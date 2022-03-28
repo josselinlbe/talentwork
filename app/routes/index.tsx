@@ -28,7 +28,9 @@ export let loader: LoaderFunction = async ({ request }) => {
     console.error({
       error: e,
     });
-    return json({});
+    return json({
+      i18n: await i18n.getTranslations(request, ["translations"]),
+    });
   }
 };
 
