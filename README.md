@@ -17,7 +17,7 @@
 
 1. Find and replace the following values on a `.env` file:
 
-- **DATABASE_URL** - default is sqlite, I'm using [Postgres/Supabase](https://supabase.io/)
+- **DATABASE_URL**
 - **REMIX_SESSION_SECRET** - any string
 - **REMIX_ADMIN_EMAIL** - this will be your admin user
 - **REMIX_ADMIN_PASSWORD** - don't commit your .env file
