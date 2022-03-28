@@ -30,16 +30,16 @@ async function createTenant(name: string, workspaces: string[], users: (User & {
     },
   });
 
-  await db.tenantFeatures.create({
-    data: {
-      tenantId: tenant.id,
-      maxWorkspaces: 3,
-      maxUsers: 5,
-      maxLinks: 45,
-      maxStorage: 100 * 1024,
-      monthlyContracts: 45,
-    },
-  });
+  // await db.tenantFeatures.create({
+  //   data: {
+  //     tenantId: tenant.id,
+  //     maxWorkspaces: 3,
+  //     maxUsers: 5,
+  //     maxLinks: 45,
+  //     maxStorage: 100 * 1024,
+  //     monthlyContracts: 45,
+  //   },
+  // });
 
   users.forEach(async (user) => {
     await db.tenantUser.create({

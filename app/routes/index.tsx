@@ -2,10 +2,10 @@ import Features from "~/components/front/Features";
 import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import JoinNow from "~/components/front/JoinNow";
-import { json, LoaderFunction, MetaFunction, useCatch, useLoaderData } from "remix";
 import { i18n } from "~/locale/i18n.server";
 import { Language } from "remix-i18next";
 import { getUserInfo } from "~/utils/session.server";
+import { MetaFunction, LoaderFunction, json, useCatch } from "remix";
 
 export const meta: MetaFunction = () => ({
   title: "Remix SaasFrontend",
@@ -42,7 +42,7 @@ export function CatchBoundary() {
   const caught = useCatch();
 
   return (
-    <div className="error-container">
+    <div>
       <h1>{`${caught.status} ${caught.statusText}`}</h1>
     </div>
   );
@@ -50,7 +50,7 @@ export function CatchBoundary() {
 
 export function ErrorBoundary({ error }: { error: Error }) {
   return (
-    <div className="error-container">
+    <div>
       <h1>App Error</h1>
       <pre>{JSON.stringify(error)}</pre>
     </div>

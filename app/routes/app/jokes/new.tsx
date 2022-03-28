@@ -136,7 +136,7 @@ export function CatchBoundary() {
 
   if (caught.status === 401) {
     return (
-      <div className="error-container">
+      <div>
         <p>You must be logged in to create a joke.</p>
         <Link to="/login">Login</Link>
       </div>
@@ -145,5 +145,5 @@ export function CatchBoundary() {
 }
 
 export function ErrorBoundary() {
-  return <div className="error-container">Something unexpected went wrong. Sorry about that.</div>;
+  return <div>Something unexpected went wrong. Sorry about that.</div>;
 }

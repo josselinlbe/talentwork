@@ -40,11 +40,11 @@ export function CatchBoundary() {
   const caught = useCatch();
 
   if (caught.status === 404) {
-    return <div className="error-container">There are no jokes to display.</div>;
+    return <div>There are no jokes to display.</div>;
   }
   throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }
 
 export function ErrorBoundary() {
-  return <div className="error-container">I did a whoopsies.</div>;
+  return <div>I did a whoopsies.</div>;
 }
