@@ -28,9 +28,6 @@ export async function getTenant(id: string) {
     where: {
       id,
     },
-    include: {
-      features: true,
-    },
   });
 }
 
