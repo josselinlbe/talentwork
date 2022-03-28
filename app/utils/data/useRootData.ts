@@ -16,7 +16,7 @@ export async function loadRootData(request: Request) {
   const userInfo = await getUserInfo(request);
   const data: AppRootData = {
     lightOrDarkMode: userInfo?.lightOrDarkMode ?? "dark",
-    locale,
+    locale: "es",
   };
   return json(data);
 }

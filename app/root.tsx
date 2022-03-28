@@ -111,6 +111,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function App() {
   let { locale } = useLoaderData<{ locale: string }>();
+  console.log({ locale_s: locale });
   useSetupTranslations(locale);
   return (
     <Document>
