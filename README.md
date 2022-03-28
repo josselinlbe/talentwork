@@ -35,7 +35,8 @@ npx prisma migrate dev --name init
 3. Run the app:
 
 ```
-npm run dev
+yarn
+yarn dev
 ```
 
 4. Log in with your `REMIX_ADMIN_EMAIL` and `REMIX_ADMIN_PASSWORD`.

@@ -23,21 +23,27 @@ export let links: LinksFunction = () => {
 };
 
 export const meta: MetaFunction = () => {
-  const description = `Learn Remix and laugh at the same time!`;
+  const description = `Remix SaaS kit with everything you need to start your SaaS app.`;
   return {
     charset: "utf-8",
     description,
-    keywords: "Remix,jokes",
-    "twitter:image": "https://remix-jokes.lol/social.png",
+    keywords: "Remix,saas,tailwindcss,typescript,starter",
+    "og:image": "https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png",
+    "og:card": "summary_large_image",
+    "og:creator": "@AlexandroMtzG",
+    "og:site": "https://saasfrontends.com",
+    "og:title": "Remix SaaS kit",
+    "og:description": description,
+    "twitter:image": "https://yahooder.sirv.com/saasfrontends/remix/remix-thumbnail.png",
     "twitter:card": "summary_large_image",
-    "twitter:creator": "@remix_run",
-    "twitter:site": "@remix_run",
-    "twitter:title": "Remix Jokes",
+    "twitter:creator": "@AlexandroMtzG",
+    "twitter:site": "@SaasFrontends",
+    "twitter:title": "Remix SaaS kit",
     "twitter:description": description,
   };
 };
 
-function Document({ children, title = `Remix: So great, it's funny!` }: { children: React.ReactNode; title?: string }) {
+function Document({ children, title = `Remix SaasFrontend` }: { children: React.ReactNode; title?: string }) {
   const data = useRootData();
   return (
     <html lang={data?.locale} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
@@ -132,7 +138,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <Document title="Uh-oh!">
       <div className="error-container">
         <h1>App Error</h1>
-        <pre>{error.message}</pre>
+        <pre>{JSON.stringify(error)}</pre>
       </div>
     </Document>
   );

@@ -1,6 +1,6 @@
 {
   "name": "remix-saas",
-  "description": "Remix codebase with everything you need to start your SaaS.",
+  "description": "Remix SaaS kit with everything you need to start your SaaS app.",
   "homepage": "https://saasfrontends.com",
   "repository": "https://github.com/AlexandroMtzG/remix-saas-kit",
   "bugs": "https://github.com/AlexandroMtzG/remix-saas-kit/issues",
