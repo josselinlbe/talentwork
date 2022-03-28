@@ -17,12 +17,19 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  const userInfo = await getUserInfo(request);
-  const data: LoaderData = {
-    authenticated: (userInfo?.userId ?? "").length > 0,
-    i18n: await i18n.getTranslations(request, ["translations"]),
-  };
-  return json(data);
+  try {
+    const userInfo = await getUserInfo(request);
+    const data: LoaderData = {
+      authenticated: (userInfo?.userId ?? "").length > 0,
+      i18n: await i18n.getTranslations(request, ["translations"]),
+    };
+    return json(data);
+  } catch (e) {
+    console.error({
+      error: e,
+    });
+    return json({});
+  }
 };
 
 export default function IndexRoute() {
