@@ -15,7 +15,7 @@
 
 ### Getting started
 
-1. Find and replace the following values on a `.env` file:
+1. Create the `.env` file and set the following values:
 
 - **DATABASE_URL**
 - **REMIX_SESSION_SECRET** - any string
