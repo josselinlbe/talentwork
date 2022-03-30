@@ -6,7 +6,7 @@ import { AppWorkspaceEntityDto } from "../../core/AppWorkspaceEntityDto";
 import { ContractEmployeeDto } from "./ContractEmployeeDto";
 
 export interface ContractDto extends AppWorkspaceEntityDto {
-  name: string;
+  name: strindg;
   description: string;
   linkId: string;
   link: LinkDto;
