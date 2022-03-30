@@ -13,7 +13,7 @@ interface Props {
   items: SubscriptionProductDto[];
 }
 export default function Plans({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
 
   const [products] = useState(items);

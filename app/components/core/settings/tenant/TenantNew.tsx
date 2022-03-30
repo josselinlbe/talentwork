@@ -21,7 +21,7 @@ interface Props {
 
 export default function TenantNew({ onClosed }: Props) {
   const actionData = useActionData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
 
   const errorModal = useRef<RefErrorModal>(null);

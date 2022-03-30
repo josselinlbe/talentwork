@@ -27,7 +27,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const form = await request.formData();
   const email = form.get("email")?.toString();
@@ -58,7 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function ForgotPasswordRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const actionData = useActionData<ActionData>();
 
   const search = useLocation().search;

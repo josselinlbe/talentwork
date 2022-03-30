@@ -28,7 +28,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   if (!params.id) {
     return badRequest({ error: t("shared.notFound") });
@@ -70,7 +70,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function EmployeeRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function AdminNavigationRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [items, setItems] = useState<SideBarItem[]>([]);
   const [roles, setRoles] = useState<TenantUserRole[]>([]);

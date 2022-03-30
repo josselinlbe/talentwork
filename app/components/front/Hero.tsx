@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function Hero() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   return (
     <div className="relative">
       <Header />
@@ -59,7 +59,7 @@ export default function Hero() {
             <span className="dark:text-cyan-300">{t("front.hero.headline2")}</span>
           </span>
           <span className="dark:text-white">
-            to <span className="dark:text-green-300">{t("front.hero.build")}</span> {t("front.hero.yourOwn")}{" "}
+            {t("front.hero.to")} <span className="dark:text-green-300">{t("front.hero.build")}</span> {t("front.hero.yourOwn")}{" "}
             <span className="dark:text-yellow-300">{t("front.hero.saas")}</span>
           </span>
         </h1>
@@ -74,7 +74,7 @@ export default function Hero() {
               target="_blank"
               className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md bg-rose-500 text-theme-50 hover:bg-rose-600 md:py-4 md:text-lg md:px-10"
             >
-              Get now
+              {t("front.hero.buy")}
             </a>
           </div>
           <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
@@ -82,12 +82,12 @@ export default function Hero() {
               to="/contact"
               className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-theme-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
             >
-              Contact us
+              {t("front.hero.contact")}
             </Link>
           </div>
         </div>
 
-        <p className="text-gray-500 flex justify-center">No credit card required.</p>
+        <p className="text-gray-500 flex justify-center">{t("front.hero.startHint")}</p>
       </div>
     </div>
   );

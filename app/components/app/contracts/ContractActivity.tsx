@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function ContractActivity({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const sortedItems = () => {
     return items.slice().sort((x, y) => {

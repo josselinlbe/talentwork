@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function WarningBanner({ title = "Warning", text = "", redirect }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="bg-yellow-50 mb-2 rounded-sm border border-yellow-300 mt-4">
       <div className="rounded-sm bg-yellow-50 p-4">
@@ -28,7 +30,7 @@ export default function WarningBanner({ title = "Warning", text = "", redirect }
                 {text}{" "}
                 {redirect && (
                   <Link className="mt-2 underline text-theme-800" to={redirect}>
-                    Go to {redirect}
+                    {t("shared.goTo")} {redirect}
                   </Link>
                 )}
               </p>

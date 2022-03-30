@@ -43,7 +43,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
   const userInfo = await getUserInfo(request);
 
   // await new Promise((r) => setTimeout(r, 5000));
@@ -134,7 +134,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function RegisterRoute() {
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [searchParams] = useSearchParams();
 

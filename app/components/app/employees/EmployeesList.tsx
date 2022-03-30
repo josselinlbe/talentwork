@@ -9,7 +9,7 @@ interface Props {
   items: Employee[];
 }
 export default function EmployeesList({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");

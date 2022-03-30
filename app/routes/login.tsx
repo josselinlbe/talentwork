@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import Logo from "~/components/front/Logo";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
-import { useRef } from "react";
 import { i18n } from "~/locale/i18n.server";
 import { deleteUser, getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/store/UserUtils";
@@ -37,7 +36,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
   const userInfo = await getUserInfo(request);
 
   // await new Promise((r) => setTimeout(r, 5000));
@@ -97,7 +96,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function LoginRoute() {
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [searchParams] = useSearchParams();
 
@@ -115,7 +114,7 @@ export default function LoginRoute() {
               </Link>
             </p>
           </div>
-          <WarningBanner title="Sandbox" text="Create a test account." redirect="/register" />
+          <WarningBanner title="Sandbox" text={t("account.login.createTestAccount")} redirect="/register" />
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
             <div className="rounded-sm shadow-sm -space-y-px">

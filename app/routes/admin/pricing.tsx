@@ -51,7 +51,7 @@ type ActionData = {
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const items = await getAllSubscriptionProducts();
   if (items.length > 0) {
@@ -115,7 +115,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function AdminPricingRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "submitting" || transition.state === "loading";
 

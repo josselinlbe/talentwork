@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function ProvidersListAndTable({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [sortByColumn, setSortByColumn] = useState("status");
   const [sortDirection, setSortDirection] = useState(-1);

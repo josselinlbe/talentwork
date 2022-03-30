@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function NewLink({ linksCount }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const appData = useAppData();
   const submit = useSubmit();
   const actionData = useActionData<NewLinkActionData>();

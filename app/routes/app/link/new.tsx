@@ -37,7 +37,7 @@ export type NewLinkActionData = {
 };
 const badRequest = (data: NewLinkActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const userInfo = await getUserInfo(request);
   const appData = await loadAppData(request);
@@ -105,7 +105,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function NewLinkRoute() {
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   return (
     <div>
       <Breadcrumb

@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function Breadcrumb({ className = "", home = "/app/dashboard", menu = [] }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   return (
     <nav className={clsx(className, "flex bg-white border-b border-gray-200 overflow-x-auto")} aria-label="Breadcrumb">
       <ol className="max-w-screen-xl w-full px-4 flex space-x-4 sm:px-6 lg:px-8">

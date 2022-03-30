@@ -6,7 +6,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function Unauthorized() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   return (
     <div className="justify-center md:flex md:space-x-2 pt-5 px-3 mx-auto max-w-2xl">
       <h1 className="text-lg font-bold mx-auto mt-1 p-1 justify-center items-center flex w-full">{t("shared.unauthorized")}</h1>

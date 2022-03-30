@@ -25,7 +25,7 @@ interface Props {
 
 export default function StackedLayout({ layout, children }: Props) {
   const appData = useAppData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
   const currentRoute = useLocation().pathname;
   const navigate = useNavigate();

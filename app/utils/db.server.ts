@@ -10,8 +10,8 @@ declare global {
 // the server with every change, but we want to make sure we don't
 // create a new connection to the DB with every change either.
 if (process.env.NODE_ENV === "production") {
-  db = new PrismaClient();
   try {
+    db = new PrismaClient();
     db.$connect();
   } catch (e) {
     console.error("Error connecting: " + JSON.stringify(e));

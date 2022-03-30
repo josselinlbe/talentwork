@@ -61,7 +61,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function MembersRoute() {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const errorModal = useRef<RefErrorModal>(null);

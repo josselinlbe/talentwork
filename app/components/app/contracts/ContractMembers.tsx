@@ -10,7 +10,7 @@ interface Props {
 
 export default function ContractMembers({ items }: Props) {
   const appData = useAppData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const sortedItems = () => {
     return items?.slice().sort((x, y) => {
       return x.user.firstName > y.user.firstName ? 1 : -1;

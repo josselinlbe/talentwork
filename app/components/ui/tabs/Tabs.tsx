@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function Tabs({ className = "", tabs = [], asLinks = true, onSelected }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const location = useLocation();

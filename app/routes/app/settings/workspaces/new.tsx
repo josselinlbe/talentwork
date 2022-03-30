@@ -52,7 +52,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
   const userInfo = await getUserInfo(request);
   if (!userInfo?.currentTenantId) {
     return unauthorized({
@@ -106,7 +106,7 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const errorModal = useRef<RefErrorModal>(null);

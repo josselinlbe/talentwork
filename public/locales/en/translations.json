@@ -111,11 +111,13 @@
       "headline1": "Remix",
       "headline2": "codebase",
       "headline3": "to build your own SaaS",
-      "headline4": "React Components, SaaS pages, Tailwind CSS, Prisma, Stripe, Postmark, and more.",
+      "headline4": "React Components, SaaS pages, Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark, and more.",
+      "to": "to",
       "build": "build",
       "yourOwn": "your own",
       "saas": "SaaS",
       "start": "Start today",
+      "buy": "I want this!",
       "contact": "Contact us",
       "startHint": "No credit card required."
     },
@@ -707,6 +709,7 @@
       "button": "Log in",
       "orStartTrial": "start free today!",
       "forgot": "Forgot your password?",
+      "createTestAccount": "Create a test account",
       "errors": {
         "passwordMissmatch": "Password don't match"
       }

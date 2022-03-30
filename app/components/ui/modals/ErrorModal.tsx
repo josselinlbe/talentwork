@@ -13,7 +13,7 @@ interface Props {
 }
 
 const ErrorModal = ({ className, onClosed }: Props, ref: Ref<RefErrorModal>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
 

@@ -33,9 +33,9 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
   const userInfo = await getUserInfo(request);
-  
+
   if (!params.id) {
     return badRequest({ error: t("shared.notFound") });
   }
@@ -77,9 +77,9 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: t("shared.notFound") });
     }
 
-    sendContract(request, contract)
+    sendContract(request, contract);
 
-    return json({success: "Contract sent"});
+    return json({ success: "Contract sent" });
   }
 
   return badRequest({ error: t("shared.invalidForm") });
@@ -88,7 +88,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function ContractRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

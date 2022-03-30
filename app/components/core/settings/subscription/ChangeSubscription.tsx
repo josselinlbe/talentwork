@@ -18,7 +18,7 @@ interface Props {
   currency: string;
 }
 export default function ChangeSubscription({ items, current, billingPeriod, currency }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading" || transition.state === "submitting";
   const navigate = useNavigate();

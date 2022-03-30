@@ -11,7 +11,7 @@ interface Props {
   items: TenantUserInvitation[];
 }
 export default function MemberInvitationsListAndTable({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
 
   const [sortByColumn, setSortByColumn] = useState("");

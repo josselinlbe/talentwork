@@ -22,7 +22,7 @@ interface Props {
 }
 
 const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectContractMembers>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

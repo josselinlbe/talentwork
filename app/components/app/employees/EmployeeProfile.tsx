@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function EmployeeProfile({ item }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
 

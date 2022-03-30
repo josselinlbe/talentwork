@@ -4,7 +4,7 @@ import { Link } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 
 export default function PendingInvitationsButton() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const appData = useAppData();
 
   return (

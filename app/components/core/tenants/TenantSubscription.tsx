@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function TenantSubscription({ id = "" }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   // const [openOptions, setOpenOptions] = useState(false);

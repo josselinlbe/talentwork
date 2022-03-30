@@ -24,7 +24,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 export default function EmployeesRoute() {
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading";
 

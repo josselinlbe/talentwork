@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function LayoutSelector({ className, btnClassName }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const layouts = [
     {

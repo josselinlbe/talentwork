@@ -136,7 +136,7 @@ export default function SubscriptionRoute() {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
 
   const errorModal = useRef<RefErrorModal>(null);

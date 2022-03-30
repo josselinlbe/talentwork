@@ -20,7 +20,7 @@ type LoaderData = {
 
 export default function TenantSelector({ className, onAdd }: Props) {
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
   const location = useLocation();

@@ -15,7 +15,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function LinksRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const tabs: TabItem[] = [
     {

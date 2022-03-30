@@ -4,7 +4,7 @@ import { Link } from "remix";
 import clsx from "~/utils/shared/ClassesUtils";
 
 export default function CurrentSubscriptionButton() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const appData = useAppData();
 
   return (

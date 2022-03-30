@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function BillingPeriodToggle({ onSelected }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   function changeInterval(billingPeriod: SubscriptionBillingPeriod) {
     // store.dispatch(setBillingPeriod(billingPeriod));

@@ -19,7 +19,7 @@ interface Props {
 
 const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<RefLinkSelector>) => {
   const appData = useAppData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading";
 

@@ -4,7 +4,7 @@ import { ContractWithDetails } from "../db/contracts.db.server";
 import { sendEmail } from "../email.server";
 
 export async function sendContract(request: Request, contract: ContractWithDetails) {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
   const appData = await loadAppData(request);
 
   const membersJson =

@@ -16,7 +16,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function TermsAndConditionsRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   return (
     <div>

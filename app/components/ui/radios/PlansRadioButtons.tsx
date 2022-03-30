@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function PlansRadioButtons({ className = "", plansLabel = true, showCurrent = false }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const activeProducts = useSelector((state: RootState): TenantProductDto[] => {

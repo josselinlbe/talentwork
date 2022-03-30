@@ -153,7 +153,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function ProfileRoute() {
   const appData = useAppData();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const submit = useSubmit();
 

@@ -111,11 +111,13 @@
       "headline1": "Remix",
       "headline2": "codebase",
       "headline3": "para desarrollar tu SaaS",
-      "headline4": "Components React, páginas para SaaS, Tailwind CSS, Prisma, Stripe, Postmark y más.",
-      "build": "desarrolla",
+      "headline4": "Componentes React, páginas para SaaS, Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark y más.",
+      "to": "para",
+      "build": "desarrollar",
       "yourOwn": "tu propio",
       "saas": "SaaS",
       "start": "Comienza hoy",
+      "buy": "Lo quiero!",
       "contact": "Contáctanos",
       "startHint": "No se necesita tarjeta de crédito."
     },
@@ -707,6 +709,7 @@
       "button": "Entrar",
       "orStartTrial": "comienza gratis",
       "forgot": "¿Olvidaste tu contraseña?",
+      "createTestAccount": "Crea una cuenta de prueba",
       "errors": {
         "passwordMissmatch": "Las contraseñas no coinciden"
       }

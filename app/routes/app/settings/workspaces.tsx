@@ -33,7 +33,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 export default function WorkspacesRoute() {
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

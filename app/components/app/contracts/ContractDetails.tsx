@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function ContractDetails({ item }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const appData = useAppData();
   const transition = useTransition();

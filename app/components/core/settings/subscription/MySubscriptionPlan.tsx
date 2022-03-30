@@ -14,7 +14,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import { SubscriptionCardDto } from "~/application/dtos/core/subscriptions/SubscriptionCardDto";
 
 export default function MySubscriptionPlan() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);

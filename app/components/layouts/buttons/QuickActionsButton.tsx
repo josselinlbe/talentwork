@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function QuickActionsButton({ className }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const appData = useAppData();
 
   const [opened, setOpened] = useState(false);

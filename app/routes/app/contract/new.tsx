@@ -64,7 +64,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const userInfo = await getUserInfo(request);
 
@@ -116,7 +116,7 @@ export const action: ActionFunction = async ({ request }) => {
   const contract = await getContract(createdContract.id);
 
   if (contract) {
-    await sendContract(request, contract)
+    await sendContract(request, contract);
   }
 
   return redirect("/app/contract/" + createdContract.id);
@@ -126,7 +126,7 @@ export default function NewContractRoute() {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
   const transition = useTransition();
   const loading = transition.state === "loading" || transition.state === "submitting";

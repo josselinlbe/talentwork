@@ -20,7 +20,7 @@ interface Props {
 }
 
 const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: Ref<RefSelectUsers>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

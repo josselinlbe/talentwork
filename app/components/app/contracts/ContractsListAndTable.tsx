@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function ContractsListAndTable({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const appData = useAppData();
   const navigate = useNavigate();
 

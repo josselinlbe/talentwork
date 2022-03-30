@@ -18,7 +18,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function ContactRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const data = useLoaderData();
 
   const usersOptions = ["1", "2 - 3", "4 - 10", "11 - 25", "26 - 50", "51 - 100", "+100"];

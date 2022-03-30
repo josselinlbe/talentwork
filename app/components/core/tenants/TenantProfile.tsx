@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function TenantProfile({ id = "" }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   // const confirmDelete = useRef<RefConfirmModal>(null);

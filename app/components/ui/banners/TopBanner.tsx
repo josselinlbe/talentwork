@@ -21,6 +21,9 @@ export default function TopBanner() {
       case 3:
         host = "https://sandbox.svelte.saasfrontends.com";
         break;
+      case 4:
+        host = "https://remix.saasfrontends.com";
+        break;
     }
     if (path !== undefined) {
       host += path;
@@ -94,7 +97,7 @@ export default function TopBanner() {
                   >
                     Svelte
                   </a>
-                  <a className="w-16 text-center border border-transparent rounded-md px-1 py-1 font-extrabold shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 text-theme-800 bg-theme-100 border-theme-100 select-none">
+                  <a className="w-16 text-center border border-transparent rounded-md px-1 py-1 font-extrabold shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 text-rose-800 bg-rose-100 border-rose-100 select-none">
                     Remix
                   </a>
                 </div>

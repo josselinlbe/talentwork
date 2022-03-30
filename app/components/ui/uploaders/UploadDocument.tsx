@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function UploadDocuments({ title = "", accept, multiple, description, icon = "", onDropped, onDroppedFiles }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [isDragging, setIsDragging] = useState(false);
   const [loading] = useState(false);

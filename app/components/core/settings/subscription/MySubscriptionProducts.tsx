@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function MySubscriptionProducts({ className = "", withCurrentPlan = false, cols = "grid-cols-2 sm:grid-cols-2 xl:grid-cols-4" }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const data = useLoaderData<DashboardLoaderData>();
   const appData = useAppData();
   const transition = useTransition();

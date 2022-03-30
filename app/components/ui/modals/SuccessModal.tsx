@@ -13,7 +13,7 @@ interface Props {
 }
 
 const SuccessModal = ({ className, onClosed }: Props, ref: Ref<RefSuccessModal>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState<string>();

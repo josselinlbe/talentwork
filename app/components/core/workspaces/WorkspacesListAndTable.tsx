@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function WorkspacesListAndTable({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const headers = [
     {

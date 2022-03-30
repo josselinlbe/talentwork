@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function Features({ className }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   return (
     <div className={className}>
@@ -249,7 +249,7 @@ export default function Features({ className }: Props) {
         </div>
       </div>
 
-      {false &&
+      {false && (
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-3 lg:gap-x-8">
           <div>
             <h2 className="text-base font-semibold text-theme-600 uppercase tracking-wide">{t("front.features.backend.hint")}</h2>
@@ -470,7 +470,7 @@ export default function Features({ className }: Props) {
             </dl>
           </div>
         </div>
-      }
+      )}
     </div>
   );
 }

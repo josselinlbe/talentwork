@@ -12,7 +12,7 @@ export default async function handleRequest(request: Request, responseStatusCode
   let i18n = createInstance();
   await i18n.use(initReactI18next).init({
     supportedLngs: ["es", "en"],
-    defaultNS: "common",
+    defaultNS: "translations",
     fallbackLng: "en",
     react: { useSuspense: false },
   });

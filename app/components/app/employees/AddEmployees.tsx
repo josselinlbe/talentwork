@@ -13,7 +13,7 @@ import { Form, useSubmit } from "remix";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
 export default function AddEmployees() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
 

@@ -22,7 +22,7 @@ interface Props {
 }
 
 const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectEmployees>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

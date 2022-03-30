@@ -19,7 +19,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
   const form = await request.formData();
   const name = form.get("name")?.toString() ?? "";
   if ((name?.length ?? 0) < 2) {
@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function TenantRoute() {
   const appData = useAppData();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   return (
     <div className="py-4 space-y-2 mx-auto max-w-5xl xl:max-w-7xl px-4 sm:px-6 lg:px-8">

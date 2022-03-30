@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function SidebarMenu({ layout, onSelected }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const location = useLocation();
   const appData = useAppData();
 

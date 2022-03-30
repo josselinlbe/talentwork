@@ -7,7 +7,7 @@ i18next
   .use(initReactI18next)
   .init({
     supportedLngs: ["es", "en"],
-    defaultNS: "common",
+    defaultNS: "translations",
     fallbackLng: "en",
     // I recommend you to always disable react.useSuspense for i18next
     react: { useSuspense: false },

@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function SettingsRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 

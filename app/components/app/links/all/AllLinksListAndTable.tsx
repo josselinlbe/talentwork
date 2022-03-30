@@ -13,7 +13,7 @@ interface Props {
 
 export default function AllLinksListAndTable({ items }: Props) {
   const appData = useAppData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [sortByColumn, setSortByColumn] = useState("type");
   const [sortDirection, setSortDirection] = useState(-1);

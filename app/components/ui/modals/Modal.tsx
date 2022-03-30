@@ -17,7 +17,7 @@ interface Props {
 }
 
 const Modal = ({ className, maxSize = "sm:max-w-lg", onClosed, children }: Props, ref: Ref<RefModal>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [showing, setShowing] = useState(false);
 

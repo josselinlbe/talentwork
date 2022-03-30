@@ -7,7 +7,7 @@ import { useDashboardData } from "~/utils/data/useDashboardData";
 
 export default function ProvidersUsage() {
   const dashboardData = useDashboardData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading";
 

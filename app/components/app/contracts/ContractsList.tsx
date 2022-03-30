@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function ContractsList({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading";
 

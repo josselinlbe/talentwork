@@ -21,7 +21,7 @@ type LoaderData = {
 
 export default function WorkspaceSelector({ className, onAdd, onSelected }: Props) {
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
   const location = useLocation();

@@ -43,7 +43,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const form = await request.formData();
   const password = form.get("password")?.toString() ?? "";
@@ -127,7 +127,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function InvitationRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const loadingButton = useRef<RefLoadingButton>(null);
   const errorModal = useRef<RefErrorModal>(null);

@@ -47,7 +47,7 @@ type ActionData = {
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const form = await request.formData();
   const type = form.get("type")?.toString();
@@ -98,7 +98,7 @@ export default function EmailsRoute() {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
   const transition = useTransition();
   const loading = transition.state === "submitting" || transition.state === "loading";

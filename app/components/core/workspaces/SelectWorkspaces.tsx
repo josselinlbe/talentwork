@@ -21,7 +21,7 @@ interface Props {
 }
 
 const SelectWorkspaces = ({ items, maxSize = "sm:max-w-lg", allowSearch, onClosed, onSelected }: Props, ref: Ref<RefSelectWorkspaces>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 

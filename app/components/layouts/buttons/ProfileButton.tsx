@@ -10,7 +10,7 @@ import UserUtils from "~/utils/store/UserUtils";
 
 export default function ProfileButton() {
   const data = useAppData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const submit = useSubmit();
 
   const [opened, setOpened] = useState(false);

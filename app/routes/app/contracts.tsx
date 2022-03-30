@@ -39,7 +39,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
 export default function ContractsRoute() {
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const tabs = [
     {

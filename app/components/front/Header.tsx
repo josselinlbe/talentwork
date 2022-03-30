@@ -2,18 +2,15 @@ import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "~/components/front/Logo";
-import IconDark from "~/assets/img/icon-dark.png";
 import DarkModeToggle from "~/components/ui/toggles/DarkModeToggle";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
-import { Theme } from "~/application/enums/shared/Theme";
 import Icon from "./Icon";
-import LocaleSelector from "../ui/selectors/LocaleSelector";
 import { useLoaderData } from "remix";
 
 export default function Header() {
   const data = useLoaderData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const location = useLocation();
 

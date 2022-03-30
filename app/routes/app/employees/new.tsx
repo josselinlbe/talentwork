@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function NewEmployeesRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const actionData = useActionData<ActionData>();
 
   const errorModal = useRef<RefErrorModal>(null);

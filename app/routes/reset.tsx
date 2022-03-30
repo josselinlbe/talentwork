@@ -34,7 +34,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const success = (data: ActionData) => json(data, { status: 200 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const form = await request.formData();
   const email = form.get("email")?.toString() ?? "";
@@ -85,7 +85,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function ResetRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const actionData = useActionData<ActionData>();
 

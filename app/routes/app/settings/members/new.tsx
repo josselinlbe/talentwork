@@ -52,7 +52,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let t = await i18n.getFixedT(request, "common");
 
   const appData = await loadAppData(request);
 
@@ -120,7 +120,7 @@ export default function NewMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
   const membersData = useMembersData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const transition = useTransition();
 

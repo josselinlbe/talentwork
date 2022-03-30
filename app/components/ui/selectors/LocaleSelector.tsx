@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function LocaleSelector({ className, btnClassName }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   let location = useLocation();
   const submit = useSubmit();
 

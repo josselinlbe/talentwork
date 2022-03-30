@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function PdfViewer({ className, file, onRemoveFile, fileName = "", editing = false }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   PDFJS.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js";

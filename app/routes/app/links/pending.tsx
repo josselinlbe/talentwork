@@ -94,7 +94,7 @@ export default function PendingLinksRoute() {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading";
   const submit = useSubmit();

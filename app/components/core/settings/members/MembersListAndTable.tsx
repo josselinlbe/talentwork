@@ -12,7 +12,7 @@ interface Props {
   items: Awaited<ReturnType<typeof getTenantUsers>>;
 }
 export default function MembersListAndTable({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [sortByColumn, setSortByColumn] = useState("");
   const [sortDirection, setSortDirection] = useState(1);

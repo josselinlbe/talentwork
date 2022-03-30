@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function SlideOver({ title = "", size = "md", paddingContent = "px-4 sm:px-6", paddingY = "py-6", onClose, content, footer }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [open] = useState(true);
 

@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function ClientsListAndTable({ items }: Props) {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [sortByColumn, setSortByColumn] = useState("");
   const [sortDirection, setSortDirection] = useState(-1);

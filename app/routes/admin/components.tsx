@@ -7,7 +7,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function AdminComponentsRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   return (
     <div>
       <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">

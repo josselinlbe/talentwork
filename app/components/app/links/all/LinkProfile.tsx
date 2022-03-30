@@ -24,7 +24,7 @@ interface Props {
 
 export default function LinkProfile({ item }: Props) {
   const appData = useAppData();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
 

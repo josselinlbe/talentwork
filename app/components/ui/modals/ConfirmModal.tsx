@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState<string>();

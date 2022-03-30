@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function AdminTenantRoute() {
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation();
   const { id } = useParams();
   const [selected, setSelected] = useState(0);
 

@@ -138,13 +138,13 @@ export function CatchBoundary() {
   );
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  return (
-    <Document title="Uh-oh!">
-      <div>
-        <h1>App Error</h1>
-        <pre>{JSON.stringify(error)}</pre>
-      </div>
-    </Document>
-  );
-}
+// export function ErrorBoundary({ error }: { error: Error }) {
+//   return (
+//     <Document title="Uh-oh!">
+//       <div>
+//         <h1>App Error</h1>
+//         <pre>{JSON.stringify(error)}</pre>
+//       </div>
+//     </Document>
+//   );
+// }
