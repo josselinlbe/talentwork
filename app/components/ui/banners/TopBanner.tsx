@@ -10,16 +10,16 @@ export default function TopBanner() {
     let host = "";
     switch (item) {
       case 0:
-        host = "https://vue2.saasfrontends.com";
+        host = "https://sandbox.vue2.saasfrontends.com";
         break;
       case 1:
-        host = "https://vue3.saasfrontends.com";
+        host = "https://sandbox.vue3.saasfrontends.com";
         break;
       case 2:
-        host = "https://react.saasfrontends.com";
+        host = "https://sandbox.react.saasfrontends.com";
         break;
       case 3:
-        host = "https://svelte.saasfrontends.com";
+        host = "https://sandbox.svelte.saasfrontends.com";
         break;
     }
     if (path !== undefined) {
