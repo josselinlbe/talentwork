@@ -17,7 +17,6 @@ import ContractEmployees from "./ContractEmployees";
 import ContractActivity from "./ContractActivity";
 import { ContractStatus } from "~/application/enums/app/contracts/ContractStatus";
 import { useAppData } from "~/utils/data/useAppData";
-import { Contract, ContractMember } from "@prisma/client";
 import { useRef, useState } from "react";
 import { Link, useSubmit, useTransition } from "remix";
 import { ContractWithDetails } from "~/utils/db/contracts.db.server";

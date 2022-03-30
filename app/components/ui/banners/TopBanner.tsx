@@ -59,7 +59,7 @@ export default function TopBanner() {
                       name="framework-or-library"
                       className="bg-slate-800 text-slate-400 block w-full pl-3 pr-10 py-2 text-base border-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm rounded-md"
                       onChange={(e) => updateRoute(Number(e.target.value))}
-                      value={2}
+                      value={4}
                     >
                       <option value={0}>Vue2</option>
                       <option value={1}>Vue3</option>
