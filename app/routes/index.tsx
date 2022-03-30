@@ -60,7 +60,7 @@ export function CatchBoundary() {
 export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <div>
-      <h1>App Error</h1>
+      <h1>Index Error</h1>
       <pre>{JSON.stringify(error)}</pre>
     </div>
   );
