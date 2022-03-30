@@ -52,7 +52,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
   return (
     <html lang={data?.lng} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
-        <meta charSet="utf-8" />
         <Meta />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
