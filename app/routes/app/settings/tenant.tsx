@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { ActionFunction, Form, json, MetaFunction, useActionData } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import { i18n } from "~/locale/i18n.server";
-import { updateTenant } from "~/utils/db/tenants.db.server";
+import { updateTenant } from "~/utils/db/core/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
 
 export const meta: MetaFunction = () => ({
@@ -19,7 +19,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
   const form = await request.formData();
   const name = form.get("name")?.toString() ?? "";
   if ((name?.length ?? 0) < 2) {

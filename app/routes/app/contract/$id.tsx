@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import ContractDetails from "~/components/app/contracts/ContractDetails";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData } from "remix";
-import { ContractWithDetails, deleteContract, getContract, updateContract } from "~/utils/db/contracts.db.server";
+import { ContractWithDetails, deleteContract, getContract, updateContract } from "~/utils/db/app/contracts.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { getUserInfo } from "~/utils/session.server";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
@@ -33,7 +33,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
   const userInfo = await getUserInfo(request);
 
   if (!params.id) {

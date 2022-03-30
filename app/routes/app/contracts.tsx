@@ -1,11 +1,11 @@
-import { ContractStatusFilter } from "~/application/contracts/app/contracts/ContractStatusFilter";
+import { ContractStatusFilter } from "~/application/enums/contracts/ContractStatusFilter";
 import ContractsList from "~/components/app/contracts/ContractsList";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import Tabs from "~/components/ui/tabs/Tabs";
 import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, redirect, useLoaderData } from "remix";
 import { getUserInfo } from "~/utils/session.server";
-import { getContracts } from "~/utils/db/contracts.db.server";
+import { getContracts } from "~/utils/db/app/contracts.db.server";
 
 export const meta: MetaFunction = () => ({
   title: "Contracts | Remix SaasFrontend",

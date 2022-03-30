@@ -1,5 +1,5 @@
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
-import { SubscriptionPriceType } from "~/application/enums/core/subscriptions/SubscriptionPriceType";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
 import { SubscriptionProductDto } from "../dtos/core/subscriptions/SubscriptionProductDto";
 
 const currency = "usd";

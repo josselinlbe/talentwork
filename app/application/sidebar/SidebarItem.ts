@@ -1,5 +1,5 @@
-import { TenantUserRole } from "../enums/core/tenants/TenantUserRole";
-import { UserType } from "../enums/core/users/UserType";
+import { TenantUserRole } from "../enums/tenants/TenantUserRole";
+import { UserType } from "../enums/users/UserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 
 export interface SideBarItem {

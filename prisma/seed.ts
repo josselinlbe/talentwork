@@ -1,9 +1,9 @@
 import { PrismaClient, Tenant, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { TenantUserJoined } from "~/application/enums/core/tenants/TenantUserJoined";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { TenantUserStatus } from "~/application/enums/core/tenants/TenantUserStatus";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
+import { UserType } from "~/application/enums/users/UserType";
 const db = new PrismaClient();
 
 async function createUser(firstName: string, lastName: string, email: string, password: string, type: UserType) {

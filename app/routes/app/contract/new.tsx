@@ -4,8 +4,8 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SelectEmployees, { RefSelectEmployees } from "~/components/app/employees/SelectEmployees";
 import SelectContractMembers, { RefSelectContractMembers } from "~/components/app/contracts/SelectContractMembers";
 import LinkSelector, { RefLinkSelector } from "~/components/app/links/selectors/LinkSelector";
-import { AddContractMemberDto } from "~/application/contracts/app/contracts/AddContractMemberDto";
-import { ContractMemberRole } from "~/application/enums/app/contracts/ContractMemberRole";
+import { AddContractMemberDto } from "~/application/dtos/contracts/AddContractMemberDto";
+import { ContractMemberRole } from "~/application/enums/contracts/ContractMemberRole";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import clsx from "~/utils/shared/ClassesUtils";
 import IconWorkers from "~/assets/icons/IconWorkers";
@@ -19,14 +19,14 @@ import { updateItem } from "~/utils/shared/ObjectUtils";
 import PdfPreview from "~/components/ui/pdf/PdfViewer";
 import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
-import { getLink, getLinksWithMembers, LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
+import { getLink, getLinksWithMembers, LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { getUserInfo } from "~/utils/session.server";
 import { Employee } from "@prisma/client";
-import { createContract, getContract, getMonthlyContractsCount } from "~/utils/db/contracts.db.server";
+import { createContract, getContract, getMonthlyContractsCount } from "~/utils/db/app/contracts.db.server";
 import { getEmployees } from "~/utils/db/app/employees.db.server";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
-import { ContractStatus } from "~/application/enums/app/contracts/ContractStatus";
+import { ContractStatus } from "~/application/enums/contracts/ContractStatus";
 import { sendEmail } from "~/utils/email.server";
 import { sendContract } from "~/utils/app/ContractUtils";
 
@@ -64,7 +64,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const userInfo = await getUserInfo(request);
 

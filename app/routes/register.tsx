@@ -4,13 +4,13 @@ import Logo from "~/components/front/Logo";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { i18n } from "~/locale/i18n.server";
-import { getUserByEmail, register } from "~/utils/db/users.db.server";
-import UserUtils from "~/utils/store/UserUtils";
+import { getUserByEmail, register } from "~/utils/db/core/users.db.server";
+import UserUtils from "~/utils/app/UserUtils";
 import { createStripeCustomer } from "~/utils/stripe.server";
-import { createTenant, createTenantUser } from "~/utils/db/tenants.db.server";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { createWorkspace, createWorkspaceUser } from "~/utils/db/workspaces.db.server";
-import { WorkspaceType } from "~/application/enums/core/tenants/WorkspaceType";
+import { createTenant, createTenantUser } from "~/utils/db/core/tenants.db.server";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { createWorkspace, createWorkspaceUser } from "~/utils/db/core/workspaces.db.server";
+import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import { sendEmail } from "~/utils/email.server";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 
@@ -43,7 +43,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
   const userInfo = await getUserInfo(request);
 
   // await new Promise((r) => setTimeout(r, 5000));

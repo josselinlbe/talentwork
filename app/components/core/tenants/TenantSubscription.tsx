@@ -4,7 +4,7 @@ import { TenantDto } from "~/application/dtos/core/tenants/TenantDto";
 import { TenantProductDto } from "~/application/dtos/core/tenants/TenantProductDto";
 
 import { SubscriptionPriceDto } from "~/application/dtos/core/subscriptions/SubscriptionPriceDto";
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import DateUtils from "~/utils/shared/DateUtils";
 import Loading from "~/components/ui/loaders/Loading";
 

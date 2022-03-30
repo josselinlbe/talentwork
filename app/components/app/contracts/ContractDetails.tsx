@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import IconContract from "~/assets/icons/IconContract";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
@@ -15,11 +15,11 @@ import PdfViewer from "~/components/ui/pdf/PdfViewer";
 import DropdownWithClick from "~/components/ui/dropdowns/DropdownWithClick";
 import ContractEmployees from "./ContractEmployees";
 import ContractActivity from "./ContractActivity";
-import { ContractStatus } from "~/application/enums/app/contracts/ContractStatus";
+import { ContractStatus } from "~/application/enums/contracts/ContractStatus";
 import { useAppData } from "~/utils/data/useAppData";
 import { useRef, useState } from "react";
 import { Link, useSubmit, useTransition } from "remix";
-import { ContractWithDetails } from "~/utils/db/contracts.db.server";
+import { ContractWithDetails } from "~/utils/db/app/contracts.db.server";
 
 interface Props {
   item: ContractWithDetails;

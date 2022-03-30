@@ -5,9 +5,9 @@ import Logo from "~/components/front/Logo";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { i18n } from "~/locale/i18n.server";
-import { deleteUser, getUserByEmail } from "~/utils/db/users.db.server";
-import UserUtils from "~/utils/store/UserUtils";
-import { getMyTenants } from "~/utils/db/tenants.db.server";
+import { deleteUser, getUserByEmail } from "~/utils/db/core/users.db.server";
+import UserUtils from "~/utils/app/UserUtils";
+import { getMyTenants } from "~/utils/db/core/tenants.db.server";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 
 export const meta: MetaFunction = () => {
@@ -36,7 +36,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
   const userInfo = await getUserInfo(request);
 
   // await new Promise((r) => setTimeout(r, 5000));

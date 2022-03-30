@@ -7,7 +7,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
-import { getContracts } from "~/utils/db/contracts.db.server";
+import { getContracts } from "~/utils/db/app/contracts.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { Contract } from "@prisma/client";
 

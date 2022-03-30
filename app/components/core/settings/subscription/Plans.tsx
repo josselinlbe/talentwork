@@ -1,4 +1,4 @@
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import clsx from "~/utils/shared/ClassesUtils";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import { useState } from "react";

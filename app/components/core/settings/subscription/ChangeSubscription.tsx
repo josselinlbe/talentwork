@@ -1,13 +1,11 @@
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import clsx from "~/utils/shared/ClassesUtils";
 import NumberUtils from "~/utils/shared/NumberUtils";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
-import WarningBanner from "~/components/ui/banners/WarningBanner";
 import Loading from "~/components/ui/loaders/Loading";
-import { json, LoaderFunction, useLoaderData, useSubmit, useTransition } from "remix";
-import { getAllSubscriptionProducts, getSubscriptionPrice, getSubscriptionProduct } from "~/utils/db/subscriptionProducts.db.server";
+import { useSubmit, useTransition } from "remix";
+import { getAllSubscriptionProducts } from "~/utils/db/core/subscriptionProducts.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 
@@ -20,23 +18,13 @@ interface Props {
 export default function ChangeSubscription({ items, current, billingPeriod, currency }: Props) {
   const { t } = useTranslation();
   const transition = useTransition();
-  const loading = transition.state === "loading" || transition.state === "submitting";
-  const navigate = useNavigate();
+  const loading = transition.state === "submitting";
   const submit = useSubmit();
 
   const confirmModal = useRef<RefConfirmModal>(null);
 
   const [products] = useState(items.filter((f) => !f.contactUs));
 
-  function billingPeriodOnce(product: SubscriptionProduct & { prices: SubscriptionPrice[] }): boolean | undefined {
-    return getPrice(product)?.billingPeriod === SubscriptionBillingPeriod.ONCE;
-  }
-  function productUrl(product: SubscriptionProduct & { prices: SubscriptionPrice[] }) {
-    if (product.contactUs) {
-      return "/contact";
-    }
-    return "/register";
-  }
   function getPrice(product: SubscriptionProduct & { prices: SubscriptionPrice[] }): SubscriptionPrice | undefined {
     const prices = product.prices.find(
       (f) => (f.billingPeriod === billingPeriod || f.billingPeriod === SubscriptionBillingPeriod.ONCE) && f.currency === currency && f.active
@@ -45,9 +33,6 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
   }
   function getPriceAmount(product: SubscriptionProduct & { prices: SubscriptionPrice[] }): number {
     return getPrice(product)?.price ?? 0;
-  }
-  function getPriceTrialDays(product: SubscriptionProduct & { prices: SubscriptionPrice[] }): number {
-    return getPrice(product)?.trialDays ?? 0;
   }
   function intFormat(value: number) {
     return NumberUtils.intFormat(value);
@@ -218,17 +203,6 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
                                 )}
                               >
                                 {getButtonTitle(plan)}
-                                {/* {(() => {
-                                if (getPriceAmount(plan) === 0) {
-                                  return <span>{t("pricing.signUpFree")}</span>;
-                                } else if (billingPeriodOnce(plan)) {
-                                  return <span>{t("pricing.payOnce")}</span>;
-                                } else if (getPriceTrialDays(plan) > 0) {
-                                  return <span>{t("pricing.startTrial", [getPriceTrialDays(plan)])}</span>;
-                                } else {
-                                  return <span>{t("pricing.subscribe")}</span>;
-                                }
-                              })()} */}
                               </button>
                             </div>
                           </div>

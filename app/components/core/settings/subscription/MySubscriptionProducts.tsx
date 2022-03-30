@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import clsx from "~/utils/shared/ClassesUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { useLoaderData, useTransition } from "remix";
 import { DashboardLoaderData } from "~/utils/data/useDashboardData";
@@ -17,12 +16,8 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
   const data = useLoaderData<DashboardLoaderData>();
   const appData = useAppData();
   const transition = useTransition();
-  const loading = transition.state === "loading";
 
   function billableStatus(max: number): number {
-    if (loading) {
-      return 2;
-    }
     if (!appData.mySubscription) {
       return 0;
     }
@@ -71,9 +66,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           <div className="space-y-2 sm:space-y-0 sm:flex items-center sm:space-x-2 justify-between">
             <h3 className="leading-5 text-gray-900 truncate">
               {(() => {
-                if (loading) {
-                  return <span className="leading-5">{t("shared.loading")}...</span>;
-                } else if (appData.mySubscription?.subscriptionProduct) {
+                if (appData.mySubscription?.subscriptionProduct) {
                   return (
                     <span>
                       {t("settings.subscription.current")}{" "}
@@ -82,7 +75,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
                       </Link>
                     </span>
                   );
-                } else if (!loading) {
+                } else {
                   return (
                     <span className="ml-1 text-sm leading-5 font-medium text-gray-500">
                       {t("settings.subscription.noActivePlan")},{" "}
@@ -91,8 +84,6 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
                       </Link>
                     </span>
                   );
-                } else {
-                  return <div></div>;
                 }
               })()}
             </h3>
@@ -110,22 +101,14 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           >
             <dt className="text-sm font-medium text-gray-500 truncate">{t("models.link.plural")}</dt>
             <dd className="mt-1 text-xl font-semibold text-gray-900">
-              {(() => {
-                if (loading) {
-                  return <span>...</span>;
-                } else {
-                  return (
-                    <span>
-                      {links ? <span>{links}</span> : <span>0</span>} /{" "}
-                      {appData.mySubscription?.subscriptionProduct ? (
-                        <span>{appData.mySubscription?.subscriptionProduct.maxLinks}</span>
-                      ) : (
-                        <span className="text-gray-500">0</span>
-                      )}
-                    </span>
-                  );
-                }
-              })()}
+              <span>
+                {links ? <span>{links}</span> : <span>0</span>} /{" "}
+                {appData.mySubscription?.subscriptionProduct ? (
+                  <span>{appData.mySubscription?.subscriptionProduct.maxLinks}</span>
+                ) : (
+                  <span className="text-gray-500">0</span>
+                )}
+              </span>
             </dd>
           </div>
 
@@ -141,22 +124,14 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           >
             <dt className="text-sm font-medium text-gray-500 truncate">{t("models.contract.plural")}</dt>
             <dd className="mt-1 text-xl font-semibold text-gray-900">
-              {(() => {
-                if (loading) {
-                  return <span>...</span>;
-                } else {
-                  return (
-                    <span>
-                      {data && data.contracts ? <span>{data.contracts}</span> : <span>0</span>} /{" "}
-                      {appData.mySubscription?.subscriptionProduct ? (
-                        <span>{appData.mySubscription?.subscriptionProduct.monthlyContracts}</span>
-                      ) : (
-                        <span className="text-gray-500">0</span>
-                      )}
-                    </span>
-                  );
-                }
-              })()}
+              <span>
+                {data && data.contracts ? <span>{data.contracts}</span> : <span>0</span>} /{" "}
+                {appData.mySubscription?.subscriptionProduct ? (
+                  <span>{appData.mySubscription?.subscriptionProduct.monthlyContracts}</span>
+                ) : (
+                  <span className="text-gray-500">0</span>
+                )}
+              </span>
             </dd>
           </Link>
 
@@ -172,22 +147,14 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           >
             <dt className="text-sm font-medium text-gray-500 truncate">{t("models.workspace.plural")}</dt>
             <dd className="mt-1 text-xl font-semibold text-gray-900">
-              {(() => {
-                if (loading) {
-                  return <span>...</span>;
-                } else {
-                  return (
-                    <span>
-                      {data ? <span>{data.workspaces}</span> : <span>0</span>} /{" "}
-                      {appData.mySubscription?.subscriptionProduct ? (
-                        <span>{appData.mySubscription?.subscriptionProduct.maxWorkspaces}</span>
-                      ) : (
-                        <span className="text-gray-500">0</span>
-                      )}
-                    </span>
-                  );
-                }
-              })()}
+              <span>
+                {data ? <span>{data.workspaces}</span> : <span>0</span>} /{" "}
+                {appData.mySubscription?.subscriptionProduct ? (
+                  <span>{appData.mySubscription?.subscriptionProduct.maxWorkspaces}</span>
+                ) : (
+                  <span className="text-gray-500">0</span>
+                )}
+              </span>
             </dd>
           </Link>
           <Link
@@ -202,22 +169,14 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           >
             <dt className="text-sm font-medium text-gray-500 truncate">{t("models.user.plural")}</dt>
             <dd className="mt-1 text-xl font-semibold text-gray-900">
-              {(() => {
-                if (loading) {
-                  return <span>...</span>;
-                } else {
-                  return (
-                    <span>
-                      {data ? <span>{data.users}</span> : <span>0</span>} /{" "}
-                      {appData.mySubscription?.subscriptionProduct ? (
-                        <span>{appData.mySubscription?.subscriptionProduct.maxUsers}</span>
-                      ) : (
-                        <span className="text-gray-500">0</span>
-                      )}
-                    </span>
-                  );
-                }
-              })()}
+              <span>
+                {data ? <span>{data.users}</span> : <span>0</span>} /{" "}
+                {appData.mySubscription?.subscriptionProduct ? (
+                  <span>{appData.mySubscription?.subscriptionProduct.maxUsers}</span>
+                ) : (
+                  <span className="text-gray-500">0</span>
+                )}
+              </span>
             </dd>
           </Link>
         </dl>

@@ -1,15 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { forwardRef, Fragment, Ref, useImperativeHandle, useRef, useState } from "react";
-import { AddContractMemberDto } from "~/application/contracts/app/contracts/AddContractMemberDto";
-import { ContractMemberRole } from "~/application/enums/app/contracts/ContractMemberRole";
+import { AddContractMemberDto } from "~/application/dtos/contracts/AddContractMemberDto";
+import { ContractMemberRole } from "~/application/enums/contracts/ContractMemberRole";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
 import IconSign from "~/assets/icons/IconSign";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Link, User, Workspace, WorkspaceUser } from "@prisma/client";
-import { LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
+import { LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
 
 export interface RefSelectContractMembers {
   show: (link: LinkWithWorkspacesAndMembers, selected: string[]) => void;

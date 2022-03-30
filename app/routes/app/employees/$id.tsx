@@ -28,7 +28,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   if (!params.id) {
     return badRequest({ error: t("shared.notFound") });

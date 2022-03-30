@@ -1,17 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { UserType } from "~/application/enums/users/UserType";
 import MembersListAndTable from "~/components/core/settings/members/MembersListAndTable";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useState } from "react";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { getTenantMember, getTenantUsers } from "~/utils/db/tenants.db.server";
+import { getTenantMember, getTenantUsers } from "~/utils/db/core/tenants.db.server";
 import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData, useNavigate } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { TenantUser } from "@prisma/client";
-import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/tenantUserInvitations.db.server";
+import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/core/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
 
 export const meta: MetaFunction = () => ({

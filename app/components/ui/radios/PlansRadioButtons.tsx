@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import Loading from "../loaders/Loading";
 import { SubscriptionPriceDto } from "~/application/dtos/core/subscriptions/SubscriptionPriceDto";
 import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import { useEffect, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";

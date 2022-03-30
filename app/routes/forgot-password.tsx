@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import crypto from "crypto";
-import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/users.db.server";
+import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/core/users.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { sendEmail } from "~/utils/email.server";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -27,7 +27,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const form = await request.formData();
   const email = form.get("email")?.toString();

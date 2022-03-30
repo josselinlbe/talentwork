@@ -1,9 +1,9 @@
 import { json } from "remix";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { WorkspaceType } from "~/application/enums/core/tenants/WorkspaceType";
-import { createTenant, createTenantUser } from "../db/tenants.db.server";
-import { getUser, updateUserDefaultWorkspaceId, updateUserPassword } from "../db/users.db.server";
-import { createWorkspace, createWorkspaceUser, getMyWorkspaces } from "../db/workspaces.db.server";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
+import { createTenant, createTenantUser } from "../db/core/tenants.db.server";
+import { updateUserDefaultWorkspaceId, getUser } from "../db/core/users.db.server";
+import { getMyWorkspaces, createWorkspace, createWorkspaceUser } from "../db/core/workspaces.db.server";
 import { getUserInfo, createUserSession, setLoggedUser } from "../session.server";
 import { createStripeCustomer } from "../stripe.server";
 

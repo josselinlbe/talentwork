@@ -1,6 +1,6 @@
 import { SideBarItem } from "./SidebarItem";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { UserType } from "~/application/enums/users/UserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 
 export const AppSidebar: SideBarItem[] = [

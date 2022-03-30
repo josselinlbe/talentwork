@@ -2,7 +2,7 @@ var postmark = require("postmark");
 // import postmark from "postmark";
 
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
-import { EmailTemplateDto } from "~/application/dtos/core/email/EmailTemplateDto";
+import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
 
 // Send an email:
 var client = new postmark.ServerClient(process.env.REMIX_POSTMARK_SERVER_TOKEN?.toString() ?? "");

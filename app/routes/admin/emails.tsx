@@ -1,4 +1,4 @@
-import { EmailTemplateDto } from "~/application/dtos/core/email/EmailTemplateDto";
+import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -47,7 +47,7 @@ type ActionData = {
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const form = await request.formData();
   const type = form.get("type")?.toString();

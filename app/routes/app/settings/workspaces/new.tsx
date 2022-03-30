@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
-import { WorkspaceType } from "~/application/enums/core/tenants/WorkspaceType";
+import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -12,10 +12,10 @@ import SelectUsers, { RefSelectUsers } from "~/components/core/users/SelectUsers
 import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
 import { LoaderFunction, json, useLoaderData, ActionFunction, redirect, useActionData, Form, MetaFunction } from "remix";
 import { getUserInfo } from "~/utils/session.server";
-import { getTenantUsers } from "~/utils/db/tenants.db.server";
+import { getTenantUsers } from "~/utils/db/core/tenants.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { useAppData } from "~/utils/data/useAppData";
-import { createWorkspace, createWorkspaceUser, getWorkspacesCount } from "~/utils/db/workspaces.db.server";
+import { createWorkspace, createWorkspaceUser, getWorkspacesCount } from "~/utils/db/core/workspaces.db.server";
 
 export const meta: MetaFunction = () => ({
   title: "New workspace | Remix SaasFrontend",
@@ -52,7 +52,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
   const userInfo = await getUserInfo(request);
   if (!userInfo?.currentTenantId) {
     return unauthorized({

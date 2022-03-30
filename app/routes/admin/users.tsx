@@ -3,18 +3,18 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import { useEffect, useRef, useState } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import Loading from "~/components/ui/loaders/Loading";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
-import { adminGetAllUsers, deleteUser, getUser, updateUserPassword } from "~/utils/db/users.db.server";
+import { adminGetAllUsers, deleteUser, getUser, updateUserPassword } from "~/utils/db/core/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { i18n } from "~/locale/i18n.server";
 import { Tenant, TenantUser, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { UserType } from "~/application/enums/users/UserType";
 
 export const meta: MetaFunction = () => ({
   title: "Users | Remix SaasFrontend",
@@ -45,7 +45,7 @@ const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const form = await request.formData();
   const type: ActionType = form.get("type")?.toString() as ActionType;

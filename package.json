@@ -40,8 +40,7 @@
     "react-i18next": "^11.16.1",
     "remix": "^1.2.3",
     "remix-i18next": "^3.0.0",
-    "stripe": "^8.211.0",
-    "tiny-emitter": "^2.1.0"
+    "stripe": "^8.211.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.2.3",

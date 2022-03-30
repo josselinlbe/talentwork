@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -10,9 +10,9 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import SelectWorkspaces, { RefSelectWorkspaces } from "~/components/core/workspaces/SelectWorkspaces";
 import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
-import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/tenants.db.server";
+import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/core/tenants.db.server";
 import { i18n } from "~/locale/i18n.server";
-import { getUserWorkspaces, getWorkspace, getWorkspaces, updateUsersWorkspaces } from "~/utils/db/workspaces.db.server";
+import { getUserWorkspaces, getWorkspace, getWorkspaces, updateUsersWorkspaces } from "~/utils/db/core/workspaces.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import clsx from "clsx";
 import { useAppData } from "~/utils/data/useAppData";
@@ -58,7 +58,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const { id } = params;
   if (!id) {

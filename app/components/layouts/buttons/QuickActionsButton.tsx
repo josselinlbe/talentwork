@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useNavigate } from "remix";
 import { useAppData } from "~/utils/data/useAppData";

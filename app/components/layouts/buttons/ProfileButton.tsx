@@ -6,7 +6,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { useSubmit } from "remix";
-import UserUtils from "~/utils/store/UserUtils";
+import UserUtils from "~/utils/app/UserUtils";
 
 export default function ProfileButton() {
   const data = useAppData();

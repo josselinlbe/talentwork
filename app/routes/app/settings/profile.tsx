@@ -5,7 +5,7 @@ import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessMod
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { UserUpdateAvatarRequest } from "~/application/contracts/core/users/UserUpdateAvatarRequest";
 import { UserUpdateRequest } from "~/application/contracts/core/users/UserUpdateRequest";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { UserType } from "~/application/enums/users/UserType";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, MetaFunction, redirect, ScrollRestoration, useActionData, useSubmit, useTransition } from "remix";
 import Loading from "~/components/ui/loaders/Loading";
-import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
+import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/core/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { db } from "~/utils/db.server";

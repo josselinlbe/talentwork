@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
@@ -12,13 +12,13 @@ import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { useMembersData } from "~/utils/data/useMembersData";
 import { Workspace } from "@prisma/client";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useTransition } from "remix";
-import { getWorkspaces } from "~/utils/db/workspaces.db.server";
+import { getWorkspaces } from "~/utils/db/core/workspaces.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { i18n } from "~/locale/i18n.server";
-import { createTenantUser, getTenant, getTenantMember } from "~/utils/db/tenants.db.server";
-import { getUserByEmail } from "~/utils/db/users.db.server";
+import { createTenantUser, getTenant, getTenantMember } from "~/utils/db/core/tenants.db.server";
+import { getUserByEmail } from "~/utils/db/core/users.db.server";
 import clsx from "clsx";
-import { createUserInvitation } from "~/utils/db/tenantUserInvitations.db.server";
+import { createUserInvitation } from "~/utils/db/core/tenantUserInvitations.db.server";
 import { sendEmail } from "~/utils/email.server";
 
 export const meta: MetaFunction = () => ({
@@ -52,7 +52,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const appData = await loadAppData(request);
 

@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { WorkspaceDto } from "~/application/dtos/core/workspaces/WorkspaceDto";
 import { useNavigate } from "react-router-dom";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
-import { getMyWorkspaces, getWorkspace } from "~/utils/db/workspaces.db.server";
+import { getMyWorkspaces, getWorkspace } from "~/utils/db/core/workspaces.db.server";
 import { useLoaderData, useLocation, useSubmit } from "remix";
 import { Workspace, WorkspaceUser } from "@prisma/client";
 

@@ -1,4 +1,4 @@
-import { EmailTemplateDto } from "../dtos/core/email/EmailTemplateDto";
+import { EmailTemplateDto } from "../dtos/email/EmailTemplateDto";
 import fs from "fs";
 import path from "path";
 

@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { TenantUserStatus } from "~/application/enums/core/tenants/TenantUserStatus";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
-import { getTenantUsers } from "~/utils/db/tenants.db.server";
+import { getTenantUsers } from "~/utils/db/core/tenants.db.server";
 import { TenantUser } from "@prisma/client";
 
 interface Props {

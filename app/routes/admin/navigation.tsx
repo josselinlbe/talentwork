@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import SidebarIcon from "~/components/layouts/icons/SidebarIcon";

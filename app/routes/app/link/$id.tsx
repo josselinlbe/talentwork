@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import LinkProfile from "~/components/app/links/all/LinkProfile";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData } from "remix";
-import { deleteLink, getLink, LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
+import { deleteLink, getLink, LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
@@ -29,7 +29,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   if (!params.id) {
     return badRequest({ error: t("shared.notFound") });

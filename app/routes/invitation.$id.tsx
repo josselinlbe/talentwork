@@ -1,19 +1,19 @@
 import Logo from "~/components/front/Logo";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import UserUtils from "~/utils/store/UserUtils";
+import UserUtils from "~/utils/app/UserUtils";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Tenant, TenantUserInvitation, User } from "@prisma/client";
 import { LoaderFunction, json, ActionFunction, useLoaderData, Form, useActionData, MetaFunction } from "remix";
 import { i18n } from "~/locale/i18n.server";
-import { getUserByEmail, register } from "~/utils/db/users.db.server";
+import { getUserByEmail, register } from "~/utils/db/core/users.db.server";
 import { sendEmail } from "~/utils/email.server";
-import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/tenantUserInvitations.db.server";
+import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/core/tenantUserInvitations.db.server";
 import { Language } from "remix-i18next";
-import { createTenantUser } from "~/utils/db/tenants.db.server";
-import { createWorkspaceUser } from "~/utils/db/workspaces.db.server";
+import { createTenantUser } from "~/utils/db/core/tenants.db.server";
+import { createWorkspaceUser } from "~/utils/db/core/workspaces.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 
 export const meta: MetaFunction = () => ({
@@ -43,7 +43,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const form = await request.formData();
   const password = form.get("password")?.toString() ?? "";

@@ -1,9 +1,9 @@
 import { redirect } from "remix";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { UserType } from "~/application/enums/users/UserType";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
-import { getTenantMember } from "./db/tenants.db.server";
+import { getTenantMember } from "./db/core/tenants.db.server";
 import { getUserInfo, getUserType } from "./session.server";
 
 export async function requireAdminUser(request: Request) {

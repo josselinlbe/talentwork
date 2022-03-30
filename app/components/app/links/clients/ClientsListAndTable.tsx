@@ -5,7 +5,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
-import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
+import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
 
 interface Props {
   items: LinkWithWorkspacesAndContracts[];

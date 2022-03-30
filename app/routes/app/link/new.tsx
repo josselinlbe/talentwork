@@ -1,16 +1,16 @@
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData, useLocation } from "remix";
-import { createLink, getLinksCount } from "~/utils/db/links.db.server";
+import { createLink, getLinksCount } from "~/utils/db/core/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { getUserInfo } from "~/utils/session.server";
 import NewLink from "~/components/app/links/pending/NewLink";
-import { getUserByEmail } from "~/utils/db/users.db.server";
-import { getUserWorkspacesByUserId } from "~/utils/db/workspaces.db.server";
-import { LinkStatus } from "~/application/enums/core/links/LinkStatus";
+import { getUserByEmail } from "~/utils/db/core/users.db.server";
+import { getUserWorkspacesByUserId } from "~/utils/db/core/workspaces.db.server";
+import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { Link } from "@prisma/client";
-import { getTenantMember } from "~/utils/db/tenants.db.server";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
+import { getTenantMember } from "~/utils/db/core/tenants.db.server";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { sendEmail } from "~/utils/email.server";
 import { loadAppData } from "~/utils/data/useAppData";
 
@@ -37,7 +37,7 @@ export type NewLinkActionData = {
 };
 const badRequest = (data: NewLinkActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const userInfo = await getUserInfo(request);
   const appData = await loadAppData(request);

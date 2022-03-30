@@ -3,13 +3,13 @@ import Logo from "~/components/front/Logo";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import classNames from "~/utils/shared/ClassesUtils";
-import UserUtils from "~/utils/store/UserUtils";
+import UserUtils from "~/utils/app/UserUtils";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoaderFunction, json, ActionFunction, Form, useActionData, MetaFunction } from "remix";
 import { i18n } from "~/locale/i18n.server";
-import { getUserByEmail, updateUserPassword } from "~/utils/db/users.db.server";
+import { getUserByEmail, updateUserPassword } from "~/utils/db/core/users.db.server";
 import bcrypt from "bcryptjs";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 
@@ -34,7 +34,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const success = (data: ActionData) => json(data, { status: 200 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const form = await request.formData();
   const email = form.get("email")?.toString() ?? "";

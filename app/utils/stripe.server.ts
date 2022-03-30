@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 const stripe = new Stripe(process.env.REMIX_STRIPE_SK?.toString() ?? "", {
   apiVersion: "2020-08-27",
 });

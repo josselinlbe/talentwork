@@ -6,9 +6,9 @@ import Loading from "~/components/ui/loaders/Loading";
 import { useRef, useState } from "react";
 import { json, LoaderFunction, MetaFunction, redirect, useLoaderData } from "remix";
 import { getUserInfo } from "~/utils/session.server";
-import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole";
-import { getTenantMember } from "~/utils/db/tenants.db.server";
-import { getWorkspaces } from "~/utils/db/workspaces.db.server";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { getTenantMember } from "~/utils/db/core/tenants.db.server";
+import { getWorkspaces } from "~/utils/db/core/workspaces.db.server";
 
 export const meta: MetaFunction = () => ({
   title: "Workspaces | Remix SaasFrontend",

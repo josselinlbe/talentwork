@@ -1,11 +1,9 @@
 import { createCookieSessionStorage, redirect } from "remix";
 import { URLSearchParams } from "url";
-import { UserType } from "~/application/enums/core/users/UserType";
-
+import { UserType } from "~/application/enums/users/UserType";
 import { db } from "./db.server";
-import { getMyTenants } from "./db/tenants.db.server";
-import { deleteUser } from "./db/users.db.server";
-import { getMyWorkspaces, getWorkspace } from "./db/workspaces.db.server";
+import { getMyTenants } from "./db/core/tenants.db.server";
+import { getWorkspace, getMyWorkspaces } from "./db/core/workspaces.db.server";
 
 export async function setLoggedUser(user: { id: string; email: string; defaultWorkspaceId: string | null }) {
   const userTenants = await getMyTenants(user.id);

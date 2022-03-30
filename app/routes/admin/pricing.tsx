@@ -9,7 +9,7 @@ import {
   createSubscriptionPrice,
   createSubscriptionProduct,
   getAllSubscriptionProducts,
-} from "~/utils/db/subscriptionProducts.db.server";
+} from "~/utils/db/core/subscriptionProducts.db.server";
 import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
 import { createStripePrice, createStripeProduct } from "~/utils/stripe.server";
 import { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -51,7 +51,7 @@ type ActionData = {
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "common");
+  let t = await i18n.getFixedT(request, "translations");
 
   const items = await getAllSubscriptionProducts();
   if (items.length > 0) {

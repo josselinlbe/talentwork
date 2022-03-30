@@ -1,5 +1,5 @@
 import { SideBarItem } from "./SidebarItem";
-import { UserType } from "~/application/enums/core/users/UserType";
+import { UserType } from "~/application/enums/users/UserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 
 export const AdminSidebar: SideBarItem[] = [

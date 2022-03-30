@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
 import DateUtils from "~/utils/shared/DateUtils";
-import { ContractActivityType } from "~/application/enums/app/contracts/ContractActivityType";
+import { ContractActivityType } from "~/application/enums/contracts/ContractActivityType";
 import { ContractActivity, User } from "@prisma/client";
 
 interface Props {

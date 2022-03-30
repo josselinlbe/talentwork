@@ -4,13 +4,13 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef, useState } from "react";
 import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
-import { SubscriptionBillingPeriod } from "~/application/enums/core/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { TenantCreateRequest } from "~/application/contracts/core/tenants/TenantCreateRequest";
 import { SubscriptionPriceDto } from "~/application/dtos/core/subscriptions/SubscriptionPriceDto";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
-import UserUtils from "~/utils/store/UserUtils";
+import UserUtils from "~/utils/app/UserUtils";
 import { useNavigate } from "react-router-dom";
 import { useActionData, useSubmit } from "remix";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
