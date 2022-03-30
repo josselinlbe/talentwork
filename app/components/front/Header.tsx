@@ -2,7 +2,6 @@ import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "~/components/front/Logo";
-import IconLight from "~/assets/img/icon-light.png";
 import IconDark from "~/assets/img/icon-dark.png";
 import DarkModeToggle from "~/components/ui/toggles/DarkModeToggle";
 import { useTranslation } from "react-i18next";

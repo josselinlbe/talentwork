@@ -12,6 +12,7 @@ import { TenantUserRole } from "~/application/enums/core/tenants/TenantUserRole"
 import { createWorkspace, createWorkspaceUser } from "~/utils/db/workspaces.db.server";
 import { WorkspaceType } from "~/application/enums/core/tenants/WorkspaceType";
 import { sendEmail } from "~/utils/email.server";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
 
 export const meta: MetaFunction = () => {
   return {
@@ -151,6 +152,7 @@ export default function RegisterRoute() {
               </span>
             </p>
           </div>
+          <WarningBanner title="Sandbox" text="Create an account to test the Remix SaaS kit /app pages (no credit card required)." />
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
             {/* Workspace */}
