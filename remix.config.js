@@ -1,7 +1,6 @@
 /**
  * @type {import('@remix-run/dev').AppConfig}
  */
-const path = require("path");
 module.exports = {
   serverBuildTarget: "vercel",
   // When running locally in development mode, we use the built in remix
@@ -14,9 +13,4 @@ module.exports = {
   // serverBuildPath: "api/index.js",
   // publicPath: "/build/",
   // devServerPort: 8002
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en", "fr"],
-    localePath: path.resolve("./public/locales"),
-  },
 };
