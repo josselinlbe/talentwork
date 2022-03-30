@@ -26,6 +26,7 @@ export const meta: MetaFunction = () => {
   const description = `Remix SaaS kit with everything you need to start your SaaS app.`;
   return {
     charset: "utf-8",
+    title: "Remix SaasFrontend",
     description,
     keywords: "Remix,saas,tailwindcss,typescript,starter",
     "og:image": "https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png",
@@ -50,10 +51,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
       <head>
         <meta charSet="utf-8" />
         <Meta />
-        <title>Remix SaasFrontend</title>
-        <meta name="title" content="Remix SaasFrontend" />
-        <meta name="description" content="Remix SaaS kit with everything you need to start your SaaS app." />
-
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
