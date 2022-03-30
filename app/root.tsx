@@ -43,15 +43,15 @@ export const meta: MetaFunction = () => {
   };
 };
 
-function Document({ children, title = `Remix SaasFrontend` }: { children: React.ReactNode; title?: string }) {
+function Document({ children }: { children: React.ReactNode; title?: string }) {
   const data = useRootData();
   return (
     <html lang={data?.locale} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
         <meta charSet="utf-8" />
         <Meta />
-        <title>{title}</title>
-        <meta name="title" content={title} />
+        <title>Remix SaasFrontend</title>
+        <meta name="title" content="Remix SaasFrontend" />
         <meta name="description" content="Remix SaaS kit with everything you need to start your SaaS app." />
 
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
