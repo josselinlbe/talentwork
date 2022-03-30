@@ -91,8 +91,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     return createUserSession(
       {
         ...userSession,
-        // locale: userInfo.locale,
         lightOrDarkMode: userInfo.lightOrDarkMode,
+        lng: userInfo.lng,
       },
       "/app/dashboard"
     );
@@ -116,8 +116,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     return createUserSession(
       {
         ...userSession,
-        // locale: userInfo.locale,
         lightOrDarkMode: userInfo.lightOrDarkMode,
+        lng: userInfo.lng,
       },
       "/app/dashboard"
     );

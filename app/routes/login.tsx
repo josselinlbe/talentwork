@@ -88,8 +88,8 @@ export const action: ActionFunction = async ({ request }) => {
   return createUserSession(
     {
       ...userSession,
-      // locale: userInfo.locale,
       lightOrDarkMode: userInfo.lightOrDarkMode,
+      lng: userInfo.lng,
     },
     redirectTo
   );

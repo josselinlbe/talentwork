@@ -23,10 +23,11 @@ export let links: LinksFunction = () => {
 };
 
 export const meta: MetaFunction = () => {
+  const title = `Remix SaasFrontend`;
   const description = `Remix SaaS kit with everything you need to start your SaaS app.`;
   return {
     charset: "utf-8",
-    title: "Remix SaasFrontend",
+    title,
     description,
     keywords: "Remix,saas,tailwindcss,typescript,starter",
     "og:image": "https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png",
@@ -47,7 +48,7 @@ export const meta: MetaFunction = () => {
 function Document({ children }: { children: React.ReactNode; title?: string }) {
   const data = useRootData();
   return (
-    <html lang={data?.locale} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
+    <html lang={data?.lng} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
         <meta charSet="utf-8" />
         <Meta />
@@ -90,19 +91,21 @@ export const action: ActionFunction = async ({ request }) => {
         userId: userInfo?.userId ?? "",
         currentTenantId: userInfo?.currentTenantId ?? "",
         currentWorkspaceId: userInfo?.currentWorkspaceId ?? "",
-        // locale: userInfo?.currentWorkspaceId ?? "en",
+        lng: userInfo?.lng ?? "en",
         lightOrDarkMode,
       },
       redirect
     );
   }
   if (type === "setLocale") {
+    const lng = form.get("lng")?.toString() ?? "";
     return createUserSession(
       {
         userId: userInfo?.userId,
         currentTenantId: userInfo?.currentTenantId,
         currentWorkspaceId: userInfo?.currentWorkspaceId,
         lightOrDarkMode: userInfo?.lightOrDarkMode,
+        lng,
       },
       redirect
     );
@@ -110,8 +113,8 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function App() {
-  let { locale } = useLoaderData<{ locale: string }>();
-  useSetupTranslations(locale);
+  let { lng } = useLoaderData<{ lng: string }>();
+  useSetupTranslations(lng);
   return (
     <Document>
       <Outlet />

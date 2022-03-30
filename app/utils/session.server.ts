@@ -1,4 +1,5 @@
 import { createCookieSessionStorage, redirect } from "remix";
+import { URLSearchParams } from "url";
 import { UserType } from "~/application/enums/core/users/UserType";
 
 import { db } from "./db.server";
@@ -69,11 +70,13 @@ export async function getUserInfo(request: Request) {
   const currentTenantId = session.get("currentTenantId");
   const currentWorkspaceId = session.get("currentWorkspaceId");
   const lightOrDarkMode = session.get("lightOrDarkMode");
+  const lng = session.get("lng");
   return {
     userId,
     currentTenantId,
     currentWorkspaceId,
     lightOrDarkMode,
+    lng,
   };
 }
 
@@ -152,6 +155,7 @@ export async function createUserSession(
     currentTenantId: string;
     currentWorkspaceId: string;
     lightOrDarkMode: string;
+    lng: string;
   },
   redirectTo: string = ""
 ) {
@@ -160,6 +164,7 @@ export async function createUserSession(
   session.set("currentTenantId", userSession.currentTenantId);
   session.set("currentWorkspaceId", userSession.currentWorkspaceId);
   session.set("lightOrDarkMode", userSession.lightOrDarkMode);
+  session.set("lng", userSession.lng);
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session),
