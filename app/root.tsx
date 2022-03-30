@@ -30,11 +30,13 @@ export const meta: MetaFunction = () => {
     title,
     description,
     keywords: "Remix,saas,tailwindcss,typescript,starter",
+    "og:title": "Remix SaaS kit",
+    "og:type": "website",
+    "og:url": "https://remix.saasfrontends.com",
     "og:image": "https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png",
     "og:card": "summary_large_image",
     "og:creator": "@AlexandroMtzG",
     "og:site": "https://saasfrontends.com",
-    "og:title": "Remix SaaS kit",
     "og:description": description,
     "twitter:image": "https://yahooder.sirv.com/saasfrontends/remix/remix-thumbnail.png",
     "twitter:card": "summary_large_image",
@@ -67,7 +69,7 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
 
         <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
         <noscript>
-          <img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" />
+          <img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="privacy-friendly-simpleanalytics" referrerPolicy="no-referrer-when-downgrade" />
         </noscript>
       </body>
     </html>

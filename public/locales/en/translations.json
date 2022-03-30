@@ -705,7 +705,7 @@
     "login": {
       "title": "Sign in to your account",
       "button": "Log in",
-      "orStartTrial": "start free",
+      "orStartTrial": "start free today!",
       "forgot": "Forgot your password?",
       "errors": {
         "passwordMissmatch": "Password don't match"

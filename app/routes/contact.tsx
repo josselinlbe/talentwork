@@ -61,7 +61,7 @@ export default function ContactRoute() {
                   <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
                 </svg>
                 <div className="text-center">
-                  <h2 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.contact.title")}</h2>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.contact.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500">{t("front.contact.headline")}</p>
                 </div>
                 <div className="mt-12">

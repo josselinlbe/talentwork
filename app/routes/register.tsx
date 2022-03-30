@@ -144,7 +144,7 @@ export default function RegisterRoute() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <Logo className="mx-auto h-12 w-auto" />
-            <h2 className="mt-6 text-center text-lg leading-9 font-bold text-gray-800 dark:text-slate-200">{t("account.register.title")}</h2>
+            <h1 className="mt-6 text-center text-lg leading-9 font-bold text-gray-800 dark:text-slate-200">{t("account.register.title")}</h1>
             <p className="mt-2 text-center text-sm leading-5 text-gray-800 dark:text-slate-200 max-w">
               {t("account.register.alreadyRegistered")}{" "}
               <span className="font-medium text-theme-500 hover:text-theme-400 focus:outline-none focus:underline transition ease-in-out duration-150">

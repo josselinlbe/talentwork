@@ -107,7 +107,7 @@ export default function LoginRoute() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <Logo className="mx-auto h-12 w-auto" />
-            <h2 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.login.title")}</h2>
+            <h1 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.login.title")}</h1>
             <p className="mt-2 text-center text-sm text-gray-500">
               <span>{t("shared.or")} </span>
               <Link to="/register" className="font-medium text-theme-500 hover:text-theme-400">

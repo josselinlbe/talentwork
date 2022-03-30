@@ -89,7 +89,7 @@ export default function ForgotPasswordRoute() {
             if (!emailSent) {
               return (
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                  <h2 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.forgot.title")}</h2>
+                  <h1 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.forgot.title")}</h1>
                   <p className="mt-5 text-sm leading-5 text-center text-gray-500">{t("account.reset.headline")}</p>
                   <div className="mt-8 sm:rounded-sm sm:px-10">
                     <Form method="post">
@@ -147,9 +147,9 @@ export default function ForgotPasswordRoute() {
               return (
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                   <div className="max-w-md w-full mx-auto rounded-sm px-8 pt-6 pb-8 mb-4 mt-8">
-                    <h2 className="text-xl font-black">
-                      <h2 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.reset.resetSuccess")}</h2>
-                    </h2>
+                    <div className="text-xl font-black">
+                      <h1 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.reset.resetSuccess")}</h1>
+                    </div>
                     <div className="my-4 leading-tight">
                       <p className="mt-2 text-center text-sm leading-5 text-gray-900 dark:text-slate-300 max-w">{t("account.reset.emailSent")}</p>
                     </div>

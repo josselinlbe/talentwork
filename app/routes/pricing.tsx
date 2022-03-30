@@ -36,7 +36,7 @@ export default function PricingRoute() {
         <div className="bg-white dark:bg-gray-900 pt-6 min-h-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h2 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.pricing.title")}</h2>
+              <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.pricing.title")}</h1>
               <p className="mt-4 text-lg leading-6 text-gray-500">{t("front.pricing.headline")}</p>
             </div>
             <Plans items={data.items} />
