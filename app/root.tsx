@@ -51,6 +51,9 @@ function Document({ children, title = `Remix SaasFrontend` }: { children: React.
         <meta charSet="utf-8" />
         <Meta />
         <title>{title}</title>
+        <meta name="title" content={title} />
+        <meta name="description" content="Remix SaaS kit with everything you need to start your SaaS app." />
+
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
