@@ -1,4 +1,4 @@
-import { ActionFunction, Form, json, Link, LoaderFunction, MetaFunction, redirect, useCatch, useLoaderData, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useCatch, useLoaderData, useParams } from "remix";
 import type { Joke } from "@prisma/client";
 
 import { db } from "~/utils/db.server";

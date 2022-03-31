@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import { ReactNode, useEffect, useState } from "react";
@@ -6,11 +6,8 @@ import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { UserType } from "~/application/enums/users/UserType";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import UserUtils from "~/utils/app/UserUtils";
 import { SidebarGroup } from "~/application/sidebar/SidebarGroup";
 import clsx from "~/utils/shared/ClassesUtils";
-import LayoutSelector from "../ui/selectors/LayoutSelector";
-import LocaleSelector from "../ui/selectors/LocaleSelector";
 import QuickActionsButton from "./buttons/QuickActionsButton";
 import ProfileButton from "./buttons/ProfileButton";
 import SidebarMenu from "./SidebarMenu";
@@ -28,7 +25,6 @@ export default function StackedLayout({ layout, children }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
   const currentRoute = useLocation().pathname;
-  const navigate = useNavigate();
 
   const [menu, setMenu] = useState<SideBarItem[]>([]);
   const [menuOpened, setMenuOpened] = useState(false);

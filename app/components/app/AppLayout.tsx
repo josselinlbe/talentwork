@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useState } from "react";
 import SidebarLayout from "../layouts/SidebarLayout";
 import { useAppData } from "~/utils/data/useAppData";
 import TenantNew from "../core/settings/tenant/TenantNew";

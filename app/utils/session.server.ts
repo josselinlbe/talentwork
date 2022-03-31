@@ -1,7 +1,5 @@
 import { createCookieSessionStorage, redirect } from "remix";
 import { URLSearchParams } from "url";
-import { UserType } from "~/application/enums/users/UserType";
-import { db } from "./db.server";
 import { getMyTenants } from "./db/core/tenants.db.server";
 import { getWorkspace, getMyWorkspaces } from "./db/core/workspaces.db.server";
 
@@ -76,14 +74,6 @@ export async function getUserInfo(request: Request) {
     lightOrDarkMode,
     lng,
   };
-}
-
-export async function getUserType(request: Request): Promise<UserType> {
-  const userInfo = await getUserInfo(request);
-  const user = await db.user.findUnique({
-    where: { id: userInfo?.userId },
-  });
-  return user?.type ?? UserType.Tenant;
 }
 
 export async function requireUserId(request: Request, redirectTo: string = new URL(request.url).pathname) {

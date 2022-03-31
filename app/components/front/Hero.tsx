@@ -6,10 +6,6 @@ import RemixLight from "~/assets/img/remix-light.png";
 import RemixDark from "~/assets/img/remix-dark.png";
 import clsx from "~/utils/shared/ClassesUtils";
 
-interface Props {
-  t: (t: string) => string;
-}
-
 export default function Hero() {
   const { t } = useTranslation();
   return (
@@ -72,6 +68,7 @@ export default function Hero() {
             <a
               href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix"
               target="_blank"
+              rel="noreferrer"
               className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md bg-rose-500 text-theme-50 hover:bg-rose-600 md:py-4 md:text-lg md:px-10"
             >
               {t("front.hero.buy")}

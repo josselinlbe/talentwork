@@ -4,21 +4,22 @@ import { forwardRef, Fragment, Ref, useImperativeHandle, useRef, useState } from
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
+import IconWorkers from "~/modules/contracts/icons/IconWorkers";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { User } from "@prisma/client";
+import { Employee } from "@prisma/client";
 
-export interface RefSelectUsers {
+export interface RefSelectEmployees {
   show: (selected: string[]) => void;
 }
 
 interface Props {
-  items: User[];
-  allowSearch?: boolean;
+  items: Employee[];
+  maxSize?: string;
   onClosed?: () => void;
-  onSelected: (users: User[]) => void;
+  onSelected: (items: Employee[]) => void;
 }
 
-const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: Ref<RefSelectUsers>) => {
+const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectEmployees>) => {
   const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -29,7 +30,6 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
 
   useImperativeHandle(ref, () => ({ show }));
   function show(_selected: string[]) {
-    console.log({ _selected });
     setSelected(_selected);
     setShowing(true);
   }
@@ -39,43 +39,43 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
     }
     setShowing(false);
   }
-  function toggle(item: User) {
+  function toggle(item: Employee) {
     if (isSelected(item)) {
       setSelected(selected.filter((f) => f !== item.id));
     } else {
       setSelected((selected) => [...selected, item.id]);
     }
   }
-  function isSelected(item: User) {
+  function isSelected(item: Employee) {
     return selected.find((f) => f === item.id);
   }
   function accept() {
-    const selectedUsers: User[] = [];
-    items.forEach((user) => {
-      if (isSelected(user)) {
-        selectedUsers.push(user);
+    const selected: Employee[] = [];
+    items.forEach((element) => {
+      if (isSelected(element)) {
+        selected.push(element);
       }
     });
     if (onSelected) {
-      onSelected(selectedUsers);
+      onSelected(selected);
     }
     close();
   }
-  const filteredItems = (items: User[]): User[] => {
+
+  const filteredItems = (): Employee[] => {
     if (!items) {
       return [];
     }
     return items.filter(
       (f) =>
         f.id?.toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase())
+        f.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
     );
   };
 
   useEscapeKeypress(close);
-
   return (
     <div>
       {showing && (
@@ -108,8 +108,10 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <div
-                // v-show="showing"
-                className="sm:max-w-lg inline-block align-bottom bg-white rounded-sm px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all my-8 sm:align-middle w-full sm:p-6"
+                className={clsx(
+                  "inline-block align-bottom bg-white rounded-sm px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all my-8 sm:align-middle w-full sm:p-6",
+                  maxSize
+                )}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="modal-headline"
@@ -137,37 +139,40 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                   <div className="max-w-lg mx-auto">
                     <div>
                       <div className="text-center">
-                        <h2 className="mt-2 text-lg font-medium text-gray-900">{t("app.workspaces.actions.selectWorkspaceUsers")}</h2>
-                        <p className="mt-1 text-sm text-gray-500">{t("app.workspaces.actions.selectUsers")}</p>
+                        <IconWorkers className="mx-auto h-12 w-12" />
+                        <h2 className="mt-2 text-lg font-medium text-gray-900">{t("app.employees.actions.selectEmployees")}</h2>
+                        <p className="mt-1 text-sm text-gray-500">{t("app.employees.actions.select")}</p>
                       </div>
-                      {allowSearch && (
-                        <form action="#" className="mt-6 flex">
-                          <label htmlFor="search" className="sr-only">
-                            {t("shared.search")}
-                          </label>
-                          <input
-                            value={searchInput}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                            type="text"
-                            name="search"
-                            id="search"
-                            className="shadow-sm focus:ring-theme-500 focus:border-theme-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                            placeholder={t("shared.searchDot")}
-                          />
-                        </form>
-                      )}
+                      <form action="#" className="mt-6 flex">
+                        <label htmlFor="search" className="sr-only">
+                          {t("shared.search")}
+                        </label>
+                        <input
+                          value={searchInput}
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          type="text"
+                          name="search"
+                          id="search"
+                          className="shadow-sm focus:ring-theme-500 focus:border-theme-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                          placeholder={t("shared.searchDot")}
+                        />
+                      </form>
                     </div>
                     <div className="mt-5">
-                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t("models.user.plural")}</h3>
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t("models.employee.plural")}</h3>
+
                       {(() => {
                         if (items.length === 0) {
                           return (
                             <div>
                               <EmptyState
                                 className="bg-white"
+                                to="/app/employees/new"
                                 captions={{
-                                  thereAreNo: t("app.workspaces.errors.noUsers"),
+                                  new: t("shared.add"),
+                                  thereAreNo: t("app.employees.errors.notDefined"),
                                 }}
+                                icon="plus"
                               />
                             </div>
                           );
@@ -175,15 +180,15 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                           return (
                             <div>
                               <ul className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
-                                {filteredItems(items).map((item, idx) => {
+                                {filteredItems().map((item, idx) => {
                                   return (
                                     <li className="py-2 flex items-center justify-between space-x-3" key={idx}>
                                       <div className="min-w-0 flex-1 flex items-center space-x-3">
                                         <div className="min-w-0 flex-1">
-                                          <p className="text-sm font-medium text-gray-900 truncate">{item.email}</p>
-                                          <p className="text-sm font-medium text-gray-500 truncate">
+                                          <p className="text-sm font-medium text-gray-900 truncate">
                                             {item.firstName} {item.lastName}
                                           </p>
+                                          <p className="text-sm font-medium text-gray-500 truncate">{item.email && <span>{item.email}</span>}</p>
                                         </div>
                                       </div>
                                       <div className="flex-shrink-0">
@@ -231,14 +236,13 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                                               );
                                             }
                                           })()}
-
                                           {(() => {
                                             if (!isSelected(item)) {
                                               return (
                                                 <span className="text-sm font-medium text-gray-900">
                                                   {t("shared.add")}
                                                   <span className="sr-only">
-                                                    {item.firstName} - {item.lastName}
+                                                    {item.firstName} {item.lastName}
                                                   </span>
                                                 </span>
                                               );
@@ -247,7 +251,7 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                                                 <span className="text-sm font-medium text-gray-900">
                                                   {t("shared.remove")}
                                                   <span className="sr-only">
-                                                    {item.firstName} - {item.lastName}
+                                                    {item.firstName} {item.lastName}
                                                   </span>
                                                 </span>
                                               );
@@ -274,7 +278,7 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                                     disabled={selected.length === 0}
                                     className={clsx(
                                       "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                                      selected.length === 0 && "opacity-50 cursor-not-allowed"
+                                      selected.length === 0 && " opacity-50 cursor-not-allowed"
                                     )}
                                   >
                                     {t("shared.accept")}
@@ -298,4 +302,4 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
   );
 };
 
-export default forwardRef(SelectUsers);
+export default forwardRef(SelectEmployees);

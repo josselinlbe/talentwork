@@ -8,8 +8,8 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useRef, useState, useEffect, FormEvent } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import { useSubmit } from "remix";
-import { EmployeeWithCreatedByUser } from "~/utils/db/app/employees.db.server";
+import { useSubmit, useTransition } from "remix";
+import { EmployeeWithCreatedByUser } from "~/modules/contracts/db/employees.db.server";
 
 interface Props {
   item: EmployeeWithCreatedByUser;
@@ -19,6 +19,8 @@ export default function EmployeeProfile({ item }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
+  const transition = useTransition();
+  const loading = transition.state === "loading" || transition.state === "submitting";
 
   const firstNameInput = useRef<HTMLInputElement>(null);
   const confirmSave = useRef<RefConfirmModal>(null);
@@ -27,7 +29,6 @@ export default function EmployeeProfile({ item }: Props) {
   const successModal = useRef<RefSuccessModal>(null);
   const successModalDeleted = useRef<RefSuccessModal>(null);
 
-  const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

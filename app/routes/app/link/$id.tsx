@@ -1,9 +1,8 @@
-import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import LinkProfile from "~/components/app/links/all/LinkProfile";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData } from "remix";
-import { deleteLink, getLink, LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
+import { deleteLink, getLink, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
@@ -60,6 +59,7 @@ export default function EditLinkRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData?.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

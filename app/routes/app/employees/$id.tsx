@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData } from "remix";
-import { deleteEmployee, EmployeeWithCreatedByUser, getEmployee, updateEmployee } from "~/utils/db/app/employees.db.server";
+import { deleteEmployee, EmployeeWithCreatedByUser, getEmployee, updateEmployee } from "~/modules/contracts/db/employees.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import EmployeeProfile from "~/components/app/employees/EmployeeProfile";
 import { i18n } from "~/locale/i18n.server";
 import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
+import EmployeeProfile from "~/modules/contracts/components/employees/EmployeeProfile";
 
 export const meta: MetaFunction = () => ({
   title: "Employee | Remix SaasFrontend",
@@ -78,6 +78,7 @@ export default function EmployeeRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData?.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
@@ -151,6 +151,7 @@ export default function EditWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
     if (actionData?.success) {
       successModal.current?.show(t("shared.success"), actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   useEffect(() => {

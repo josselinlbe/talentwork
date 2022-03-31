@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
-import { useLoaderData, useTransition } from "remix";
+import { useLoaderData } from "remix";
 import { DashboardLoaderData } from "~/utils/data/useDashboardData";
 import clsx from "clsx";
 
@@ -15,7 +15,6 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
   const { t } = useTranslation();
   const data = useLoaderData<DashboardLoaderData>();
   const appData = useAppData();
-  const transition = useTransition();
 
   function billableStatus(max: number): number {
     if (!appData.mySubscription) {

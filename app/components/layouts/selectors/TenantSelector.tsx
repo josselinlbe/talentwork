@@ -3,10 +3,9 @@ import { Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
-import { useNavigate } from "react-router-dom";
-import { Tenant, TenantUser } from "@prisma/client";
-import { getMyTenants, getTenant, getTenantUser } from "~/utils/db/core/tenants.db.server";
-import { ActionFunction, Form, useLoaderData, useLocation, useSubmit } from "remix";
+import { Tenant } from "@prisma/client";
+import { getMyTenants } from "~/utils/db/core/tenants.db.server";
+import { useLoaderData, useLocation, useSubmit } from "remix";
 
 interface Props {
   className?: string;
@@ -21,7 +20,6 @@ type LoaderData = {
 export default function TenantSelector({ className, onAdd }: Props) {
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const submit = useSubmit();
   const location = useLocation();
 
@@ -174,7 +172,7 @@ export default function TenantSelector({ className, onAdd }: Props) {
           >
             {data.myTenants.map((tenantUser, index) => {
               return (
-                <li key={index} role="option">
+                <li key={index}>
                   <button
                     type="button"
                     onClick={() => changeTenant(tenantUser)}
@@ -201,7 +199,6 @@ export default function TenantSelector({ className, onAdd }: Props) {
             })}
             <button
               onClick={addTenant}
-              role="option"
               className="w-full text-left font-bold text-slate-800 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100 focus:outline-none"
             >
               {t("settings.tenant.create")}

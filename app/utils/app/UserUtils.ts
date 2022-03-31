@@ -28,6 +28,7 @@ const profileName = (user: any): string => {
 
 const validateEmail = (email: unknown) => {
   const regexp = new RegExp(
+    // eslint-disable no-useless-escape
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   );
   if (typeof email !== "string" || email.length < 5 || !regexp.test(email)) {

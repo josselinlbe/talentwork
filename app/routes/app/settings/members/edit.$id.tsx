@@ -1,14 +1,14 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import SelectWorkspaces, { RefSelectWorkspaces } from "~/components/core/workspaces/SelectWorkspaces";
-import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
+import { TenantUser, User, Workspace } from "@prisma/client";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
 import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/core/tenants.db.server";
 import { i18n } from "~/locale/i18n.server";
@@ -70,8 +70,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const type = form.get("type")?.toString();
   const email = form.get("email")?.toString().toLowerCase().trim();
-  const firstName = form.get("firstName")?.toString() ?? "";
-  const lastName = Number(form.get("lastName")) ?? "";
+  // const firstName = form.get("firstName")?.toString() ?? "";
+  // const lastName = Number(form.get("lastName")) ?? "";
   const role = Number(form.get("tenant-user-role"));
   const workspaces = form.getAll("workspaces[]").map((f) => f.toString());
 
@@ -180,6 +180,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     if (actionData?.success) {
       successModal.current?.show(t("shared.success"), actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   useEffect(() => {
@@ -189,13 +190,6 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
   }, []);
   function close() {
     navigate("/app/settings/members");
-  }
-  function save(e: FormEvent) {
-    e.preventDefault();
-    if (workspaces.length === 0) {
-      errorModal.current?.show(t("shared.error"), t("account.tenant.members.errors.atLeastOneWorkspace"));
-      return;
-    }
   }
   function remove() {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"));

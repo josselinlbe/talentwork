@@ -1,10 +1,11 @@
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
-import { SubscriptionProductDto } from "../dtos/core/subscriptions/SubscriptionProductDto";
+import { SubscriptionProductDto } from "../dtos/subscriptions/SubscriptionProductDto";
 
 const currency = "usd";
 const plans: SubscriptionProductDto[] = [
   {
+    id: "",
     stripeId: "",
     tier: 1,
     title: "pricing.products.plan1.title",
@@ -12,6 +13,7 @@ const plans: SubscriptionProductDto[] = [
     contactUs: false,
     prices: [
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -22,6 +24,7 @@ const plans: SubscriptionProductDto[] = [
         active: true,
       },
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -85,6 +88,7 @@ const plans: SubscriptionProductDto[] = [
     monthlyContracts: 1,
   },
   {
+    id: "",
     stripeId: "",
     tier: 2,
     title: "pricing.products.plan2.title",
@@ -92,6 +96,7 @@ const plans: SubscriptionProductDto[] = [
     contactUs: false,
     prices: [
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -102,6 +107,7 @@ const plans: SubscriptionProductDto[] = [
         active: true,
       },
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -165,6 +171,7 @@ const plans: SubscriptionProductDto[] = [
     monthlyContracts: 45,
   },
   {
+    id: "",
     stripeId: "",
     tier: 3,
     title: "pricing.products.plan3.title",
@@ -172,6 +179,7 @@ const plans: SubscriptionProductDto[] = [
     contactUs: false,
     prices: [
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -182,6 +190,7 @@ const plans: SubscriptionProductDto[] = [
         active: true,
       },
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -245,6 +254,7 @@ const plans: SubscriptionProductDto[] = [
     monthlyContracts: 90,
   },
   {
+    id: "",
     stripeId: "",
     tier: 4,
     title: "pricing.products.plan4.title",
@@ -252,6 +262,7 @@ const plans: SubscriptionProductDto[] = [
     contactUs: true,
     prices: [
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,
@@ -262,6 +273,7 @@ const plans: SubscriptionProductDto[] = [
         active: true,
       },
       {
+        id: "",
         stripeId: "",
         subscriptionProductId: "",
         type: SubscriptionPriceType.RECURRING,

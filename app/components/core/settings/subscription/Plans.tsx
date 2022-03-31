@@ -3,25 +3,23 @@ import clsx from "~/utils/shared/ClassesUtils";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { useSubmit, useTransition } from "remix";
-import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
-import { SubscriptionPriceDto } from "~/application/dtos/core/subscriptions/SubscriptionPriceDto";
+import { SubscriptionPriceDto } from "~/application/dtos/subscriptions/SubscriptionPriceDto";
+import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 
 interface Props {
   items: SubscriptionProductDto[];
 }
 export default function Plans({ items }: Props) {
   const { t } = useTranslation();
-  const transition = useTransition();
 
   const [products] = useState(items);
   const [customPlan] = useState(items.find((f) => f.contactUs));
   const [testProducts] = useState(!items || items.filter((f) => f.id === undefined || f.id === "").length > 0);
 
   const [billingPeriod, setBillingPeriod] = useState<SubscriptionBillingPeriod>(SubscriptionBillingPeriod.MONTHLY);
-  const [currency, setCurrency] = useState("usd");
+  const [currency] = useState("usd");
 
   function toggleBillingPeriod() {
     if (billingPeriod === SubscriptionBillingPeriod.MONTHLY) {
@@ -203,7 +201,7 @@ export default function Plans({ items }: Props) {
                           <h4 className="flex-shrink-0 pr-4 text-sm tracking-wider font-semibold uppercase text-white">{t("pricing.whatsIncluded")}</h4>
                           <div className="flex-1 border-t dark:border-gray-300 border-gray-700"></div>
                         </div>
-                        <ul role="list" className="mt-8 space-y-5 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5">
+                        <ul className="mt-8 space-y-5 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5">
                           {customPlan.features.map((feature, idxFeature) => {
                             return (
                               <li key={idxFeature} className="flex items-start lg:col-span-1">

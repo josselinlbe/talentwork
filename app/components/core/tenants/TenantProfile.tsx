@@ -28,6 +28,7 @@ export default function TenantProfile({ id = "" }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // TODO: Tenant Profile
   function reload() {
     setLoading(true);
     services.tenants

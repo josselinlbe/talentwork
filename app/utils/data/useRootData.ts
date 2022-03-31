@@ -1,4 +1,4 @@
-import { json, redirect, useMatches } from "remix";
+import { json, useMatches } from "remix";
 import { getUserInfo } from "../session.server";
 import { i18n } from "~/locale/i18n.server";
 

@@ -1,15 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import IconContractArchived from "~/assets/icons/IconContractArchived";
-import IconContractCheck from "~/assets/icons/IconContractCheck";
-import IconContractClock from "~/assets/icons/IconContractClock";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
-import { getContracts } from "~/utils/db/app/contracts.db.server";
+import { getContracts } from "~/modules/contracts/db/contracts.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { Contract } from "@prisma/client";
+import IconContractClock from "../../icons/IconContractClock";
+import IconContractArchived from "../../icons/IconContractArchived";
+import IconContractCheck from "../../icons/IconContractCheck";
 
 interface Props {
   items: Awaited<ReturnType<typeof getContracts>>;
@@ -104,7 +104,7 @@ export default function ContractsListAndTable({ items }: Props) {
             <div>
               <div className="sm:hidden">
                 <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                  <ul role="list" className="divide-y divide-gray-200">
+                  <ul className="divide-y divide-gray-200">
                     {sortedItems().map((contract, idxContract) => {
                       return (
                         <li key={idxContract}>

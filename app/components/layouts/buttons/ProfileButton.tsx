@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
@@ -69,12 +69,12 @@ export default function ProfileButton() {
           className="z-40 origin-top-right absolute right-0 mt-2 w-64 rounded-sm shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none"
         >
           <div className="py-1 rounded-sm bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-            <a className="truncate group flex items-center px-4 py-2 text-sm text-gray-700 transition ease-in-out duration-150" role="menuitem">
+            <div className="truncate group flex items-center px-4 py-2 text-sm text-gray-700 transition ease-in-out duration-150" role="menuitem">
               <div className="flex flex-col space-y-1 truncate">
                 <div className="font-medium">{UserUtils.profileName(data.user)}</div>
                 <div className="font-bold truncate">{data.user?.email}</div>
               </div>
-            </a>
+            </div>
             <div className="border-t border-gray-200"></div>
 
             <Link

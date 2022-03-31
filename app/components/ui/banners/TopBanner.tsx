@@ -6,7 +6,7 @@ export default function TopBanner() {
   const location = useLocation();
   const [open, setOpen] = useState(true);
 
-  function getRoute(item: number, path: string) {
+  function getRoute(item: number, path: string): string {
     let host = "";
     switch (item) {
       case 0:
@@ -45,9 +45,9 @@ export default function TopBanner() {
   function getRouteInSvelte() {
     return getRoute(3, location.pathname);
   }
-  function getRouteInRemix() {
-    return getRoute(4, location.pathname);
-  }
+  // function getRouteInRemix() {
+  //   return getRoute(4, location.pathname);
+  // }
   return (
     <span>
       {open && (
@@ -97,9 +97,9 @@ export default function TopBanner() {
                   >
                     Svelte
                   </a>
-                  <a className="w-16 text-center border border-transparent rounded-md px-1 py-1 font-extrabold shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 text-rose-800 bg-rose-100 border-rose-100 select-none">
+                  <div className="w-16 text-center border border-transparent rounded-md px-1 py-1 font-extrabold shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 text-rose-800 bg-rose-100 border-rose-100 select-none">
                     Remix
-                  </a>
+                  </div>
                 </div>
               </div>
               <div className="hidden md:flex items-center truncate">
@@ -142,6 +142,7 @@ export default function TopBanner() {
                 <a
                   href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix"
                   target="_blank"
+                  rel="noreferrer"
                   className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm sm:text-sm font-medium text-yellow-900 bg-yellow-400 hover:bg-yellow-500"
                 >
                   Get codebase!

@@ -1,8 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import IconContract from "~/assets/icons/IconContract";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -14,12 +11,13 @@ import { Menu } from "@headlessui/react";
 import PdfViewer from "~/components/ui/pdf/PdfViewer";
 import DropdownWithClick from "~/components/ui/dropdowns/DropdownWithClick";
 import ContractEmployees from "./ContractEmployees";
-import ContractActivity from "./ContractActivity";
-import { ContractStatus } from "~/application/enums/contracts/ContractStatus";
+import ContractActivities from "./ContractActivities";
+import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
 import { useAppData } from "~/utils/data/useAppData";
 import { useRef, useState } from "react";
 import { Link, useSubmit, useTransition } from "remix";
-import { ContractWithDetails } from "~/utils/db/app/contracts.db.server";
+import { ContractWithDetails } from "~/modules/contracts/db/contracts.db.server";
+import IconContract from "../../icons/IconContract";
 
 interface Props {
   item: ContractWithDetails;
@@ -27,7 +25,6 @@ interface Props {
 
 export default function ContractDetails({ item }: Props) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const appData = useAppData();
   const transition = useTransition();
   const submit = useSubmit();
@@ -43,11 +40,7 @@ export default function ContractDetails({ item }: Props) {
   const [status, setStatus] = useState(item.status);
   const [description, setDescription] = useState(item.description);
   const [contractPdf, setContractPdf] = useState(item.file);
-
   const [editing, setEditing] = useState(false);
-
-  const [error, setError] = useState("");
-  const [loadingPdf, setLoadingPdf] = useState(false);
 
   function removeFile() {
     if (item) {
@@ -156,8 +149,6 @@ export default function ContractDetails({ item }: Props) {
       {(() => {
         if (loading) {
           return <Loading />;
-        } else if (!item || !item.id) {
-          return <div className="mx-auto p-5 items-center justify-between flex text-red-700">{error}</div>;
         } else if (item) {
           return (
             <div key={item.id}>
@@ -370,34 +361,22 @@ export default function ContractDetails({ item }: Props) {
                           <div>
                             <label className="block text-xs font-medium text-gray-700 sm:mt-px sm:pt-2">{t("models.contract.file")}</label>
                             <div className={clsx("mt-1 sm:col-span-2", editing && "bg-white")}>
-                              {(() => {
-                                if (loadingPdf) {
-                                  return (
-                                    <div className="overflow-hidden border border-gray-300 rounded-md items-center">
-                                      <Loading />
-                                    </div>
-                                  );
-                                } else {
-                                  return (
-                                    <div>
-                                      {(() => {
-                                        if (contractPdf && contractPdf.length > 0) {
-                                          return <PdfViewer file={contractPdf} fileName={item.name} editing={editing} onRemoveFile={removeFile} />;
-                                        } else {
-                                          return (
-                                            <UploadDocument
-                                              accept=".pdf"
-                                              description={t("shared.onlyFileTypes", [".PDF"])}
-                                              onDroppedFiles={droppedContractFile}
-                                              icon={<IconContract className="mx-auto h-10 w-10 text-gray-400" />}
-                                            />
-                                          );
-                                        }
-                                      })()}
-                                    </div>
-                                  );
-                                }
-                              })()}
+                              <div>
+                                {(() => {
+                                  if (contractPdf && contractPdf.length > 0) {
+                                    return <PdfViewer file={contractPdf} fileName={item.name} editing={editing} onRemoveFile={removeFile} />;
+                                  } else {
+                                    return (
+                                      <UploadDocument
+                                        accept=".pdf"
+                                        description={t("shared.onlyFileTypes", [".PDF"])}
+                                        onDroppedFiles={droppedContractFile}
+                                        icon={<IconContract className="mx-auto h-10 w-10 text-gray-400" />}
+                                      />
+                                    );
+                                  }
+                                })()}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -407,7 +386,7 @@ export default function ContractDetails({ item }: Props) {
                     <div className="space-y-5">
                       <ContractMembers items={item.members} />
                       {item.employees.length > 0 && <ContractEmployees items={item.employees} />}
-                      <ContractActivity items={item.activity} />
+                      <ContractActivities items={item.activity} />
                     </div>
                   </div>
                 </div>

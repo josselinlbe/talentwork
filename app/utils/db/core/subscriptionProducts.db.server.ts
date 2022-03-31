@@ -1,48 +1,54 @@
+import { SubscriptionFeature, SubscriptionPrice, SubscriptionProduct } from ".prisma/client";
+import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 import { db } from "~/utils/db.server";
 
-export async function getAllSubscriptionProducts() {
-  return await db.subscriptionProduct.findMany({
-    where: {
-      active: true,
-    },
-    include: {
-      prices: true,
-      features: true,
-    },
-    orderBy: {
-      tier: "asc",
-    },
-  });
+export type SubscriptionPriceWithProduct = SubscriptionPrice & {
+  subscriptionProduct: SubscriptionProduct;
+};
+
+export async function getAllSubscriptionProducts(): Promise<SubscriptionProductDto[]> {
+  return await db.subscriptionProduct
+    .findMany({
+      where: {
+        active: true,
+      },
+      include: {
+        prices: true,
+        features: true,
+      },
+      orderBy: {
+        tier: "asc",
+      },
+    })
+    .catch(() => {
+      return [];
+    });
 }
 
-export async function getSubscriptionProduct(id: string) {
-  return await db.subscriptionProduct.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      prices: true,
-      features: true,
-    },
-  });
+export async function getSubscriptionPrice(id: string): Promise<SubscriptionPriceWithProduct | null> {
+  return await db.subscriptionPrice
+    .findUnique({
+      where: { id },
+      include: {
+        subscriptionProduct: true,
+      },
+    })
+    .catch(() => {
+      return null;
+    });
 }
 
-export async function getSubscriptionPrice(id: string) {
-  return await db.subscriptionPrice.findUnique({
-    where: { id },
-    include: {
-      subscriptionProduct: true,
-    },
-  });
-}
-
-export async function getSubscriptionPriceByStripeId(stripeId: string) {
-  return await db.subscriptionPrice.findFirst({
-    where: { stripeId },
-    include: {
-      subscriptionProduct: true,
-    },
-  });
+export async function getSubscriptionPriceByStripeId(stripeId: string): Promise<SubscriptionPriceWithProduct | null> {
+  return await db.subscriptionPrice
+    .findFirst({
+      where: { stripeId },
+      include: {
+        subscriptionProduct: true,
+      },
+    })
+    .catch(() => {
+      return null;
+    });
 }
 
 export async function createSubscriptionProduct(data: {
@@ -58,10 +64,14 @@ export async function createSubscriptionProduct(data: {
   maxLinks: number;
   maxStorage: number;
   monthlyContracts: number;
-}) {
-  return await db.subscriptionProduct.create({
-    data,
-  });
+}): Promise<SubscriptionProduct | null> {
+  return await db.subscriptionProduct
+    .create({
+      data,
+    })
+    .catch(() => {
+      return null;
+    });
 }
 
 export async function createSubscriptionPrice(data: {
@@ -73,10 +83,20 @@ export async function createSubscriptionPrice(data: {
   currency: string;
   trialDays: number;
   active: boolean;
-}) {
-  return await db.subscriptionPrice.create({ data });
+}): Promise<SubscriptionPrice | null> {
+  return await db.subscriptionPrice.create({ data }).catch(() => {
+    return null;
+  });
 }
 
-export async function createSubscriptionFeature(data: { subscriptionProductId: string; order: number; key: string; value: string; included: boolean }) {
-  return await db.subscriptionFeature.create({ data });
+export async function createSubscriptionFeature(data: {
+  subscriptionProductId: string;
+  order: number;
+  key: string;
+  value: string;
+  included: boolean;
+}): Promise<SubscriptionFeature | null> {
+  return await db.subscriptionFeature.create({ data }).catch(() => {
+    return null;
+  });
 }

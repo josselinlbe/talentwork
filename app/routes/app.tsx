@@ -1,6 +1,6 @@
 import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useCatch } from "remix";
 import AppLayout from "~/components/app/AppLayout";
-import { useAppAction } from "~/utils/actions/useAppAction";
+import { callAppAction } from "~/utils/actions/callAppAction";
 import { loadAppData } from "~/utils/data/useAppData";
 import { requireAuthorization } from "~/utils/loaders.middleware";
 
@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const action: ActionFunction = async ({ request }) => {
-  return useAppAction(request);
+  return callAppAction(request);
 };
 
 export let loader: LoaderFunction = async ({ request }) => {

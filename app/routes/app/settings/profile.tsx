@@ -1,19 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
-import { UserUpdateAvatarRequest } from "~/application/contracts/core/users/UserUpdateAvatarRequest";
-import { UserUpdateRequest } from "~/application/contracts/core/users/UserUpdateRequest";
 import { UserType } from "~/application/enums/users/UserType";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
-import supportedLocales from "~/locale/supportedLocales";
-import { useNavigate } from "react-router-dom";
 import { useAppData } from "~/utils/data/useAppData";
-import { ActionFunction, Form, json, MetaFunction, redirect, ScrollRestoration, useActionData, useSubmit, useTransition } from "remix";
-import Loading from "~/components/ui/loaders/Loading";
+import { ActionFunction, Form, json, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
 import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/core/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
@@ -168,9 +163,9 @@ export default function ProfileRoute() {
     inputFirstName.current?.select();
   }, []);
 
-  const locales = supportedLocales;
+  // const locales = supportedLocales;
   const [avatar, setAvatar] = useState<string | undefined>(appData.user?.avatar);
-  const [selectedLocale, setSelectedLocale] = useState("en");
+  // const [selectedLocale, setSelectedLocale] = useState("en");
   const [showUploadImage, setShowUploadImage] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
 
@@ -188,9 +183,6 @@ export default function ProfileRoute() {
   }
   function loadedImage(image: string | undefined) {
     setAvatar(image);
-    const updateAvatar: UserUpdateAvatarRequest = {
-      avatar: image ?? "",
-    };
     setUploadingImage(true);
   }
 

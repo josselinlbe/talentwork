@@ -4,8 +4,6 @@ import { Fragment, ReactNode, useRef, useState } from "react";
 import TenantSelector from "./selectors/TenantSelector";
 import WorkspaceSelector from "./selectors/WorkspaceSelector";
 import SidebarMenu from "./SidebarMenu";
-import LayoutSelector from "../ui/selectors/LayoutSelector";
-import LocaleSelector from "../ui/selectors/LocaleSelector";
 import ChatSupportButton from "./buttons/ChatSupportButton";
 import PendingInvitationsButton from "./buttons/PendingInvitationsButton";
 import ProfileButton from "./buttons/ProfileButton";

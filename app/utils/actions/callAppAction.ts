@@ -4,14 +4,14 @@ import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import { createTenant, createTenantUser } from "../db/core/tenants.db.server";
 import { updateUserDefaultWorkspaceId, getUser } from "../db/core/users.db.server";
 import { getMyWorkspaces, createWorkspace, createWorkspaceUser } from "../db/core/workspaces.db.server";
-import { getUserInfo, createUserSession, setLoggedUser } from "../session.server";
+import { getUserInfo, createUserSession } from "../session.server";
 import { createStripeCustomer } from "../stripe.server";
 
 type ActionData = {
   error?: string;
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-export async function useAppAction(request: Request, redirect?: string) {
+export async function callAppAction(request: Request, redirect?: string) {
   let userInfo = await getUserInfo(request);
   if (!userInfo) {
     return null;

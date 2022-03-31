@@ -1,10 +1,10 @@
-import EmployeesList from "~/components/app/employees/EmployeesList";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, useLoaderData, useTransition } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { Employee } from "@prisma/client";
 import { getUserInfo } from "~/utils/session.server";
-import { getEmployees } from "~/utils/db/app/employees.db.server";
+import { getEmployees } from "~/modules/contracts/db/employees.db.server";
+import EmployeesList from "~/modules/contracts/components/employees/EmployeesList";
 
 export const meta: MetaFunction = () => ({
   title: "Employees | Remix SaasFrontend",
@@ -25,8 +25,6 @@ export let loader: LoaderFunction = async ({ request }) => {
 export default function EmployeesRoute() {
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
-  const transition = useTransition();
-  const loading = transition.state === "loading";
 
   return (
     <div>

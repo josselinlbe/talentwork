@@ -5,7 +5,6 @@ import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SidebarGroup } from "~/application/sidebar/SidebarGroup";
 import { UserType } from "~/application/enums/users/UserType";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import clsx from "~/utils/shared/ClassesUtils";
 import SidebarIcon from "./icons/SidebarIcon";
 import { useTranslation } from "react-i18next";

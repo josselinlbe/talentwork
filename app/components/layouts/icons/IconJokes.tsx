@@ -1,6 +1,7 @@
 export default function IconJokes({ className }: { className: string }) {
   return (
     <img
+      alt="Jokes"
       className={className}
       width="30"
       height="30"

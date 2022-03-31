@@ -10,11 +10,11 @@ import {
   createSubscriptionProduct,
   getAllSubscriptionProducts,
 } from "~/utils/db/core/subscriptionProducts.db.server";
-import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
 import { createStripePrice, createStripeProduct } from "~/utils/stripe.server";
 import { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { i18n } from "~/locale/i18n.server";
 import clsx from "~/utils/shared/ClassesUtils";
+import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 
 export const meta: MetaFunction = () => ({
   title: "Pricing | Remix SaasFrontend",
@@ -22,7 +22,7 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
   onStripe: boolean;
-  items: Awaited<ReturnType<typeof getAllSubscriptionProducts>> | SubscriptionProductDto[];
+  items: SubscriptionProductDto[];
 };
 
 export let loader: LoaderFunction = async () => {
@@ -81,6 +81,10 @@ export const action: ActionFunction = async ({ request }) => {
         monthlyContracts: plan.monthlyContracts,
       });
 
+      if (!product) {
+        return badRequest({ error: "Could not create subscription product" });
+      }
+
       plan.prices.forEach(async (price) => {
         // Create stripe price
         const stripePrice = await createStripePrice(stripeProduct.id, price);
@@ -132,6 +136,7 @@ export default function AdminPricingRoute() {
       successModal.current?.show(t("shared.success"), actionData.success);
     }
     setItems(actionData?.items ?? data.items);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   const sortedItems = () => {

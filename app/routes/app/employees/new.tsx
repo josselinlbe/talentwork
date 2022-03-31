@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import AddEmployees from "~/components/app/employees/AddEmployees";
 import { ActionFunction, json, MetaFunction, redirect, useActionData } from "remix";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef } from "react";
-import { createEmployee, getEmployeeByEmail } from "~/utils/db/app/employees.db.server";
+import { createEmployee, getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 import { getUserInfo } from "~/utils/session.server";
+import AddEmployees from "~/modules/contracts/components/employees/AddEmployees";
 
 export const meta: MetaFunction = () => ({
   title: "New employees | Remix SaasFrontend",
@@ -76,6 +76,7 @@ export default function NewEmployeesRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

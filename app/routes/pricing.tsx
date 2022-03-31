@@ -6,8 +6,8 @@ import { getAllSubscriptionProducts } from "~/utils/db/core/subscriptionProducts
 import { LoaderFunction, json, useLoaderData, MetaFunction } from "remix";
 import { i18n } from "~/locale/i18n.server";
 import { Language } from "remix-i18next";
-import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
 import plans from "~/application/pricing/plans.server";
+import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 
 export const meta: MetaFunction = () => ({
   title: "Pricing | Remix SaasFrontend",
@@ -39,7 +39,7 @@ export default function PricingRoute() {
               <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.pricing.title")}</h1>
               <p className="mt-4 text-lg leading-6 text-gray-500">{t("front.pricing.headline")}</p>
             </div>
-            <Plans items={data.items} />
+            {data?.items && <Plans items={data.items} />}
           </div>
         </div>
         <Footer />

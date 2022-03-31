@@ -127,6 +127,7 @@ export default function AdminUsersRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData?.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function impersonate(user: User) {

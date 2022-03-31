@@ -26,7 +26,7 @@ type LoaderData = DashboardLoaderData & {
   items: Awaited<ReturnType<typeof getAllSubscriptionProducts>>;
   mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
 };
-export let loader: LoaderFunction = async ({ request, params }) => {
+export let loader: LoaderFunction = async ({ request }) => {
   await requireOwnerOrAdminRole(request);
   const userInfo = await getUserInfo(request);
   const user = await getUser(userInfo.userId);
@@ -144,7 +144,7 @@ export default function SubscriptionRoute() {
   const confirmModal = useRef<RefConfirmModal>(null);
 
   const [billingPeriod, setBillingPeriod] = useState<SubscriptionBillingPeriod>(appData.mySubscription?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY);
-  const [currency, setCurrency] = useState("usd");
+  const [currency] = useState("usd");
 
   useEffect(() => {
     if (actionData?.success) {
@@ -153,6 +153,7 @@ export default function SubscriptionRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData?.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function cancel() {
@@ -161,14 +162,6 @@ export default function SubscriptionRoute() {
   function confirmCancel() {
     const form = new FormData();
     form.set("type", "cancel");
-    submit(form, {
-      method: "post",
-    });
-  }
-
-  function updateSubscription(price: SubscriptionPrice) {
-    const form = new FormData();
-    form.set("price-id", price.id);
     submit(form, {
       method: "post",
     });

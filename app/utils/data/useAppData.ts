@@ -1,4 +1,4 @@
-import { json, redirect, useMatches } from "remix";
+import { redirect, useMatches } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { createUserSession, getUserInfo } from "../session.server";
@@ -7,7 +7,7 @@ import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import { getStripeSubscription } from "../stripe.server";
 import { getLinksCount } from "../db/core/links.db.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
-import { getSubscriptionPriceByStripeId } from "../db/core/subscriptionProducts.db.server";
+import { getSubscriptionPriceByStripeId, SubscriptionPriceWithProduct } from "../db/core/subscriptionProducts.db.server";
 import { getMyTenants, getTenant } from "../db/core/tenants.db.server";
 import { getUser } from "../db/core/users.db.server";
 import { getMyWorkspaces, getWorkspace, getWorkspaceUser } from "../db/core/workspaces.db.server";
@@ -58,7 +58,7 @@ export async function loadAppData(request: Request) {
   const tenantMembership = myTenants.find((f) => f.tenantId === userInfo?.currentTenantId);
 
   const stripeSubscription = await getStripeSubscription(currentTenant?.subscriptionId ?? "");
-  let mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
+  let mySubscription: SubscriptionPriceWithProduct | null = null;
   if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
     mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
   }

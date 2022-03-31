@@ -1,11 +1,11 @@
 import { useMatches } from "remix";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
-import { getEmployeesCount } from "../db/app/employees.db.server";
-import { getMonthlyContractsCount } from "../db/app/contracts.db.server";
 import { getClientLinksCount, getLinksCount, getProviderLinksCount } from "../db/core/links.db.server";
 import { getUserInfo } from "../session.server";
 import { getTenantUsersCount } from "../db/core/tenants.db.server";
 import { getWorkspacesCount } from "../db/core/workspaces.db.server";
+import { getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
+import { getEmployeesCount } from "~/modules/contracts/db/employees.db.server";
 
 export type DashboardLoaderData = {
   users: number;

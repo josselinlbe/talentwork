@@ -1,10 +1,9 @@
 import { SubscriptionProductDto } from "./SubscriptionProductDto";
-import { SubscriptionPlanDto } from "./SubscriptionPlanDto";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 
 export interface SubscriptionPriceDto {
-  id?: string;
+  id: string;
   stripeId: string;
   type: SubscriptionPriceType;
   billingPeriod: SubscriptionBillingPeriod;
@@ -15,5 +14,4 @@ export interface SubscriptionPriceDto {
   priceBefore?: number;
   subscriptionProductId: string;
   subscriptionProduct?: SubscriptionProductDto;
-  subscriptionPlan?: SubscriptionPlanDto;
 }

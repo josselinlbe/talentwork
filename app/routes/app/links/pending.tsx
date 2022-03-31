@@ -108,6 +108,7 @@ export default function PendingLinksRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function reject(item: LinkWithWorkspaces) {
@@ -191,7 +192,7 @@ export default function PendingLinksRoute() {
                   );
                 } else {
                   return (
-                    <ul role="list" className="sm:grid grid-cols-1 gap-3">
+                    <ul className="sm:grid grid-cols-1 gap-3">
                       {items.map((item, idx) => {
                         return (
                           <li key={idx} className="col-span-1 bg-white rounded-sm shadow-md divide-y divide-gray-200 border-t sm:border border-gray-300">

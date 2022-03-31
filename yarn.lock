@@ -399,10 +399,10 @@
   "resolved" "https://registry.npmjs.org/@prisma/engines-version/-/engines-version-3.11.1-1.1a2506facaf1a4727b7c26850735e88ec779dee9.tgz"
   "version" "3.11.1-1.1a2506facaf1a4727b7c26850735e88ec779dee9"
 
-"@prisma/engines@3.11.1-1.1a2506facaf1a4727b7c26850735e88ec779dee9":
-  "integrity" "sha512-MILbsGnvmnhCbFGa2/iSnsyGyazU3afzD7ldjCIeLIGKkNBMSZgA2IvpYsAXl+6qFHKGrS3B2otKfV31dwMSQw=="
-  "resolved" "https://registry.npmjs.org/@prisma/engines/-/engines-3.11.1-1.1a2506facaf1a4727b7c26850735e88ec779dee9.tgz"
-  "version" "3.11.1-1.1a2506facaf1a4727b7c26850735e88ec779dee9"
+"@prisma/engines@3.12.0-30.6f1b5b24baff9909403d1355bfee5155e02940b8":
+  "integrity" "sha512-Py2UxszZ28S5TWXwXYfaLa1P8MkKlNCnZG3m65txMLg2iIaUSp45zNN7ka0qgzl/tqn+gpi0C/NLH7BSFiswlg=="
+  "resolved" "https://registry.npmjs.org/@prisma/engines/-/engines-3.12.0-30.6f1b5b24baff9909403d1355bfee5155e02940b8.tgz"
+  "version" "3.12.0-30.6f1b5b24baff9909403d1355bfee5155e02940b8"
 
 "@remix-run/dev@^1.2.3":
   "integrity" "sha512-VxK2ZXTeYuQm+mqJ5ct/OOZKj8OcpdmFBH1UjPC1Fjb/NrtWmG6FJTy21js278NCrxAmPaET0d1VS0M3h43VVw=="
@@ -4582,12 +4582,12 @@
   dependencies:
     "parse-ms" "^2.1.0"
 
-"prisma@*", "prisma@^3.11.0":
-  "integrity" "sha512-aYn8bQwt1xwR2oSsVNHT4PXU7EhsThIwmpNB/MNUaaMx5OPLTro6VdNJe/sJssXFLxhamfWeMjwmpXjljo6xkg=="
-  "resolved" "https://registry.npmjs.org/prisma/-/prisma-3.11.1.tgz"
-  "version" "3.11.1"
+"prisma@*", "prisma@^3.12.0-dev.38":
+  "integrity" "sha512-HV5px7VUOVD4+1lR9Q5ei9FXhtN054BGz56MUoywRYbOBqwhNxg+u7gBfkEgdwzcLfXcRKgy+ba67YhnCZZfRw=="
+  "resolved" "https://registry.npmjs.org/prisma/-/prisma-3.12.0-dev.38.tgz"
+  "version" "3.12.0-dev.38"
   dependencies:
-    "@prisma/engines" "3.11.1-1.1a2506facaf1a4727b7c26850735e88ec779dee9"
+    "@prisma/engines" "3.12.0-30.6f1b5b24baff9909403d1355bfee5155e02940b8"
 
 "process-nextick-args@~2.0.0":
   "integrity" "sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag=="

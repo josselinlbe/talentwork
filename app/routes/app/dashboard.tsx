@@ -6,7 +6,7 @@ import { useAppData } from "~/utils/data/useAppData";
 import MySubscriptionProducts from "~/components/core/settings/subscription/MySubscriptionProducts";
 import { loadDashboardData } from "~/utils/data/useDashboardData";
 import ClientsUsage from "~/components/app/usages/ClientsUsage";
-import EmployeesUsage from "~/components/app/usages/EmployeesUsage";
+import EmployeesUsage from "~/modules/contracts/components/employees/EmployeesUsage";
 import ProvidersUsage from "~/components/app/usages/ProvidersUsage";
 
 export const meta: MetaFunction = () => ({

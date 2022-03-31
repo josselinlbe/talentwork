@@ -2,7 +2,6 @@ import { Link, MetaFunction, Outlet, useLoaderData } from "remix";
 import { json } from "remix";
 import type { LoaderFunction } from "remix";
 import { db } from "~/utils/db.server";
-import { useAppData } from "~/utils/data/useAppData";
 
 export const meta: MetaFunction = () => ({
   title: "Jokes | Remix SaasFrontend",
@@ -31,7 +30,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function JokesRoute() {
-  const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   return (
     <div className="jokes-layout">

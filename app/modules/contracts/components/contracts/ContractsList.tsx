@@ -1,11 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { ContractStatusFilter } from "~/application/enums/contracts/ContractStatusFilter";
 import Loading from "~/components/ui/loaders/Loading";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ContractsListAndTable from "./ContractsListAndTable";
-import { useLoaderData, useTransition } from "remix";
-import { Contract, Link, User, Workspace } from "@prisma/client";
-import { getContracts } from "~/utils/db/app/contracts.db.server";
+import { useTransition } from "remix";
+import { getContracts } from "~/modules/contracts/db/contracts.db.server";
 
 interface Props {
   items: Awaited<ReturnType<typeof getContracts>>;

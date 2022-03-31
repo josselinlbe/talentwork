@@ -1,34 +1,32 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import SelectEmployees, { RefSelectEmployees } from "~/components/app/employees/SelectEmployees";
-import SelectContractMembers, { RefSelectContractMembers } from "~/components/app/contracts/SelectContractMembers";
+import SelectContractMembers, { RefSelectContractMembers } from "~/modules/contracts/components/contracts/SelectContractMembers";
 import LinkSelector, { RefLinkSelector } from "~/components/app/links/selectors/LinkSelector";
-import { AddContractMemberDto } from "~/application/dtos/contracts/AddContractMemberDto";
-import { ContractMemberRole } from "~/application/enums/contracts/ContractMemberRole";
+import { AddContractMemberDto } from "~/modules/contracts/dtos/AddContractMemberDto";
+import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import clsx from "~/utils/shared/ClassesUtils";
-import IconWorkers from "~/assets/icons/IconWorkers";
-import IconSign from "~/assets/icons/IconSign";
+import IconWorkers from "~/modules/contracts/icons/IconWorkers";
 import UploadDocument from "~/components/ui/uploaders/UploadDocument";
-import IconContract from "~/assets/icons/IconContract";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import Loading from "~/components/ui/loaders/Loading";
 import { updateItem } from "~/utils/shared/ObjectUtils";
 import PdfPreview from "~/components/ui/pdf/PdfViewer";
-import { loadAppData, useAppData } from "~/utils/data/useAppData";
+import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
 import { getLink, getLinksWithMembers, LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { getUserInfo } from "~/utils/session.server";
 import { Employee } from "@prisma/client";
-import { createContract, getContract, getMonthlyContractsCount } from "~/utils/db/app/contracts.db.server";
-import { getEmployees } from "~/utils/db/app/employees.db.server";
+import { createContract, getContract, getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
-import { ContractStatus } from "~/application/enums/contracts/ContractStatus";
-import { sendEmail } from "~/utils/email.server";
-import { sendContract } from "~/utils/app/ContractUtils";
+import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
+import { sendContract } from "~/modules/contracts/utils/ContractUtils";
+import { getEmployees } from "~/modules/contracts/db/employees.db.server";
+import IconContract from "~/modules/contracts/icons/IconContract";
+import IconSign from "~/modules/contracts/icons/IconSign";
+import SelectEmployees, { RefSelectEmployees } from "~/modules/contracts/components/employees/SelectEmployees";
 
 export const meta: MetaFunction = () => ({
   title: "New contract | Remix SaasFrontend",
@@ -140,7 +138,6 @@ export default function NewContractRoute() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState<LinkWithWorkspacesAndMembers | null>(null);
-  const [linkId, setLinkId] = useState("");
   const [contractFile, setContractFile] = useState("");
   const [members, setMembers] = useState<AddContractMemberDto[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -149,12 +146,14 @@ export default function NewContractRoute() {
     if (data.preselectLink) {
       linkSelector.current?.select(data.preselectLink);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (actionData?.error) {
       errorModal.current?.show(actionData.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function addMember() {
@@ -195,28 +194,6 @@ export default function NewContractRoute() {
       method: "post",
     });
   }
-  // function confirmedSave() {
-  //   setLoading(true);
-  //   services.contracts
-  //     .create({
-  //       linkId,
-  //       // clientWorkspaceId: clientWorkspaceId,
-  //       name,
-  //       description,
-  //       file: contractFile,
-  //       members,
-  //       employees,
-  //     })
-  //     .then((response: ContractDto) => {
-  //       navigate("/app/contract/" + response.id);
-  //     })
-  //     .catch((error) => {
-  //       errorModal.current?.show(t("shared.error"), t(error));
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }
   function droppedContractFile(files: FileBase64[]) {
     if (files.length > 0) {
       const mb = files[0].file.size / 1048576;
@@ -228,7 +205,6 @@ export default function NewContractRoute() {
     }
   }
   function selectedLink(id: string, _link: LinkWithWorkspacesAndMembers) {
-    setLinkId(id);
     setLink(_link);
     // nextTick(() => {
     inputName.current?.focus();

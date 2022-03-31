@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { WorkspaceDto } from "~/application/dtos/core/workspaces/WorkspaceDto";
+import { Fragment, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { getMyWorkspaces, getWorkspace } from "~/utils/db/core/workspaces.db.server";
@@ -174,7 +173,6 @@ export default function WorkspaceSelector({ className, onAdd, onSelected }: Prop
                 return (
                   <button
                     key={index}
-                    role="option"
                     title={userWorkspace.workspace.name}
                     className="text-left w-full text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-5 hover:bg-gray-100 border-gray-100 font-medium truncate focus:outline-none"
                     onClick={() => change(userWorkspace)}
@@ -185,7 +183,6 @@ export default function WorkspaceSelector({ className, onAdd, onSelected }: Prop
               })}
               <button
                 onClick={addWorkspace}
-                role="option"
                 className="text-theme-600 w-full text-sm text-left font-bold cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100 hover:text-theme-700"
               >
                 {t("shared.add")}

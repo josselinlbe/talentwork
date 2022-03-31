@@ -5,8 +5,7 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import clsx from "~/utils/shared/ClassesUtils";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { useActionData, useNavigate, useSubmit, useTransition } from "remix";
-import { Link } from "@prisma/client";
+import { useActionData, useNavigate, useSubmit } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import { NewLinkActionData } from "~/routes/app/link/new";
 
@@ -30,7 +29,6 @@ export default function NewLink({ linksCount }: Props) {
 
   const [email, setEmail] = useState("");
   const [workspaceName, setWorkspaceName] = useState("");
-  const [linkCreated, setLinkCreated] = useState<Link | null>(null);
 
   useEffect(() => {
     inputEmail.current?.focus();
@@ -47,6 +45,7 @@ export default function NewLink({ linksCount }: Props) {
       setWorkspaceName("");
       successModal.current?.show(t("shared.success"), actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function sendInvitation() {

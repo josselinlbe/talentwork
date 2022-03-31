@@ -54,7 +54,7 @@ export const action: ActionFunction = async ({ request }) => {
   const company = form.get("company")?.toString();
   const firstName = form.get("first-name")?.toString();
   const lastName = form.get("last-name")?.toString();
-  const priceId = form.get("price-id")?.toString();
+  // const priceId = form.get("price-id")?.toString();
   if (
     typeof email !== "string" ||
     typeof password !== "string" ||

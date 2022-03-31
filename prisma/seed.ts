@@ -1,4 +1,4 @@
-import { PrismaClient, Tenant, User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";

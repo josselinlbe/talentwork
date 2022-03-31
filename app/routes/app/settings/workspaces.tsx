@@ -4,7 +4,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import WorkspacesListAndTable from "~/components/core/workspaces/WorkspacesListAndTable";
 import Loading from "~/components/ui/loaders/Loading";
 import { useRef, useState } from "react";
-import { json, LoaderFunction, MetaFunction, redirect, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, redirect, useLoaderData, useTransition } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { getTenantMember } from "~/utils/db/core/tenants.db.server";
@@ -34,10 +34,11 @@ export let loader: LoaderFunction = async ({ request }) => {
 export default function WorkspacesRoute() {
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
+  const transition = useTransition();
+  const loading = transition.state === "loading";
 
   const errorModal = useRef<RefErrorModal>(null);
 
-  const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
   const filteredItems = () => {

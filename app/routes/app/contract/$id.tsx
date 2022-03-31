@@ -1,16 +1,13 @@
-import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import ContractDetails from "~/components/app/contracts/ContractDetails";
+import ContractDetails from "~/modules/contracts/components/contracts/ContractDetails";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData } from "remix";
-import { ContractWithDetails, deleteContract, getContract, updateContract } from "~/utils/db/app/contracts.db.server";
+import { ContractWithDetails, deleteContract, getContract, updateContract } from "~/modules/contracts/db/contracts.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { getUserInfo } from "~/utils/session.server";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useEffect } from "react";
-import { loadAppData } from "~/utils/data/useAppData";
-import { sendEmail } from "~/utils/email.server";
-import { sendContract } from "~/utils/app/ContractUtils";
+import { sendContract } from "~/modules/contracts/utils/ContractUtils";
 
 export const meta: MetaFunction = () => ({
   title: "Contract | Remix SaasFrontend",
@@ -96,6 +93,7 @@ export default function ContractRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData?.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

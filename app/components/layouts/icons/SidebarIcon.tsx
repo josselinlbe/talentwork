@@ -13,10 +13,10 @@ import IconSettings from "./IconSettings";
 import IconLinks from "./IconLinks";
 import IconProviders from "./IconProviders";
 import IconClients from "./IconClients";
-import IconContracts from "./IconContracts";
-import IconEmployees from "./IconEmployees";
 import IconEmails from "./IconEmails";
 import IconJokes from "./IconJokes";
+import IconEmployees from "~/modules/contracts/icons/IconEmployees";
+import IconContracts from "~/modules/contracts/icons/IconContracts";
 
 interface Props {
   className: string;

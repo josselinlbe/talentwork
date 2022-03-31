@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
 import DateUtils from "~/utils/shared/DateUtils";
-import { ContractActivityType } from "~/application/enums/contracts/ContractActivityType";
+import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
 import { ContractActivity, User } from "@prisma/client";
 
 interface Props {
   items: (ContractActivity & { createdByUser: User })[];
 }
 
-export default function ContractActivity({ items }: Props) {
+export default function ContractActivities({ items }: Props) {
   const { t } = useTranslation();
 
   const sortedItems = () => {
@@ -38,7 +38,7 @@ export default function ContractActivity({ items }: Props) {
       <h3 className="mb-2 text-gray-400 font-medium text-sm">{t("models.contract.activity")}</h3>
       <div className="bg-white p-3 rounded-md border border-gray-100 shadow-md space-y-3 overflow-hidden">
         <div className="flow-root">
-          <ul role="list" className="-mb-8">
+          <ul className="-mb-8">
             {sortedItems().map((activity, idxActivity) => {
               return (
                 <li key={idxActivity}>

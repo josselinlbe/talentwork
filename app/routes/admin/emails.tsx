@@ -132,6 +132,7 @@ export default function EmailsRoute() {
     if (actionData?.success) {
       successModal.current?.show(t("shared.success"), actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function templateUrl(item: EmailTemplateDto) {

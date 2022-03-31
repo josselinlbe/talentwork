@@ -1,9 +1,9 @@
 import Logo from "~/components/front/Logo";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import crypto from "crypto";
 import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/core/users.db.server";
@@ -61,15 +61,11 @@ export default function ForgotPasswordRoute() {
   const { t } = useTranslation();
   const actionData = useActionData<ActionData>();
 
-  const search = useLocation().search;
-  const emailQueryParam = new URLSearchParams(search).get("e");
-
   const loadingButton = useRef<RefLoadingButton>(null);
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
 
   const [emailSent, setEmailSent] = useState(false);
-  const [email, setEmail] = useState(emailQueryParam?.toString() ?? "");
 
   useEffect(() => {
     if (actionData?.error) {
@@ -78,6 +74,7 @@ export default function ForgotPasswordRoute() {
     if (actionData?.success) {
       setEmailSent(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

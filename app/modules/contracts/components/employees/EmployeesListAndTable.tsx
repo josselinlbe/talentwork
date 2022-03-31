@@ -96,7 +96,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
             <div>
               <div className="sm:hidden">
                 <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                  <ul role="list" className="divide-y divide-gray-200">
+                  <ul className="divide-y divide-gray-200">
                     {sortedItems().map((employee, idxEmployee) => {
                       return (
                         <li key={idxEmployee}>

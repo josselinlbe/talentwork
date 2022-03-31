@@ -2,19 +2,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import IconContractArchived from "~/assets/icons/IconContractArchived";
-import IconContractCheck from "~/assets/icons/IconContractCheck";
-import IconContractClock from "~/assets/icons/IconContractClock";
-import IconSign from "~/assets/icons/IconSign";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import Loading from "~/components/ui/loaders/Loading";
 import DateUtils from "~/utils/shared/DateUtils";
-import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts, LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
+import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { Workspace } from "@prisma/client";
-import { useSubmit } from "remix";
+import { useSubmit, useTransition } from "remix";
+import IconContractArchived from "~/modules/contracts/icons/IconContractArchived";
+import IconContractCheck from "~/modules/contracts/icons/IconContractCheck";
+import IconContractClock from "~/modules/contracts/icons/IconContractClock";
+import IconSign from "~/modules/contracts/icons/IconSign";
 
 interface Props {
   item: LinkWithWorkspacesAndContracts;
@@ -25,12 +25,13 @@ export default function LinkProfile({ item }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
+  const transition = useTransition();
+  const loading = transition.state === "loading" || transition.state === "submitting";
 
   const confirmDelete = useRef<RefConfirmModal>(null);
   const successModalDeleted = useRef<RefSuccessModal>(null);
   const errorModal = useRef<RefErrorModal>(null);
 
-  const [loading, setLoading] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
 
   const [workspace, setWorkspace] = useState<Workspace | undefined>();
@@ -41,6 +42,7 @@ export default function LinkProfile({ item }: Props) {
     } else {
       setWorkspace(item.providerWorkspace);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
   // function reloadContracts() {
@@ -285,7 +287,7 @@ export default function LinkProfile({ item }: Props) {
 
                           {/*Activity Feed */}
                           <div className="mt-6 flow-root">
-                            <ul role="list" className="-mb-8">
+                            <ul className="-mb-8">
                               <li>
                                 <div className="relative pb-8">
                                   {item.contracts.length > 0 && (

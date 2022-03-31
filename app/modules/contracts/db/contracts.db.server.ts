@@ -1,10 +1,9 @@
 import { Contract, ContractActivity, ContractEmployee, ContractMember, Employee, Link, User, Workspace } from "@prisma/client";
-import { AddContractMemberDto } from "~/application/dtos/contracts/AddContractMemberDto";
-import { ContractStatusFilter } from "~/application/enums/contracts/ContractStatusFilter";
-import { ContractActivityType } from "~/application/enums/contracts/ContractActivityType";
-import { ContractMemberRole } from "~/application/enums/contracts/ContractMemberRole";
-import { ContractStatus } from "~/application/enums/contracts/ContractStatus";
-import { db } from "../../db.server";
+import { ContractStatusFilter } from "~/modules/contracts/enums/ContractStatusFilter";
+import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
+import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
+import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
+import { db } from "../../../utils/db.server";
 
 export type ContractWithDetails = Contract & {
   createdByUser: User;

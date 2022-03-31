@@ -2,7 +2,7 @@ import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { useState } from "react";
-import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18n } from "~/locale/i18n.server";
 

@@ -43,8 +43,6 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
-  let t = await i18n.getFixedT(request, "translations");
-
   const form = await request.formData();
   const password = form.get("password")?.toString() ?? "";
   const passwordConfirm = form.get("password-confirm")?.toString() ?? "";
@@ -136,6 +134,7 @@ export default function InvitationRoute() {
     if (actionData?.error) {
       errorModal.current?.show(actionData.error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

@@ -1,17 +1,18 @@
 import { useTranslation } from "react-i18next";
 import Loading from "~/components/ui/loaders/Loading";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import EmployeesListAndTable from "./EmployeesListAndTable";
 import { Employee } from "@prisma/client";
+import { useTransition } from "remix";
 
 interface Props {
   items: Employee[];
 }
 export default function EmployeesList({ items }: Props) {
   const { t } = useTranslation();
+  const transition = useTransition();
+  const loading = transition.state === "loading";
 
-  const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
   const filteredItems = () => {

@@ -1,61 +1,92 @@
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { forwardRef, Fragment, Ref, useImperativeHandle, useRef, useState } from "react";
+import { AddContractMemberDto } from "~/modules/contracts/dtos/AddContractMemberDto";
+import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
-import IconWorkers from "~/assets/icons/IconWorkers";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import Loading from "~/components/ui/loaders/Loading";
-import { Employee } from "@prisma/client";
+import { User, Workspace, WorkspaceUser } from "@prisma/client";
+import { LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
+import IconSign from "../../icons/IconSign";
 
-export interface RefSelectEmployees {
-  show: (selected: string[]) => void;
+export interface RefSelectContractMembers {
+  show: (link: LinkWithWorkspacesAndMembers, selected: string[]) => void;
 }
 
 interface Props {
-  items: Employee[];
   maxSize?: string;
   onClosed?: () => void;
-  onSelected: (items: Employee[]) => void;
+  onSelected: (users: AddContractMemberDto[]) => void;
 }
 
-const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectEmployees>) => {
+const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectContractMembers>) => {
   const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
 
   const [showing, setShowing] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const [items, setItems] = useState<(WorkspaceUser & { workspace: Workspace; user: User })[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
   useImperativeHandle(ref, () => ({ show }));
-  function show(_selected: string[]) {
-    setSelected(_selected);
+  function show(link: LinkWithWorkspacesAndMembers, selected: string[]) {
+    setSelected(selected);
     setShowing(true);
+
+    const members: (WorkspaceUser & { workspace: Workspace; user: User })[] = [];
+    [...link.providerWorkspace.users, ...link.clientWorkspace.users].forEach((user) => {
+      if (!members.find((f) => f.userId === user.userId)) {
+        members.push(user);
+      }
+    });
+
+    setItems(members);
+    // reload(_linkId);
   }
+  // function reload(linkId) {
+  //   setLoading(true);
+  //   services.links
+  //     .getLinkUsers(linkId)
+  //     .then((response) => {
+  //       setItems(response);
+  //     })
+  //     .catch((error) => {
+  //       errorModal.current?.show(t("shared.error"), t(error));
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }
   function close() {
     if (onClosed) {
       onClosed();
     }
     setShowing(false);
   }
-  function toggle(item: Employee) {
+  function toggle(item: WorkspaceUser) {
     if (isSelected(item)) {
-      setSelected(selected.filter((f) => f !== item.id));
+      setSelected(selected.filter((f) => f !== item.userId));
     } else {
-      setSelected((selected) => [...selected, item.id]);
+      setSelected((selected) => [...selected, item.userId]);
     }
   }
-  function isSelected(item: Employee) {
-    return selected.find((f) => f === item.id);
+  function isSelected(item: WorkspaceUser) {
+    return selected.find((f) => f === item.userId);
   }
   function accept() {
-    const selected: Employee[] = [];
+    const selected: AddContractMemberDto[] = [];
     items.forEach((element) => {
       if (isSelected(element)) {
-        selected.push(element);
+        const contractMember: AddContractMemberDto = {
+          userId: element.userId,
+          role: ContractMemberRole.SIGNATORY,
+          name: (element.user?.firstName + " " + element.user?.lastName).trim(),
+          email: element.user?.email ?? "",
+        };
+        selected.push(contractMember);
       }
     });
     if (onSelected) {
@@ -63,17 +94,20 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
     }
     close();
   }
-
-  const filteredItems = (): Employee[] => {
+  function getNoMembers() {
+    return t("app.tenants.members.noMembers");
+  }
+  const filteredItems = () => {
     if (!items) {
       return [];
     }
     return items.filter(
       (f) =>
         f.id?.toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
+        f.workspace?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.user?.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.user?.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.user?.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
     );
   };
 
@@ -141,9 +175,9 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                   <div className="max-w-lg mx-auto">
                     <div>
                       <div className="text-center">
-                        <IconWorkers className="mx-auto h-12 w-12" />
-                        <h2 className="mt-2 text-lg font-medium text-gray-900">{t("app.employees.actions.selectEmployees")}</h2>
-                        <p className="mt-1 text-sm text-gray-500">{t("app.employees.actions.select")}</p>
+                        <IconSign className="mx-auto h-12 w-12 text-gray-800" />
+                        <h2 className="mt-2 text-lg font-medium text-gray-900">{t("app.contracts.members.add")}</h2>
+                        <p className="mt-1 text-sm text-gray-500">{t("app.contracts.members.select")}</p>
                       </div>
                       <form action="#" className="mt-6 flex">
                         <label htmlFor="search" className="sr-only">
@@ -161,7 +195,7 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                       </form>
                     </div>
                     <div className="mt-5">
-                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t("models.employee.plural")}</h3>
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t("models.user.plural")}</h3>
 
                       {(() => {
                         if (items.length === 0) {
@@ -169,10 +203,10 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                             <div>
                               <EmptyState
                                 className="bg-white"
-                                to="/app/employees/new"
+                                to="/app/settings/members/new"
                                 captions={{
                                   new: t("shared.add"),
-                                  thereAreNo: t("app.employees.errors.notDefined"),
+                                  thereAreNo: getNoMembers(),
                                 }}
                                 icon="plus"
                               />
@@ -181,19 +215,21 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                         } else {
                           return (
                             <div>
-                              <ul role="list" className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
+                              <ul className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
                                 {filteredItems().map((item, idx) => {
-                                  {
-                                    return (
-                                      <li className="py-2 flex items-center justify-between space-x-3" key={idx}>
+                                  return (
+                                    <li className="py-2 flex items-center justify-between space-x-3" key={idx}>
+                                      {item.user && (
                                         <div className="min-w-0 flex-1 flex items-center space-x-3">
                                           <div className="min-w-0 flex-1">
-                                            <p className="text-sm font-medium text-gray-900 truncate">
-                                              {item.firstName} {item.lastName}
+                                            <p className="text-sm font-bold text-gray-900 truncate">
+                                              {item.user.firstName} {item.user.lastName} <span className="text-xs font-normal">({item.user.email})</span>
                                             </p>
-                                            <p className="text-sm font-medium text-gray-500 truncate">{item.email && <span>{item.email}</span>}</p>
+                                            <p className="text-sm text-gray-500 truncate">{item.workspace && <span>{item.workspace.name}</span>}</p>
                                           </div>
                                         </div>
+                                      )}
+                                      {item.user && (
                                         <div className="flex-shrink-0">
                                           <button
                                             onClick={() => toggle(item)}
@@ -205,6 +241,7 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                                             )}
                                           >
                                             {/*Heroicon name: solid/plus-sm */}
+
                                             {(() => {
                                               if (!isSelected(item)) {
                                                 return (
@@ -239,13 +276,14 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                                                 );
                                               }
                                             })()}
+
                                             {(() => {
                                               if (!isSelected(item)) {
                                                 return (
                                                   <span className="text-sm font-medium text-gray-900">
                                                     {t("shared.add")}
                                                     <span className="sr-only">
-                                                      {item.firstName} {item.lastName}
+                                                      {item.user.firstName} {item.user.lastName}
                                                     </span>
                                                   </span>
                                                 );
@@ -254,7 +292,7 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                                                   <span className="text-sm font-medium text-gray-900">
                                                     {t("shared.remove")}
                                                     <span className="sr-only">
-                                                      {item.firstName} {item.lastName}
+                                                      {item.user.firstName} {item.user.lastName}
                                                     </span>
                                                   </span>
                                                 );
@@ -262,9 +300,9 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                                             })()}
                                           </button>
                                         </div>
-                                      </li>
-                                    );
-                                  }
+                                      )}
+                                    </li>
+                                  );
                                 })}
                               </ul>
                               <div className="py-3 text-right flex justify-end">
@@ -306,4 +344,4 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
   );
 };
 
-export default forwardRef(SelectEmployees);
+export default forwardRef(SelectContractMembers);

@@ -1,4 +1,4 @@
-import { ContractMemberRole } from "~/application/enums/contracts/ContractMemberRole";
+import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
 
 export interface AddContractMemberDto {
   name: string;

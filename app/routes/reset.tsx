@@ -1,10 +1,9 @@
-import { UserVerifyRequest } from "~/application/contracts/core/users/UserVerifyRequest";
 import Logo from "~/components/front/Logo";
 import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import classNames from "~/utils/shared/ClassesUtils";
 import UserUtils from "~/utils/app/UserUtils";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoaderFunction, json, ActionFunction, Form, useActionData, MetaFunction } from "remix";
@@ -105,6 +104,7 @@ export default function ResetRoute() {
     if (actionData?.success) {
       successModal.current?.show(actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   return (

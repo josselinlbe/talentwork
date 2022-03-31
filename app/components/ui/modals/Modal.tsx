@@ -2,7 +2,6 @@ import { Transition } from "@headlessui/react";
 import { forwardRef, Fragment, ReactNode, Ref, useImperativeHandle, useState } from "react";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
 
 export interface RefModal {
   show: () => void;
@@ -17,8 +16,6 @@ interface Props {
 }
 
 const Modal = ({ className, maxSize = "sm:max-w-lg", onClosed, children }: Props, ref: Ref<RefModal>) => {
-  const { t } = useTranslation();
-
   const [showing, setShowing] = useState(false);
 
   useImperativeHandle(ref, () => ({ show, close }));

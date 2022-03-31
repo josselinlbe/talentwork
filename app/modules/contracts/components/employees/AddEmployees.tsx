@@ -3,19 +3,21 @@ import { useTranslation } from "react-i18next";
 import Loading from "~/components/ui/loaders/Loading";
 import clsx from "~/utils/shared/ClassesUtils";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
-import IconEmployees from "~/components/layouts/icons/IconEmployees";
+import IconEmployees from "~/modules/contracts/icons/IconEmployees";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import UploadDocument from "~/components/ui/uploaders/UploadDocument";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Form, useSubmit } from "remix";
+import { useSubmit, useTransition } from "remix";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
 export default function AddEmployees() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
+  const transition = useTransition();
+  const loading = transition.state === "loading";
 
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
@@ -23,7 +25,6 @@ export default function AddEmployees() {
   const inputFirstName = useRef<HTMLInputElement>(null);
 
   const [importingEmployees, setImportingEmployees] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const [employeesFile, setEmployeesFile] = useState("");
   const [employees, setEmployees] = useState<
@@ -38,6 +39,7 @@ export default function AddEmployees() {
 
   useEffect(() => {
     addEmployee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function removeEmployee(index: number) {
@@ -124,13 +126,6 @@ export default function AddEmployees() {
       };
       reader.readAsText(_employeesFile);
     }
-  }
-  function clearEmptyEmployees() {
-    employees.forEach((employee, index) => {
-      if (!employee.firstName || employee.firstName.trim() === "") {
-        setEmployees(employees.filter((_x, i) => i !== index));
-      }
-    });
   }
   function csvToArray(str: string, delimiter = ",") {
     const headers: any[] = str.slice(0, str.indexOf("\n")).split(delimiter);

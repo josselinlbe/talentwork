@@ -1,17 +1,8 @@
 import { useTranslation } from "react-i18next";
-import Modal, { RefModal } from "~/components/ui/modals/Modal";
-import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef, useState } from "react";
-import { SubscriptionProductDto } from "~/application/dtos/core/subscriptions/SubscriptionProductDto";
-import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
-import { TenantCreateRequest } from "~/application/contracts/core/tenants/TenantCreateRequest";
-import { SubscriptionPriceDto } from "~/application/dtos/core/subscriptions/SubscriptionPriceDto";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
-import UserUtils from "~/utils/app/UserUtils";
-import { useNavigate } from "react-router-dom";
+import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useActionData, useSubmit } from "remix";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 
@@ -36,6 +27,7 @@ export default function TenantNew({ onClosed }: Props) {
     } else if (actionData?.success) {
       successModal.current?.show(actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   function createTenant() {

@@ -2,7 +2,6 @@ import { Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
 
 type size = "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "full";
 interface Props {
@@ -17,8 +16,6 @@ interface Props {
 }
 
 export default function SlideOver({ title = "", size = "md", paddingContent = "px-4 sm:px-6", paddingY = "py-6", onClose, content, footer }: Props) {
-  const { t } = useTranslation();
-
   const [open] = useState(true);
 
   useEscapeKeypress(onClose);

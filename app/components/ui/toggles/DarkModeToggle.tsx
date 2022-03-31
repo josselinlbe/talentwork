@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { useRoutes } from "react-router";
-import { useLoaderData, useLocation, useNavigate, useSubmit } from "remix";
-import { Theme } from "~/application/enums/shared/Theme";
+import { useLocation, useSubmit } from "remix";
 import { useRootData } from "~/utils/data/useRootData";
 import clsx from "~/utils/shared/ClassesUtils";
 

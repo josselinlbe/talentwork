@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
@@ -9,7 +9,7 @@ import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessMod
 import clsx from "~/utils/shared/ClassesUtils";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import SelectUsers, { RefSelectUsers } from "~/components/core/users/SelectUsers";
-import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
+import { TenantUser, User, WorkspaceUser } from "@prisma/client";
 import { LoaderFunction, json, useLoaderData, ActionFunction, redirect, useActionData, Form, MetaFunction } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { getTenantUsers } from "~/utils/db/core/tenants.db.server";
@@ -130,6 +130,7 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
     if (actionData?.success) {
       successModal.current?.show(t("shared.success"), actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   useEffect(() => {
@@ -138,13 +139,6 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
 
   function close() {
     navigate("/app/settings/workspaces");
-  }
-  function save(e: FormEvent) {
-    e.preventDefault();
-    if (users.length === 0) {
-      errorModal.current?.show(t("shared.error"), t("account.tenant.workspaces.errors.atLeastOneUser"));
-      return;
-    }
   }
   function selectWorkspaceUsers() {
     selectUsers.current?.show(users.map((f) => f.id));

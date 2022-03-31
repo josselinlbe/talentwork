@@ -1,5 +1,5 @@
+// eslint-disable import/first
 var postmark = require("postmark");
-// import postmark from "postmark";
 
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
 import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";

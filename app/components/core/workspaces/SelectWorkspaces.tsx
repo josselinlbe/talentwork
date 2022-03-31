@@ -4,7 +4,6 @@ import { forwardRef, Fragment, Ref, useImperativeHandle, useRef, useState } from
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
-import Loading from "~/components/ui/loaders/Loading";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Workspace } from "@prisma/client";
 
@@ -171,7 +170,7 @@ const SelectWorkspaces = ({ items, maxSize = "sm:max-w-lg", allowSearch, onClose
                         } else {
                           return (
                             <div>
-                              <ul role="list" className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
+                              <ul className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
                                 {filteredItems(items).map((item, idx) => {
                                   return (
                                     <li className="py-2 flex items-center justify-between space-x-3" key={idx}>

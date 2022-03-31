@@ -1,8 +1,6 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserInvitation } from "@prisma/client";
 import { useSubmit } from "remix";

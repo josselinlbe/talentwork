@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { forwardRef, Fragment, KeyboardEvent, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, Fragment, KeyboardEvent, Ref, useImperativeHandle, useRef, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { Link, useTransition } from "remix";
@@ -183,7 +183,6 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                             <li
                               className="cursor-pointer text-gray-900 select-none relative py-2 pl-3 pr-12 hover:bg-slate-100 hover:text-theme-900"
                               id={"listbox-option-" + idx}
-                              role="option"
                               key={idx}
                               onClick={() => select(link)}
                             >

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { FormEvent, Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -15,7 +15,7 @@ import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData
 import { getWorkspaces } from "~/utils/db/core/workspaces.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { i18n } from "~/locale/i18n.server";
-import { createTenantUser, getTenant, getTenantMember } from "~/utils/db/core/tenants.db.server";
+import { getTenantMember } from "~/utils/db/core/tenants.db.server";
 import { getUserByEmail } from "~/utils/db/core/users.db.server";
 import clsx from "clsx";
 import { createUserInvitation } from "~/utils/db/core/tenantUserInvitations.db.server";
@@ -164,6 +164,7 @@ export default function NewMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     if (actionData?.success) {
       successModal.current?.show(t("shared.success"), actionData.success);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
   useEffect(() => {
@@ -196,7 +197,7 @@ export default function NewMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     return workspaces.map((f) => f.name).join(", ");
   };
   const maxUsers = (): number => {
-    return appData.currentTenant?.features?.maxUsers ?? 0;
+    return appData.mySubscription?.subscriptionProduct.maxUsers ?? 0;
   };
   const maxUsersReached = () => {
     return maxUsers() > 0 && (membersData.users?.length ?? 0) >= maxUsers();

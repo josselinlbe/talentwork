@@ -1,8 +1,8 @@
-import { ActionFunction, Form, json, Link, LoaderFunction, MetaFunction, useActionData, useSearchParams, useTransition } from "remix";
+import { ActionFunction, Form, json, Link, LoaderFunction, MetaFunction, useActionData, useSearchParams } from "remix";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import bcrypt from "bcryptjs";
 import Logo from "~/components/front/Logo";
-import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/LoadingButton";
+import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { i18n } from "~/locale/i18n.server";
 import { deleteUser, getUserByEmail } from "~/utils/db/core/users.db.server";

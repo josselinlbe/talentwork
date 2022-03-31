@@ -20,7 +20,7 @@ export default function ContractEmployees({ items }: Props) {
       <h3 className="mb-2 text-gray-400 font-medium text-sm">{t("models.employee.plural")}</h3>
       <div className="bg-white border-gray-200 rounded-md border shadow-md overflow-hidden">
         <div className="flow-root">
-          <ul role="list" className="divide-y divide-gray-200">
+          <ul className="divide-y divide-gray-200">
             {sortedItems().map((employee, idx) => {
               return (
                 <li key={idx} className={clsx("flex items-center justify-between py-2 px-4 space-x-2")}>

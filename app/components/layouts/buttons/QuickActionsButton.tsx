@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
-import { useNavigate } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 
 interface Props {
@@ -54,11 +52,9 @@ export default function QuickActionsButton({ className }: Props) {
             <ul
               className="z-40 origin-top-right absolute right-0 mt-2 w-72 rounded-sm shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none"
               tabIndex={-1}
-              role="listbox"
               aria-labelledby="listbox-label"
-              aria-activedescendant="listbox-option-0"
             >
-              <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-0" role="option">
+              <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-0">
                 <Link to="/app/contract/new" onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
                   <div className="flex justify-between">
                     <p className="font-semibold">{t("app.contracts.new.title")}</p>
@@ -68,7 +64,7 @@ export default function QuickActionsButton({ className }: Props) {
               </li>
               {appData.isOwnerOrAdmin && (
                 <>
-                  <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2" role="option">
+                  <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2">
                     <Link
                       to="/app/link/new"
                       onClick={() => setOpened(false)}
@@ -80,7 +76,7 @@ export default function QuickActionsButton({ className }: Props) {
                       <p className="text-gray-500 mt-2">{t("app.links.newDescription")}</p>
                     </Link>
                   </li>
-                  <li className="text-gray-900 cursor-default select-none relative text-sm" role="option">
+                  <li className="text-gray-900 cursor-default select-none relative text-sm">
                     <Link to="/app/settings/workspaces/new" onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
                       <div className="flex justify-between">
                         <p className="font-semibold">{t("app.workspaces.create")}</p>

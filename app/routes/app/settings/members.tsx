@@ -10,7 +10,6 @@ import { getTenantMember, getTenantUsers } from "~/utils/db/core/tenants.db.serv
 import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData, useNavigate } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { useAppData } from "~/utils/data/useAppData";
-import { TenantUser } from "@prisma/client";
 import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/core/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
 
@@ -69,8 +68,6 @@ export default function MembersRoute() {
 
   const [searchInput, setSearchInput] = useState("");
 
-  const [acceptedUser] = useState<TenantUser | null>(null);
-
   function yesUpdateSubscription() {
     navigate("/app/settings/subscription");
   }
@@ -79,7 +76,7 @@ export default function MembersRoute() {
     if (appData.user?.type === UserType.Admin) {
       return 0;
     }
-    return appData.currentTenant?.features?.maxUsers ?? 0;
+    return appData.mySubscription?.subscriptionProduct.maxUsers ?? 0;
   };
   const maxUsersReached = () => {
     return maxUsers() > 0 && (data.users?.length ?? 0) >= maxUsers();

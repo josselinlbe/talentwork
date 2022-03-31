@@ -11,6 +11,8 @@ import {
   LoaderFunction,
   useLoaderData,
   ActionFunction,
+  Link,
+  useLocation,
 } from "remix";
 import styles from "./styles/app.css";
 import { useSetupTranslations } from "remix-i18next";
@@ -50,7 +52,7 @@ export const meta: MetaFunction = () => {
 function Document({ children }: { children: React.ReactNode; title?: string }) {
   const data = useRootData();
   return (
-    <html lang={data?.lng} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
+    <html lang={data?.lng ?? "en"} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
         <Meta />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
@@ -129,22 +131,29 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <div>
+      <div className="mx-auto p-12 text-center">
         <h1>
-          {caught.status} {caught.statusText}
+          Client error,{" "}
+          <button type="button" onClick={() => window.location.reload()} className="underline">
+            please try again
+          </button>
         </h1>
       </div>
     </Document>
   );
 }
 
-// export function ErrorBoundary({ error }: { error: Error }) {
-//   return (
-//     <Document title="Uh-oh!">
-//       <div>
-//         <h1>App Error</h1>
-//         <pre>{JSON.stringify(error)}</pre>
-//       </div>
-//     </Document>
-//   );
-// }
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <Document title="Uh-oh!">
+      <div className="mx-auto p-12 text-center">
+        <h1>
+          Server error,{" "}
+          <button type="button" onClick={() => window.location.reload()} className="underline">
+            please try again
+          </button>
+        </h1>
+      </div>
+    </Document>
+  );
+}

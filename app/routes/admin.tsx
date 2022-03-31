@@ -1,7 +1,7 @@
 import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useCatch } from "remix";
 import AppLayout from "~/components/app/AppLayout";
 import { loadAppData } from "~/utils/data/useAppData";
-import { useAppAction } from "~/utils/actions/useAppAction";
+import { callAppAction } from "~/utils/actions/callAppAction";
 import { requireAdminUser } from "~/utils/loaders.middleware";
 
 export const meta: MetaFunction = () => ({
@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const action: ActionFunction = async ({ request }) => {
-  return useAppAction(request, "/admin/tenants");
+  return callAppAction(request, "/admin/tenants");
 };
 
 export let loader: LoaderFunction = async ({ request }) => {

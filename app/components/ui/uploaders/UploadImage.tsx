@@ -28,7 +28,7 @@ export default function UploadImage({ title = "", initialImage, onLoaded, onClos
             <UploadDocument accept="image/png, image/jpg, image/jpeg" description={title} onDropped={onChange} />
             {image && (
               <div>
-                <img className="w-full h-auto" alt="Image" src={image} />
+                <img className="w-full h-auto" alt="Uploaded" src={image} />
               </div>
             )}
           </div>
