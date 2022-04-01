@@ -36,7 +36,7 @@ export default function AdminTenantsRoute() {
       title: t("models.tenant.object"),
     },
     {
-      title: t("models.workspace.plural"),
+      title: t("models.tenant.plural"),
     },
   ];
 
