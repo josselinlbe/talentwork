@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useRef, useState } from "react";
-import TenantSelector from "./selectors/TenantSelector";
-import WorkspaceSelector from "./selectors/WorkspaceSelector";
 import SidebarMenu from "./SidebarMenu";
 import ChatSupportButton from "./buttons/ChatSupportButton";
 import PendingInvitationsButton from "./buttons/PendingInvitationsButton";
@@ -12,6 +10,8 @@ import LogoLight from "~/assets/img/logo-light.png";
 import IconLight from "~/assets/img/icon-light.png";
 import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
+import TenantSelector from "./selectors/TenantSelector";
+import WorkspaceSelector from "./selectors/WorkspaceSelector";
 
 interface Props {
   layout: "app" | "admin";

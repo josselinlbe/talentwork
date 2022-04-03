@@ -1,22 +1,18 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useCatch } from "remix";
+import { ActionFunction, json, LoaderFunction, Outlet, useCatch } from "remix";
 import AppLayout from "~/components/app/AppLayout";
 import { callAppAction } from "~/utils/actions/callAppAction";
 import { loadAppData } from "~/utils/data/useAppData";
 import { requireAuthorization } from "~/utils/loaders.middleware";
-
-export const meta: MetaFunction = () => ({
-  title: "App | Remix SaasFrontend",
-});
-
-export const action: ActionFunction = async ({ request }) => {
-  return callAppAction(request);
-};
 
 export let loader: LoaderFunction = async ({ request }) => {
   const data = await loadAppData(request);
   const currentPath = new URL(request.url).pathname;
   await requireAuthorization(currentPath, data.currentRole);
   return json(data);
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  return callAppAction(request);
 };
 
 export default function AppRoute() {

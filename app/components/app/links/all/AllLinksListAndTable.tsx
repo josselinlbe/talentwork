@@ -4,7 +4,7 @@ import { useState } from "react";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
-import { LinkWithWorkspaces } from "~/utils/db/core/links.db.server";
+import { LinkWithWorkspaces } from "~/utils/db/links.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 
 interface Props {

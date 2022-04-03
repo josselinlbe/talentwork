@@ -31,6 +31,7 @@
     "bcryptjs": "^2.4.3",
     "browser-image-compression": "^1.0.17",
     "clsx": "^1.1.1",
+    "framer-motion": "^6.2.8",
     "i18next": "^21.6.14",
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
@@ -41,6 +42,7 @@
     "react-i18next": "^11.16.1",
     "remix": "^1.2.3",
     "remix-i18next": "^3.0.0",
+    "spin-delay": "^1.1.0",
     "stripe": "^8.211.0"
   },
   "devDependencies": {

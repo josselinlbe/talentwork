@@ -5,15 +5,17 @@ import { json, LoaderFunction, MetaFunction } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Components | Remix SaasFrontend",
-});
-
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
   return json({
+    title: `${t("admin.components.title")} | ${process.env.APP_NAME}`,
     i18n: await i18n.getTranslations(request, ["translations"]),
   });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function ComponentsRoute() {
   const { t } = useTranslation();

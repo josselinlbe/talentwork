@@ -12,24 +12,24 @@ import SelectUsers, { RefSelectUsers } from "~/components/core/users/SelectUsers
 import { TenantUser, User, WorkspaceUser } from "@prisma/client";
 import { LoaderFunction, json, useLoaderData, ActionFunction, redirect, useActionData, Form, MetaFunction } from "remix";
 import { getUserInfo } from "~/utils/session.server";
-import { getTenantUsers } from "~/utils/db/core/tenants.db.server";
+import { getTenantUsers } from "~/utils/db/tenants.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { useAppData } from "~/utils/data/useAppData";
-import { createWorkspace, createWorkspaceUser, getWorkspacesCount } from "~/utils/db/core/workspaces.db.server";
-
-export const meta: MetaFunction = () => ({
-  title: "New workspace | Remix SaasFrontend",
-});
+import { createWorkspace, createWorkspaceUser, getWorkspacesCount } from "~/utils/db/workspaces.db.server";
 
 type LoaderData = {
+  title: string;
   tenantUsers: (TenantUser & { user: User })[];
   workspacesCount: number;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   const userInfo = await getUserInfo(request);
   const tenantUsers = (await getTenantUsers(userInfo?.currentTenantId)) ?? [];
   const data: LoaderData = {
+    title: `${t("app.workspaces.actions.new")} | ${process.env.APP_NAME}`,
     tenantUsers,
     workspacesCount: await getWorkspacesCount(userInfo.currentTenantId),
   };
@@ -97,6 +97,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   return redirect("/app/settings/workspaces");
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 interface Props {
   maxSize?: string;

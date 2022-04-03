@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import * as PDFJS from "pdfjs-dist";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
@@ -33,7 +33,7 @@ export default function PdfViewer({ className, file, onRemoveFile, fileName = ""
     (pageNum, pdf = pdfRef) => {
       if (pdf) {
         setPageCount(pdf.numPages);
-        pdf.getPage(pageNum).then(function (page) {
+        pdf.getPage(pageNum).then(function (page: any) {
           const viewport = page.getViewport({ scale: 0.49 });
           const canvas = canvasRef.current;
           if (canvas) {

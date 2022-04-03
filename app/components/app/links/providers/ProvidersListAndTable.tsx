@@ -5,7 +5,7 @@ import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import clsx from "~/utils/shared/ClassesUtils";
-import { LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
+import { LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 
 interface Props {
   items: LinkWithWorkspacesAndContracts[];

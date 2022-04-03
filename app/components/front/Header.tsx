@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import Icon from "./Icon";
 import { useLoaderData } from "remix";
+import { UserType } from "~/application/enums/users/UserType";
 
 export default function Header() {
   const data = useLoaderData();
@@ -24,6 +25,13 @@ export default function Header() {
   function isCurrent(path: string): boolean {
     return location.pathname === path;
   }
+
+  const loginOrEnterRoute = () => {
+    if (!data.authenticated) {
+      return "/login";
+    }
+    return data.userType === UserType.Tenant ? "/app/dashboard" : "/admin/tenants";
+  };
 
   return (
     <div>
@@ -49,7 +57,7 @@ export default function Header() {
                           </Link>
                         )}
                         <Link
-                          to={data.authenticated ? "/app/dashboard" : "/login"}
+                          to={loginOrEnterRoute()}
                           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300"
                         >
                           {!data.authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
@@ -101,7 +109,7 @@ export default function Header() {
                     </Link>
                   )}
                   <Link
-                    to={data.authenticated ? "/app/dashboard" : "/login"}
+                    to={loginOrEnterRoute()}
                     className="shadow inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-theme-600 dark:text-white bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:text-slate-300"
                   >
                     {!data.authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}

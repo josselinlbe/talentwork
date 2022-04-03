@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => ({
 });
 
 type LoaderData = { randomJoke: Joke };
-export const loader: LoaderFunction = async () => {
+export let loader: LoaderFunction = async () => {
   const count = await db.joke.count();
   const randomRowNumber = Math.floor(Math.random() * count);
   const [randomJoke] = await db.joke.findMany({

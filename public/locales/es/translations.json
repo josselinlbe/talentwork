@@ -61,6 +61,7 @@
     "invalidInvitation": "Enlace de invitación inválido",
     "download": "Descargar",
     "loading": "Cargando",
+    "processing": "Procesando",
     "unauthorized": "No autorizado",
     "notSet": "Not set",
     "warning": "Advertencia",
@@ -82,7 +83,9 @@
     "dragAndDrop": "Arrastra y suelta",
     "home": "Inicio",
     "createdBy": "Creado por",
+    "createdAt": "Creado el",
     "sandbox": "Sandbox",
+    "path": "Ruta",
     "locales": {
       "en": "Inglés",
       "es": "Español"
@@ -427,6 +430,10 @@
         "title": "Límites",
         "description": "Seleccion un plan de acuerdo a lo que necesites"
       },
+      "invoices": {
+        "title": "Facturas",
+        "description": "Descarga tus facturas"
+      },
       "errors": {
         "limitReached": "Límite alcanzado",
         "limitReachedLinks": "Has llegado al límite de enlaces.",
@@ -606,7 +613,9 @@
         "inviteOwnersOrAdmins": "Solo puedes invitar a propietarios o administradores"
       },
       "actions": {
-        "selectOne": "Selecciona un cliente o proveedor"
+        "selectOne": "Selecciona un cliente o proveedor",
+        "new": "Nuevo enlace",
+        "edit": "Editar enlace"
       }
     },
     "providers": {
@@ -658,7 +667,8 @@
       "title": "Planes",
       "thesePricesAreFromFiles": "Estos precios no están en la base de datos, están cargados desde: src/application/pricing/plans.ts.",
       "noPricesInDatabase": "No hay precios configurados. Inicia como admin para configurar los planes y precios.",
-      "generateFromFiles": "Clic aquí para generar estos precios en base de datos y el proveedor de Subscripciones"
+      "noPricesConfigured": "No hay precios configurados.",
+      "generateFromFiles": "Clic aquí para generar estos precios en tu Base de Datos y en tu proveedor de Subscripciones"
     },
     "tenants": {
       "title": "Organizaciones",

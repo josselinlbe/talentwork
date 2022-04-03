@@ -3,7 +3,7 @@ import { SubscriptionPriceType } from "~/application/enums/subscriptions/Subscri
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 
 export interface SubscriptionPriceDto {
-  id: string;
+  id?: string;
   stripeId: string;
   type: SubscriptionPriceType;
   billingPeriod: SubscriptionBillingPeriod;

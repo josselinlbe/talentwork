@@ -10,32 +10,29 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import SelectWorkspaces, { RefSelectWorkspaces } from "~/components/core/workspaces/SelectWorkspaces";
 import { TenantUser, User, Workspace } from "@prisma/client";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
-import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/core/tenants.db.server";
+import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/tenants.db.server";
 import { i18n } from "~/locale/i18n.server";
-import { getUserWorkspaces, getWorkspace, getWorkspaces, updateUsersWorkspaces } from "~/utils/db/core/workspaces.db.server";
+import { getUserWorkspaces, getWorkspace, getWorkspaces, updateUsersWorkspaces } from "~/utils/db/workspaces.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import clsx from "clsx";
 import { useAppData } from "~/utils/data/useAppData";
 
-export const meta: MetaFunction = () => ({
-  title: "Edit member | Remix SaasFrontend",
-});
-
 type LoaderData = {
+  title: string;
   member: (TenantUser & { user: User }) | null;
   tenantWorkspaces: Workspace[];
   userWorkspaces: Workspace[];
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  if (!params.id) {
-    return null;
-  }
+  let t = await i18n.getFixedT(request, "translations");
+
   const userInfo = await getUserInfo(request);
   const member = await getTenantUser(params.id);
   const userWorkspaces = await getUserWorkspaces(userInfo?.currentTenantId, member?.userId);
   const tenantWorkspaces = await getWorkspaces(userInfo?.currentTenantId);
   const data: LoaderData = {
+    title: `${t("settings.members.actions.edit")} | ${process.env.APP_NAME}`,
     member,
     userWorkspaces: userWorkspaces?.map((f) => f.workspace) ?? [],
     tenantWorkspaces,
@@ -122,6 +119,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 };
 
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
+
 interface Props {
   maxSize?: string;
 }
@@ -134,7 +135,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
   const navigate = useNavigate();
   const submit = useSubmit();
   const transition = useTransition();
-  const loading = transition.state === "submitting" || transition.state === "loading";
+  const loading = transition.state === "submitting";
 
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);

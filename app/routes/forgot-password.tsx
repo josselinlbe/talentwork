@@ -6,17 +6,15 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import crypto from "crypto";
-import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/core/users.db.server";
+import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/users.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { sendEmail } from "~/utils/email.server";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 
-export const meta: MetaFunction = () => ({
-  title: "Forgot password | Remix SaasFrontend",
-});
-
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
   return json({
+    title: `${t("account.forgot.title")} | ${process.env.APP_NAME}`,
     i18n: await i18n.getTranslations(request, ["translations"]),
   });
 };
@@ -56,6 +54,10 @@ export const action: ActionFunction = async ({ request }) => {
     success: "Email sent",
   });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function ForgotPasswordRoute() {
   const { t } = useTranslation();

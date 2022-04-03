@@ -3,8 +3,8 @@ import { Transition } from "@headlessui/react";
 import { forwardRef, Fragment, KeyboardEvent, Ref, useImperativeHandle, useRef, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { Link, useTransition } from "remix";
-import { LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
+import { Link } from "remix";
+import { LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
 
 export interface RefLinkSelector {
   select: (link: LinkWithWorkspacesAndMembers) => void;
@@ -19,8 +19,6 @@ interface Props {
 const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<RefLinkSelector>) => {
   const appData = useAppData();
   const { t } = useTranslation();
-  const transition = useTransition();
-  const loading = transition.state === "loading";
 
   const inputSearch = useRef<HTMLInputElement>(null);
 
@@ -152,7 +150,6 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                     </svg>
                   </div>
                   <input
-                    disabled={loading}
                     id="search"
                     autoComplete="off"
                     onKeyDown={trySelect}
@@ -172,9 +169,7 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                 </Link>
               </div>
               {(() => {
-                if (loading) {
-                  return <div className="py-2 px-3 text-gray-400 text-sm">{t("shared.loading")}...</div>;
-                } else if (items.length > 0) {
+                if (items.length > 0) {
                   return (
                     <div>
                       <ul tabIndex={-1} role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-0">

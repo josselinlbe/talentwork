@@ -106,7 +106,7 @@ export default function AllComponentsList({ className, withSlideOvers }: Props) 
 
         <div className="space-y-1">
           <h3 className="font-medium text-sm">Uploaders</h3>
-          <div className="bg-white dark:bg-slate-900 p-6 border-dashed border-gray-300 dark:border-gray-700 border">
+          <div className="bg-white p-6 border-dashed border-gray-300 border">
             <PreviewUploadersDocument />
           </div>
         </div>

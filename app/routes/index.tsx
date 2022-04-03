@@ -6,21 +6,24 @@ import { i18n } from "~/locale/i18n.server";
 import { Language } from "remix-i18next";
 import { getUserInfo } from "~/utils/session.server";
 import { MetaFunction, LoaderFunction, json, useCatch } from "remix";
-
-export const meta: MetaFunction = () => ({
-  title: "Remix SaasFrontend",
-});
+import { getUser } from "~/utils/db/users.db.server";
+import { UserType } from "~/application/enums/users/UserType";
 
 type LoaderData = {
+  title: string;
   authenticated: boolean;
+  userType: UserType;
   i18n: Record<string, Language>;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   try {
     const userInfo = await getUserInfo(request);
+    const user = await getUser(userInfo.userId);
     const data: LoaderData = {
+      title: `${process.env.APP_NAME}`,
       authenticated: (userInfo?.userId ?? "").length > 0,
+      userType: user?.type ?? UserType.Tenant,
       i18n: await i18n.getTranslations(request, ["translations"]),
     };
     return json(data);
@@ -33,6 +36,10 @@ export let loader: LoaderFunction = async ({ request }) => {
     });
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function IndexRoute() {
   return (

@@ -1,21 +1,17 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useCatch } from "remix";
+import { ActionFunction, json, LoaderFunction, Outlet, useCatch } from "remix";
 import AppLayout from "~/components/app/AppLayout";
 import { loadAppData } from "~/utils/data/useAppData";
 import { callAppAction } from "~/utils/actions/callAppAction";
 import { requireAdminUser } from "~/utils/loaders.middleware";
 
-export const meta: MetaFunction = () => ({
-  title: "Admin | Remix SaasFrontend",
-});
-
-export const action: ActionFunction = async ({ request }) => {
-  return callAppAction(request, "/admin/tenants");
-};
-
 export let loader: LoaderFunction = async ({ request }) => {
   const data = await loadAppData(request);
   await requireAdminUser(request);
   return json(data);
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  return callAppAction(request, "/admin/tenants");
 };
 
 export default function AdminRoute() {

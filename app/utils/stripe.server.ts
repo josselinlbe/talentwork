@@ -31,6 +31,18 @@ export async function getStripeSubscription(id: string) {
   }
 }
 
+export async function getStripeInvoices(id: string) {
+  try {
+    return (
+      await stripe.invoices.list({
+        customer: id,
+      })
+    ).data;
+  } catch (e) {
+    return null;
+  }
+}
+
 export async function createStripeCustomer(email: string, name: string) {
   return await stripe.customers.create({
     email,

@@ -1,6 +1,7 @@
 import { SideBarItem } from "./SidebarItem";
 import { UserType } from "~/application/enums/users/UserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
+import { TenantUserRole } from "../enums/tenants/TenantUserRole";
 
 export const AdminSidebar: SideBarItem[] = [
   {
@@ -43,6 +44,12 @@ export const AdminSidebar: SideBarItem[] = [
         icon: SvgIcon.COMPONENTS,
         items: [],
       },
+      // {
+      //   title: "settings.members.title",
+      //   path: "/admin/members",
+      //   icon: SvgIcon.MEMBERS,
+      //   userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
+      // },
     ],
   },
   {

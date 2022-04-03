@@ -8,16 +8,14 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoaderFunction, json, ActionFunction, Form, useActionData, MetaFunction } from "remix";
 import { i18n } from "~/locale/i18n.server";
-import { getUserByEmail, updateUserPassword } from "~/utils/db/core/users.db.server";
+import { getUserByEmail, updateUserPassword } from "~/utils/db/users.db.server";
 import bcrypt from "bcryptjs";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 
-export const meta: MetaFunction = () => ({
-  title: "Reset | Remix SaasFrontend",
-});
-
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
   return json({
+    title: `${t("account.reset.title")} | ${process.env.APP_NAME}`,
     i18n: await i18n.getTranslations(request, ["translations"]),
   });
 };
@@ -82,6 +80,10 @@ export const action: ActionFunction = async ({ request }) => {
     fields,
   });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function ResetRoute() {
   const { t } = useTranslation();

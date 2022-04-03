@@ -8,16 +8,25 @@ import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
 import { useAppData } from "~/utils/data/useAppData";
-import { ActionFunction, Form, json, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
-import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/core/users.db.server";
+import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
+import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { db } from "~/utils/db.server";
 import bcrypt from "bcryptjs";
+import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Profile | Remix SaasFrontend",
-});
+type LoaderData = {
+  title: string;
+};
+
+export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+  const data: LoaderData = {
+    title: `${t("settings.profile.profileTitle")} | ${process.env.APP_NAME}`,
+  };
+  return json(data);
+};
 
 type ActionData = {
   profileSuccess?: string;
@@ -41,7 +50,6 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
@@ -113,8 +121,6 @@ export const action: ActionFunction = async ({ request }) => {
       if (!user) return null;
 
       const isCorrectPassword = await bcrypt.compare(passwordCurrent, user.passwordHash);
-      console.log({ isCorrectPassword });
-
       if (!isCorrectPassword) {
         return badRequest({
           passwordError: `Invalid password.`,
@@ -144,6 +150,10 @@ export const action: ActionFunction = async ({ request }) => {
     }
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function ProfileRoute() {
   const appData = useAppData();

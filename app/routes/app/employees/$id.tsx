@@ -7,16 +7,14 @@ import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import EmployeeProfile from "~/modules/contracts/components/employees/EmployeeProfile";
 
-export const meta: MetaFunction = () => ({
-  title: "Employee | Remix SaasFrontend",
-});
-
 type LoaderData = {
+  title: string;
   item: EmployeeWithCreatedByUser | null;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   const item = await getEmployee(params.id);
   const data: LoaderData = {
+    title: `${item?.firstName} ${item?.lastName} | ${process.env.APP_NAME}`,
     item,
   };
   return json(data);
@@ -66,6 +64,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Form not submitted correctly" });
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function EmployeeRoute() {
   const data = useLoaderData<LoaderData>();

@@ -19,17 +19,22 @@ import { useSetupTranslations } from "remix-i18next";
 import { createUserSession, getUserInfo } from "./utils/session.server";
 import { loadRootData, useRootData } from "./utils/data/useRootData";
 import TopBanner from "./components/ui/banners/TopBanner";
+import Loading from "./components/ui/loaders/Loading";
+import FloatingLoader from "./components/ui/loaders/FloatingLoader";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-export const meta: MetaFunction = () => {
-  const title = `Remix SaasFrontend`;
+export let loader: LoaderFunction = async ({ request }) => {
+  return loadRootData(request);
+};
+
+export const meta: MetaFunction = ({ data }) => {
   const description = `Remix SaaS kit with everything you need to start your SaaS app.`;
   return {
     charset: "utf-8",
-    title,
+    title: data.title,
     description,
     keywords: "Remix,saas,tailwindcss,typescript,starter",
     "og:title": "Remix SaaS kit",
@@ -64,10 +69,12 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
       </head>
       <body className="min-h-screen text-gray-800 dark:text-white bg-white dark:bg-slate-900 max-w-full max-h-full">
         <TopBanner />
+
         {children}
         <Scripts />
         <LiveReload />
         <ScrollRestoration />
+        <FloatingLoader />
 
         <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
         <noscript>
@@ -77,10 +84,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
     </html>
   );
 }
-
-export let loader: LoaderFunction = async ({ request }) => {
-  return loadRootData(request);
-};
 
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);

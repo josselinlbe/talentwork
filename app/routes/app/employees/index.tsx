@@ -5,22 +5,27 @@ import { Employee } from "@prisma/client";
 import { getUserInfo } from "~/utils/session.server";
 import { getEmployees } from "~/modules/contracts/db/employees.db.server";
 import EmployeesList from "~/modules/contracts/components/employees/EmployeesList";
-
-export const meta: MetaFunction = () => ({
-  title: "Employees | Remix SaasFrontend",
-});
+import { i18n } from "~/locale/i18n.server";
 
 type LoaderData = {
+  title: string;
   items: Employee[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   const userInfo = await getUserInfo(request);
   const items = await getEmployees(userInfo.currentWorkspaceId);
   const data: LoaderData = {
+    title: `${t("models.employee.plural")} | ${process.env.APP_NAME}`,
     items,
   };
   return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function EmployeesRoute() {
   const data = useLoaderData<LoaderData>();

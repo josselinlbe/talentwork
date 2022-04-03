@@ -4,7 +4,7 @@ import { Fragment, useRef, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { Tenant } from "@prisma/client";
-import { getMyTenants } from "~/utils/db/core/tenants.db.server";
+import { getMyTenants } from "~/utils/db/tenants.db.server";
 import { useLoaderData, useLocation, useSubmit } from "remix";
 
 interface Props {

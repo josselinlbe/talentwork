@@ -6,6 +6,7 @@ export enum SvgIcon {
   EMAILS,
   NAVIGATION,
   COMPONENTS,
+  MEMBERS,
   APP,
   DASHBOARD,
   SETTINGS,

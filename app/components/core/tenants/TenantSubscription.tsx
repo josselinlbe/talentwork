@@ -1,25 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
-import { TenantDto } from "~/application/dtos/core/tenants/TenantDto";
-import { TenantProductDto } from "~/application/dtos/core/tenants/TenantProductDto";
-
-import { SubscriptionPriceDto } from "~/application/dtos/core/subscriptions/SubscriptionPriceDto";
-import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import DateUtils from "~/utils/shared/DateUtils";
-import Loading from "~/components/ui/loaders/Loading";
+import { SubscriptionPrice, Tenant } from ".prisma/client";
+import { SubscriptionProduct } from "@prisma/client";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import EmptyState from "~/components/ui/emptyState/EmptyState";
 
 interface Props {
-  id?: string;
+  tenant: Tenant;
+  subscriptionPrice: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
 }
 
-export default function TenantSubscription({ id = "" }: Props) {
+export default function TenantSubscription({ tenant, subscriptionPrice }: Props) {
   const { t } = useTranslation();
-
-  const [loading, setLoading] = useState(false);
-  // const [openOptions, setOpenOptions] = useState(false);
-
-  const [item, setItem] = useState<TenantDto>({} as TenantDto);
-  const [products, setProducts] = useState<TenantProductDto[]>([]);
 
   const headers = [
     {
@@ -27,18 +19,6 @@ export default function TenantSubscription({ id = "" }: Props) {
     },
     {
       title: t("app.tenants.subscription.price"),
-    },
-    {
-      title: t("app.tenants.subscription.starts"),
-    },
-    {
-      title: t("app.tenants.subscription.ends"),
-    },
-    {
-      title: t("app.tenants.subscription.isTrial"),
-    },
-    {
-      title: t("app.tenants.subscription.status"),
     },
     {
       title: t("app.tenants.subscription.workspaces"),
@@ -57,30 +37,7 @@ export default function TenantSubscription({ id = "" }: Props) {
     },
   ];
 
-  useEffect(() => {
-    reload();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  function reload() {
-    // closeOptions();
-    const promises: any[] = [
-      services.tenants.get(id).then((response) => {
-        setItem(response);
-      }),
-      services.tenants.adminGetProducts(id).then((response) => {
-        setProducts(response);
-      }),
-    ];
-
-    setLoading(true);
-    Promise.all(promises).finally(() => {
-      setLoading(false);
-    });
-  }
-  // function closeOptions() {
-  //   setOpenOptions(false);
-  // }
-  function priceBillingPeriod(price: SubscriptionPriceDto): string {
+  function priceBillingPeriod(price: SubscriptionPrice): string {
     if (price.billingPeriod === SubscriptionBillingPeriod.ONCE) {
       return t("pricing.once").toString();
     } else {
@@ -97,83 +54,62 @@ export default function TenantSubscription({ id = "" }: Props) {
   return (
     <div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8">
-        {(() => {
-          if (loading) {
-            return <Loading />;
-          } else if (item && item.id) {
-            return (
-              <div>
-                <div className="flex flex-col">
-                  <div className="overflow-x-auto">
-                    <div className="py-2 align-middle inline-block min-w-full">
-                      <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              {headers.map((header, idx) => {
-                                return (
-                                  <th
-                                    key={idx}
-                                    scope="col"
-                                    className="text-xs px-3 py-2 text-left font-medium text-gray-500 tracking-wider select-none truncate"
-                                  >
-                                    <div className="flex items-center space-x-1 text-gray-500">
-                                      <div>{header.title}</div>
-                                    </div>
-                                  </th>
-                                );
-                              })}
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
-                            {products.map((item, idx) => {
-                              return (
-                                <tr key={idx}>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item.subscriptionPrice && item.subscriptionPrice.subscriptionProduct && (
-                                      <span>{t(item.subscriptionPrice.subscriptionProduct.title)}</span>
-                                    )}
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item.subscriptionPrice && (
-                                      <span>
-                                        {item.subscriptionPrice.price}
-                                        {priceBillingPeriod(item.subscriptionPrice)}
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{dateYMD(item.startDate)}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{dateYMD(item.endDate)}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item.trialEnds && (
-                                      <span>
-                                        {t("settings.subscription.trial.ends")} {dateAgo(item.trialEnds)}
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item.active ? <span>{t("shared.active")}</span> : <span>{t("shared.inactive")}</span>}
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.maxWorkspaces}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.maxUsers}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.maxLinks}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.monthlyContracts}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.maxStorage / 1024}</td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+        <div>
+          <div className="flex flex-col">
+            <div className="overflow-x-auto">
+              <div className="py-2 align-middle inline-block min-w-full">
+                {!subscriptionPrice ? (
+                  <EmptyState
+                    className="bg-white"
+                    captions={{
+                      thereAreNo: t("api.errors.noSubscription"),
+                    }}
+                  />
+                ) : (
+                  <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          {headers.map((header, idx) => {
+                            return (
+                              <th key={idx} scope="col" className="text-xs px-3 py-2 text-left font-medium text-gray-500 tracking-wider select-none truncate">
+                                <div className="flex items-center space-x-1 text-gray-500">
+                                  <div>{header.title}</div>
+                                </div>
+                              </th>
+                            );
+                          })}
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        <tr>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                            {subscriptionPrice && subscriptionPrice.subscriptionProduct && <span>{t(subscriptionPrice.subscriptionProduct.title)}</span>}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                            {subscriptionPrice && (
+                              <span>
+                                {subscriptionPrice.price}
+                                {priceBillingPeriod(subscriptionPrice)}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{subscriptionPrice?.subscriptionProduct.maxWorkspaces}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{subscriptionPrice?.subscriptionProduct.maxUsers}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{subscriptionPrice?.subscriptionProduct.maxLinks}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{subscriptionPrice?.subscriptionProduct.monthlyContracts}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                            {subscriptionPrice?.subscriptionProduct?.maxStorage ?? 0 / 1024}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                </div>
+                )}
               </div>
-            );
-          } else {
-            return <div></div>;
-          }
-        })()}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

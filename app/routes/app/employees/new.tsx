@@ -1,15 +1,24 @@
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import { ActionFunction, json, MetaFunction, redirect, useActionData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData } from "remix";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef } from "react";
 import { createEmployee, getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import AddEmployees from "~/modules/contracts/components/employees/AddEmployees";
+import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "New employees | Remix SaasFrontend",
-});
+type LoaderData = {
+  title: string;
+};
+
+export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+  const data: LoaderData = {
+    title: `${t("app.employees.new.multiple")} | ${process.env.APP_NAME}`,
+  };
+  return json(data);
+};
 
 type ActionData = {
   error?: string;
@@ -65,6 +74,10 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function NewEmployeesRoute() {
   const { t } = useTranslation();

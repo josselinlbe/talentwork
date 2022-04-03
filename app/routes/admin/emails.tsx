@@ -11,32 +11,33 @@ import { useAppData } from "~/utils/data/useAppData";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { i18n } from "~/locale/i18n.server";
-import Loading from "~/components/ui/loaders/Loading";
-
-export const meta: MetaFunction = () => ({
-  title: "Emails | Remix SaasFrontend",
-});
+import { createEmailTemplates } from "~/utils/services/emailService";
 
 type LoaderData = {
+  title: string;
   onPostmark: boolean;
   items: EmailTemplateDto[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  const items = await getPostmarkTemplates();
-  if (items.length > 0) {
-    return json({
-      onPostmark: true,
-      items,
-    });
+  let t = await i18n.getFixedT(request, "translations");
+  const data: LoaderData = {
+    title: `${t("admin.emails.title")} | ${process.env.APP_NAME}`,
+    onPostmark: true,
+    items: await getPostmarkTemplates(),
+  };
+
+  if (data.items.length === 0) {
+    data.onPostmark = false;
+    data.items = await emailTemplates();
   }
 
-  const data: LoaderData = {
-    onPostmark: false,
-    items: await emailTemplates(),
-  };
   return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 type ActionData = {
   error?: string;
@@ -58,15 +59,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
     try {
       const templates = await emailTemplates();
-      const template = templates.find((f) => f.type === "layout");
-      if (template) {
-        await createPostmarkTemplate(template);
-      }
-      templates
-        .filter((f) => f.type === "standard")
-        .forEach(async (item) => {
-          await createPostmarkTemplate(item, template?.alias);
-        });
+      await createEmailTemplates(templates);
 
       return success({
         onPostmark: true,
@@ -101,7 +94,7 @@ export default function EmailsRoute() {
   const { t } = useTranslation();
   const submit = useSubmit();
   const transition = useTransition();
-  const loading = transition.state === "submitting" || transition.state === "loading";
+  const loading = transition.state === "submitting";
 
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
@@ -178,9 +171,7 @@ export default function EmailsRoute() {
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
         <div className="flex flex-col">
           {(() => {
-            if (loading) {
-              return <Loading />;
-            } else if (items.length === 0) {
+            if (items.length === 0) {
               return (
                 <EmptyState
                   className="bg-white"

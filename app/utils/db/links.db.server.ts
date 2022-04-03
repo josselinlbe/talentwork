@@ -1,6 +1,6 @@
 import { Contract, Link, User, Workspace, WorkspaceUser } from "@prisma/client";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
-import { db } from "../../db.server";
+import { db } from "../db.server";
 
 export type LinkWithWorkspaces = Link & {
   createdByUser: User;

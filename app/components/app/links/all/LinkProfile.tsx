@@ -7,7 +7,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import Loading from "~/components/ui/loaders/Loading";
 import DateUtils from "~/utils/shared/DateUtils";
-import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
+import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { Workspace } from "@prisma/client";
 import { useSubmit, useTransition } from "remix";
@@ -26,7 +26,7 @@ export default function LinkProfile({ item }: Props) {
   const navigate = useNavigate();
   const submit = useSubmit();
   const transition = useTransition();
-  const loading = transition.state === "loading" || transition.state === "submitting";
+  const loading = transition.state === "submitting";
 
   const confirmDelete = useRef<RefConfirmModal>(null);
   const successModalDeleted = useRef<RefSuccessModal>(null);
@@ -92,9 +92,7 @@ export default function LinkProfile({ item }: Props) {
     <div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8">
         {(() => {
-          if (loading) {
-            return <Loading />;
-          } else if (workspace?.id) {
+          if (workspace?.id) {
             return (
               <div>
                 <div className="relative min-h-screen">

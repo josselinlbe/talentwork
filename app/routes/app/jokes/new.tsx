@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => ({
   title: "New joke | Remix SaasFrontend",
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
   if (!userInfo?.userId) {
     throw new Response("Unauthorized", { status: 401 });

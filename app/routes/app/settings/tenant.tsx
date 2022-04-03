@@ -1,13 +1,21 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, Form, json, MetaFunction, useActionData } from "remix";
+import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import { i18n } from "~/locale/i18n.server";
-import { updateTenant } from "~/utils/db/core/tenants.db.server";
+import { updateTenant } from "~/utils/db/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Tenant | Remix SaasFrontend",
-});
+type LoaderData = {
+  title: string;
+};
+
+export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+  const data: LoaderData = {
+    title: `${t("models.tenant.object")} | ${process.env.APP_NAME}`,
+  };
+  return json(data);
+};
 
 type ActionData = {
   error?: string;
@@ -39,6 +47,10 @@ export const action: ActionFunction = async ({ request }) => {
   };
   return json(actionData);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function TenantRoute() {
   const appData = useAppData();

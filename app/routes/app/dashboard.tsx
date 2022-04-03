@@ -4,18 +4,28 @@ import UserUtils from "~/utils/app/UserUtils";
 import { json, LoaderFunction, MetaFunction, useCatch } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import MySubscriptionProducts from "~/components/core/settings/subscription/MySubscriptionProducts";
-import { loadDashboardData } from "~/utils/data/useDashboardData";
+import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
 import ClientsUsage from "~/components/app/usages/ClientsUsage";
 import EmployeesUsage from "~/modules/contracts/components/employees/EmployeesUsage";
 import ProvidersUsage from "~/components/app/usages/ProvidersUsage";
+import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Dashboard | Remix SaasFrontend",
-});
+type LoaderType = DashboardLoaderData & {
+  title: string;
+};
 
 export let loader: LoaderFunction = async ({ request }) => {
-  return json(await loadDashboardData(request));
+  let t = await i18n.getFixedT(request, "translations");
+  const data: LoaderType = {
+    title: `${t("app.sidebar.dashboard")} | ${process.env.APP_NAME}`,
+    ...(await loadDashboardData(request)),
+  };
+  return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function DashboardRoute() {
   const appData = useAppData();

@@ -6,15 +6,15 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, redirect, useLoaderData } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { getContracts } from "~/modules/contracts/db/contracts.db.server";
-
-export const meta: MetaFunction = () => ({
-  title: "Contracts | Remix SaasFrontend",
-});
+import { i18n } from "~/locale/i18n.server";
 
 type LoaderData = {
+  title: string;
   items: Awaited<ReturnType<typeof getContracts>>;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   const url = new URL(request.url);
   const filterString = url.searchParams.get("status");
   let filter: ContractStatusFilter | undefined;
@@ -32,10 +32,15 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
   const items = await getContracts(userInfo.currentWorkspaceId, filter);
   const data: LoaderData = {
+    title: `${t("models.contract.plural")} | ${process.env.APP_NAME}`,
     items,
   };
   return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function ContractsRoute() {
   const data = useLoaderData<LoaderData>();

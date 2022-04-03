@@ -9,16 +9,14 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useEffect } from "react";
 import { sendContract } from "~/modules/contracts/utils/ContractUtils";
 
-export const meta: MetaFunction = () => ({
-  title: "Contract | Remix SaasFrontend",
-});
-
 type LoaderData = {
+  title: string;
   item: ContractWithDetails | null;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   const item = await getContract(params.id);
   const data: LoaderData = {
+    title: `${item?.name} | ${process.env.APP_NAME}`,
     item,
   };
   return json(data);
@@ -81,6 +79,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   return badRequest({ error: t("shared.invalidForm") });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function ContractRoute() {
   const data = useLoaderData<LoaderData>();

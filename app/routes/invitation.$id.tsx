@@ -8,27 +8,27 @@ import { Link } from "react-router-dom";
 import { Tenant, TenantUserInvitation, User } from "@prisma/client";
 import { LoaderFunction, json, ActionFunction, useLoaderData, Form, useActionData, MetaFunction } from "remix";
 import { i18n } from "~/locale/i18n.server";
-import { getUserByEmail, register } from "~/utils/db/core/users.db.server";
+import { getUserByEmail, register } from "~/utils/db/users.db.server";
 import { sendEmail } from "~/utils/email.server";
-import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/core/tenantUserInvitations.db.server";
+import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/tenantUserInvitations.db.server";
 import { Language } from "remix-i18next";
-import { createTenantUser } from "~/utils/db/core/tenants.db.server";
-import { createWorkspaceUser } from "~/utils/db/core/workspaces.db.server";
+import { createTenantUser } from "~/utils/db/tenants.db.server";
+import { createWorkspaceUser } from "~/utils/db/workspaces.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Invitation | Remix SaasFrontend",
-});
-
 type LoaderData = {
+  title: string;
   i18n: Record<string, Language>;
   invitation: (TenantUserInvitation & { tenant: Tenant }) | null;
   existingUser: User | null;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   const invitation = await getUserInvitation(params.id ?? "");
   const existingUser = await getUserByEmail(invitation?.email);
   const data: LoaderData = {
+    title: `${t("account.invitation.title")} | ${process.env.APP_NAME}`,
     i18n: await i18n.getTranslations(request, ["translations"]),
     invitation,
     existingUser,
@@ -121,6 +121,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function InvitationRoute() {
   const data = useLoaderData<LoaderData>();

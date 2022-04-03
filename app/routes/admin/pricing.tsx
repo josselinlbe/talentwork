@@ -4,41 +4,36 @@ import { useEffect, useRef, useState } from "react";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import plans from "~/application/pricing/plans.server";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useTransition } from "remix";
-import {
-  createSubscriptionFeature,
-  createSubscriptionPrice,
-  createSubscriptionProduct,
-  getAllSubscriptionProducts,
-} from "~/utils/db/core/subscriptionProducts.db.server";
-import { createStripePrice, createStripeProduct } from "~/utils/stripe.server";
+import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { i18n } from "~/locale/i18n.server";
 import clsx from "~/utils/shared/ClassesUtils";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
-
-export const meta: MetaFunction = () => ({
-  title: "Pricing | Remix SaasFrontend",
-});
+import { createPlans } from "~/utils/services/pricingService";
 
 type LoaderData = {
+  title: string;
   onStripe: boolean;
+  isStripeTest: boolean;
   items: SubscriptionProductDto[];
 };
 
-export let loader: LoaderFunction = async () => {
+export let loader: LoaderFunction = async ({ request }) => {
+  await new Promise((r) => setTimeout(r, 1000));
+  let t = await i18n.getFixedT(request, "translations");
+  const data: LoaderData = {
+    title: `${t("admin.pricing.title")} | ${process.env.APP_NAME}`,
+    onStripe: true,
+    isStripeTest: process.env.REMIX_STRIPE_SK?.toString().startsWith("sk_test_") ?? true,
+    items: await getAllSubscriptionProducts(),
+  };
+
   const items = await getAllSubscriptionProducts();
-  if (items.length > 0) {
-    const data: LoaderData = {
-      onStripe: true,
-      items,
-    };
-    return json(data);
+  if (items.length === 0) {
+    data.onStripe = false;
+    data.items = plans;
   }
 
-  const data: LoaderData = {
-    onStripe: false,
-    items: plans,
-  };
   return json(data);
 };
 
@@ -61,51 +56,12 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
+  plans.forEach((plan) => {
+    plan.title = t(plan.title);
+  });
+
   try {
-    plans.forEach(async (plan) => {
-      // Create stripe product
-      const stripeProduct = await createStripeProduct({ title: t(plan.title) });
-      // Save to db
-      const product = await createSubscriptionProduct({
-        stripeId: stripeProduct.id,
-        tier: plan.tier,
-        title: plan.title,
-        description: plan.description,
-        badge: plan.badge,
-        active: plan.active,
-        contactUs: plan.contactUs,
-        maxWorkspaces: plan.maxWorkspaces,
-        maxUsers: plan.maxUsers,
-        maxLinks: plan.maxLinks,
-        maxStorage: plan.maxStorage,
-        monthlyContracts: plan.monthlyContracts,
-      });
-
-      if (!product) {
-        return badRequest({ error: "Could not create subscription product" });
-      }
-
-      plan.prices.forEach(async (price) => {
-        // Create stripe price
-        const stripePrice = await createStripePrice(stripeProduct.id, price);
-        // Save to db
-        await createSubscriptionPrice({
-          ...price,
-          subscriptionProductId: product.id,
-          stripeId: stripePrice.id,
-        });
-      });
-
-      plan.features.forEach(async (feature) => {
-        // Save to db
-        await createSubscriptionFeature({
-          ...feature,
-          subscriptionProductId: product.id,
-        });
-      });
-    });
-
-    await new Promise((r) => setTimeout(r, 1000));
+    await createPlans(plans);
 
     return success({
       onStripe: true,
@@ -116,12 +72,16 @@ export const action: ActionFunction = async ({ request }) => {
   }
 };
 
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
+
 export default function AdminPricingRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
   const { t } = useTranslation();
   const transition = useTransition();
-  const loading = transition.state === "submitting" || transition.state === "loading";
+  const loading = transition.state === "submitting";
 
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
@@ -181,7 +141,7 @@ export default function AdminPricingRoute() {
               return (
                 <div>
                   <Form method="post">
-                    <div className="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-sm border-b border-gray-200 space-y-2">
+                    <div className="align-middle inline-block min-w-full overflow-hidden sm:rounded-sm border-b border-gray-200 space-y-4">
                       {!data.onStripe && (
                         <div className="bg-yellow-50 mb-2 rounded-sm border border-yellow-300 min-w-full">
                           <div className="rounded-sm bg-yellow-50 p-4">
@@ -207,7 +167,7 @@ export default function AdminPricingRoute() {
                                       disabled={loading}
                                       type="submit"
                                       className={clsx(
-                                        "ml-1 h-8 inline-flex items-center px-4 py-2 border border-orange-200 text-xs leading-5 font-medium rounded-sm text-orange-700 bg-orange-100 focus:outline-none focus:shadow-outline-indigo focus:border-orange-700 active:bg-orange-700 transition duration-150 ease-in-out",
+                                        "ml-1 h-8 inline-flex items-center px-4 py-2 border border-orange-200 text-xs leading-5 font-medium rounded-sm text-orange-700 bg-orange-100 focus:outline-none transition duration-150 ease-in-out",
                                         loading ? "bg-opacity-80 cursor-not-allowed" : "hover:bg-orange-200"
                                       )}
                                     >
@@ -220,7 +180,7 @@ export default function AdminPricingRoute() {
                           </div>
                         </div>
                       )}
-                      <table className="min-w-full divide-y divide-gray-300">
+                      <table className="min-w-full divide-y divide-gray-300 shadow border border-gray-200">
                         <thead>
                           <tr>
                             <th className="px-3 py-3 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
@@ -286,7 +246,16 @@ export default function AdminPricingRoute() {
                                 <td className="truncate px-3 py-3 text-sm leading-3">
                                   {!item.monthlyContracts || item.maxLinks === 0 ? t("shared.unlimited") : item.monthlyContracts}
                                 </td>
-                                <td className="truncate px-3 py-3 text-sm leading-3 text-theme-700">{item.stripeId}</td>
+                                <td className="truncate px-3 py-3 text-sm leading-3 text-theme-700">
+                                  <a
+                                    target="_blank"
+                                    className=" underline"
+                                    rel="noreferrer"
+                                    href={`https://dashboard.stripe.com${data.isStripeTest ? "/test" : ""}/products/${item.stripeId}`}
+                                  >
+                                    {item.stripeId}
+                                  </a>
+                                </td>
                               </tr>
                             );
                           })}

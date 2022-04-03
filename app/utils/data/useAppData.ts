@@ -5,12 +5,12 @@ import { createUserSession, getUserInfo } from "../session.server";
 import { i18n } from "~/locale/i18n.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import { getStripeSubscription } from "../stripe.server";
-import { getLinksCount } from "../db/core/links.db.server";
+import { getLinksCount } from "../db/links.db.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
-import { getSubscriptionPriceByStripeId, SubscriptionPriceWithProduct } from "../db/core/subscriptionProducts.db.server";
-import { getMyTenants, getTenant } from "../db/core/tenants.db.server";
-import { getUser } from "../db/core/users.db.server";
-import { getMyWorkspaces, getWorkspace, getWorkspaceUser } from "../db/core/workspaces.db.server";
+import { getSubscriptionPriceByStripeId, SubscriptionPriceWithProduct } from "../db/subscriptionProducts.db.server";
+import { getMyTenants, getTenant } from "../db/tenants.db.server";
+import { getUser } from "../db/users.db.server";
+import { getMyWorkspaces, getWorkspace, getWorkspaceUser } from "../db/workspaces.db.server";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;

@@ -8,7 +8,7 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { User, Workspace, WorkspaceUser } from "@prisma/client";
-import { LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
+import { LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
 import IconSign from "../../icons/IconSign";
 
 export interface RefSelectContractMembers {

@@ -15,7 +15,7 @@ import { updateItem } from "~/utils/shared/ObjectUtils";
 import PdfPreview from "~/components/ui/pdf/PdfViewer";
 import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
-import { getLink, getLinksWithMembers, LinkWithWorkspacesAndMembers } from "~/utils/db/core/links.db.server";
+import { getLink, getLinksWithMembers, LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { getUserInfo } from "~/utils/session.server";
 import { Employee } from "@prisma/client";
@@ -28,19 +28,17 @@ import IconContract from "~/modules/contracts/icons/IconContract";
 import IconSign from "~/modules/contracts/icons/IconSign";
 import SelectEmployees, { RefSelectEmployees } from "~/modules/contracts/components/employees/SelectEmployees";
 
-export const meta: MetaFunction = () => ({
-  title: "New contract | Remix SaasFrontend",
-});
-
 type LoaderData = {
+  title: string;
   links: LinkWithWorkspacesAndMembers[];
   preselectLink: LinkWithWorkspacesAndMembers | undefined;
   employees: Employee[];
   monthlyContractsCount: number;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
-  const userInfo = await getUserInfo(request);
+  let t = await i18n.getFixedT(request, "translations");
 
+  const userInfo = await getUserInfo(request);
   const url = new URL(request.url);
   const preselectLinkIdQueryParam = url.searchParams.get("l");
   let preselectLink: LinkWithWorkspacesAndMembers | undefined;
@@ -49,6 +47,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     preselectLink = links.find((f) => f.id === preselectLinkIdQueryParam);
   }
   const data: LoaderData = {
+    title: `${t("app.employees.new.multiple")} | ${process.env.APP_NAME}`,
     links,
     preselectLink,
     employees: await getEmployees(userInfo.currentWorkspaceId),
@@ -120,6 +119,10 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect("/app/contract/" + createdContract.id);
 };
 
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
+
 export default function NewContractRoute() {
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
@@ -127,7 +130,7 @@ export default function NewContractRoute() {
   const { t } = useTranslation();
   const submit = useSubmit();
   const transition = useTransition();
-  const loading = transition.state === "loading" || transition.state === "submitting";
+  const loading = transition.state === "submitting";
 
   const inputName = useRef<HTMLInputElement>(null);
   const errorModal = useRef<RefErrorModal>(null);

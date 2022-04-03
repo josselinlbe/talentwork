@@ -4,16 +4,18 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction } from "remix";
 import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Terms and conditions | Remix SaasFrontend",
-});
-
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
   return json({
+    title: `${t("front.terms.title")} | ${process.env.APP_NAME}`,
     i18n: await i18n.getTranslations(request, ["translations"]),
     actionUrl: process.env.REMIX_INTEGRATIONS_CONTACT_FORMSPREE?.toString() ?? "",
   });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function TermsAndConditionsRoute() {
   const { t } = useTranslation();

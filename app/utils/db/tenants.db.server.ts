@@ -1,6 +1,7 @@
 import { Tenant, TenantUser, User, Workspace } from "@prisma/client";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
+import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
 
 export type TenantWithWorkspacesAndUsers = Tenant & {
@@ -23,10 +24,28 @@ export async function adminGetAllTenants(): Promise<TenantWithWorkspacesAndUsers
   });
 }
 
-export async function getTenant(id: string) {
+export async function getTenant(id?: string) {
+  if (!id) {
+    return null;
+  }
   return await db.tenant.findUnique({
     where: {
       id,
+    },
+  });
+}
+
+export async function getTenantWithUsersAndWorkspaces(id?: string) {
+  if (!id) {
+    return null;
+  }
+  return await db.tenant.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      workspaces: true,
+      users: true,
     },
   });
 }
@@ -76,19 +95,29 @@ export async function getTenantUsersCount(tenantId: string) {
   });
 }
 
-export async function getTenantUsers(tenantId?: string) {
+export async function getTenantUsers(tenantId?: string, types: UserType[] = [UserType.Admin, UserType.Tenant]) {
   if (!tenantId) {
     return null;
   }
   return await db.tenantUser.findMany({
-    where: { tenantId },
+    where: {
+      tenantId,
+      user: {
+        type: {
+          in: types,
+        },
+      },
+    },
     include: {
       user: true,
     },
   });
 }
 
-export async function getTenantUser(id: string) {
+export async function getTenantUser(id?: string) {
+  if (!id) {
+    return null;
+  }
   return await db.tenantUser.findUnique({
     where: {
       id,

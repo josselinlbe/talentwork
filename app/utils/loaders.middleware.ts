@@ -3,8 +3,8 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { UserType } from "~/application/enums/users/UserType";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
-import { getTenantMember } from "./db/core/tenants.db.server";
-import { getUser } from "./db/core/users.db.server";
+import { getTenantMember } from "./db/tenants.db.server";
+import { getUser } from "./db/users.db.server";
 import { getUserInfo } from "./session.server";
 
 export async function requireAdminUser(request: Request) {

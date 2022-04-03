@@ -2,19 +2,18 @@ import { Link, MetaFunction, Outlet, useLoaderData } from "remix";
 import { json } from "remix";
 import type { LoaderFunction } from "remix";
 import { db } from "~/utils/db.server";
-
-export const meta: MetaFunction = () => ({
-  title: "Jokes | Remix SaasFrontend",
-});
+import { i18n } from "~/locale/i18n.server";
 
 type LoaderData = {
+  title: string;
   items: Array<{ id: string; name: string }>;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  // await new Promise((r) => setTimeout(r, 5000));
+export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
 
   const data: LoaderData = {
+    title: `${t("models.joke.plural")} | ${process.env.APP_NAME}`,
     items: await db.joke.findMany({
       take: 5,
       select: {
@@ -28,6 +27,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   };
   return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function JokesRoute() {
   const data = useLoaderData<LoaderData>();

@@ -2,21 +2,21 @@ import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import LinkProfile from "~/components/app/links/all/LinkProfile";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData } from "remix";
-import { deleteLink, getLink, LinkWithWorkspacesAndContracts } from "~/utils/db/core/links.db.server";
+import { deleteLink, getLink, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { i18n } from "~/locale/i18n.server";
 import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 
-export const meta: MetaFunction = () => ({
-  title: "Link | Remix SaasFrontend",
-});
-
 type LoaderData = {
+  title: string;
   item: LinkWithWorkspacesAndContracts | null;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   const item = await getLink(params.id);
   const data: LoaderData = {
+    title: `${t("app.links.actions.edit")} | ${process.env.APP_NAME}`,
     item,
   };
   return json(data);
@@ -47,6 +47,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   return badRequest({ error: "Form not submitted correctly." });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function EditLinkRoute() {
   const data = useLoaderData<LoaderData>();

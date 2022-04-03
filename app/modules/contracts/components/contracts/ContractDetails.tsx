@@ -3,7 +3,6 @@ import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import Loading from "~/components/ui/loaders/Loading";
 import UploadDocument from "~/components/ui/uploaders/UploadDocument";
 import ContractMembers from "./ContractMembers";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -28,7 +27,7 @@ export default function ContractDetails({ item }: Props) {
   const appData = useAppData();
   const transition = useTransition();
   const submit = useSubmit();
-  const loading = transition.state === "loading" || transition.state === "submitting";
+  const loading = transition.state === "submitting";
 
   const inputName = useRef<HTMLInputElement>(null);
   const confirmSendContract = useRef<RefConfirmModal>(null);
@@ -147,9 +146,7 @@ export default function ContractDetails({ item }: Props) {
   return (
     <div className="max-w-5xl xl:max-w-7xl mx-auto pb-6">
       {(() => {
-        if (loading) {
-          return <Loading />;
-        } else if (item) {
+        if (item) {
           return (
             <div key={item.id}>
               <div className="md:flex space-y-2 md:space-y-0 items-center justify-between py-3 border-b border-gray-200 mb-2 md:space-x-3">
@@ -177,9 +174,13 @@ export default function ContractDetails({ item }: Props) {
                   )}
                   {editing && (
                     <button
+                      disabled={loading}
                       onClick={save}
                       type="submit"
-                      className="inline-flex truncate justify-center px-4 py-2 border border-transparent shadow-sm sm:text-sm font-medium sm:rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
+                      className={clsx(
+                        "inline-flex truncate justify-center px-4 py-2 border border-transparent shadow-sm sm:text-sm font-medium sm:rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
+                        loading && "opacity-80 cursor-not-allowed"
+                      )}
                     >
                       {t("shared.saveChanges")}
                     </button>

@@ -5,10 +5,18 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import SidebarIcon from "~/components/layouts/icons/SidebarIcon";
-import { MetaFunction } from "remix";
+import { json, LoaderFunction, MetaFunction } from "remix";
+import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Navigation | Remix SaasFrontend",
+export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+  return json({
+    title: `${t("admin.navigation.title")} | ${process.env.APP_NAME}`,
+  });
+};
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
 });
 
 export default function AdminNavigationRoute() {

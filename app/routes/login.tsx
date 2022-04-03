@@ -5,10 +5,11 @@ import Logo from "~/components/front/Logo";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { i18n } from "~/locale/i18n.server";
-import { deleteUser, getUserByEmail } from "~/utils/db/core/users.db.server";
+import { deleteUser, getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
-import { getMyTenants } from "~/utils/db/core/tenants.db.server";
+import { getMyTenants } from "~/utils/db/tenants.db.server";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
+import { UserType } from "~/application/enums/users/UserType";
 
 export const meta: MetaFunction = () => {
   return {
@@ -44,7 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = form.get("email")?.toString().toLowerCase().trim();
   const password = form.get("password");
-  const redirectTo = form.get("redirectTo") || "/app/dashboard";
+  const redirectTo = form.get("redirectTo");
   if (typeof email !== "string" || typeof password !== "string" || typeof redirectTo !== "string") {
     return badRequest({
       error: `Form not submitted correctly.`,
@@ -67,7 +68,6 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const isCorrectPassword = await bcrypt.compare(password, user.passwordHash);
-  console.log({ isCorrectPassword });
   if (!isCorrectPassword) {
     return badRequest({
       fields,
@@ -90,7 +90,7 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    redirectTo
+    redirectTo.length > 0 ? redirectTo : user.type === UserType.Admin ? "/admin/tenants" : "/app/dashboard"
   );
 };
 

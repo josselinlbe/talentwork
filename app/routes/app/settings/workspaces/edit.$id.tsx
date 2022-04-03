@@ -13,21 +13,20 @@ import { useAppData } from "~/utils/data/useAppData";
 import SelectUsers, { RefSelectUsers } from "~/components/core/users/SelectUsers";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit } from "remix";
 import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
-import { getTenantMember, getTenantUsers } from "~/utils/db/core/tenants.db.server";
+import { getTenantMember, getTenantUsers } from "~/utils/db/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { i18n } from "~/locale/i18n.server";
-import { getWorkspace, updateWorkspace, updateWorkspaceUsers, deleteWorkspace } from "~/utils/db/core/workspaces.db.server";
-
-export const meta: MetaFunction = () => ({
-  title: "Edit workspace | Remix SaasFrontend",
-});
+import { getWorkspace, updateWorkspace, updateWorkspaceUsers, deleteWorkspace } from "~/utils/db/workspaces.db.server";
 
 type LoaderData = {
+  title: string;
   workspace: (Workspace & { users: (WorkspaceUser & { user: User })[] }) | null;
   tenantUsers: (TenantUser & { user: User })[];
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   if (!params.id) {
     return null;
   }
@@ -35,6 +34,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   const workspace = await getWorkspace(params.id);
   const tenantUsers = (await getTenantUsers(userInfo?.currentTenantId)) ?? [];
   const data: LoaderData = {
+    title: `${t("app.workspaces.actions.edit")} | ${process.env.APP_NAME}`,
     workspace,
     tenantUsers,
   };
@@ -116,6 +116,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     return redirect("/app/settings/workspaces");
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 interface Props {
   maxSize?: string;

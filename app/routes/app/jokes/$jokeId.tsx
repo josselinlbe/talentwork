@@ -20,7 +20,7 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData | undefined }) =
 
 type LoaderData = { joke: Joke; isOwner: boolean };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
   const joke = await db.joke.findUnique({
     where: { id: params.jokeId },

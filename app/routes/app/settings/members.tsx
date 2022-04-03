@@ -6,22 +6,23 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useState } from "react";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { getTenantMember, getTenantUsers } from "~/utils/db/core/tenants.db.server";
+import { getTenantMember, getTenantUsers } from "~/utils/db/tenants.db.server";
 import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData, useNavigate } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { useAppData } from "~/utils/data/useAppData";
-import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/core/tenantUserInvitations.db.server";
+import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
-
-export const meta: MetaFunction = () => ({
-  title: "Members | Remix SaasFrontend",
-});
+import { i18n } from "~/locale/i18n.server";
 
 type LoaderData = {
+  title: string;
   users: Awaited<ReturnType<typeof getTenantUsers>>;
   pendingInvitations: Awaited<ReturnType<typeof getUserInvitations>>;
 };
+
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   const userInfo = await getUserInfo(request);
   const users = await getTenantUsers(userInfo?.currentTenantId);
   const pendingInvitations = await getUserInvitations(userInfo?.currentTenantId);
@@ -30,6 +31,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     return redirect("/app/unauthorized");
   }
   const data: LoaderData = {
+    title: `${t("settings.members.title")} | ${process.env.APP_NAME}`,
     users,
     pendingInvitations,
   };
@@ -56,6 +58,10 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ success: "Invitation deleted" });
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function MembersRoute() {
   const appData = useAppData();

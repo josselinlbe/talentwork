@@ -64,14 +64,10 @@ export async function createSubscriptionProduct(data: {
   maxLinks: number;
   maxStorage: number;
   monthlyContracts: number;
-}): Promise<SubscriptionProduct | null> {
-  return await db.subscriptionProduct
-    .create({
-      data,
-    })
-    .catch(() => {
-      return null;
-    });
+}): Promise<SubscriptionProduct> {
+  return await db.subscriptionProduct.create({
+    data,
+  });
 }
 
 export async function createSubscriptionPrice(data: {
@@ -83,10 +79,9 @@ export async function createSubscriptionPrice(data: {
   currency: string;
   trialDays: number;
   active: boolean;
-}): Promise<SubscriptionPrice | null> {
-  return await db.subscriptionPrice.create({ data }).catch(() => {
-    return null;
-  });
+}): Promise<SubscriptionPrice> {
+  console.log("price", { data });
+  return await db.subscriptionPrice.create({ data });
 }
 
 export async function createSubscriptionFeature(data: {
@@ -95,8 +90,6 @@ export async function createSubscriptionFeature(data: {
   key: string;
   value: string;
   included: boolean;
-}): Promise<SubscriptionFeature | null> {
-  return await db.subscriptionFeature.create({ data }).catch(() => {
-    return null;
-  });
+}): Promise<SubscriptionFeature> {
+  return await db.subscriptionFeature.create({ data });
 }

@@ -1,7 +1,7 @@
 import { createCookieSessionStorage, redirect } from "remix";
 import { URLSearchParams } from "url";
-import { getMyTenants } from "./db/core/tenants.db.server";
-import { getWorkspace, getMyWorkspaces } from "./db/core/workspaces.db.server";
+import { getMyTenants } from "./db/tenants.db.server";
+import { getWorkspace, getMyWorkspaces } from "./db/workspaces.db.server";
 
 export async function setLoggedUser(user: { id: string; email: string; defaultWorkspaceId: string | null }) {
   const userTenants = await getMyTenants(user.id);

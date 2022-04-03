@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import Loading from "~/components/ui/loaders/Loading";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useRef, useState, useEffect, FormEvent } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -20,7 +19,7 @@ export default function EmployeeProfile({ item }: Props) {
   const navigate = useNavigate();
   const submit = useSubmit();
   const transition = useTransition();
-  const loading = transition.state === "loading" || transition.state === "submitting";
+  const loading = transition.state === "submitting";
 
   const firstNameInput = useRef<HTMLInputElement>(null);
   const confirmSave = useRef<RefConfirmModal>(null);
@@ -103,9 +102,7 @@ export default function EmployeeProfile({ item }: Props) {
     <div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8">
         {(() => {
-          if (loading) {
-            return <Loading />;
-          } else if (item && item.id) {
+          if (item && item.id) {
             return (
               <div>
                 <div className="relative min-h-screen">
@@ -237,17 +234,18 @@ export default function EmployeeProfile({ item }: Props) {
                                       <button
                                         type="button"
                                         onClick={cancel}
-                                        disabled={!editing}
+                                        disabled={!editing || loading}
                                         className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
                                       >
                                         {t("shared.cancel")}
                                       </button>
                                       <button
                                         type="submit"
-                                        disabled={!editing || thereAreNoChanges()}
+                                        disabled={!editing || thereAreNoChanges() || loading}
                                         className={clsx(
                                           "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                                          !editing || (thereAreNoChanges() && " opacity-50 cursor-not-allowed")
+                                          !editing || (thereAreNoChanges() && " opacity-50 cursor-not-allowed"),
+                                          loading && " opacity-80 cursor-not-allowed"
                                         )}
                                       >
                                         {t("shared.save")}

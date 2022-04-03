@@ -2,17 +2,27 @@ import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Tabs, { TabItem } from "~/components/ui/tabs/Tabs";
 import { json, Link, LoaderFunction, MetaFunction, redirect } from "remix";
+import { i18n } from "~/locale/i18n.server";
 
-export const meta: MetaFunction = () => ({
-  title: "Links | Remix SaasFrontend",
-});
+type LoaderData = {
+  title: string;
+};
 
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   if (new URL(request.url).pathname === "/app/links") {
     throw redirect("/app/links/all");
   }
-  return json({});
+  const data: LoaderData = {
+    title: `${t("models.link.plural")} | ${process.env.APP_NAME}`,
+  };
+  return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function LinksRoute() {
   const { t } = useTranslation();

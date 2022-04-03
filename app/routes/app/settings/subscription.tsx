@@ -5,28 +5,40 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useRef, useEffect, useState } from "react";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit } from "remix";
-import { getAllSubscriptionProducts, getSubscriptionPrice, getSubscriptionPriceByStripeId } from "~/utils/db/core/subscriptionProducts.db.server";
-import { cancelStripeSubscription, createStripeCustomer, createStripeSession, getStripeSession, getStripeSubscription } from "~/utils/stripe.server";
-import { getTenant, updateTenantSubscriptionCustomerId, updateTenantSubscriptionId } from "~/utils/db/core/tenants.db.server";
+import { getAllSubscriptionProducts, getSubscriptionPrice, getSubscriptionPriceByStripeId } from "~/utils/db/subscriptionProducts.db.server";
+import {
+  cancelStripeSubscription,
+  createStripeCustomer,
+  createStripeSession,
+  getStripeInvoices,
+  getStripeSession,
+  getStripeSubscription,
+} from "~/utils/stripe.server";
+import { getTenant, updateTenantSubscriptionCustomerId, updateTenantSubscriptionId } from "~/utils/db/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
-import { getUser } from "~/utils/db/core/users.db.server";
+import { getUser } from "~/utils/db/users.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ChangeSubscription from "~/components/core/settings/subscription/ChangeSubscription";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import MySubscriptionProducts from "~/components/core/settings/subscription/MySubscriptionProducts";
 import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
-
-export const meta: MetaFunction = () => ({
-  title: "Subscription | Remix SaasFrontend",
-});
+import { i18n } from "~/locale/i18n.server";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
+import { UserType } from "~/application/enums/users/UserType";
+import MyInvoices from "~/components/core/settings/subscription/MyInvoices";
+import Stripe from "stripe";
 
 type LoaderData = DashboardLoaderData & {
+  title: string;
   items: Awaited<ReturnType<typeof getAllSubscriptionProducts>>;
   mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
+  myInvoices: Stripe.Invoice[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
+  let t = await i18n.getFixedT(request, "translations");
+
   await requireOwnerOrAdminRole(request);
   const userInfo = await getUserInfo(request);
   const user = await getUser(userInfo.userId);
@@ -74,10 +86,14 @@ export let loader: LoaderFunction = async ({ request }) => {
     });
   }
 
+  const myInvoices = (await getStripeInvoices(tenant.subscriptionCustomerId)) ?? [];
+
   const dashboardData = await loadDashboardData(request);
 
   const items = await getAllSubscriptionProducts();
   const data: LoaderData = {
+    myInvoices,
+    title: `${t("app.navbar.subscription")} | ${process.env.APP_NAME}`,
     items,
     mySubscription,
     ...dashboardData,
@@ -131,6 +147,10 @@ export const action: ActionFunction = async ({ request }) => {
     return json(actionData);
   }
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export default function SubscriptionRoute() {
   const appData = useAppData();
@@ -192,7 +212,10 @@ export default function SubscriptionRoute() {
       data.items.forEach((product) => {
         const prices = product.prices.find((f) => f.billingPeriod === billingPeriod && f.currency === currency && f.price > 0);
         if (prices) {
-          price = prices;
+          price = {
+            id: prices.id ?? "",
+            ...prices,
+          };
         }
       });
     }
@@ -250,7 +273,17 @@ export default function SubscriptionRoute() {
         </div>
       </div>
 
-      <ChangeSubscription items={data.items} current={data.mySubscription} billingPeriod={billingPeriod} currency={currency} />
+      {data.items.length === 0 ? (
+        <>
+          {appData.user?.type === UserType.Admin ? (
+            <WarningBanner redirect="/admin/pricing" title={t("shared.warning")} text={t("admin.pricing.noPricesInDatabase")} />
+          ) : (
+            <WarningBanner title={t("shared.warning")} text={t("admin.pricing.noPricesConfigured")} />
+          )}
+        </>
+      ) : (
+        <ChangeSubscription items={data.items} current={data.mySubscription} billingPeriod={billingPeriod} currency={currency} />
+      )}
 
       <div className="grid lg:grid-cols-2 gap-6 md:gap-2 mb-4">
         <div className="md:col-span-1">
@@ -263,6 +296,22 @@ export default function SubscriptionRoute() {
       </div>
 
       <MySubscriptionProducts withCurrentPlan={false} />
+
+      {data.myInvoices.length > 0 && (
+        <>
+          <div className="grid lg:grid-cols-2 gap-6 md:gap-2 mb-4">
+            <div className="md:col-span-1">
+              <div className="sm:px-0">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">{t("app.subscription.invoices.title")}</h3>
+
+                <div className="mt-1 text-sm leading-5 text-gray-600">{t("app.subscription.invoices.description")}</div>
+              </div>
+            </div>
+          </div>
+
+          <MyInvoices items={data.myInvoices} />
+        </>
+      )}
 
       <ConfirmModal ref={confirmModal} onYes={confirmCancel} />
       <SuccessModal ref={successModal} />

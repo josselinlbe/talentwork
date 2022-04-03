@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Workspace } from "@prisma/client";
-import { getWorkspaces, getWorkspace } from "~/utils/db/core/workspaces.db.server";
+import { getWorkspaces, getWorkspace } from "~/utils/db/workspaces.db.server";
 
 interface Props {
   items: Awaited<ReturnType<typeof getWorkspaces>>;

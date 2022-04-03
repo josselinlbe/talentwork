@@ -5,7 +5,7 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
-import { getTenantUsers } from "~/utils/db/core/tenants.db.server";
+import { getTenantUsers } from "~/utils/db/tenants.db.server";
 import { TenantUser } from "@prisma/client";
 
 interface Props {
@@ -70,7 +70,7 @@ export default function MembersListAndTable({ items }: Props) {
             <div>
               <EmptyState
                 className="bg-white"
-                to="/app/settings/members/new"
+                to="new"
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.workspaces.errors.noUsers"),
@@ -159,10 +159,7 @@ export default function MembersListAndTable({ items }: Props) {
                   >{ getUserJoined(item) }</td>*/}
                               <td className="w-20 px-2 py-2 whitespace-nowrap text-sm text-gray-600">
                                 <div className="flex items-center space-x-2">
-                                  <Link
-                                    to={"/app/settings/members/edit/" + item.id}
-                                    className="flex items-center space-x-2 text-theme-600 hover:text-theme-900"
-                                  >
+                                  <Link to={"edit/" + item.id} className="flex items-center space-x-2 text-theme-600 hover:text-theme-900">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                       <path
                                         strokeLinecap="round"

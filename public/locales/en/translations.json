@@ -61,6 +61,7 @@
     "invalidInvitation": "Invalid invitation link",
     "download": "Download",
     "loading": "Loading",
+    "processing": "Processing",
     "unauthorized": "Unauthorized",
     "notSet": "Not set",
     "note": "Note",
@@ -82,7 +83,9 @@
     "dragAndDrop": "Drag and drop",
     "home": "Home",
     "createdBy": "Created by",
+    "createdAt": "Created at",
     "sandbox": "Sandbox",
+    "path": "Path",
     "locales": {
       "en": "English",
       "es": "Spanish"
@@ -427,6 +430,10 @@
         "title": "Limits",
         "description": "Select a subscription plan according to your needs"
       },
+      "invoices": {
+        "title": "Invoices",
+        "description": "Download your invoices"
+      },
       "errors": {
         "limitReached": "Limit reached",
         "limitReachedLinks": "You have reached the links limit ({{0}}), upgrade your subscription.",
@@ -606,7 +613,9 @@
         "inviteOwnersOrAdmins": "You can only invite owners or admins"
       },
       "actions": {
-        "selectOne": "Select a client or provider"
+        "selectOne": "Select a client or provider",
+        "new": "New link",
+        "edit": "Edit link"
       }
     },
     "providers": {
@@ -658,7 +667,8 @@
       "title": "Pricing",
       "thesePricesAreFromFiles": "These prices are not in the database, they're loaded from: src/application/pricing/plans.ts.",
       "noPricesInDatabase": "There are no prices. Log in as admin and configure plans and prices.",
-      "generateFromFiles": "Click here to generate these prices in Database and your Subscription provider"
+      "noPricesConfigured": "There are no prices.",
+      "generateFromFiles": "Click here to generate these prices on your Database and your Subscription provider"
     },
     "tenants": {
       "title": "Tenants",
@@ -962,8 +972,8 @@
     "members": {
       "title": "Members",
       "actions": {
-        "new": "Add user",
-        "edit": "Edit user"
+        "new": "Add member",
+        "edit": "Edit member"
       }
     }
   },
