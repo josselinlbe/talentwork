@@ -6,7 +6,7 @@ import plans from "~/application/pricing/plans.server";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useTransition } from "remix";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import clsx from "~/utils/shared/ClassesUtils";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 import { createPlans } from "~/utils/services/pricingService";
@@ -20,7 +20,7 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request }) => {
   await new Promise((r) => setTimeout(r, 1000));
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const data: LoaderData = {
     title: `${t("admin.pricing.title")} | ${process.env.APP_NAME}`,
     onStripe: true,
@@ -46,7 +46,7 @@ type ActionData = {
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const items = await getAllSubscriptionProducts();
   if (items.length > 0) {

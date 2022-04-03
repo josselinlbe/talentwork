@@ -6,14 +6,14 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, redirect, useLoaderData } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { getContracts } from "~/modules/contracts/db/contracts.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
   items: Awaited<ReturnType<typeof getContracts>>;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const url = new URL(request.url);
   const filterString = url.searchParams.get("status");

@@ -8,6 +8,7 @@ import clsx from "clsx";
 import Icon from "./Icon";
 import { useLoaderData } from "remix";
 import { UserType } from "~/application/enums/users/UserType";
+import LocaleSelector from "../ui/selectors/LocaleSelector";
 
 export default function Header() {
   const data = useLoaderData();
@@ -20,7 +21,7 @@ export default function Header() {
     { path: "/", title: t("front.navbar.product") },
     { path: "/pricing", title: t("front.navbar.pricing") },
     { path: "/contact", title: t("front.navbar.contact") },
-    { path: "/components", title: t("admin.components.title") },
+    { path: "/components", title: t("admin.components.title"), className: "hidden xl:block" },
   ];
   function isCurrent(path: string): boolean {
     return location.pathname === path;
@@ -46,7 +47,7 @@ export default function Header() {
                   <div className="-mr-1 flex items-center md:hidden">
                     <div className="flex">
                       <div className="inline-flex rounded-md space-x-2">
-                        {/* <LocaleSelector className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300" /> */}
+                        <LocaleSelector className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300" />
 
                         {!data.authenticated && (
                           <Link
@@ -86,6 +87,7 @@ export default function Header() {
                       key={idx}
                       to={link.path}
                       className={clsx(
+                        link.className,
                         "text-base leading-6 font-medium focus:outline-none transition ease-in-out duration-150 px-3 py-1 rounded-sm",
                         !isCurrent(link.path) && "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300",
                         isCurrent(link.path) && "text-gray-900 dark:text-white"
@@ -95,7 +97,7 @@ export default function Header() {
                     </Link>
                   );
                 })}
-                {/* <LocaleSelector className="hidden lg:block" /> */}
+                <LocaleSelector className="hidden lg:block" />
                 <DarkModeToggle className="hidden lg:flex" />
               </div>
               <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0 z-40">

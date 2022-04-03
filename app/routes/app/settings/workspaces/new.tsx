@@ -13,7 +13,7 @@ import { TenantUser, User, WorkspaceUser } from "@prisma/client";
 import { LoaderFunction, json, useLoaderData, ActionFunction, redirect, useActionData, Form, MetaFunction } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { getTenantUsers } from "~/utils/db/tenants.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { useAppData } from "~/utils/data/useAppData";
 import { createWorkspace, createWorkspaceUser, getWorkspacesCount } from "~/utils/db/workspaces.db.server";
 
@@ -24,7 +24,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const tenantUsers = (await getTenantUsers(userInfo?.currentTenantId)) ?? [];
@@ -52,7 +52,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
   if (!userInfo?.currentTenantId) {
     return unauthorized({

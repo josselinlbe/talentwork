@@ -53,9 +53,9 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 function Document({ children }: { children: React.ReactNode; title?: string }) {
-  const { lng, lightOrDarkMode } = useRootData();
+  let data = useRootData();
   return (
-    <html lang={lng ?? "en"} className={lightOrDarkMode === "dark" ? "dark" : ""}>
+    <html lang={data?.lng ?? "en"} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
         <Meta />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
@@ -119,7 +119,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function App() {
   let { lng } = useLoaderData<{ lng: string }>();
-  useSetupTranslations(lng);
+  useSetupTranslations(lng ?? "en");
   return (
     <Document>
       <Outlet />
@@ -152,7 +152,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <Document title="Uh-oh!">
       <div className="mx-auto p-12 text-center">
         <h1>
-          Server error,{" "}
+          Server error ({error.stack}),{" "}
           <button type="button" onClick={() => window.location.reload()} className="underline">
             please try again
           </button>

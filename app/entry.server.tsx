@@ -13,7 +13,6 @@ export default async function handleRequest(request: Request, responseStatusCode
   await i18n.use(initReactI18next).init({
     supportedLngs: ["es", "en"],
     defaultNS: "translations",
-    fallbackLng: "en",
     react: { useSuspense: false },
   });
 

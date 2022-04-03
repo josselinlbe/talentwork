@@ -11,7 +11,7 @@ import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { sendEmail } from "~/utils/email.server";
 import { getUser } from "~/utils/db/users.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import clsx from "clsx";
 
 type LoaderData = {
@@ -19,7 +19,7 @@ type LoaderData = {
   items: LinkWithWorkspaces[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const items = await getLinks(userInfo.currentWorkspaceId, LinkStatus.PENDING);

@@ -1,5 +1,5 @@
 import { json, useMatches } from "remix";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { Tenant, TenantUser, Workspace } from "@prisma/client";
 import { getTenantWithUsersAndWorkspaces } from "../db/tenants.db.server";
 
@@ -18,7 +18,7 @@ export function useAdminTenantData(id?: string): AdminTenantLoaderData {
 }
 
 export async function loadAdminTenantData(request: Request, id?: string) {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const tenant = await getTenantWithUsersAndWorkspaces(id);
   const data: AdminTenantLoaderData = {
     title: `${t("models.tenant.object")} | ${process.env.APP_NAME}`,

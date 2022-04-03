@@ -3,7 +3,7 @@ import { Workspace } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, MetaFunction } from "remix";
 import { getWorkspaces } from "~/utils/db/workspaces.db.server";
 import { getUserInfo } from "~/utils/session.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenantMember } from "~/utils/db/tenants.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
 import { createUserInvitation } from "~/utils/db/tenantUserInvitations.db.server";
@@ -16,7 +16,7 @@ export type NewMemberLoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const tenantWorkspaces = await getWorkspaces(userInfo?.currentTenantId);
@@ -41,7 +41,7 @@ export type NewMemberActionData = {
 
 const badRequest = (data: NewMemberActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const appData = await loadAppData(request);
 

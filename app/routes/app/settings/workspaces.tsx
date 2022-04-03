@@ -8,7 +8,7 @@ import { getUserInfo } from "~/utils/session.server";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { getTenantMember } from "~/utils/db/tenants.db.server";
 import { getWorkspaces } from "~/utils/db/workspaces.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 export type LoaderData = {
   title: string;
@@ -16,7 +16,7 @@ export type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const workspaces = await getWorkspaces(userInfo?.currentTenantId);

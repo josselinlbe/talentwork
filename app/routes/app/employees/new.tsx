@@ -5,7 +5,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef } from "react";
 import { getUserInfo } from "~/utils/session.server";
 import AddEmployees from "~/modules/contracts/components/employees/AddEmployees";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmployees } from "~/modules/contracts/services/employeesService";
 import { getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 
@@ -14,7 +14,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const data: LoaderData = {
     title: `${t("app.employees.new.multiple")} | ${process.env.APP_NAME}`,
   };

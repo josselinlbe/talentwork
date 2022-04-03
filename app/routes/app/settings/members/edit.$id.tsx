@@ -11,7 +11,7 @@ import SelectWorkspaces, { RefSelectWorkspaces } from "~/components/core/workspa
 import { TenantUser, User, Workspace } from "@prisma/client";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
 import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/tenants.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserWorkspaces, getWorkspace, getWorkspaces, updateUsersWorkspaces } from "~/utils/db/workspaces.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import clsx from "clsx";
@@ -25,7 +25,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const member = await getTenantUser(params.id);
@@ -55,7 +55,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const { id } = params;
   if (!id) {

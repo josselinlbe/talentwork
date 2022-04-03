@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { updateTenant } from "~/utils/db/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
 
@@ -10,7 +10,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const data: LoaderData = {
     title: `${t("models.tenant.object")} | ${process.env.APP_NAME}`,
   };
@@ -27,7 +27,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const form = await request.formData();
   const name = form.get("name")?.toString() ?? "";
   if ((name?.length ?? 0) < 2) {

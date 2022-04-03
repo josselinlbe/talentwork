@@ -7,7 +7,7 @@
 // import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, useLoaderData } from "remix";
 // import { getUserInfo } from "~/utils/session.server";
 // import { deleteUserInvitation, getUserInvitation } from "~/utils/db/tenantUserInvitations.db.server";
-// import { i18n } from "~/locale/i18n.server";
+// import { i18nHelper } from "~/locale/i18n.utils";
 
 // type LoaderData = {
 //   title: string;
@@ -15,7 +15,7 @@
 // };
 
 // export let loader: LoaderFunction = async ({ request }) => {
-//   let t = await i18n.getFixedT(request, "translations");
+//   let { t, translations } = await i18nHelper(request);
 //   const userInfo = await getUserInfo(request);
 //   const users = await getTenantUsers(userInfo?.currentTenantId, [UserType.Admin]);
 //   const data: LoaderData = {

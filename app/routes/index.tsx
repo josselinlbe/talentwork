@@ -2,7 +2,7 @@ import Features from "~/components/front/Features";
 import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import JoinNow from "~/components/front/JoinNow";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { Language } from "remix-i18next";
 import { getUserInfo } from "~/utils/session.server";
 import { MetaFunction, LoaderFunction, json } from "remix";
@@ -17,6 +17,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  const { translations } = await i18nHelper(request);
   try {
     const userInfo = await getUserInfo(request);
     const user = await getUser(userInfo.userId);
@@ -24,7 +25,7 @@ export let loader: LoaderFunction = async ({ request }) => {
       title: `${process.env.APP_NAME}`,
       authenticated: (userInfo?.userId ?? "").length > 0,
       userType: user?.type ?? UserType.Tenant,
-      i18n: await i18n.getTranslations(request, ["translations"]),
+      i18n: translations,
     };
     return json(data);
   } catch (e) {
@@ -32,7 +33,7 @@ export let loader: LoaderFunction = async ({ request }) => {
       error: e,
     });
     return json({
-      i18n: await i18n.getTranslations(request, ["translations"]),
+      i18n: translations,
     });
   }
 };

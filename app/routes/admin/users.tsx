@@ -10,7 +10,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
 import { adminGetAllUsers, deleteUser, getUser, updateUserPassword } from "~/utils/db/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { Tenant, TenantUser, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { UserType } from "~/application/enums/users/UserType";
@@ -22,7 +22,7 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request }) => {
   // await new Promise((r) => setTimeout(r, 4000));
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const items = await adminGetAllUsers();
   const data: LoaderData = {
     title: `${t("models.user.plural")} | ${process.env.APP_NAME}`,
@@ -48,7 +48,7 @@ const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const form = await request.formData();
   const type: ActionType = form.get("type")?.toString() as ActionType;

@@ -5,7 +5,7 @@ import { getLinks, LinkWithWorkspaces } from "~/utils/db/links.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { useState } from "react";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
@@ -13,7 +13,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const items = await getLinks(userInfo.currentWorkspaceId, LinkStatus.LINKED);

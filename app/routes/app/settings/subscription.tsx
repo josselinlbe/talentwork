@@ -24,7 +24,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import MySubscriptionProducts from "~/components/core/settings/subscription/MySubscriptionProducts";
 import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { UserType } from "~/application/enums/users/UserType";
 import MyInvoices from "~/components/core/settings/subscription/MyInvoices";
@@ -37,7 +37,7 @@ type LoaderData = DashboardLoaderData & {
   myInvoices: Stripe.Invoice[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   await requireOwnerOrAdminRole(request);
   const userInfo = await getUserInfo(request);

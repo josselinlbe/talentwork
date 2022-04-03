@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { createLink, getLinksCount } from "~/utils/db/links.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import NewLink from "~/components/app/links/pending/NewLink";
 import { getUserByEmail } from "~/utils/db/users.db.server";
@@ -19,7 +19,7 @@ type LoaderData = {
   linksCount: number;
 };
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const data: LoaderData = {
@@ -36,7 +36,7 @@ export type NewLinkActionData = {
 };
 const badRequest = (data: NewLinkActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const appData = await loadAppData(request);

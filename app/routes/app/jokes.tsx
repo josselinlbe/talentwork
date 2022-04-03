@@ -2,7 +2,7 @@ import { Link, MetaFunction, Outlet, useLoaderData } from "remix";
 import { json } from "remix";
 import type { LoaderFunction } from "remix";
 import { db } from "~/utils/db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
@@ -10,7 +10,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const data: LoaderData = {
     title: `${t("models.joke.plural")} | ${process.env.APP_NAME}`,

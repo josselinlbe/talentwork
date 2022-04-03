@@ -7,15 +7,15 @@ import { Link } from "react-router-dom";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import crypto from "crypto";
 import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/users.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { sendEmail } from "~/utils/email.server";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t, translations } = await i18nHelper(request);
   return json({
     title: `${t("account.forgot.title")} | ${process.env.APP_NAME}`,
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
   });
 };
 
@@ -25,7 +25,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const form = await request.formData();
   const email = form.get("email")?.toString();

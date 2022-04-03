@@ -4,7 +4,7 @@ import ClientsListAndTable from "~/components/app/links/clients/ClientsListAndTa
 import { getClientLinks, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { getUserInfo } from "~/utils/session.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
@@ -12,7 +12,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const items = await getClientLinks(userInfo.currentWorkspaceId);

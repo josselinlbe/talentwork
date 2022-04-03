@@ -4,14 +4,14 @@ import { LoaderFunction, json, useLoaderData, MetaFunction } from "remix";
 import ProvidersListAndTable from "~/components/app/links/providers/ProvidersListAndTable";
 import { getProviderLinks, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { getUserInfo } from "~/utils/session.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
   items: LinkWithWorkspacesAndContracts[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const items = await getProviderLinks(userInfo.currentWorkspaceId);

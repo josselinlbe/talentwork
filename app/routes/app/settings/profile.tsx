@@ -14,14 +14,15 @@ import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { db } from "~/utils/db.server";
 import bcrypt from "bcryptjs";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
+import supportedLocales from "~/locale/supportedLocales";
 
 type LoaderData = {
   title: string;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const data: LoaderData = {
     title: `${t("settings.profile.profileTitle")} | ${process.env.APP_NAME}`,
   };
@@ -158,7 +159,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function ProfileRoute() {
   const appData = useAppData();
   const actionData = useActionData<ActionData>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const transition = useTransition();
   const submit = useSubmit();
 
@@ -173,11 +174,20 @@ export default function ProfileRoute() {
     inputFirstName.current?.select();
   }, []);
 
-  // const locales = supportedLocales;
+  const locales = supportedLocales;
   const [avatar, setAvatar] = useState<string | undefined>(appData.user?.avatar);
-  // const [selectedLocale, setSelectedLocale] = useState("en");
+  const [selectedLocale, setSelectedLocale] = useState(i18n.language);
   const [showUploadImage, setShowUploadImage] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  function changedLocale(locale: string) {
+    setSelectedLocale(locale);
+    const form = new FormData();
+    form.set("type", "setLocale");
+    form.set("redirect", location.pathname);
+    form.set("lng", locale);
+    submit(form, { method: "post", action: "/" });
+  }
 
   function deleteAccount() {
     if (appData.user?.type === UserType.Admin) {
@@ -424,7 +434,7 @@ export default function ProfileRoute() {
         </div>
 
         {/*Preferences */}
-        {/* <div className="md:grid lg:grid-cols-3 md:gap-2">
+        <div className="md:grid lg:grid-cols-3 md:gap-2">
           <div className="md:col-span-1">
             <div className="sm:px-0">
               <h3 className="text-lg font-medium leading-6 text-gray-900">{t("settings.preferences.title")}</h3>
@@ -443,13 +453,13 @@ export default function ProfileRoute() {
                       id="locale"
                       required
                       value={selectedLocale}
-                      onChange={changedLocale}
+                      onChange={(e) => changedLocale(e.currentTarget.value)}
                       className="w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300"
                     >
                       {locales.map((locale, idx) => {
                         return (
                           <option key={idx} value={locale.lang}>
-                            {locale.name}
+                            {t("shared.locales." + locale.name)}
                           </option>
                         );
                       })}
@@ -459,13 +469,14 @@ export default function ProfileRoute() {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
         {/*Separator */}
-        {/* <div className="block">
+        <div className="block">
           <div className="py-5">
             <div className="border-t border-gray-200"></div>
           </div>
-        </div> */}
+        </div>
+
         {/*Danger */}
         <div className="md:grid lg:grid-cols-3 md:gap-2">
           <div className="md:col-span-1">

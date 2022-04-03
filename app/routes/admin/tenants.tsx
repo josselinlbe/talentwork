@@ -6,7 +6,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Tenant, TenantUser, User, Workspace } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenants, TenantWithWorkspacesAndUsers } from "~/utils/db/tenants.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
@@ -14,7 +14,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const items = await adminGetAllTenants();
   const data: LoaderData = {
     title: `${t("models.tenant.plural")} | ${process.env.APP_NAME}`,

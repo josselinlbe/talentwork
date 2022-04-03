@@ -12,7 +12,7 @@ import { getUserInfo } from "~/utils/session.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
@@ -21,7 +21,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const users = await getTenantUsers(userInfo?.currentTenantId);

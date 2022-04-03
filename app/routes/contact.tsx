@@ -4,13 +4,13 @@ import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { useState } from "react";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t, translations } = await i18nHelper(request);
   return json({
     title: `${t("front.contact.title")} | ${process.env.APP_NAME}`,
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
     actionUrl: process.env.REMIX_INTEGRATIONS_CONTACT_FORMSPREE?.toString() ?? "",
   });
 };

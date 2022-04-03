@@ -16,7 +16,7 @@ import PdfPreview from "~/components/ui/pdf/PdfViewer";
 import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
 import { getLink, getLinksWithMembers, LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import { Employee } from "@prisma/client";
 import { createContract, getContract, getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
@@ -36,7 +36,7 @@ type LoaderData = {
   monthlyContractsCount: number;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const url = new URL(request.url);
@@ -61,7 +61,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
 

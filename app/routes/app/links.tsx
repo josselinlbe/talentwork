@@ -2,14 +2,15 @@ import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Tabs, { TabItem } from "~/components/ui/tabs/Tabs";
 import { json, Link, LoaderFunction, MetaFunction, redirect } from "remix";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  const newLocal = await i18nHelper(request);
+  let { t } = newLocal;
 
   if (new URL(request.url).pathname === "/app/links") {
     throw redirect("/app/links/all");

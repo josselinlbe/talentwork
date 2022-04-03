@@ -8,14 +8,14 @@ import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboar
 import ClientsUsage from "~/components/app/usages/ClientsUsage";
 import EmployeesUsage from "~/modules/contracts/components/employees/EmployeesUsage";
 import ProvidersUsage from "~/components/app/usages/ProvidersUsage";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderType = DashboardLoaderData & {
   title: string;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const data: LoaderType = {
     title: `${t("app.sidebar.dashboard")} | ${process.env.APP_NAME}`,
     ...(await loadDashboardData(request)),

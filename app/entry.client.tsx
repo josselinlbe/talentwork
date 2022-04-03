@@ -11,6 +11,10 @@ i18next
     fallbackLng: "en",
     // I recommend you to always disable react.useSuspense for i18next
     react: { useSuspense: false },
+    detection: {
+      caches: ["cookie"],
+      lookupCookie: "lng",
+    },
   })
   .then(() => {
     // then hydrate your app wrapped in the RemixI18NextProvider

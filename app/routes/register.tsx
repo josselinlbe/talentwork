@@ -3,7 +3,7 @@ import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.s
 import Logo from "~/components/front/Logo";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserByEmail, register } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
 import { createStripeCustomer } from "~/utils/stripe.server";
@@ -21,8 +21,9 @@ export const meta: MetaFunction = () => {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  const { translations } = await i18nHelper(request);
   return json({
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
   });
 };
 
@@ -43,7 +44,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
 
   // await new Promise((r) => setTimeout(r, 5000));

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Tenant, TenantUserInvitation, User } from "@prisma/client";
 import { LoaderFunction, json, ActionFunction, useLoaderData, Form, useActionData, MetaFunction } from "remix";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserByEmail, register } from "~/utils/db/users.db.server";
 import { sendEmail } from "~/utils/email.server";
 import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/tenantUserInvitations.db.server";
@@ -23,13 +23,13 @@ type LoaderData = {
   existingUser: User | null;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t, translations } = await i18nHelper(request);
 
   const invitation = await getUserInvitation(params.id ?? "");
   const existingUser = await getUserByEmail(invitation?.email);
   const data: LoaderData = {
     title: `${t("account.invitation.title")} | ${process.env.APP_NAME}`,
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
     invitation,
     existingUser,
   };

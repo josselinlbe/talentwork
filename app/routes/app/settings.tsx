@@ -2,14 +2,14 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Tabs, { TabItem } from "~/components/ui/tabs/Tabs";
 import { json, LoaderFunction, MetaFunction } from "remix";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const data: LoaderData = {
     title: `${t("app.navbar.settings")} | ${process.env.APP_NAME}`,
   };

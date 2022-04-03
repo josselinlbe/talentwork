@@ -2,7 +2,6 @@ import { redirect, useMatches } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { createUserSession, getUserInfo } from "../session.server";
-import { i18n } from "~/locale/i18n.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import { getStripeSubscription } from "../stripe.server";
 import { getLinksCount } from "../db/links.db.server";
@@ -11,6 +10,7 @@ import { getSubscriptionPriceByStripeId, SubscriptionPriceWithProduct } from "..
 import { getMyTenants, getTenant } from "../db/tenants.db.server";
 import { getUser } from "../db/users.db.server";
 import { getMyWorkspaces, getWorkspace, getWorkspaceUser } from "../db/workspaces.db.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -30,6 +30,7 @@ export function useAppData(): AppLoaderData {
 }
 
 export async function loadAppData(request: Request) {
+  const { translations } = await i18nHelper(request);
   if (new URL(request.url).pathname === "/app") {
     throw redirect("/app/dashboard");
   }
@@ -68,7 +69,7 @@ export async function loadAppData(request: Request) {
 
   const pendingInvitations = await getLinksCount(userInfo.currentWorkspaceId, [LinkStatus.PENDING]);
   const data: AppLoaderData = {
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
     user,
     myTenants,
     currentTenant,

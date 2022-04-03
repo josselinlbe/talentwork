@@ -3,13 +3,13 @@ import Header from "~/components/front/Header";
 import AllComponentsList from "~/components/ui/AllComponentsList";
 import { json, LoaderFunction, MetaFunction } from "remix";
 import { useTranslation } from "react-i18next";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t, translations } = await i18nHelper(request);
   return json({
     title: `${t("admin.components.title")} | ${process.env.APP_NAME}`,
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
   });
 };
 

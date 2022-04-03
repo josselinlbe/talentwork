@@ -5,14 +5,14 @@ import { Employee } from "@prisma/client";
 import { getUserInfo } from "~/utils/session.server";
 import { getEmployees } from "~/modules/contracts/db/employees.db.server";
 import EmployeesList from "~/modules/contracts/components/employees/EmployeesList";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
   items: Employee[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const userInfo = await getUserInfo(request);
   const items = await getEmployees(userInfo.currentWorkspaceId);

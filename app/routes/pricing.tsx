@@ -3,11 +3,11 @@ import Plans from "~/components/core/settings/subscription/Plans";
 import Footer from "~/components/front/Footer";
 import { useTranslation } from "react-i18next";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
-import { LoaderFunction, json, useLoaderData, MetaFunction } from "remix";
-import { i18n } from "~/locale/i18n.server";
 import { Language } from "remix-i18next";
 import plans from "~/application/pricing/plans.server";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
+import { i18nHelper } from "~/locale/i18n.utils";
+import { LoaderFunction, json, MetaFunction, useLoaderData } from "remix";
 
 type LoaderData = {
   title: string;
@@ -15,12 +15,12 @@ type LoaderData = {
   items: SubscriptionProductDto[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t, translations } = await i18nHelper(request);
   // await new Promise((r) => setTimeout(r, 1000));
   const items = await getAllSubscriptionProducts();
   const data: LoaderData = {
     title: `${t("front.pricing.title")} | ${process.env.APP_NAME}`,
-    i18n: await i18n.getTranslations(request, ["translations"]),
+    i18n: translations,
     items: items.length > 0 ? items : plans,
   };
   return json(data);

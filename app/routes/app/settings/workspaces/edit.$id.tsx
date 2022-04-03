@@ -15,7 +15,7 @@ import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, use
 import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
 import { getTenantMember, getTenantUsers } from "~/utils/db/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getWorkspace, updateWorkspace, updateWorkspaceUsers, deleteWorkspace } from "~/utils/db/workspaces.db.server";
 
 type LoaderData = {
@@ -25,7 +25,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   if (!params.id) {
     return null;
@@ -57,7 +57,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
 
   const { id } = params;
   if (!id) {

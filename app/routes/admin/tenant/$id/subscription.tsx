@@ -1,7 +1,7 @@
 import { SubscriptionPrice, SubscriptionProduct, Tenant } from "@prisma/client";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import TenantSubscription from "~/components/core/tenants/TenantSubscription";
-import { i18n } from "~/locale/i18n.server";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { getSubscriptionPriceByStripeId } from "~/utils/db/subscriptionProducts.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
 import { getStripeSubscription } from "~/utils/stripe.server";
@@ -13,7 +13,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  let t = await i18n.getFixedT(request, "translations");
+  let { t } = await i18nHelper(request);
   const tenant = await getTenant(params.id);
   const stripeSubscription = await getStripeSubscription(tenant?.subscriptionId ?? "");
   let tenantSubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
