@@ -9,7 +9,7 @@ let firstRender = false;
 export default function FloatingLoader() {
   const { t } = useTranslation();
   const transition = useTransition();
-  const [words, setWords] = useState<Array<string>>([]);
+  const [, setWords] = useState<Array<string>>([]);
   const [pendingPath, setPendingPath] = useState("");
   const showLoader = useSpinDelay(Boolean(transition.state !== "idle"), {
     delay: 400,

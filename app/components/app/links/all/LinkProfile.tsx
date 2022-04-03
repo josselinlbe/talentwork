@@ -5,12 +5,11 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import Loading from "~/components/ui/loaders/Loading";
 import DateUtils from "~/utils/shared/DateUtils";
 import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { Workspace } from "@prisma/client";
-import { useSubmit, useTransition } from "remix";
+import { useSubmit } from "remix";
 import IconContractArchived from "~/modules/contracts/icons/IconContractArchived";
 import IconContractCheck from "~/modules/contracts/icons/IconContractCheck";
 import IconContractClock from "~/modules/contracts/icons/IconContractClock";
@@ -25,8 +24,6 @@ export default function LinkProfile({ item }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const transition = useTransition();
-  const loading = transition.state === "submitting";
 
   const confirmDelete = useRef<RefConfirmModal>(null);
   const successModalDeleted = useRef<RefSuccessModal>(null);
@@ -45,11 +42,6 @@ export default function LinkProfile({ item }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
-  // function reloadContracts() {
-  //   services.contracts.getAllByLink(link.id).then((response) => {
-  //     setContracts(response);
-  //   });
-  // }
   function deleteLink() {
     closeOptions();
     confirmDelete.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));

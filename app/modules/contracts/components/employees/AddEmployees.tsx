@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Loading from "~/components/ui/loaders/Loading";
 import clsx from "~/utils/shared/ClassesUtils";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import IconEmployees from "~/modules/contracts/icons/IconEmployees";

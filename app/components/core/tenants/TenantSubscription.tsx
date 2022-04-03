@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import DateUtils from "~/utils/shared/DateUtils";
 import { SubscriptionPrice, Tenant } from ".prisma/client";
 import { SubscriptionProduct } from "@prisma/client";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
@@ -10,7 +9,7 @@ interface Props {
   subscriptionPrice: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
 }
 
-export default function TenantSubscription({ tenant, subscriptionPrice }: Props) {
+export default function TenantSubscription({ subscriptionPrice }: Props) {
   const { t } = useTranslation();
 
   const headers = [
@@ -43,12 +42,6 @@ export default function TenantSubscription({ tenant, subscriptionPrice }: Props)
     } else {
       return "/" + t("pricing." + SubscriptionBillingPeriod[price.billingPeriod] + "Short");
     }
-  }
-  function dateAgo(value: Date) {
-    return DateUtils.dateAgo(value);
-  }
-  function dateYMD(value: Date | undefined) {
-    return DateUtils.dateYMD(value);
   }
 
   return (

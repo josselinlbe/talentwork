@@ -4,9 +4,8 @@ import { useState } from "react";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Tenant, TenantUser, User, Workspace } from "@prisma/client";
-import { json, LoaderFunction, MetaFunction, useLoaderData, useTransition } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenants, TenantWithWorkspacesAndUsers } from "~/utils/db/tenants.db.server";
-import Loading from "~/components/ui/loaders/Loading";
 import { i18n } from "~/locale/i18n.server";
 
 type LoaderData = {

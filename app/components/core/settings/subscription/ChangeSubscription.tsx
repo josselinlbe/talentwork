@@ -3,7 +3,6 @@ import clsx from "~/utils/shared/ClassesUtils";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Loading from "~/components/ui/loaders/Loading";
 import { useSubmit, useTransition } from "remix";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";

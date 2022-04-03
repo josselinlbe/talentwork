@@ -5,7 +5,7 @@ import JoinNow from "~/components/front/JoinNow";
 import { i18n } from "~/locale/i18n.server";
 import { Language } from "remix-i18next";
 import { getUserInfo } from "~/utils/session.server";
-import { MetaFunction, LoaderFunction, json, useCatch } from "remix";
+import { MetaFunction, LoaderFunction, json } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import { UserType } from "~/application/enums/users/UserType";
 
@@ -50,25 +50,6 @@ export default function IndexRoute() {
         <JoinNow />
         <Footer />
       </div>
-    </div>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  return (
-    <div>
-      <h1>{`${caught.status} ${caught.statusText}`}</h1>
-    </div>
-  );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  return (
-    <div>
-      <h1>Index Error</h1>
-      <pre>{JSON.stringify(error)}</pre>
     </div>
   );
 }

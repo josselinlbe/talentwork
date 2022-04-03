@@ -11,16 +11,14 @@ import {
   LoaderFunction,
   useLoaderData,
   ActionFunction,
-  Link,
-  useLocation,
 } from "remix";
 import styles from "./styles/app.css";
 import { useSetupTranslations } from "remix-i18next";
 import { createUserSession, getUserInfo } from "./utils/session.server";
 import { loadRootData, useRootData } from "./utils/data/useRootData";
 import TopBanner from "./components/ui/banners/TopBanner";
-import Loading from "./components/ui/loaders/Loading";
 import FloatingLoader from "./components/ui/loaders/FloatingLoader";
+import Page404 from "./components/pages/404";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -34,7 +32,7 @@ export const meta: MetaFunction = ({ data }) => {
   const description = `Remix SaaS kit with everything you need to start your SaaS app.`;
   return {
     charset: "utf-8",
-    title: data.title,
+    title: data?.title,
     description,
     keywords: "Remix,saas,tailwindcss,typescript,starter",
     "og:title": "Remix SaaS kit",
@@ -55,9 +53,9 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 function Document({ children }: { children: React.ReactNode; title?: string }) {
-  const data = useRootData();
+  const { lng, lightOrDarkMode } = useRootData();
   return (
-    <html lang={data?.lng ?? "en"} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
+    <html lang={lng ?? "en"} className={lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
         <Meta />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
@@ -134,12 +132,15 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <div className="mx-auto p-12 text-center">
+      <div>
         <h1>
-          Client error,{" "}
-          <button type="button" onClick={() => window.location.reload()} className="underline">
-            please try again
-          </button>
+          {caught.status === 404 ? (
+            <Page404 />
+          ) : (
+            <div className="mx-auto p-12 text-center">
+              {caught.status} {caught.statusText}
+            </div>
+          )}
         </h1>
       </div>
     </Document>
