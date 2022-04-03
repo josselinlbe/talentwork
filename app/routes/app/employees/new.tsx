@@ -3,10 +3,11 @@ import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData } from "remix";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef } from "react";
-import { createEmployee, getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import AddEmployees from "~/modules/contracts/components/employees/AddEmployees";
 import { i18n } from "~/locale/i18n.server";
+import { createEmployees } from "~/modules/contracts/services/employeesService";
+import { getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 
 type LoaderData = {
   title: string;
@@ -26,52 +27,43 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
+  // await new Promise((r) => setTimeout(r, 3000));
   const userInfo = await getUserInfo(request);
 
   const form = await request.formData();
   const employeesArr = form.getAll("employees[]");
-  const employees = employeesArr.map((f: FormDataEntryValue) => {
+  const employees: { email: string; firstName: string; lastName: string }[] = employeesArr.map((f: FormDataEntryValue) => {
     return JSON.parse(f.toString());
   });
+
   if (employees.length === 0) {
-    return badRequest({
-      error: "Add at least one employee",
-    });
+    return badRequest({ error: "Add at least one employee" });
   }
-  employees.forEach(async (employee) => {
+  const findExistingEmployees = employees.map(async (employee) => {
     if (!employee.email) {
-      return badRequest({ error: `Email required` });
+      return `Email required`;
     } else if (!employee.firstName) {
-      return badRequest({ error: `First name required` });
+      return `First name required`;
     } else if (!employee.lastName) {
-      return badRequest({ error: `Last name required` });
+      return `Last name required`;
     }
     const existing = await getEmployeeByEmail(userInfo.currentWorkspaceId, employee.email);
     if (existing) {
-      return badRequest({
-        error: `Employee with email ${existing.email} already added`,
-      });
+      return `Employee with email ${existing.email} already added`;
     }
+    return null;
   });
 
+  const existingEmployeesErrors = (await Promise.all(findExistingEmployees)).filter((f) => f);
+  if (existingEmployeesErrors.length > 0) {
+    return badRequest({ error: existingEmployeesErrors.join(", ") });
+  }
+
   try {
-    employees.forEach(async (employee) => {
-      const newEmployee = {
-        createdByUserId: userInfo.userId,
-        tenantId: userInfo.currentTenantId,
-        workspaceId: userInfo.currentWorkspaceId,
-        email: employee.email,
-        firstName: employee.firstName,
-        lastName: employee.lastName,
-      };
-      console.log({ newEmployee });
-      await createEmployee(newEmployee);
-    });
+    await createEmployees(userInfo, employees);
     return redirect("/app/employees");
   } catch (e: any) {
-    return badRequest({
-      error: e?.toString(),
-    });
+    return badRequest({ error: e?.toString() });
   }
 };
 

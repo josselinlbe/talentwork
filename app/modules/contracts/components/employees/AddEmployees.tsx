@@ -11,6 +11,7 @@ import UploadDocument from "~/components/ui/uploaders/UploadDocument";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSubmit, useTransition } from "remix";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
+import LoadingButton from "~/components/ui/buttons/LoadingButton";
 
 export default function AddEmployees() {
   const { t } = useTranslation();
@@ -314,7 +315,7 @@ export default function AddEmployees() {
             >
               {t("shared.cancel")}
             </button>
-            <button
+            <LoadingButton
               disabled={loading}
               type="submit"
               className={clsx(
@@ -326,7 +327,7 @@ export default function AddEmployees() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
               <span>{t("shared.save")}</span>
-            </button>
+            </LoadingButton>
           </div>
         </div>
       </form>
