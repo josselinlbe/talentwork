@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { Tenant, TenantUser, User, Workspace } from "@prisma/client";
-import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, Link, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenants, TenantWithWorkspacesAndUsers } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
+import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
+import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 
 type LoaderData = {
   title: string;
@@ -16,6 +17,8 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
   const items = await adminGetAllTenants();
+  await loadTenantsSubscriptionAndUsage(items);
+
   const data: LoaderData = {
     title: `${t("models.tenant.plural")} | ${process.env.APP_NAME}`,
     items,
@@ -37,16 +40,31 @@ export default function AdminTenantsRoute() {
       title: t("models.tenant.object"),
     },
     {
-      title: t("models.tenant.plural"),
+      title: t("app.tenants.subscription.plan"),
+    },
+    {
+      title: t("models.user.plural"),
+    },
+    {
+      title: t("models.workspace.plural"),
+    },
+    {
+      title: t("models.contract.plural"),
+    },
+    {
+      title: t("models.employee.plural"),
+    },
+    {
+      title: "", // actions
     },
   ];
 
-  function getWorkspaces(item: Tenant & { workspaces: Workspace[] }) {
-    return item.workspaces?.map((f) => `${f.name}`).join(", ");
-  }
-  function getUsers(item: Tenant & { users: (TenantUser & { user: User })[] }) {
-    return item.users?.map((f) => `${f.user.firstName} ${f.user.lastName} (${f.user.email})`).join(", ");
-  }
+  // function getWorkspaces(item: Tenant & { workspaces: Workspace[] }) {
+  //   return item.workspaces?.map((f) => `${f.name}`).join(", ");
+  // }
+  // function getUsers(item: Tenant & { users: (TenantUser & { user: User })[] }) {
+  //   return item.users?.map((f) => `${f.user.firstName} ${f.user.lastName} (${f.user.email})`).join(", ");
+  // }
   // function getProducts(item: Tenant & { users: (TenantUser & { user: User })[] }) {
   //   return item.products
   //     ?.map(
@@ -83,6 +101,9 @@ export default function AdminTenantsRoute() {
     }
     return data.items.filter((f) => f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()));
   };
+  function billingPeriodName(item: TenantWithWorkspacesAndUsers) {
+    return t("pricing." + SubscriptionBillingPeriod[item.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY] + "Short");
+  }
   return (
     <div>
       <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
@@ -170,15 +191,30 @@ export default function AdminTenantsRoute() {
                                   return (
                                     <tr key={idx}>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        <div className="flex flex-col max-w-sm truncate">
-                                          <Link to={"/admin/tenant/" + item.id + "/profile"} className="text-sm font-medium text-gray-900 hover:underline">
-                                            {item.name}
-                                          </Link>
-                                          <div>{getUsers(item)}</div>
-                                        </div>
+                                        <Link to={`/admin/tenant/${item.id}/profile`} className="font-medium hover:underline">
+                                          {item.name}
+                                        </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        <div className="max-w-sm truncate">{getWorkspaces(item)}</div>
+                                        <div className="flex space-x-1">
+                                          <div>
+                                            {item.subscriptionPrice?.subscriptionProduct?.title ?? t("settings.subscription.noSubscription")}
+                                            {" - "}
+                                            <span className=" italic">
+                                              ({item.subscriptionPrice?.price ?? 0}/{billingPeriodName(item)})
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.usersCount}</td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.workspacesCount}</td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.contractsCount}</td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.employeesCount}</td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        <div className="flex items-center space-x-2">
+                                          <ButtonTertiary to={`/admin/tenant/${item.id}/profile`}>{t("admin.tenants.profile.title")}</ButtonTertiary>
+                                          <ButtonTertiary to={`/admin/tenant/${item.id}/subscription`}>{t("admin.tenants.subscription.title")}</ButtonTertiary>
+                                        </div>
                                       </td>
                                     </tr>
                                   );

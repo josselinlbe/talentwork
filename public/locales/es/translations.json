@@ -949,6 +949,7 @@
     "subscription": {
       "title": "Subscripción",
       "description": "Actualiza tu plan y details de pago",
+      "noSubscription": "Sin suscripción",
       "notSubscribed": "No tienes ninguna subscripción activa",
       "notSubscribedDescription": "Selecciona un plan de acuerdo a lo que necesitas",
       "updated": "Subscripción actualizada",

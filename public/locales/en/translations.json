@@ -949,6 +949,7 @@
     "subscription": {
       "title": "Subscription",
       "description": "Update your plan and payment details",
+      "noSubscription": "No active subscription",
       "notSubscribed": "You don't have any active subscription",
       "notSubscribedDescription": "Please select a plan according to your needs",
       "updated": "Subscription updated",

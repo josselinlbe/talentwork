@@ -3,12 +3,18 @@ import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
+import { SubscriptionPriceWithProduct } from "./subscriptionProducts.db.server";
 
 export type TenantWithWorkspacesAndUsers = Tenant & {
   workspaces: Workspace[];
   users: (TenantUser & {
     user: User;
   })[];
+  usersCount?: number;
+  workspacesCount?: number;
+  subscriptionPrice?: SubscriptionPriceWithProduct | null;
+  contractsCount?: number;
+  employeesCount?: number;
 };
 
 export async function adminGetAllTenants(): Promise<TenantWithWorkspacesAndUsers[]> {

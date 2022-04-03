@@ -1699,10 +1699,6 @@ select {
   max-width: 64rem;
 }
 
-.max-w-sm {
-  max-width: 24rem;
-}
-
 .max-w-3xl {
   max-width: 48rem;
 }
@@ -1713,6 +1709,10 @@ select {
 
 .max-w-screen-xl {
   max-width: 1280px;
+}
+
+.max-w-sm {
+  max-width: 24rem;
 }
 
 .flex-1 {
