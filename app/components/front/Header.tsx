@@ -21,8 +21,8 @@ export default function Header() {
     { path: "/", title: t("front.navbar.product") },
     { path: "/pricing", title: t("front.navbar.pricing") },
     { path: "/contact", title: t("front.navbar.contact") },
-    { path: "/changelog", title: "Changelog" },
-    { path: "/components", title: t("admin.components.title"), className: "hidden xl:block" },
+    { path: "/changelog", title: "Changelog", clsasName: "hidden lg:block" },
+    // { path: "/components", title: t("admin.components.title"), className: "hidden xl:block" },
   ];
   function isCurrent(path: string): boolean {
     return location.pathname === path;

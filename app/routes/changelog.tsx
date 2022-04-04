@@ -3,7 +3,7 @@ import Header from "~/components/front/Header";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
-import Changelog, { ChangelogItem } from "~/components/front/Changelog";
+import ChangelogIssues, { ChangelogItem } from "~/components/front/ChangelogIssues";
 import DateUtils from "~/utils/shared/DateUtils";
 
 type LoaderData = {
@@ -136,8 +136,8 @@ export default function ContactRoute() {
                       return (
                         <>
                           <h2 className="text-black dark:text-white">{DateUtils.dateMonthDayYear(item.date)}</h2>
-                          <Changelog title="Added issues" items={item.added} icon="⌛" />
-                          <Changelog title="Closed issues" items={item.closed} icon="✅" />
+                          <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
+                          <ChangelogIssues title="Closed issues" items={item.closed} icon="✅" />
                         </>
                       );
                     })}

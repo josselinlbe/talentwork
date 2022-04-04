@@ -17,7 +17,7 @@ interface Props {
   icon: string;
   items: Issue[];
 }
-export default function Changelog({ title, icon, items }: Props) {
+export default function ChangelogIssues({ title, icon, items }: Props) {
   const [viewImages, setViewImages] = useState(false);
   function getIssueId(item: Issue) {
     if (item.title.includes("#")) {
@@ -50,7 +50,7 @@ export default function Changelog({ title, icon, items }: Props) {
                   return (
                     <li key={idx}>
                       {icon}{" "}
-                      <a target="_blank" rel="noreferrer" href={getIssueUrl(issue)}>
+                      <a className=" text-theme-600 dark:text-theme-400" target="_blank" rel="noreferrer" href={getIssueUrl(issue)}>
                         #{getIssueId(issue)}
                       </a>
                       : {issue.title.split("#")[0]}
