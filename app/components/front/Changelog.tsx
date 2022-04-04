@@ -1,8 +1,9 @@
-import DateUtils from "~/utils/shared/DateUtils";
+import { useState } from "react";
 
 export type ChangelogItem = {
   date: Date;
   closed: Issue[];
+  added: Issue[];
 };
 
 type Issue = {
@@ -12,9 +13,12 @@ type Issue = {
 };
 
 interface Props {
-  items: ChangelogItem[];
+  title: string;
+  icon: string;
+  items: Issue[];
 }
-export default function Changelog({ items }: Props) {
+export default function Changelog({ title, icon, items }: Props) {
+  const [viewImages, setViewImages] = useState(false);
   function getIssueId(item: Issue) {
     if (item.title.includes("#")) {
       const id = item.title.split("#")[1];
@@ -32,28 +36,41 @@ export default function Changelog({ items }: Props) {
   return (
     <div className="mx-auto ">
       <div className="prose text-sm text-black dark:text-white">
-        {items.map((item) => {
-          return (
+        <>
+          {items.length > 0 && (
             <>
-              <h2 className="text-black dark:text-white">{DateUtils.dateMonthDayYear(item.date)}</h2>
-              <h3 className="text-black dark:text-white">Closed</h3>
+              <div className=" flex space-x-1 items-baseline">
+                <h3 className="text-black dark:text-white">{title}</h3>
+                <button className=" text-xs underline" type="button" onClick={() => setViewImages(!viewImages)}>
+                  ({!viewImages ? "Click here to view images" : "Close images"})
+                </button>
+              </div>
               <ul>
-                {item.closed.map((issue, idx) => {
+                {items.map((issue, idx) => {
                   return (
                     <li key={idx}>
-                      ✅{" "}
+                      {icon}{" "}
                       <a target="_blank" rel="noreferrer" href={getIssueUrl(issue)}>
                         #{getIssueId(issue)}
                       </a>
                       : {issue.title.split("#")[0]}
-                      {issue.img && <img alt={issue.title} src={issue.img} className="object-cover rounded-lg shadow-lg overflow-hidden" />}
+                      {viewImages && (
+                        <>
+                          {issue.img && <img alt={issue.title} src={issue.img} className="object-cover rounded-lg shadow-lg overflow-hidden" />}
+                          {issue.video && (
+                            <a href={issue.video} target="_blank" rel="noreferrer">
+                              Watch demo video
+                            </a>
+                          )}
+                        </>
+                      )}
                     </li>
                   );
                 })}
               </ul>
             </>
-          );
-        })}
+          )}
+        </>
       </div>
     </div>
   );

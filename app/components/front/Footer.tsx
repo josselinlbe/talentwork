@@ -34,6 +34,16 @@ export default function Footer() {
                 Privacy Policy
               </Link>
             </div>
+            <div className="px-5 py-2">
+              <Link to="/changelog" className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                Changelog
+              </Link>
+            </div>
+            <div className="px-5 py-2">
+              <Link to="/components" className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                Components
+              </Link>
+            </div>
           </nav>
           <div className="mt-8 flex justify-center space-x-6">
             <a target="_blank" rel="noreferrer" href="https://twitter.com/AlexandroMtzG" className="text-gray-400 hover:text-gray-500">
