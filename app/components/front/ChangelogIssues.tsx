@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export type ChangelogItem = {
-  date: Date;
+  date: string;
   closed: Issue[];
   added: Issue[];
 };

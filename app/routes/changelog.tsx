@@ -15,7 +15,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const changelogItems: ChangelogItem[] = [
     {
-      date: new Date(2022, 3, 4),
+      date: "April 4, 2022",
       added: [
         {
           title: "Upgrade to React 18 #6",
@@ -135,7 +135,7 @@ export default function ContactRoute() {
                     {data.items.map((item) => {
                       return (
                         <>
-                          <h2 className="text-black dark:text-white">{DateUtils.dateMonthDayYear(item.date)}</h2>
+                          <h2 className="text-black dark:text-white">{item.date}</h2>
                           <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
                           <ChangelogIssues title="Closed issues" items={item.closed} icon="✅" />
                         </>
