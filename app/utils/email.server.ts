@@ -4,18 +4,12 @@ var postmark = require("postmark");
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
 import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
 
-// Send an email:
-var client = new postmark.ServerClient(process.env.REMIX_POSTMARK_SERVER_TOKEN?.toString() ?? "");
-var from = "Remix SaasFrontend";
-var fromEmail = "remix@saasfrontends.com";
-
-export async function sendPlainEmail(to: string, subject: string, textBody: string) {
-  client.sendEmail({
-    From: fromEmail,
-    To: to,
-    Subject: subject,
-    TextBody: textBody,
-  });
+function getClient() {
+  try {
+    return new postmark.ServerClient(process.env.REMIX_POSTMARK_SERVER_TOKEN?.toString() ?? "");
+  } catch (e) {
+    return null;
+  }
 }
 
 function getBaseTemplateModel() {
@@ -23,17 +17,19 @@ function getBaseTemplateModel() {
   return {
     product_url: appUrl,
     login_url: appUrl + "/login",
-    product_name: "Remix SaasFrontend",
-    support_email: "saasfrontends@gmail.com",
-    sender_name: from,
-    company_name: "SaasFrontends",
+    product_name: process.env.APP_NAME,
+    support_email: process.env.REMIX_SUPPORT_EMAIL,
+    sender_name: process.env.APP_NAME,
+    company_name: process.env.REMIX_COMPANY_NAME,
     company_address: process.env.REMIX_COMPANY_ADDRESS,
   };
 }
 
 export async function sendEmail(to: string, alias: string, data: any, Attachments?: { Name: string; Content: string; ContentType: string }[]) {
+  var client = new postmark.ServerClient(process.env.REMIX_POSTMARK_SERVER_TOKEN?.toString() ?? "");
+
   await client.sendEmailWithTemplate({
-    From: fromEmail,
+    From: process.env.REMIX_POSTMARK_FROM_EMAIL,
     To: to,
     TemplateAlias: alias,
     TemplateModel: {
@@ -44,7 +40,11 @@ export async function sendEmail(to: string, alias: string, data: any, Attachment
   });
 }
 
-export async function getPostmarkTemplates() {
+export async function getPostmarkTemplates(): Promise<EmailTemplateDto[]> {
+  const client = getClient();
+  if (!client) {
+    return [];
+  }
   const items: TemplateInList[] = (await client.getTemplates()).Templates;
   const templatesPromises = items.map(async (item: TemplateInList) => {
     const postmarkTemplate: Template = await client.getTemplate(item.Alias ?? "");
@@ -65,6 +65,10 @@ export async function getPostmarkTemplates() {
 }
 
 export async function createPostmarkTemplate(template: EmailTemplateDto, layoutTemplate?: string | undefined) {
+  const client = getClient();
+  if (!client) {
+    throw Error("Undefined Postmark client");
+  }
   return client.createTemplate({
     LayoutTemplate: layoutTemplate,
     TemplateType: template.alias.startsWith("layout-") ? TemplateTypes.Layout : TemplateTypes.Standard,

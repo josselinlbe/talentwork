@@ -5,6 +5,7 @@ export type AppRootData = {
   title: string;
   lng: string;
   lightOrDarkMode: string;
+  debug: boolean;
 };
 
 export function useRootData(): AppRootData {
@@ -17,6 +18,7 @@ export async function loadRootData(request: Request) {
     title: `${process.env.APP_NAME}`,
     lightOrDarkMode: userInfo?.lightOrDarkMode ?? "dark",
     lng: userInfo.lng,
+    debug: process.env.NODE_ENV === "development",
   };
   return json(data);
 }
