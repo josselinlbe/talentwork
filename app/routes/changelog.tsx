@@ -21,7 +21,7 @@ export let loader: LoaderFunction = async ({ request }) => {
           title: "Upgrade to React 18 #6",
         },
         {
-          title: "Make less database calls #7",
+          title: "Make fewer database calls #7",
           img: "https://user-images.githubusercontent.com/8606530/161167627-1e8c2407-fea2-4bb4-81d5-2542f7a02ac4.png",
         },
         {
