@@ -140,6 +140,10 @@
       "comments": "Questions or comments",
       "setup": "Update the .env variable REMIX_INTEGRATIONS_CONTACT_FORMSPREE"
     },
+    "changelog": {
+      "title": "Changelog",
+      "headline": "Stay up to date with the private repo issues status."
+    },
     "faq": {
       "title": "Frequently asked questions",
       "headline": "Add your own questions and answers to help your users understand your SaaS.",

@@ -140,6 +140,10 @@
       "comments": "Preguntas o comentarios",
       "setup": "Actualiza la variable .env REMIX_INTEGRATIONS_CONTACT_FORMSPREE"
     },
+    "changelog": {
+      "title": "Changelog",
+      "headline": "Mantente actualizado con el estatus de los issues en el repositorio privado del kit Remix SaaS kit."
+    },
     "faq": {
       "title": "Preguntas más frecuentes",
       "headline": "Agrega tus propias preguntas y respuestas para ayudar a tus usuarios a entender tu SaaS.",

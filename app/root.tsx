@@ -152,7 +152,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <Document title="Uh-oh!">
       <div className="mx-auto p-12 text-center">
         <h1>
-          Server error ({error.stack}),{" "}
+          Server error ({error.message}),{" "}
           <button type="button" onClick={() => window.location.reload()} className="underline">
             please try again
           </button>
