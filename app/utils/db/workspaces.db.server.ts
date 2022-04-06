@@ -1,7 +1,10 @@
 import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import { db } from "~/utils/db.server";
 
-export async function getWorkspace(id: string) {
+export async function getWorkspace(id?: string) {
+  if (!id) {
+    return null;
+  }
   return await db.workspace.findUnique({
     where: {
       id,

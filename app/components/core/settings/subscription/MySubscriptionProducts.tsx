@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
-import { useLoaderData } from "remix";
+import { useLoaderData, useParams } from "remix";
 import { DashboardLoaderData } from "~/utils/data/useDashboardData";
 import clsx from "clsx";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   className?: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function MySubscriptionProducts({ className = "", withCurrentPlan = false, cols = "grid-cols-2 sm:grid-cols-2 xl:grid-cols-4" }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
   const data = useLoaderData<DashboardLoaderData>();
   const appData = useAppData();
@@ -61,33 +63,6 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
   return (
     <div className={className}>
       <div>
-        {withCurrentPlan && (
-          <div className="space-y-2 sm:space-y-0 sm:flex items-center sm:space-x-2 justify-between">
-            <h3 className="leading-5 text-gray-900 truncate">
-              {(() => {
-                if (appData.mySubscription?.subscriptionProduct) {
-                  return (
-                    <span>
-                      {t("settings.subscription.current")}{" "}
-                      <Link to="/app/settings/subscription" className="leading-5 font-bold hover:underline hover:text-theme-600">
-                        {t(appData.mySubscription?.subscriptionProduct.title)}
-                      </Link>
-                    </span>
-                  );
-                } else {
-                  return (
-                    <span className="ml-1 text-sm leading-5 font-medium text-gray-500">
-                      {t("settings.subscription.noActivePlan")},{" "}
-                      <Link to="/app/settings/subscription" className=" underline text-blue-600">
-                        {t("settings.subscription.clickHereToSubscribe")}
-                      </Link>
-                    </span>
-                  );
-                }
-              })()}
-            </h3>
-          </div>
-        )}
         <dl className={clsx("grid gap-5", cols, withCurrentPlan && "mt-2 ")}>
           <div
             className={clsx(
@@ -112,7 +87,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           </div>
 
           <Link
-            to="/app/contracts?status=pending"
+            to={`${UrlUtils.appUrl(params, "contracts?status=pending")}`}
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
               billableStatus(maxDocumentsRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
@@ -135,7 +110,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           </Link>
 
           <Link
-            to="/app/settings/workspaces"
+            to={UrlUtils.appUrl(params, "settings/workspaces")}
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
               billableStatus(maxWorkspacesRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
@@ -157,7 +132,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             </dd>
           </Link>
           <Link
-            to="/app/settings/members"
+            to={UrlUtils.appUrl(params, "settings/members")}
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
               billableStatus(maxUsersRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",

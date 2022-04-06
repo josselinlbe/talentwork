@@ -1,7 +1,7 @@
 import { redirect, useMatches } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { createUserSession, getUserInfo } from "../session.server";
+import { getUserInfo } from "../session.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import { getStripeSubscription } from "../stripe.server";
 import { getLinksCount } from "../db/links.db.server";
@@ -11,6 +11,8 @@ import { getMyTenants, getTenant } from "../db/tenants.db.server";
 import { getUser } from "../db/users.db.server";
 import { getMyWorkspaces, getWorkspace, getWorkspaceUser } from "../db/workspaces.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { Params } from "react-router";
+import UrlUtils from "../app/UrlUtils";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -26,37 +28,43 @@ export type AppLoaderData = {
 };
 
 export function useAppData(): AppLoaderData {
-  return (useMatches().find((f) => f.pathname === "/app" || f.pathname === "/admin")?.data ?? {}) as AppLoaderData;
+  const paths: string[] = ["routes/app.$tenant.$workspace", "routes/app"];
+  return (useMatches().find((f) => paths.includes(f.id.toLowerCase()))?.data ?? {}) as AppLoaderData;
 }
 
-export async function loadAppData(request: Request) {
+export async function loadAppData(request: Request, params: Params) {
   const { translations } = await i18nHelper(request);
-  if (new URL(request.url).pathname === "/app") {
-    throw redirect("/app/dashboard");
-  }
   const userInfo = await getUserInfo(request);
+  if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === `/app/${params.tenant}/${params.workspace}`) {
+    throw redirect(UrlUtils.appUrl(params, "dashboard"));
+  }
   const user = await getUser(userInfo?.userId);
   const redirectTo = new URL(request.url).pathname;
   if (!userInfo || !user) {
     let searchParams = new URLSearchParams([["redirect", redirectTo]]);
     throw redirect(`/login?${searchParams}`);
   }
-  const currentWorkspaceMembership = await getWorkspaceUser(userInfo.currentWorkspaceId, userInfo.userId);
+  const currentWorkspaceMembership = await getWorkspaceUser(params.workspace, userInfo.userId);
   if (!currentWorkspaceMembership) {
     // No longer a workspace member
-    userInfo.currentWorkspaceId = "";
-    const userWorkspaces = await getMyWorkspaces(userInfo.userId, userInfo.currentTenantId);
-    if (userWorkspaces.length > 0) {
-      userInfo.currentWorkspaceId = userWorkspaces[0].workspace.id;
-    }
-    throw createUserSession(userInfo, redirectTo);
+    // TODO
+    // params.workspace = "";
+    // const userWorkspaces = await getMyWorkspaces(userInfo.userId, userInfo.currentTenantId);
+    // if (userWorkspaces.length > 0) {
+    //   params.workspace = userWorkspaces[0].workspace.id;
+    // }
+    // throw createUserSession(userInfo, redirectTo);
   }
 
-  const currentTenant = await getTenant(userInfo?.currentTenantId);
-  const currentWorkspace = await getWorkspace(userInfo?.currentWorkspaceId);
+  const currentTenant = await getTenant(params.tenant);
+  const currentWorkspace = await getWorkspace(params.workspace);
+  if (!currentTenant || !currentWorkspace) {
+    throw redirect(`/app`);
+  }
+
   const myTenants = await getMyTenants(user.id);
   const myWorkspaces = await getMyWorkspaces(user.id, currentTenant?.id);
-  const tenantMembership = myTenants.find((f) => f.tenantId === userInfo?.currentTenantId);
+  const tenantMembership = myTenants.find((f) => f.tenantId === params.tenant);
 
   const stripeSubscription = await getStripeSubscription(currentTenant?.subscriptionId ?? "");
   let mySubscription: SubscriptionPriceWithProduct | null = null;
@@ -67,7 +75,7 @@ export async function loadAppData(request: Request) {
   const currentRole = tenantMembership?.role ?? TenantUserRole.GUEST;
   const isOwnerOrAdmin = currentRole == TenantUserRole.OWNER || currentRole == TenantUserRole.ADMIN;
 
-  const pendingInvitations = await getLinksCount(userInfo.currentWorkspaceId, [LinkStatus.PENDING]);
+  const pendingInvitations = await getLinksCount(params.workspace ?? "", [LinkStatus.PENDING]);
   const data: AppLoaderData = {
     i18n: translations,
     user,

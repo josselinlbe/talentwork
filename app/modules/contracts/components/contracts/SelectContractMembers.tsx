@@ -10,6 +10,8 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { User, Workspace, WorkspaceUser } from "@prisma/client";
 import { LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
 import IconSign from "../../icons/IconSign";
+import UrlUtils from "~/utils/app/UrlUtils";
+import { useParams } from "react-router";
 
 export interface RefSelectContractMembers {
   show: (link: LinkWithWorkspacesAndMembers, selected: string[]) => void;
@@ -22,6 +24,7 @@ interface Props {
 }
 
 const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectContractMembers>) => {
+  const params = useParams();
   const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -203,7 +206,7 @@ const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }
                             <div>
                               <EmptyState
                                 className="bg-white"
-                                to="/app/settings/members/new"
+                                to={UrlUtils.appUrl(params, "settings/members/new")}
                                 captions={{
                                   new: t("shared.add"),
                                   thereAreNo: getNoMembers(),

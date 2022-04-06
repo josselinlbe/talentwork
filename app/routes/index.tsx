@@ -4,13 +4,14 @@ import Hero from "~/components/front/Hero";
 import JoinNow from "~/components/front/JoinNow";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { Language } from "remix-i18next";
-import { getUserInfo } from "~/utils/session.server";
+import { getUserInfo, UserSession } from "~/utils/session.server";
 import { MetaFunction, LoaderFunction, json } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import { UserType } from "~/application/enums/users/UserType";
 
-type LoaderData = {
+export type IndexLoaderData = {
   title: string;
+  userSession: UserSession;
   authenticated: boolean;
   userType: UserType;
   i18n: Record<string, Language>;
@@ -19,12 +20,13 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   const { translations } = await i18nHelper(request);
   try {
-    const userInfo = await getUserInfo(request);
-    const user = await getUser(userInfo.userId);
-    const data: LoaderData = {
+    const userSession = await getUserInfo(request);
+    const user = await getUser(userSession.userId);
+    const data: IndexLoaderData = {
       title: `${process.env.APP_NAME}`,
-      authenticated: (userInfo?.userId ?? "").length > 0,
+      userSession,
       userType: user?.type ?? UserType.Tenant,
+      authenticated: userSession.userId.length > 0,
       i18n: translations,
     };
     return json(data);

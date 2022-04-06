@@ -18,7 +18,7 @@ import { createUserSession, getUserInfo } from "./utils/session.server";
 import { loadRootData, useRootData } from "./utils/data/useRootData";
 import TopBanner from "./components/ui/banners/TopBanner";
 import FloatingLoader from "./components/ui/loaders/FloatingLoader";
-import Page404 from "./components/pages/404";
+import Page404 from "./components/pages/Page404";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
@@ -53,9 +53,9 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 function Document({ children }: { children: React.ReactNode; title?: string }) {
-  let data = useRootData();
+  let { userSession } = useRootData();
   return (
-    <html lang={data?.lng ?? "en"} className={data?.lightOrDarkMode === "dark" ? "dark" : ""}>
+    <html lang={userSession?.lng ?? "en"} className={userSession?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
         <Meta />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
@@ -94,8 +94,8 @@ export const action: ActionFunction = async ({ request }) => {
     return createUserSession(
       {
         userId: userInfo?.userId ?? "",
-        currentTenantId: userInfo?.currentTenantId ?? "",
-        currentWorkspaceId: userInfo?.currentWorkspaceId ?? "",
+        // currentTenantId: userInfo?.currentTenantId ?? "",
+        // currentWorkspaceId: userInfo?.currentWorkspaceId ?? "",
         lng: userInfo?.lng ?? "en",
         lightOrDarkMode,
       },
@@ -107,8 +107,8 @@ export const action: ActionFunction = async ({ request }) => {
     return createUserSession(
       {
         userId: userInfo?.userId,
-        currentTenantId: userInfo?.currentTenantId,
-        currentWorkspaceId: userInfo?.currentWorkspaceId,
+        // currentTenantId: userInfo?.currentTenantId,
+        // currentWorkspaceId: userInfo?.currentWorkspaceId,
         lightOrDarkMode: userInfo?.lightOrDarkMode,
         lng,
       },

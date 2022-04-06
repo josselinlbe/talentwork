@@ -4,7 +4,6 @@ import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
 import ChangelogIssues, { ChangelogItem } from "~/components/front/ChangelogIssues";
-import DateUtils from "~/utils/shared/DateUtils";
 
 type LoaderData = {
   items: ChangelogItem[];

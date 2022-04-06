@@ -17,6 +17,10 @@ export type TenantWithWorkspacesAndUsers = Tenant & {
   employeesCount?: number;
 };
 
+export type WorkspaceWithTenant = Workspace & {
+  tenant: Tenant;
+};
+
 export async function adminGetAllTenants(): Promise<TenantWithWorkspacesAndUsers[]> {
   return await db.tenant.findMany({
     include: {
@@ -62,7 +66,15 @@ export async function getMyTenants(userId: string) {
       userId,
     },
     include: {
-      tenant: true,
+      tenant: {
+        include: {
+          workspaces: {
+            include: {
+              tenant: true,
+            },
+          },
+        },
+      },
     },
   });
   // if (tenants.length > 0) {
@@ -148,7 +160,10 @@ export async function getTenantMember(userId?: string, tenantId?: string) {
   });
 }
 
-export async function updateTenant(id: string, data: { name: string }) {
+export async function updateTenant(data: { name: string; icon: string }, id?: string) {
+  if (!id) {
+    return;
+  }
   return await db.tenant.update({
     where: {
       id,
@@ -184,11 +199,12 @@ export async function updateTenantUser(id: string, data: { role: number }) {
   });
 }
 
-export async function createTenant(name: string, subscriptionCustomerId: string) {
+export async function createTenant(name: string, subscriptionCustomerId: string, icon: string) {
   return await db.tenant.create({
     data: {
       name,
       subscriptionCustomerId,
+      icon,
     },
   });
 }

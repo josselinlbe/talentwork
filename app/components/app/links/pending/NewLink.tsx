@@ -5,9 +5,10 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import clsx from "~/utils/shared/ClassesUtils";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { useActionData, useNavigate, useSubmit } from "remix";
+import { useActionData, useNavigate, useParams, useSubmit } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
-import { NewLinkActionData } from "~/routes/app/link/new";
+import { NewLinkActionData } from "~/routes/app.$tenant.$workspace/link/new";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   linksCount: number;
@@ -15,6 +16,7 @@ interface Props {
 
 export default function NewLink({ linksCount }: Props) {
   const { t } = useTranslation();
+  const params = useParams();
   const appData = useAppData();
   const submit = useSubmit();
   const actionData = useActionData<NewLinkActionData>();
@@ -80,7 +82,7 @@ export default function NewLink({ linksCount }: Props) {
     <div>
       {maxLinksReached() ? (
         <WarningBanner
-          redirect="/app/settings/subscription"
+          redirect={UrlUtils.appUrl(params, `settings/subscription`)}
           title={t("app.subscription.errors.limitReached")}
           text={t("app.subscription.errors.limitReachedLinks", [maxLinks])}
         />
@@ -183,7 +185,7 @@ export default function NewLink({ linksCount }: Props) {
         </>
       )}
 
-      <SuccessModal ref={successModal} onClosed={() => navigate("/app/links/pending")} />
+      <SuccessModal ref={successModal} onClosed={() => navigate(UrlUtils.appUrl(params, `links/pending`))} />
       <ConfirmModal ref={confirmCreateLinkModal} onYes={confirmCreateLink} />
       <ErrorModal ref={errorModal} />
     </div>

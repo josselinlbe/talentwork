@@ -676,6 +676,7 @@
     },
     "tenants": {
       "title": "Tenants",
+      "overview": "Overview",
       "profile": {
         "title": "Profile"
       },
@@ -808,7 +809,7 @@
     }
   },
   "models": {
-     "joke": {
+    "joke": {
       "object": "Joke",
       "plural": "Jokes",
       "name": "Name",
@@ -1025,7 +1026,7 @@
       "alreadyAMember": "Already a member",
       "noChanges": "No changes",
       "noSubscription": "No active subscription",
-      "noTenants": "You don't belong to any organization, register to create one",
+      "noTenants": "You don't belong to any organization",
       "limitReachedWorkspaces": "You have reached the workspaces limit"
     }
   }

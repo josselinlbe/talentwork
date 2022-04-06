@@ -9,6 +9,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import SidebarIcon from "./icons/SidebarIcon";
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
+import { useParams } from "remix";
 
 interface Props {
   layout: "app" | "admin";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function SidebarMenu({ layout, onSelected }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
   const location = useLocation();
   const appData = useAppData();
@@ -24,7 +26,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   const [expanded, setExpanded] = useState<number[]>([]);
 
   useEffect(() => {
-    setMenu(layout === "admin" ? AdminSidebar : AppSidebar);
+    setMenu(layout === "admin" ? AdminSidebar : AppSidebar(params.tenant ?? "", params.workspace ?? ""));
     menu.forEach((group) => {
       group.items?.forEach((element, index) => {
         if (element.open) {
@@ -34,6 +36,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
         }
       });
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -47,8 +50,11 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
       setExpanded([...expanded, index]);
     }
   }
+  function getPath(item: SideBarItem) {
+    return item.path.replace(":tenant", appData.currentTenant?.id ?? "").replace(":workspace", appData.currentWorkspace?.id ?? "");
+  }
   function isCurrent(menuItem: SideBarItem) {
-    return location.pathname?.includes(menuItem.path);
+    return location.pathname?.includes(getPath(menuItem));
   }
   function allowCurrentUserType(item: SideBarItem) {
     return !item.userTypes || item.userTypes.includes(appData.user?.type ?? UserType.Tenant);
@@ -86,7 +92,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                         return (
                           <div>
                             <Link
-                              to={menuItem.path}
+                              to={getPath(menuItem)}
                               className={clsx(
                                 "px-4 mt-1 group flex items-center space-x-4 py-2 text-base leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
                                 isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
@@ -132,7 +138,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                   return (
                                     <Link
                                       key={index}
-                                      to={subItem.path}
+                                      to={getPath(subItem)}
                                       className={clsx(
                                         "pl-14 mt-1 group flex items-center py-2 sm:text-sm leading-5 rounded-sm hover:text-slate-300 focus:outline-none focus:text-slate-300 transition ease-in-out duration-150",
                                         isCurrent(subItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
@@ -179,7 +185,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                         return (
                           <div>
                             <Link
-                              to={menuItem.path}
+                              to={getPath(menuItem)}
                               className={clsx(
                                 "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
                                 menuItem.icon !== undefined && "px-4",
@@ -226,7 +232,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                   return (
                                     <Link
                                       key={index}
-                                      to={subItem.path}
+                                      to={getPath(subItem)}
                                       className={clsx(
                                         "mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 text-slate-300 transition ease-in-out duration-150",
                                         menuItem.icon === undefined && "pl-10",

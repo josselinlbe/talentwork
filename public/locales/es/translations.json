@@ -676,6 +676,7 @@
     },
     "tenants": {
       "title": "Organizaciones",
+      "overview": "Detalles",
       "profile": {
         "title": "Perfil"
       },
@@ -1025,7 +1026,7 @@
       "alreadyAMember": "Ya pertenece a la empresa",
       "noChanges": "No hay cambios",
       "noSubscription": "No hay subscripción activa",
-      "noTenants": "No perteneces a ninguna organización, regístrate para crear una",
+      "noTenants": "No perteneces a ninguna organización",
       "limitReachedWorkspaces": "Has llegado al límite de empresas"
     }
   }

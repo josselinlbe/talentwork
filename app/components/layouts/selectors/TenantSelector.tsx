@@ -17,7 +17,7 @@ type LoaderData = {
   currentTenant?: Tenant;
 };
 
-export default function TenantSelector({ className, onAdd }: Props) {
+export default function TenantSelector({ className }: Props) {
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
   const submit = useSubmit();
@@ -73,9 +73,6 @@ export default function TenantSelector({ className, onAdd }: Props) {
   }
   function addTenant() {
     closeDropdownTenant();
-    if (onAdd) {
-      onAdd();
-    }
   }
   // function getPlanFromTenant(tenant: Tenant): string {
   //   if (tenant.products && tenant.products.length > 0 && tenant.products[0].subscriptionProduct) {

@@ -2,10 +2,12 @@ import { loadAppData } from "../../../utils/data/useAppData";
 import { ContractWithDetails } from "../db/contracts.db.server";
 import { sendEmail } from "../../../utils/email.server";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { Params } from "react-router";
+import UrlUtils from "~/utils/app/UrlUtils";
 
-export async function sendContract(request: Request, contract: ContractWithDetails) {
+export async function sendContract(request: Request, params: Params, contract: ContractWithDetails) {
   let { t } = await i18nHelper(request);
-  const appData = await loadAppData(request);
+  const appData = await loadAppData(request, params);
 
   const membersJson =
     contract?.members.map((f) => {
@@ -31,7 +33,7 @@ export async function sendContract(request: Request, contract: ContractWithDetai
       `${member.user.firstName} ${member.user.lastName} <${member.user.email}>`,
       "contract-new",
       {
-        action_url: process.env.REMIX_SERVER_URL + `/app/contract/${contract.id}`,
+        action_url: process.env.REMIX_SERVER_URL + UrlUtils.appUrl(params, "contract/" + contract.id),
         user_creator_firstName: appData.user?.firstName,
         user_creator_email: appData.user?.email,
         contract_name: contract.name,

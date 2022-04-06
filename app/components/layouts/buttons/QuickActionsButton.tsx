@@ -4,6 +4,8 @@ import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
+import { useParams } from "remix";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   className?: string;
@@ -11,6 +13,7 @@ interface Props {
 
 export default function QuickActionsButton({ className }: Props) {
   const { t } = useTranslation();
+  const params = useParams();
   const appData = useAppData();
 
   const [opened, setOpened] = useState(false);
@@ -55,7 +58,7 @@ export default function QuickActionsButton({ className }: Props) {
               aria-labelledby="listbox-label"
             >
               <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-0">
-                <Link to="/app/contract/new" onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
+                <Link to={UrlUtils.appUrl(params, "contract/new")} onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
                   <div className="flex justify-between">
                     <p className="font-semibold">{t("app.contracts.new.title")}</p>
                   </div>
@@ -66,7 +69,7 @@ export default function QuickActionsButton({ className }: Props) {
                 <>
                   <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2">
                     <Link
-                      to="/app/link/new"
+                      to={UrlUtils.appUrl(params, "link/new")}
                       onClick={() => setOpened(false)}
                       className="w-full text-left flex flex-col p-4 hover:bg-gray-50 focus:outline-none"
                     >
@@ -77,7 +80,11 @@ export default function QuickActionsButton({ className }: Props) {
                     </Link>
                   </li>
                   <li className="text-gray-900 cursor-default select-none relative text-sm">
-                    <Link to="/app/settings/workspaces/new" onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
+                    <Link
+                      to={UrlUtils.appUrl(params, "settings/workspaces/new")}
+                      onClick={() => setOpened(false)}
+                      className="flex flex-col p-4 hover:bg-gray-50"
+                    >
                       <div className="flex justify-between">
                         <p className="font-semibold">{t("app.workspaces.create")}</p>
                       </div>

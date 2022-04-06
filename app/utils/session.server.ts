@@ -3,6 +3,14 @@ import { URLSearchParams } from "url";
 import { getMyTenants } from "./db/tenants.db.server";
 import { getWorkspace, getMyWorkspaces } from "./db/workspaces.db.server";
 
+export type UserSession = {
+  userId: string;
+  // currentTenantId: string;
+  // currentWorkspaceId: string;
+  lightOrDarkMode: string;
+  lng: string;
+};
+
 export async function setLoggedUser(user: { id: string; email: string; defaultWorkspaceId: string | null }) {
   const userTenants = await getMyTenants(user.id);
 
@@ -60,17 +68,17 @@ function getUserSession(request: Request) {
   return storage.getSession(request.headers.get("Cookie"));
 }
 
-export async function getUserInfo(request: Request) {
+export async function getUserInfo(request: Request): Promise<UserSession> {
   const session = await getUserSession(request);
   const userId = session.get("userId");
-  const currentTenantId = session.get("currentTenantId");
-  const currentWorkspaceId = session.get("currentWorkspaceId");
+  // const currentTenantId = session.get("currentTenantId");
+  // const currentWorkspaceId = session.get("currentWorkspaceId");
   const lightOrDarkMode = session.get("lightOrDarkMode");
   const lng = session.get("lng");
   return {
     userId,
-    currentTenantId,
-    currentWorkspaceId,
+    // currentTenantId,
+    // currentWorkspaceId,
     lightOrDarkMode,
     lng,
   };
@@ -86,48 +94,6 @@ export async function requireUserId(request: Request, redirectTo: string = new U
   return userId;
 }
 
-// export async function getUser(request: Request) {
-//   const userInfo = await getUserInfo(request);
-//   if (typeof userInfo?.userId !== "string") {
-//     return null;
-//   }
-
-//   try {
-//     const user = await db.user.findUnique({
-//       where: { id: userInfo.userId },
-//       select: {
-//         id: true,
-//         email: true,
-//         firstName: true,
-//         lastName: true,
-//         avatar: true,
-//       },
-//     });
-//     return user;
-//   } catch {
-//     throw logout(request);
-//   }
-// }
-
-// export async function getCurrentTenant(request: Request) {
-//   const userInfo = await getUserInfo(request);
-//   if (typeof userInfo?.currentTenantId !== "string") {
-//     return null;
-//   }
-
-//   const tenant = await getTenant(userInfo.currentTenantId);
-//   return tenant;
-// }
-
-// export async function getCurrentWorkspace(request: Request) {
-//   const userInfo = await getUserInfo(request);
-//   if (typeof userInfo?.currentWorkspaceId !== "string") {
-//     return null;
-//   }
-//   const workspace = await getWorkspace(userInfo.currentWorkspaceId);
-//   return workspace;
-// }
-
 export async function logout(request: Request) {
   const session = await getUserSession(request);
   return redirect("/login", {
@@ -137,20 +103,11 @@ export async function logout(request: Request) {
   });
 }
 
-export async function createUserSession(
-  userSession: {
-    userId: string;
-    currentTenantId: string;
-    currentWorkspaceId: string;
-    lightOrDarkMode: string;
-    lng: string;
-  },
-  redirectTo: string = ""
-) {
+export async function createUserSession(userSession: UserSession, redirectTo: string = "") {
   const session = await storage.getSession();
   session.set("userId", userSession.userId);
-  session.set("currentTenantId", userSession.currentTenantId);
-  session.set("currentWorkspaceId", userSession.currentWorkspaceId);
+  // session.set("currentTenantId", userSession.currentTenantId);
+  // session.set("currentWorkspaceId", userSession.currentWorkspaceId);
   session.set("lightOrDarkMode", userSession.lightOrDarkMode);
   session.set("lng", userSession.lng);
   return redirect(redirectTo, {

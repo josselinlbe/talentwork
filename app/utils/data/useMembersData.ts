@@ -1,10 +1,12 @@
+import { Params } from "react-router";
 import { useMatches } from "remix";
-import { getWorkspaces } from "../workspaces.api";
+import UrlUtils from "../app/UrlUtils";
+import { getWorkspaces } from "../db/workspaces.db.server";
 
 export type MembersLoaderData = {
   users: Awaited<ReturnType<typeof getWorkspaces>>;
 };
 
-export function useMembersData(): MembersLoaderData {
-  return (useMatches().find((f) => f.pathname === "/app/settings/members")?.data ?? {}) as MembersLoaderData;
+export function useMembersData(params: Params): MembersLoaderData {
+  return (useMatches().find((f) => f.pathname === UrlUtils.appUrl(params, "settings/members"))?.data ?? {}) as MembersLoaderData;
 }

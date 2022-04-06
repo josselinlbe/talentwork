@@ -6,12 +6,15 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import clsx from "~/utils/shared/ClassesUtils";
 import { LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
+import { useParams } from "remix";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   items: LinkWithWorkspacesAndContracts[];
 }
 
 export default function ProvidersListAndTable({ items }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
 
   const [sortByColumn, setSortByColumn] = useState("status");
@@ -85,7 +88,7 @@ export default function ProvidersListAndTable({ items }: Props) {
                     {sortedItems().map((item, idx) => {
                       return (
                         <li key={idx}>
-                          <Link to={"/app/link/" + item.id} className="block hover:bg-gray-50">
+                          <Link to={UrlUtils.appUrl(params, `link/${item.id}`)} className="block hover:bg-gray-50">
                             <div className="flex items-center px-4 py-4 sm:px-6">
                               <div className="min-w-0 flex-1 flex items-center">
                                 <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -207,7 +210,7 @@ export default function ProvidersListAndTable({ items }: Props) {
                                       } else {
                                         return (
                                           <Link
-                                            to={"/app/contracts?status=all&l=" + item.id}
+                                            to={UrlUtils.appUrl(params, `contracts?status=all&l=${item.id}`)}
                                             className="text-theme-600 hover:text-theme-800 lowercase underline font-medium"
                                           >
                                             {item.contracts && (
@@ -230,7 +233,7 @@ export default function ProvidersListAndTable({ items }: Props) {
 
                                   <td className="w-20 px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <div className="flex items-center space-x-2">
-                                      <ButtonTertiary to={"/app/contract/new?l=" + item.id}>
+                                      <ButtonTertiary to={UrlUtils.appUrl(params, `contract/new?l=${item.id}`)}>
                                         <div>{t("app.contracts.new.title")}</div>
                                       </ButtonTertiary>
                                     </div>

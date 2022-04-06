@@ -1,3 +1,5 @@
+import { Workspace } from "@prisma/client";
+
 const avatarText = (user: any): string => {
   if (user) {
     if (user.firstName && user.lastName) {
@@ -14,6 +16,17 @@ const avatarText = (user: any): string => {
   }
   return "--";
 };
+
+function getWorkspacePrefix(item: Workspace) {
+  const words = item.name.split(" ");
+  if (words.length > 1) {
+    return (words[0].substring(0, 1) + words[1].substring(0, 1)).toUpperCase();
+  }
+  if (item.name.length > 1) {
+    return item.name.substring(0, 2).toUpperCase();
+  }
+  return item.name.substring(0, 1).toUpperCase();
+}
 
 const profileName = (user: any): string => {
   if (user) {
@@ -57,4 +70,5 @@ export default {
   validateEmail,
   validatePassword,
   validatePasswords,
+  getWorkspacePrefix,
 };

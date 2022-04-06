@@ -3,8 +3,9 @@ import { Transition } from "@headlessui/react";
 import { forwardRef, Fragment, KeyboardEvent, Ref, useImperativeHandle, useRef, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { Link } from "remix";
+import { Link, useParams } from "remix";
 import { LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 export interface RefLinkSelector {
   select: (link: LinkWithWorkspacesAndMembers) => void;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<RefLinkSelector>) => {
+  const params = useParams();
   const appData = useAppData();
   const { t } = useTranslation();
 
@@ -160,7 +162,7 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                   />
                 </div>
                 <Link
-                  to="/app/link/new"
+                  to={UrlUtils.appUrl(params, `link/new`)}
                   className="-ml-px relative inline-flex items-center space-x-2 px-2 py-2 border border-gray-300 text-sm font-medium rounded-r-sm text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

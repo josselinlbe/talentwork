@@ -6,12 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                 String                @id @default(uuid())
+  id                 String                @id @default(cuid())
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @updatedAt
   email              String                @unique
@@ -36,21 +36,21 @@ model User {
 }
 
 model Tenant {
-  id                     String                 @id @default(uuid())
+  id                     String                 @id @default(cuid())
   createdAt              DateTime               @default(now())
   updatedAt              DateTime               @updatedAt
   name                   String
+  icon                   String
   subscriptionCustomerId String
   subscriptionId         String?
   users                  TenantUser[]
   workspaces             Workspace[]
-  // features               TenantFeatures?
   invitations            TenantUserInvitation[]
   employees              Employee[]
 }
 
 // model TenantFeatures {
-//   id               String @id @default(uuid())
+//   id               String @id @default(cuid())
 //   tenantId         String @unique
 //   tenant           Tenant @relation(fields: [tenantId], references: [id])
 //   maxWorkspaces    Int
@@ -61,7 +61,7 @@ model Tenant {
 // }
 
 model TenantUser {
-  id       String @id @default(uuid())
+  id       String @id @default(cuid())
   tenantId String
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   userId   String
@@ -73,7 +73,7 @@ model TenantUser {
 }
 
 model TenantUserInvitation {
-  id            String                          @id @default(uuid())
+  id            String                          @id @default(cuid())
   tenantId      String
   tenant        Tenant                          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   email         String
@@ -87,14 +87,14 @@ model TenantUserInvitation {
 }
 
 model TenantUserInvitationWorkspace {
-  id           String               @id @default(uuid())
+  id           String               @id @default(cuid())
   invitationId String
   invitation   TenantUserInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
   workspaceId  String
 }
 
 model Workspace {
-  id                   String          @id @default(uuid())
+  id                   String          @id @default(cuid())
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
   tenantId             String
@@ -112,7 +112,7 @@ model Workspace {
 }
 
 model WorkspaceUser {
-  id          String    @id @default(uuid())
+  id          String    @id @default(cuid())
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   userId      String
@@ -121,7 +121,7 @@ model WorkspaceUser {
 }
 
 model Joke {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   jokesterId String
   jokester   User     @relation(fields: [jokesterId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
@@ -131,7 +131,7 @@ model Joke {
 }
 
 model SubscriptionProduct {
-  id               String                @id @default(uuid())
+  id               String                @id @default(cuid())
   stripeId         String
   tier             Int
   title            String
@@ -149,7 +149,7 @@ model SubscriptionProduct {
 }
 
 model SubscriptionPrice {
-  id                    String              @id @default(uuid())
+  id                    String              @id @default(cuid())
   subscriptionProductId String
   subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   stripeId              String
@@ -162,7 +162,7 @@ model SubscriptionPrice {
 }
 
 model SubscriptionFeature {
-  id                    String              @id @default(uuid())
+  id                    String              @id @default(cuid())
   subscriptionProductId String
   subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   order                 Int
@@ -172,7 +172,7 @@ model SubscriptionFeature {
 }
 
 model Link {
-  id                   String     @id @default(uuid())
+  id                   String     @id @default(cuid())
   createdAt            DateTime   @default(now())
   createdByUserId      String
   createdByUser        User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
@@ -189,7 +189,7 @@ model Link {
 }
 
 model Employee {
-  id               String             @id @default(uuid())
+  id               String             @id @default(cuid())
   createdAt        DateTime           @default(now())
   createdByUserId  String
   createdByUser    User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
@@ -204,7 +204,7 @@ model Employee {
 }
 
 model Contract {
-  id              String             @id @default(uuid())
+  id              String             @id @default(cuid())
   createdAt       DateTime           @default(now())
   createdByUserId String
   createdByUser   User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
@@ -220,7 +220,7 @@ model Contract {
 }
 
 model ContractMember {
-  id         String    @id @default(uuid())
+  id         String    @id @default(cuid())
   contractId String
   contract   Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
   role       Int
@@ -230,7 +230,7 @@ model ContractMember {
 }
 
 model ContractEmployee {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   contractId String
   contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
   employeeId String
@@ -238,7 +238,7 @@ model ContractEmployee {
 }
 
 model ContractActivity {
-  id              String   @id @default(uuid())
+  id              String   @id @default(cuid())
   createdAt       DateTime @default(now())
   createdByUserId String
   createdByUser   User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)

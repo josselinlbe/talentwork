@@ -4,12 +4,15 @@ import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Workspace } from "@prisma/client";
 import { getWorkspaces, getWorkspace } from "~/utils/db/workspaces.db.server";
+import UrlUtils from "~/utils/app/UrlUtils";
+import { useParams } from "remix";
 
 interface Props {
   items: Awaited<ReturnType<typeof getWorkspaces>>;
 }
 
 export default function WorkspacesListAndTable({ items }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
 
   const headers = [
@@ -42,7 +45,7 @@ export default function WorkspacesListAndTable({ items }: Props) {
             <div>
               <EmptyState
                 className="bg-white"
-                to="/app/settings/workspaces/new"
+                to={UrlUtils.appUrl(params, "settings/workspaces/new")}
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.workspaces.errors.noWorkspaces"),
@@ -90,7 +93,7 @@ export default function WorkspacesListAndTable({ items }: Props) {
                               <td className="w-20 px-2 py-2 whitespace-nowrap text-sm text-gray-600">
                                 <div className="flex items-center space-x-2">
                                   <Link
-                                    to={"/app/settings/workspaces/edit/" + item.id}
+                                    to={UrlUtils.appUrl(params, "settings/workspaces/edit/" + item.id)}
                                     className="flex items-center space-x-2 text-theme-600 hover:text-theme-900 hover:underline"
                                   >
                                     <div>{t("shared.edit")}</div>

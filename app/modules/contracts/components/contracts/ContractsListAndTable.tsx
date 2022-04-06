@@ -10,12 +10,15 @@ import { Contract } from "@prisma/client";
 import IconContractClock from "../../icons/IconContractClock";
 import IconContractArchived from "../../icons/IconContractArchived";
 import IconContractCheck from "../../icons/IconContractCheck";
+import UrlUtils from "~/utils/app/UrlUtils";
+import { useParams } from "remix";
 
 interface Props {
   items: Awaited<ReturnType<typeof getContracts>>;
 }
 
 export default function ContractsListAndTable({ items }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
   const appData = useAppData();
   const navigate = useNavigate();
@@ -60,7 +63,7 @@ export default function ContractsListAndTable({ items }: Props) {
     return DateUtils.dateDM(value);
   }
   function clicked(item: Contract) {
-    navigate("/app/contract/" + item.id);
+    navigate(UrlUtils.appUrl(params, "contract/" + item.id));
   }
   const sortedItems = () => {
     if (!items) {
@@ -90,7 +93,7 @@ export default function ContractsListAndTable({ items }: Props) {
             <div>
               <EmptyState
                 className="bg-white"
-                to="/app/contract/new"
+                to={UrlUtils.appUrl(params, "contract/new")}
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.contracts.errors.noContracts"),
@@ -108,7 +111,7 @@ export default function ContractsListAndTable({ items }: Props) {
                     {sortedItems().map((contract, idxContract) => {
                       return (
                         <li key={idxContract}>
-                          <Link to={"/app/contract/" + contract.id} className="block hover:bg-gray-50">
+                          <Link to={UrlUtils.appUrl(params, "contract/" + contract.id)} className="block hover:bg-gray-50">
                             <div className="flex items-center px-4 py-4 sm:px-6">
                               <div className="min-w-0 flex-1 flex items-center">
                                 <div className="flex-shrink-0">

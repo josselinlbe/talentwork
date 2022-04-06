@@ -3,23 +3,25 @@ import { Workspace } from "@prisma/client";
 import clsx from "clsx";
 import { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useLoaderData, useActionData, useNavigate, useTransition, Form, useLocation } from "remix";
+import { useLoaderData, useActionData, useNavigate, useTransition, Form, useLocation, useParams } from "remix";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import { NewMemberActionData, NewMemberLoaderData } from "~/routes/app/settings/members/new";
+import { NewMemberActionData, NewMemberLoaderData } from "~/routes/app.$tenant.$workspace/settings/members/new";
+import UrlUtils from "~/utils/app/UrlUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { useMembersData } from "~/utils/data/useMembersData";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import SelectWorkspaces, { RefSelectWorkspaces } from "../../workspaces/SelectWorkspaces";
 
 export default function NewMember() {
+  const params = useParams();
   const location = useLocation();
   const appData = useAppData();
   const data = useLoaderData<NewMemberLoaderData>();
   const actionData = useActionData<NewMemberActionData>();
-  const membersData = useMembersData();
+  const membersData = useMembersData(params);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const transition = useTransition();
@@ -79,7 +81,7 @@ export default function NewMember() {
 
   function close() {
     if (location.pathname.startsWith("/app")) {
-      navigate("/app/settings/members", { replace: true });
+      navigate(UrlUtils.appUrl(params, "settings/members"), { replace: true });
     } else {
       navigate("/admin/members", { replace: true });
     }
@@ -171,7 +173,7 @@ export default function NewMember() {
                   {maxUsersReached() && (
                     <div>
                       <WarningBanner
-                        redirect="/app/settings/subscription"
+                        redirect={UrlUtils.appUrl(params, `settings/subscription`)}
                         title={t("app.subscription.errors.limitReached")}
                         text={t("app.subscription.errors.limitReachedUsers", [maxUsers])}
                       />

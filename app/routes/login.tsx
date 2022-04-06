@@ -91,7 +91,11 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    redirectTo.length > 0 ? redirectTo : user.type === UserType.Admin ? "/admin/tenants" : "/app/dashboard"
+    redirectTo.length > 0
+      ? redirectTo
+      : user.type === UserType.Admin
+      ? "/admin/tenants"
+      : `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
   );
 };
 

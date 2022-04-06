@@ -1,5 +1,4 @@
 import { SideBarItem } from "./SidebarItem";
-import { UserType } from "~/application/enums/users/UserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 
 export const AdminSidebar: SideBarItem[] = [
@@ -19,29 +18,41 @@ export const AdminSidebar: SideBarItem[] = [
         icon: SvgIcon.USERS,
         items: [],
       },
-      {
-        title: "admin.pricing.title",
-        path: "/admin/pricing",
-        icon: SvgIcon.PRICING,
-        items: [],
-      },
-      {
-        title: "admin.emails.title",
-        path: "/admin/emails",
-        icon: SvgIcon.EMAILS,
-        items: [],
-      },
-      {
-        title: "admin.navigation.title",
-        path: "/admin/navigation",
-        icon: SvgIcon.NAVIGATION,
-        items: [],
-      },
+      // {
+      //   title: "admin.navigation.title",
+      //   path: "/admin/navigation",
+      //   icon: SvgIcon.NAVIGATION,
+      //   items: [],
+      // },
       {
         title: "admin.components.title",
         path: "/admin/components",
         icon: SvgIcon.COMPONENTS,
         items: [],
+      },
+      {
+        title: "app.navbar.profile",
+        path: "/admin/profile",
+        icon: SvgIcon.PROFILE,
+      },
+      {
+        title: "app.navbar.settings",
+        path: "",
+        icon: SvgIcon.SETTINGS,
+        items: [
+          {
+            title: "admin.pricing.title",
+            path: "/admin/pricing",
+            items: [],
+            // icon: SvgIcon.PRICING,
+          },
+          {
+            title: "admin.emails.title",
+            path: "/admin/emails",
+            // icon: SvgIcon.EMAILS,
+            items: [],
+          },
+        ],
       },
       // {
       //   title: "settings.members.title",
@@ -57,9 +68,8 @@ export const AdminSidebar: SideBarItem[] = [
     items: [
       {
         title: "admin.switchToApp",
-        path: "/app/dashboard",
+        path: "/app",
         icon: SvgIcon.APP,
-        userTypes: [UserType.Admin],
         items: [],
       },
     ],

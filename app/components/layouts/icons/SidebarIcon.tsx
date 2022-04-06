@@ -14,10 +14,10 @@ import IconLinks from "./IconLinks";
 import IconProviders from "./IconProviders";
 import IconClients from "./IconClients";
 import IconEmails from "./IconEmails";
-import IconJokes from "./IconJokes";
 import IconEmployees from "~/modules/contracts/icons/IconEmployees";
 import IconContracts from "~/modules/contracts/icons/IconContracts";
 import IconMembers from "./IconMembers";
+import IconProfile from "./IconProfile";
 
 interface Props {
   className: string;
@@ -37,6 +37,7 @@ export default function SidebarIcon(props: Props) {
       {icon === SvgIcon.NAVIGATION && <IconNavigation className={props.className} />}
       {icon === SvgIcon.COMPONENTS && <IconComponents className={props.className} />}
       {icon === SvgIcon.MEMBERS && <IconMembers className={props.className} />}
+      {icon === SvgIcon.PROFILE && <IconProfile className={props.className} />}
       {icon === SvgIcon.APP && <IconApp className={props.className} />}
       {icon === SvgIcon.DASHBOARD && <IconDashboard className={props.className} />}
       {icon === SvgIcon.SETTINGS && <IconSettings className={props.className} />}
@@ -47,7 +48,6 @@ export default function SidebarIcon(props: Props) {
       {icon === SvgIcon.CLIENTS && <IconClients className={props.className} />}
       {icon === SvgIcon.CONTRACTS && <IconContracts className={props.className} />}
       {icon === SvgIcon.EMPLOYEES && <IconEmployees className={props.className} />}
-      {icon === SvgIcon.JOKES && <IconJokes className={props.className} />}
     </span>
   );
 }

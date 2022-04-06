@@ -7,6 +7,8 @@ import clsx from "~/utils/shared/ClassesUtils";
 import IconWorkers from "~/modules/contracts/icons/IconWorkers";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Employee } from "@prisma/client";
+import UrlUtils from "~/utils/app/UrlUtils";
+import { useParams } from "remix";
 
 export interface RefSelectEmployees {
   show: (selected: string[]) => void;
@@ -20,6 +22,7 @@ interface Props {
 }
 
 const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" }: Props, ref: Ref<RefSelectEmployees>) => {
+  const params = useParams();
   const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -167,7 +170,7 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                             <div>
                               <EmptyState
                                 className="bg-white"
-                                to="/app/employees/new"
+                                to={UrlUtils.appUrl(params, "employees/new")}
                                 captions={{
                                   new: t("shared.add"),
                                   thereAreNo: t("app.employees.errors.notDefined"),

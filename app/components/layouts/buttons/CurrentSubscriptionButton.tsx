@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
-import { Link } from "remix";
+import { Link, useParams } from "remix";
 import clsx from "~/utils/shared/ClassesUtils";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 export default function CurrentSubscriptionButton() {
+  const params = useParams();
   const { t } = useTranslation();
   const appData = useAppData();
 
@@ -12,7 +14,7 @@ export default function CurrentSubscriptionButton() {
       <div className="inline-flex shadow-none rounded-sm divide-x divide-gray-300">
         <div className="text-xs sm:text-sm relative z-0 inline-flex shadow-none rounded-full">
           <Link
-            to="/app/settings/subscription"
+            to={UrlUtils.appUrl(params, `settings/subscription`)}
             type="button"
             className={clsx(
               "text-gray-800 bg-gray-50 border-gray-100 shadow-inner border relative inline-flex items-center p-2 rounded-md font-medium hover:bg-teal-50 hover:text-teal-800 focus:bg-teal-100 focus:text-teal-900 focus:outline-none focus:z-10 space-x-1",

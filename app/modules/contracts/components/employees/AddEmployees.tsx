@@ -8,11 +8,13 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import UploadDocument from "~/components/ui/uploaders/UploadDocument";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { useSubmit, useTransition } from "remix";
+import { useParams, useSubmit, useTransition } from "remix";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 export default function AddEmployees() {
+  const params = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
@@ -53,7 +55,7 @@ export default function AddEmployees() {
     confirmCreate.current?.show(t("shared.confirmSave"), t("shared.confirm"), t("shared.back"));
   }
   function cancel() {
-    navigate("/app/employees");
+    navigate(UrlUtils.appUrl(params, "employees"));
   }
   function confirmSave() {
     const form = new FormData();
@@ -65,7 +67,7 @@ export default function AddEmployees() {
     });
   }
   function goToProfile() {
-    navigate("/app/employees");
+    navigate(UrlUtils.appUrl(params, "employees"));
   }
   function addEmployee() {
     setEmployees([

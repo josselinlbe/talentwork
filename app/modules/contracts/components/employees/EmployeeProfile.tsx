@@ -7,14 +7,16 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useRef, useState, useEffect, FormEvent } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import { useSubmit, useTransition } from "remix";
+import { useParams, useSubmit, useTransition } from "remix";
 import { EmployeeWithCreatedByUser } from "~/modules/contracts/db/employees.db.server";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   item: EmployeeWithCreatedByUser;
 }
 
 export default function EmployeeProfile({ item }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
@@ -63,7 +65,7 @@ export default function EmployeeProfile({ item }: Props) {
     confirmDeleteEmployee.current?.show(t("shared.confirmDelete"), t("shared.yes"), t("shared.cancel"), t("shared.warningCannotUndo"));
   }
   function successModalDeletedClosed() {
-    navigate("/app/employees");
+    navigate(UrlUtils.appUrl(params, "employees"));
   }
   function confirmedDeleteEmployee() {
     const form = new FormData();

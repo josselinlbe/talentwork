@@ -6,6 +6,8 @@ import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import { LinkWithWorkspaces } from "~/utils/db/links.db.server";
 import { useAppData } from "~/utils/data/useAppData";
+import { useParams } from "react-router";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   items: LinkWithWorkspaces[];
@@ -14,6 +16,7 @@ interface Props {
 export default function AllLinksListAndTable({ items }: Props) {
   const appData = useAppData();
   const { t } = useTranslation();
+  const params = useParams();
 
   const [sortByColumn, setSortByColumn] = useState("type");
   const [sortDirection, setSortDirection] = useState(-1);
@@ -173,10 +176,10 @@ export default function AllLinksListAndTable({ items }: Props) {
                               </td>
                               <td className="w-20 px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                 <div className="flex items-center space-x-2">
-                                  <ButtonTertiary to={"/app/link/" + link.id}>
+                                  <ButtonTertiary to={UrlUtils.appUrl(params, `link/${link.id}`)}>
                                     <div>{t("app.links.profile.title")}</div>
                                   </ButtonTertiary>
-                                  <ButtonTertiary to={"/app/contract/new?l=" + link.id}>
+                                  <ButtonTertiary to={UrlUtils.appUrl(params, `contract/new?l=${link.id}`)}>
                                     <div>{t("app.contracts.new.title")}</div>
                                   </ButtonTertiary>
                                 </div>

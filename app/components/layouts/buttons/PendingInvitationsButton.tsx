@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
-import { Link } from "remix";
+import { Link, useParams } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 export default function PendingInvitationsButton() {
+  const params = useParams();
   const { t } = useTranslation();
   const appData = useAppData();
 
@@ -14,7 +16,7 @@ export default function PendingInvitationsButton() {
         <div className="inline-flex shadow-none rounded-sm divide-x divide-gray-300">
           <div className="text-sm relative z-0 inline-flex shadow-none rounded-full">
             <Link
-              to="/app/links/pending"
+              to={UrlUtils.appUrl(params, "links/pending")}
               type="button"
               className={clsx(
                 "text-gray-800 bg-gray-50 border-gray-100 shadow-inner border relative inline-flex items-center p-2 rounded-full font-medium hover:bg-theme-300 hover:text-theme-800 focus:bg-theme-400 focus:text-theme-900 focus:outline-none focus:z-10 focus:ring-2 focus:ring-offset-2 focus:ring-offset-theme-50 focus:ring-theme-100",

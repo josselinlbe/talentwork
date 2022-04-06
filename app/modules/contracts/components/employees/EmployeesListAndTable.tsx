@@ -1,19 +1,22 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { EmployeeDto } from "~/application/dtos/app/employees/EmployeeDto";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useState, useEffect } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
+import UrlUtils from "~/utils/app/UrlUtils";
+import { useParams } from "remix";
+import { Employee } from ".prisma/client";
 
 interface Props {
-  items: EmployeeDto[];
+  items: Employee[];
   className?: string;
   canEdit?: boolean;
 }
 
 export default function EmployeesListAndTable({ className = "", canEdit = true, items }: Props) {
+  const params = useParams();
   const { t } = useTranslation();
 
   const [sortByColumn, setSortByColumn] = useState("");
@@ -54,7 +57,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
   function dateMonthName(value: Date | undefined) {
     return DateUtils.dateMonthName(value);
   }
-  const sortedItems = (): EmployeeDto[] => {
+  const sortedItems = () => {
     if (!items) {
       return [];
     }
@@ -82,7 +85,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
             <div>
               <EmptyState
                 className="bg-white"
-                to="/app/employees/new"
+                to={UrlUtils.appUrl(params, "employees/new")}
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.employees.errors.notDefined"),
@@ -100,7 +103,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
                     {sortedItems().map((employee, idxEmployee) => {
                       return (
                         <li key={idxEmployee}>
-                          <Link to={"/app/employees/" + employee.id} className="block hover:bg-gray-50">
+                          <Link to={UrlUtils.appUrl(params, "employees/" + employee.id)} className="block hover:bg-gray-50">
                             <div className="flex items-center px-4 py-2 sm:px-4">
                               <div className="min-w-0 flex-1 flex items-center">
                                 <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -222,7 +225,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
                                   {canEdit && (
                                     <td className="w-20 px-2 py-4 whitespace-nowrap text-sm text-gray-600">
                                       <div className="flex items-center space-x-2">
-                                        <ButtonTertiary to={"/app/employees/" + employee.id}>{t("shared.edit")}</ButtonTertiary>
+                                        <ButtonTertiary to={UrlUtils.appUrl(params, "employees/" + employee.id)}>{t("shared.edit")}</ButtonTertiary>
                                       </div>
                                     </td>
                                   )}

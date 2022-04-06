@@ -4,8 +4,9 @@ import { Fragment, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { getMyWorkspaces, getWorkspace } from "~/utils/db/workspaces.db.server";
-import { useLoaderData, useLocation, useSubmit } from "remix";
+import { useLoaderData, useLocation, useParams, useSubmit } from "remix";
 import { Workspace, WorkspaceUser } from "@prisma/client";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   className?: string;
@@ -19,6 +20,7 @@ type LoaderData = {
 };
 
 export default function WorkspaceSelector({ className, onAdd, onSelected }: Props) {
+  const params = useParams();
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -30,26 +32,12 @@ export default function WorkspaceSelector({ className, onAdd, onSelected }: Prop
   const [opened, setOpened] = useState(false);
   const [search, setSearch] = useState("");
 
-  // useEffect(() => {
-  //   if (!currentWorkspace && workspaces && workspaces.length > 0) {
-  //     const defaultWorkspace = workspaces.find((f) => f.default);
-  //     if (defaultWorkspace) {
-  //       change(defaultWorkspace);
-  //     } else {
-  //       change(workspaces[0]);
-  //     }
-  //   }
-  //   if (!workspaces) {
-  //     services.workspaces.getAllWorkspaces(true);
-  //   }
-  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   function addWorkspace() {
     if (onAdd) {
       onAdd();
     }
     closeDropdown();
-    navigate("/app/settings/workspaces/new");
+    navigate(UrlUtils.appUrl(params, "settings/workspaces/new"));
   }
   function closeDropdown() {
     setOpened(false);

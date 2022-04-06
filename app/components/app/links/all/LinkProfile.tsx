@@ -9,17 +9,19 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { LinkWithWorkspaces, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { useAppData } from "~/utils/data/useAppData";
 import { Workspace } from "@prisma/client";
-import { useSubmit } from "remix";
+import { useParams, useSubmit } from "remix";
 import IconContractArchived from "~/modules/contracts/icons/IconContractArchived";
 import IconContractCheck from "~/modules/contracts/icons/IconContractCheck";
 import IconContractClock from "~/modules/contracts/icons/IconContractClock";
 import IconSign from "~/modules/contracts/icons/IconSign";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   item: LinkWithWorkspacesAndContracts;
 }
 
 export default function LinkProfile({ item }: Props) {
+  const params = useParams();
   const appData = useAppData();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -55,9 +57,9 @@ export default function LinkProfile({ item }: Props) {
   }
   function successModalDeletedClosed() {
     if (item.providerWorkspaceId === appData.currentWorkspace?.id) {
-      navigate("/app/links/clients");
+      navigate(UrlUtils.appUrl(params, `links/clients`));
     } else {
-      navigate("/app/links/providers");
+      navigate(UrlUtils.appUrl(params, `links/providers`));
     }
   }
   function closeOptions() {
@@ -144,7 +146,7 @@ export default function LinkProfile({ item }: Props) {
                         {/*Options */}
                         <span className="relative inline-flex justify-end rounded-md">
                           <Link
-                            to={"/app/contract/new?l=" + item.id}
+                            to={UrlUtils.appUrl(params, `contract/new?l=${item.id}`)}
                             className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-r-0 border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500 truncate"
                           >
                             <IconSign className="-ml-0.5 mr-2 h-4 w-4 flex-shrink-0" />
@@ -330,7 +332,10 @@ export default function LinkProfile({ item }: Props) {
                                         <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-2">
                                           <div className="truncate">
                                             <p className="text-sm text-gray-500">
-                                              <Link to={"/app/contract/" + contract.id} className="font-medium text-gray-600 underline hover:text-gray-700">
+                                              <Link
+                                                to={UrlUtils.appUrl(params, `contract/${contract.id}`)}
+                                                className="font-medium text-gray-600 underline hover:text-gray-700"
+                                              >
                                                 {contract.name}
                                               </Link>
                                             </p>

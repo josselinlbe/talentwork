@@ -5,10 +5,12 @@ import { Fragment, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { useSubmit } from "remix";
+import { useParams, useSubmit } from "remix";
 import UserUtils from "~/utils/app/UserUtils";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 export default function ProfileButton() {
+  const params = useParams();
   const data = useAppData();
   const { t } = useTranslation();
   const submit = useSubmit();
@@ -81,7 +83,7 @@ export default function ProfileButton() {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
               role="menuitem"
               onClick={closeDropdownUser}
-              to="/app/settings/profile"
+              to={UrlUtils.appUrl(params, `settings/profile`)}
             >
               {t("app.navbar.profile")}
             </Link>
@@ -89,7 +91,7 @@ export default function ProfileButton() {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
               role="menuitem"
               onClick={closeDropdownUser}
-              to="/app/settings/workspaces"
+              to={UrlUtils.appUrl(params, "settings/workspaces")}
             >
               {t("app.navbar.workspaces")}
             </Link>
@@ -98,7 +100,7 @@ export default function ProfileButton() {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
               role="menuitem"
               onClick={closeDropdownUser}
-              to="/app/settings/members"
+              to={UrlUtils.appUrl(params, "settings/members")}
             >
               {t("app.navbar.members")}
             </Link>
@@ -106,7 +108,7 @@ export default function ProfileButton() {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
               role="menuitem"
               onClick={closeDropdownUser}
-              to="/app/settings/subscription"
+              to={UrlUtils.appUrl(params, `settings/subscription`)}
             >
               {t("app.navbar.subscription")}
             </Link>
@@ -114,7 +116,7 @@ export default function ProfileButton() {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
               role="menuitem"
               onClick={closeDropdownUser}
-              to="/app/settings/tenant"
+              to={UrlUtils.appUrl(params, "settings/tenant")}
             >
               {t("app.navbar.tenant")}
             </Link>

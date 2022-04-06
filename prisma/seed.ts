@@ -26,6 +26,7 @@ async function createTenant(name: string, workspaces: string[], users: (User & {
   const tenant = await db.tenant.create({
     data: {
       name,
+      icon: "",
       subscriptionCustomerId: "",
     },
   });
@@ -88,6 +89,9 @@ async function seed() {
   const admin = await createUser("Admin", "User", adminEmail, adminPassword, UserType.Admin);
   const user1 = await createUser("John", "Doe", "john.doe@company.com", "password", UserType.Tenant);
   const user2 = await createUser("Luna", "Davis", "luna.davis@company.com", "password", UserType.Tenant);
+
+  // User without tenants
+  await createUser("Alex", "Martinez", "alex.martinez@company.com", "password", UserType.Tenant);
 
   await createTenant(
     "Tenant 1",

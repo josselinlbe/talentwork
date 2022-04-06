@@ -1,14 +1,16 @@
 import { createEmployee } from "../db/employees.db.server";
 
 export async function createEmployees(
-  userInfo: { userId: any; currentTenantId: any; currentWorkspaceId: any },
+  userId: string,
+  tenantId: string,
+  workspaceId: string,
   employees: { email: string; firstName: string; lastName: string }[]
 ) {
   employees.forEach(async (employee) => {
     const newEmployee = {
-      createdByUserId: userInfo.userId,
-      tenantId: userInfo.currentTenantId,
-      workspaceId: userInfo.currentWorkspaceId,
+      createdByUserId: userId,
+      tenantId: tenantId,
+      workspaceId: workspaceId,
       email: employee.email,
       firstName: employee.firstName,
       lastName: employee.lastName,

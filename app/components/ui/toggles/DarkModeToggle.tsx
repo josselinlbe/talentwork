@@ -3,7 +3,7 @@ import { useRootData } from "~/utils/data/useRootData";
 import clsx from "~/utils/shared/ClassesUtils";
 
 export default function DarkModeToggle({ className }: { className: string }) {
-  const rootData = useRootData();
+  const { userSession } = useRootData();
   let location = useLocation();
   const submit = useSubmit();
 
@@ -13,7 +13,7 @@ export default function DarkModeToggle({ className }: { className: string }) {
     form.set("redirect", location.pathname);
     submit(form, { method: "post", action: "/" });
   };
-  const isDarkMode = rootData.lightOrDarkMode === "dark";
+  const isDarkMode = userSession.lightOrDarkMode === "dark";
 
   return (
     <button type="button" onClick={toggle} className={clsx(className, "flex items-center justify-center space-x-2 w-full focus:outline-none group")}>

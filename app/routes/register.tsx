@@ -90,7 +90,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (!user) {
     return badRequest({ error: "Could not create user" });
   }
-  const tenant = await createTenant(company, stripeCustomer.id);
+  const tenant = await createTenant(company, stripeCustomer.id, "");
   if (!tenant) {
     return badRequest({ error: "Could not create tenant" });
   }
@@ -129,7 +129,7 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    "/app/dashboard"
+    `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
   );
 };
 

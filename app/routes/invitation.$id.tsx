@@ -88,11 +88,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     const userSession = await setLoggedUser(user);
     return createUserSession(
       {
-        ...userSession,
+        userId: user.id,
         lightOrDarkMode: userInfo.lightOrDarkMode,
         lng: userInfo.lng,
       },
-      "/app/dashboard"
+      `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
     );
   } else {
     // Existing user
@@ -117,7 +117,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         lightOrDarkMode: userInfo.lightOrDarkMode,
         lng: userInfo.lng,
       },
-      "/app/dashboard"
+      `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
     );
   }
 };

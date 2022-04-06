@@ -104,6 +104,9 @@ export default function AdminTenantsRoute() {
   function billingPeriodName(item: TenantWithWorkspacesAndUsers) {
     return t("pricing." + SubscriptionBillingPeriod[item.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY] + "Short");
   }
+  function getSubscribedProduct(item: TenantWithWorkspacesAndUsers) {
+    return item.subscriptionPrice?.subscriptionProduct;
+  }
   return (
     <div>
       <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
@@ -191,29 +194,47 @@ export default function AdminTenantsRoute() {
                                   return (
                                     <tr key={idx}>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        <Link to={`/admin/tenant/${item.id}/profile`} className="font-medium hover:underline">
+                                        <Link to={`/admin/tenant/${item.id}/profile`} className="font-medium hover:underline text-gray-800">
                                           {item.name}
                                         </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex space-x-1">
                                           <div>
-                                            {item.subscriptionPrice?.subscriptionProduct?.title ?? t("settings.subscription.noSubscription")}
-                                            {" - "}
-                                            <span className=" italic">
-                                              ({item.subscriptionPrice?.price ?? 0}/{billingPeriodName(item)})
-                                            </span>
+                                            {item.subscriptionPrice?.subscriptionProduct ? (
+                                              <Link to={`/admin/tenant/${item.id}/subscription`} className="hover:underline text-gray-800">
+                                                {t(item.subscriptionPrice?.subscriptionProduct?.title)}
+                                                {" - "}
+                                                <span className=" italic">
+                                                  ({item.subscriptionPrice?.price ?? 0}/{billingPeriodName(item)})
+                                                </span>
+                                              </Link>
+                                            ) : (
+                                              // <span className=" font-light text-gray-400 line-through">{t("settings.subscription.noSubscription")}</span>
+                                              "-"
+                                            )}
                                           </div>
                                         </div>
                                       </td>
-                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.usersCount}</td>
-                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.workspacesCount}</td>
-                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.contractsCount}</td>
-                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.employeesCount}</td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        {item.usersCount}
+                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxUsers ?? 0}</span>
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        {item.workspacesCount}
+                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxWorkspaces ?? 0}</span>
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        {item.contractsCount}
+                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.monthlyContracts ?? 0}</span>
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        {item.employeesCount === 0 ? "-" : item.employeesCount}
+                                      </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex items-center space-x-2">
-                                          <ButtonTertiary to={`/admin/tenant/${item.id}/profile`}>{t("admin.tenants.profile.title")}</ButtonTertiary>
-                                          <ButtonTertiary to={`/admin/tenant/${item.id}/subscription`}>{t("admin.tenants.subscription.title")}</ButtonTertiary>
+                                          <ButtonTertiary to={`/admin/tenant/${item.id}/profile`}>{t("admin.tenants.overview")}</ButtonTertiary>
+                                          {/* <ButtonTertiary to={`/admin/tenant/${item.id}/subscription`}>{t("admin.tenants.subscription.title")}</ButtonTertiary> */}
                                         </div>
                                       </td>
                                     </tr>

@@ -9,9 +9,10 @@ import Icon from "./Icon";
 import { useLoaderData } from "remix";
 import { UserType } from "~/application/enums/users/UserType";
 import LocaleSelector from "../ui/selectors/LocaleSelector";
+import { IndexLoaderData } from "~/routes";
 
 export default function Header() {
-  const data = useLoaderData();
+  const { userType, authenticated } = useLoaderData<IndexLoaderData>();
   const { t } = useTranslation();
 
   const location = useLocation();
@@ -29,10 +30,10 @@ export default function Header() {
   }
 
   const loginOrEnterRoute = () => {
-    if (!data.authenticated) {
+    if (!authenticated) {
       return "/login";
     }
-    return data.userType === UserType.Tenant ? "/app/dashboard" : "/admin/tenants";
+    return userType === UserType.Tenant ? `/app` : "/admin";
   };
 
   return (
@@ -50,7 +51,7 @@ export default function Header() {
                       <div className="inline-flex rounded-md space-x-2">
                         <LocaleSelector className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300" />
 
-                        {!data.authenticated && (
+                        {!authenticated && (
                           <Link
                             to="/register"
                             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300"
@@ -62,7 +63,7 @@ export default function Header() {
                           to={loginOrEnterRoute()}
                           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300"
                         >
-                          {!data.authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
+                          {!authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
                         </Link>
                       </div>
                     </div>
@@ -103,7 +104,7 @@ export default function Header() {
               </div>
               <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0 z-40">
                 <span className="inline-flex space-x-2">
-                  {!data.authenticated && (
+                  {!authenticated && (
                     <Link
                       to="/register"
                       className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-sm text-slate-500 dark:text-white"
@@ -115,7 +116,7 @@ export default function Header() {
                     to={loginOrEnterRoute()}
                     className="shadow inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-theme-600 dark:text-white bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:text-slate-300"
                   >
-                    {!data.authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
+                    {!authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
                   </Link>
                 </span>
               </div>

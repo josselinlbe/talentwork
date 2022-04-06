@@ -14,7 +14,10 @@ export async function getUserInvitation(id: string) {
   });
 }
 
-export async function getUserInvitations(tenantId: string) {
+export async function getUserInvitations(tenantId?: string) {
+  if (!tenantId) {
+    return [];
+  }
   return await db.tenantUserInvitation.findMany({
     where: {
       tenantId,

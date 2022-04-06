@@ -1,9 +1,9 @@
+import { ContractEmployee, Employee } from ".prisma/client";
 import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
-import { ContractEmployeeDto } from "~/application/dtos/app/contracts/ContractEmployeeDto";
 
 interface Props {
-  items: ContractEmployeeDto[];
+  items: (ContractEmployee & { employee: Employee })[];
 }
 
 export default function ContractEmployees({ items }: Props) {

@@ -12,14 +12,17 @@ import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
 import TenantSelector from "./selectors/TenantSelector";
 import WorkspaceSelector from "./selectors/WorkspaceSelector";
+import TenantSelect from "./selectors/TenantSelect";
+import { useParams } from "remix";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   layout: "app" | "admin";
   children: ReactNode;
-  onAddTenant?: () => void;
 }
 
-export default function SidebarLayout({ layout, onAddTenant, children }: Props) {
+export default function SidebarLayout({ layout, children }: Props) {
+  const params = useParams();
   const appData = useAppData();
   const mainElement = useRef<HTMLElement>(null);
 
@@ -57,7 +60,7 @@ export default function SidebarLayout({ layout, onAddTenant, children }: Props) 
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <div className="relative flex-1 flex flex-col max-w-xs w-full pb-4 bg-gray-900">
+              <div className="relative flex-1 flex flex-col max-w-xs w-full bg-gray-900">
                 <div className="absolute top-0 right-0 -mr-14 p-1 mt-2">
                   <button
                     className="flex items-center justify-center h-12 w-12 rounded-sm focus:outline-none focus:bg-gray-600"
@@ -73,13 +76,14 @@ export default function SidebarLayout({ layout, onAddTenant, children }: Props) 
                   <nav className="px-2 space-y-2">
                     {layout === "app" && (
                       <>
-                        <TenantSelector className="text-sm" onAdd={onAddTenant} />
+                        <TenantSelector className="text-sm" />
                         <WorkspaceSelector className="text-sm" />
                       </>
                     )}
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
                 </div>
+                {layout == "app" && <TenantSelect onOpen={() => setSidebarOpen(false)} />}
               </div>
             </Transition>
             <div className="flex-shrink-0 w-14">{/*Dummy element to force sidebar to shrink to fit close icon */}</div>
@@ -101,14 +105,16 @@ export default function SidebarLayout({ layout, onAddTenant, children }: Props) 
               <nav className="flex-1 px-2 py-4 space-y-3 bg-gray-900 select-none">
                 {layout === "app" && (
                   <>
-                    <TenantSelector className="text-xs sm:text-sm" onAdd={onAddTenant} />
-                    <WorkspaceSelector className="text-xs sm:text-sm" onAdd={() => setSidebarOpen(false)} onSelected={() => setSidebarOpen(false)} />
+                    {/* <TenantSelector className="text-xs sm:text-sm" onAdd={onAddTenant} /> */}
+                    {/* <WorkspaceSelector className="text-xs sm:text-sm" onAdd={() => setSidebarOpen(false)} onSelected={() => setSidebarOpen(false)} /> */}
                   </>
                 )}
                 <SidebarMenu layout={layout} />
               </nav>
             </div>
           </div>
+
+          {layout == "app" && <TenantSelect onOpen={() => setSidebarOpen(false)} />}
         </div>
       </div>
 
@@ -130,13 +136,13 @@ export default function SidebarLayout({ layout, onAddTenant, children }: Props) 
               <div className="w-full flex md:ml-0">
                 <div className="align-baseline w-full text-slate-200 pl-1">
                   <nav className="lg:hidden">
-                    <Link to="/app/dashboard">
+                    <Link to={UrlUtils.appUrl(params, "dashboard")}>
                       <img alt="Logo" className="h-7 w-auto sm:hidden" src={IconLight} />
                       <img alt="Logo" className="h-7 w-auto hidden sm:block" src={LogoLight} />
                     </Link>
                   </nav>
                   <nav className="hidden lg:flex items-center text-base leading-5 font-medium">
-                    <Link to="/app/dashboard">
+                    <Link to={UrlUtils.appUrl(params, "dashboard")}>
                       <img alt="Logo" className="hidden sm:block h-7 sm:h-8 w-auto" src={LogoLight} />
                     </Link>
                   </nav>
@@ -150,7 +156,7 @@ export default function SidebarLayout({ layout, onAddTenant, children }: Props) 
               {layout === "app" && appData.isOwnerOrAdmin && <PendingInvitationsButton />}
               {layout === "app" && <ChatSupportButton />}
               {layout === "app" && <QuickActionsButton />}
-              <ProfileButton />
+              {layout === "app" && <ProfileButton />}
             </div>
           </div>
         </div>
