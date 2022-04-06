@@ -105,7 +105,7 @@ export default function StackedLayout({ layout, children }: Props) {
               {/* {layout === "admin" && <LayoutSelector className="text-sm" />} */}
               {/* {layout === "admin" && <LocaleSelector className="text-sm" />} */}
               {layout === "app" && <QuickActionsButton className="text-gray-400" />}
-              <ProfileButton />
+              <ProfileButton layout={layout} />
               <button
                 onClick={() => setMenuOpened(!menuOpened)}
                 type="button"

@@ -2,8 +2,8 @@ import { json, LoaderFunction, Outlet } from "remix";
 import AppLayout from "~/components/app/AppLayout";
 import { loadAdminData } from "~/utils/data/useAdminData";
 
-export let loader: LoaderFunction = async ({ request }) => {
-  const data = await loadAdminData(request);
+export let loader: LoaderFunction = async ({ request, params }) => {
+  const data = await loadAdminData(request, params);
   return json(data);
 };
 

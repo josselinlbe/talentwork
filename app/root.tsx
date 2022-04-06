@@ -67,7 +67,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
       </head>
       <body className="min-h-screen text-gray-800 dark:text-white bg-white dark:bg-slate-900 max-w-full max-h-full">
         <TopBanner />
-
         {children}
         <Scripts />
         <LiveReload />

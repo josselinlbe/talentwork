@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -5,9 +6,10 @@ interface Props {
   title: string;
   text: string;
   redirect?: string;
+  children?: ReactNode;
 }
 
-export default function WarningBanner({ title = "Warning", text = "", redirect }: Props) {
+export default function WarningBanner({ title = "Warning", text = "", redirect, children }: Props) {
   const { t } = useTranslation();
   return (
     <div className="bg-yellow-50 mb-2 rounded-sm border border-yellow-300 mt-4">
@@ -33,6 +35,7 @@ export default function WarningBanner({ title = "Warning", text = "", redirect }
                     {t("shared.goTo")} {redirect}
                   </Link>
                 )}
+                {children}
               </p>
             </div>
           </div>

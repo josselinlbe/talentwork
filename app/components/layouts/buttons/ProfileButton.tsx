@@ -9,7 +9,11 @@ import { useParams, useSubmit } from "remix";
 import UserUtils from "~/utils/app/UserUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
 
-export default function ProfileButton() {
+interface Props {
+  layout: "app" | "admin";
+}
+
+export default function ProfileButton({ layout }: Props) {
   const params = useParams();
   const data = useAppData();
   const { t } = useTranslation();
@@ -71,56 +75,69 @@ export default function ProfileButton() {
           className="z-40 origin-top-right absolute right-0 mt-2 w-64 rounded-sm shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none"
         >
           <div className="py-1 rounded-sm bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-            <div className="truncate group flex items-center px-4 py-2 text-sm text-gray-700 transition ease-in-out duration-150" role="menuitem">
-              <div className="flex flex-col space-y-1 truncate">
-                <div className="font-medium">{UserUtils.profileName(data.user)}</div>
-                <div className="font-bold truncate">{data.user?.email}</div>
-              </div>
-            </div>
-            <div className="border-t border-gray-200"></div>
+            {layout === "app" ? (
+              <>
+                <div className="truncate group flex items-center px-4 py-2 text-sm text-gray-700 transition ease-in-out duration-150" role="menuitem">
+                  <div className="flex flex-col space-y-1 truncate">
+                    <div className="font-medium">{UserUtils.profileName(data.user)}</div>
+                    <div className="font-bold truncate">{data.user?.email}</div>
+                  </div>
+                </div>
+                <div className="border-t border-gray-200"></div>
 
-            <Link
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-              role="menuitem"
-              onClick={closeDropdownUser}
-              to={UrlUtils.appUrl(params, `settings/profile`)}
-            >
-              {t("app.navbar.profile")}
-            </Link>
-            <Link
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-              role="menuitem"
-              onClick={closeDropdownUser}
-              to={UrlUtils.appUrl(params, "settings/workspaces")}
-            >
-              {t("app.navbar.workspaces")}
-            </Link>
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.appUrl(params, `settings/profile`)}
+                >
+                  {t("app.navbar.profile")}
+                </Link>
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.appUrl(params, "settings/workspaces")}
+                >
+                  {t("app.navbar.workspaces")}
+                </Link>
 
-            <Link
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-              role="menuitem"
-              onClick={closeDropdownUser}
-              to={UrlUtils.appUrl(params, "settings/members")}
-            >
-              {t("app.navbar.members")}
-            </Link>
-            <Link
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-              role="menuitem"
-              onClick={closeDropdownUser}
-              to={UrlUtils.appUrl(params, `settings/subscription`)}
-            >
-              {t("app.navbar.subscription")}
-            </Link>
-            <Link
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-              role="menuitem"
-              onClick={closeDropdownUser}
-              to={UrlUtils.appUrl(params, "settings/tenant")}
-            >
-              {t("app.navbar.tenant")}
-            </Link>
-            <div className="border-t border-gray-200 mt-1"></div>
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.appUrl(params, "settings/members")}
+                >
+                  {t("app.navbar.members")}
+                </Link>
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.appUrl(params, `settings/subscription`)}
+                >
+                  {t("app.navbar.subscription")}
+                </Link>
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.appUrl(params, "settings/tenant")}
+                >
+                  {t("app.navbar.tenant")}
+                </Link>
+                <div className="border-t border-gray-200 mt-1"></div>
+              </>
+            ) : (
+              <Link
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                role="menuitem"
+                onClick={closeDropdownUser}
+                to={`/admin/profile`}
+              >
+                {t("app.navbar.profile")}
+              </Link>
+            )}
 
             <button
               onClick={signOut}

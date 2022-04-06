@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { SubscriptionProductDto } from "../../application/dtos/subscriptions/SubscriptionProductDto";
 import { createSubscriptionProduct, createSubscriptionPrice, createSubscriptionFeature } from "../db/subscriptionProducts.db.server";
 import { createStripeProduct, createStripePrice } from "../stripe.server";
@@ -6,7 +5,7 @@ import { createStripeProduct, createStripePrice } from "../stripe.server";
 export async function createPlans(plans: SubscriptionProductDto[]) {
   plans.forEach(async (plan) => {
     // Create stripe product
-    const stripeProduct = await createStripeProduct({ title: t(plan.title) });
+    const stripeProduct = await createStripeProduct({ title: plan.title });
     // Save to db
     const product = await createSubscriptionProduct({
       stripeId: stripeProduct.id,

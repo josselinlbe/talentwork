@@ -34,7 +34,11 @@ export default function ChangeWorkspaceCommandPalette({ onClose, isOpen }: Props
 
   function onChange(workspace: any) {
     onClose();
-    navigate(`/app/${workspace.tenantId}/${workspace.id}/dashboard`);
+    if (workspace) {
+      navigate(`/app/${workspace.tenantId}/${workspace.id}/dashboard`);
+    } else {
+      navigate(`/app/new-tenant`);
+    }
   }
 
   return (
@@ -96,7 +100,7 @@ export default function ChangeWorkspaceCommandPalette({ onClose, isOpen }: Props
                     className={({ active }) => clsx("flex cursor-default select-none rounded-xl p-3", active && "bg-gray-100")}
                   >
                     {({ active }) => (
-                      <div className="flex justify-between items-center w-full pr-2">
+                      <Link to={`/app/${item.tenantId}/${item.id}/dashboard`} className="flex justify-between items-center w-full pr-2">
                         <div className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-theme-600")}>
                           <span className="inline-flex items-center justify-center h-9 w-9">
                             <span className="text-sm font-medium leading-none text-theme-200">{UserUtils.getWorkspacePrefix(item)}</span>
@@ -120,10 +124,34 @@ export default function ChangeWorkspaceCommandPalette({ onClose, isOpen }: Props
                             </svg>
                           </div>
                         )}
-                      </div>
+                      </Link>
                     )}
                   </Combobox.Option>
                 ))}
+
+                <Combobox.Option value={""} className={({ active }) => clsx("flex cursor-default select-none rounded-xl p-3", active && "bg-gray-100")}>
+                  {({ active }) => (
+                    <Link to={`/app/new-tenant`} className="flex justify-between items-center w-full pr-2">
+                      <div className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-500")}>
+                        <span className="inline-flex items-center justify-center h-9 w-9">
+                          <span className="text-sm font-medium leading-none text-gray-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path
+                                fillRule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </div>
+                      <div className="ml-4 flex-auto">
+                        <p className={clsx("text-sm font-medium", active ? "text-gray-900" : "text-gray-700")}>New tenant</p>
+                        <p className={clsx("text-sm", active ? "text-gray-700" : "text-gray-500")}>Create a new organization</p>
+                      </div>
+                    </Link>
+                  )}
+                </Combobox.Option>
               </Combobox.Options>
             )}
 
@@ -148,11 +176,11 @@ export default function ChangeWorkspaceCommandPalette({ onClose, isOpen }: Props
               </div>
             )}
 
-            <div className="mt-4 flex">
+            {/* <div className="mt-4 flex py-4">
               <Link to="/app/new-tenant" className="text-sm font-medium text-theme-600 dark:text-theme-400 hover:text-theme-500 w-full text-center">
                 Create an organization<span aria-hidden="true"> &rarr;</span>
               </Link>
-            </div>
+            </div> */}
           </Combobox>
         </Transition.Child>
       </Dialog>

@@ -38,6 +38,7 @@
     "edit": "Editar",
     "upload": "Subir",
     "avatar": "Avatar",
+    "icon": "Ícono",
     "back": "Atrás",
     "active": "Activo",
     "inactive": "Inactivo",
@@ -724,7 +725,8 @@
       "button": "Entrar",
       "orStartTrial": "comienza gratis",
       "forgot": "¿Olvidaste tu contraseña?",
-      "createTestAccount": "Crea una cuenta de prueba",
+      "createTestAccount": "Crea una cuenta de prueba.",
+      "useTestAccount": "O usa las siguientes credenciales:",
       "errors": {
         "passwordMissmatch": "Las contraseñas no coinciden"
       }
@@ -1029,5 +1031,9 @@
       "noTenants": "No perteneces a ninguna organización",
       "limitReachedWorkspaces": "Has llegado al límite de empresas"
     }
+  },
+  "demo": {
+    "cannotDelete": "No se puede eliminar en ambiente demo",
+    "cannotUpdate": "No se puede actualizar en ambiente demo"
   }
 }

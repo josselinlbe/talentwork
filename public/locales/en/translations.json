@@ -38,6 +38,7 @@
     "edit": "Edit",
     "upload": "Upload",
     "avatar": "Avatar",
+    "icon": "Icon",
     "back": "Back",
     "active": "Active",
     "inactive": "Inactive",
@@ -724,7 +725,8 @@
       "button": "Log in",
       "orStartTrial": "start free today!",
       "forgot": "Forgot your password?",
-      "createTestAccount": "Create a test account",
+      "createTestAccount": "Create a test account.",
+      "useTestAccount": "Or use the following credentials:",
       "errors": {
         "passwordMissmatch": "Password don't match"
       }
@@ -1029,5 +1031,9 @@
       "noTenants": "You don't belong to any organization",
       "limitReachedWorkspaces": "You have reached the workspaces limit"
     }
+  },
+  "demo": {
+    "cannotDelete": "Cannot delete on demo environment",
+    "cannotUpdate": "Cannot update on demo environment"
   }
 }

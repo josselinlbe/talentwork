@@ -71,7 +71,9 @@ export const action: ActionFunction = async ({ request }) => {
           ...userInfo,
           ...userSession,
         },
-        `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+        userSession.currentTenantId && userSession.currentWorkspaceId
+          ? `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+          : "/app"
       );
     }
     case ActionType.ChangePassword: {

@@ -98,7 +98,7 @@ export default function TenantRoute() {
                     </label>
                     <div className="mt-2 flex items-center space-x-3">
                       <input hidden id="icon" name="icon" defaultValue={icon} />
-                      <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100">
+                      <div className="h-12 w-12 rounded-md overflow-hidden">
                         {(() => {
                           if (icon) {
                             return <img id="icon" alt="Tenant icon" src={icon} />;

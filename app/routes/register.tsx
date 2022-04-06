@@ -12,17 +12,16 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { createWorkspace, createWorkspaceUser } from "~/utils/db/workspaces.db.server";
 import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import { sendEmail } from "~/utils/email.server";
-import WarningBanner from "~/components/ui/banners/WarningBanner";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "Register | Remix SaasFrontend",
-  };
-};
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
 
 export let loader: LoaderFunction = async ({ request }) => {
-  const { translations } = await i18nHelper(request);
+  let { t, translations } = await i18nHelper(request);
   return json({
+    title: `${t("account.forgot.title")} | ${process.env.APP_NAME}`,
     i18n: translations,
   });
 };
@@ -102,7 +101,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const defaultWorkspace = await createWorkspace({
     tenantId: tenant.id,
-    name: company,
+    name: "Default workspace",
     type: WorkspaceType.PRIVATE,
     businessMainActivity: "",
     registrationNumber: "",
@@ -153,7 +152,7 @@ export default function RegisterRoute() {
               </span>
             </p>
           </div>
-          <WarningBanner title="Sandbox" text="Create an account to test the Remix SaaS kit /app pages (no credit card required)." />
+          <InfoBanner title="Demo" text={"No email verification required nor a credit card to test the app."} />
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
             {/* Workspace */}

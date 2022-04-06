@@ -58,7 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
   });
   const defaultWorkspace = await createWorkspace({
     tenantId: tenant.id,
-    name,
+    name: "Default workspace",
     type: WorkspaceType.PRIVATE,
     businessMainActivity: "",
     registrationNumber: "",

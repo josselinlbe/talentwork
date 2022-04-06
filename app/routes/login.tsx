@@ -8,18 +8,13 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { deleteUser, getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
 import { getMyTenants } from "~/utils/db/tenants.db.server";
-import WarningBanner from "~/components/ui/banners/WarningBanner";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
 import { UserType } from "~/application/enums/users/UserType";
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "Login | Remix SaasFrontend",
-  };
-};
-
 export let loader: LoaderFunction = async ({ request }) => {
-  const { translations } = await i18nHelper(request);
+  let { t, translations } = await i18nHelper(request);
   return json({
+    title: `${t("account.login.title")} | ${process.env.APP_NAME}`,
     i18n: translations,
   });
 };
@@ -99,6 +94,10 @@ export const action: ActionFunction = async ({ request }) => {
   );
 };
 
+export const meta: MetaFunction = ({ data }) => ({
+  title: data.title,
+});
+
 export default function LoginRoute() {
   const actionData = useActionData<ActionData>();
   const { t } = useTranslation();
@@ -119,7 +118,17 @@ export default function LoginRoute() {
               </Link>
             </p>
           </div>
-          <WarningBanner title="Sandbox" text={t("account.login.createTestAccount")} redirect="/register" />
+          <InfoBanner title="Demo" text={t("account.login.createTestAccount")} redirect="/register">
+            <p className="mt-2 border-t pt-1 border-pink-300 w-full">
+              {t("account.login.useTestAccount")}
+              <p className="mt-1">
+                <span className="font-bold">Email</span>: john.doe@company.com
+              </p>
+              <p>
+                <span className="font-bold">Password</span>: password
+              </p>
+            </p>
+          </InfoBanner>
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
             <div className="rounded-sm shadow-sm -space-y-px">

@@ -27,16 +27,14 @@ export default function TenantSelect() {
         <div className="flex-shrink-0 w-full group block">
           <div className="flex justify-between items-center">
             <div className="flex items-center text-left truncate">
-              <div>
-                {/* <img
-                    className="inline-block h-9 w-9 rounded-full"
-                    src="{https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80}"
-                    alt=""
-                  /> */}
+              {/*  */}
+              {appData.currentTenant?.icon ? (
+                <img className="inline-block h-9 w-9 rounded-full bg-gray-500 shadow-sm" src={appData.currentTenant?.icon} alt="Tenant icon" />
+              ) : (
                 <span className="inline-flex items-center justify-center h-9 w-9 rounded-full bg-theme-900">
                   <span className="text-sm font-medium leading-none text-theme-200">{appData.currentTenant?.name.substring(0, 1)}</span>
                 </span>
-              </div>
+              )}
               <div className="ml-3 truncate">
                 <p className="text-sm font-medium text-gray-200 group-hover:text-white">{appData.currentWorkspace?.name}</p>
                 <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200 truncate">{appData.currentTenant?.name}</p>

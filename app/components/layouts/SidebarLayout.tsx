@@ -83,7 +83,7 @@ export default function SidebarLayout({ layout, children }: Props) {
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
                 </div>
-                {layout == "app" && <TenantSelect onOpen={() => setSidebarOpen(false)} />}
+                {layout == "app" && <TenantSelect />}
               </div>
             </Transition>
             <div className="flex-shrink-0 w-14">{/*Dummy element to force sidebar to shrink to fit close icon */}</div>
@@ -114,7 +114,7 @@ export default function SidebarLayout({ layout, children }: Props) {
             </div>
           </div>
 
-          {layout == "app" && <TenantSelect onOpen={() => setSidebarOpen(false)} />}
+          {layout == "app" && <TenantSelect />}
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default function SidebarLayout({ layout, children }: Props) {
               {layout === "app" && appData.isOwnerOrAdmin && <PendingInvitationsButton />}
               {layout === "app" && <ChatSupportButton />}
               {layout === "app" && <QuickActionsButton />}
-              {layout === "app" && <ProfileButton />}
+              <ProfileButton layout={layout} />
             </div>
           </div>
         </div>

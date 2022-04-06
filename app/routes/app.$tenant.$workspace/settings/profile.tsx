@@ -52,6 +52,7 @@ type ActionData = {
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
+  const { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
   const type = form.get("type");
@@ -101,6 +102,11 @@ export const action: ActionFunction = async ({ request }) => {
       });
     }
     case "password": {
+      if (user?.email === "john.doe@company.com") {
+        // TODO: REMOVE
+        return badRequest({ passwordError: t("demo.cannotDelete") });
+      }
+
       if (typeof passwordCurrent !== "string" || typeof passwordNew !== "string" || typeof passwordNewConfirm !== "string") {
         return badRequest({
           passwordError: `Form not submitted correctly.`,
@@ -190,6 +196,12 @@ export default function ProfileRoute() {
   }
 
   function deleteAccount() {
+    if (appData.user?.email === "john.doe@company.com") {
+      // TODO: REMOVE
+      errorModal.current?.show(t("demo.cannotDelete"));
+      return;
+    }
+
     if (appData.user?.type === UserType.Admin) {
       errorModal.current?.show(t("settings.profile.errors.cannotDeleteAdmin"));
     } else {

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ActionFunction, json, LoaderFunction, useLoaderData, useNavigate } from "remix";
+import { json, LoaderFunction, useLoaderData } from "remix";
 import { Language } from "remix-i18next";
 import Logo from "~/components/front/Logo";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
@@ -31,7 +31,6 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 export default function AppRoute() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
-  const navigate = useNavigate();
 
   const [items, setItems] = useState<WorkspaceWithTenant[]>([]);
   useEffect(() => {
@@ -44,11 +43,6 @@ export default function AppRoute() {
     console.log({ items });
     setItems(items);
   }, [data.myTenants]);
-
-  function onChange(workspace: any) {
-    // onClose();
-    navigate(`/app/${workspace.tenantId}/${workspace.id}/dashboard`);
-  }
 
   return (
     <div>
@@ -86,7 +80,9 @@ export default function AppRoute() {
               </svg>
               <div className="text-center">
                 <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">Select a workspace</h1>
-                <p className="mt-4 text-lg leading-6 text-gray-500">Select a workspace</p>
+                <p className="mt-4 text-lg leading-6 text-gray-500">
+                  {items.length === 1 ? <span>You belong to 1 workspace</span> : <span>You belong to {items.length} workspaces</span>}
+                </p>
               </div>
               <div className="mt-12">
                 {items.length === 0 ? (
@@ -99,8 +95,8 @@ export default function AppRoute() {
                 ) : (
                   <Combobox
                     as="div"
-                    className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl shadow-inner border border-gray-800 ring-1 ring-black ring-opacity-5 transition-all"
-                    onChange={onChange}
+                    className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 ring-1 ring-black ring-opacity-5 transition-all"
+                    onChange={() => {}}
                     value={""}
                   >
                     <Combobox.Options static className="max-h-96 scroll-py-3 overflow-y-auto p-3">
@@ -133,7 +129,7 @@ export default function AppRoute() {
                     </Combobox.Options>
                   </Combobox>
                 )}
-                <div className="mt-4 flex">
+                <div className="mt-4 flex pb-12">
                   <Link to="/app/new-tenant" className="text-sm font-medium text-theme-600 dark:text-theme-400 hover:text-theme-500 w-full text-center">
                     Create an organization<span aria-hidden="true"> &rarr;</span>
                   </Link>
