@@ -1,11 +1,11 @@
 import Stripe from "stripe";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
-const stripe = new Stripe(process.env.REMIX_STRIPE_SK?.toString() ?? "", {
+const stripe = new Stripe(process.env.STRIPE_SK?.toString() ?? "", {
   apiVersion: "2020-08-27",
 });
 
 export async function createStripeSession(tenant: string, workspace: string, customer: string, price: string) {
-  const site = process.env.REMIX_SERVER_URL?.toString() ?? "";
+  const site = process.env.SERVER_URL?.toString() ?? "";
   return await stripe.checkout.sessions.create({
     customer,
     success_url: site + `/app/${tenant}/${workspace}/settings/subscription?session_id={CHECKOUT_SESSION_ID}`,

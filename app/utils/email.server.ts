@@ -6,30 +6,30 @@ import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
 
 function getClient() {
   try {
-    return new postmark.ServerClient(process.env.REMIX_POSTMARK_SERVER_TOKEN?.toString() ?? "");
+    return new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN?.toString() ?? "");
   } catch (e) {
     return null;
   }
 }
 
 function getBaseTemplateModel() {
-  const appUrl = process.env.REMIX_SERVER_URL?.toString();
+  const appUrl = process.env.SERVER_URL?.toString();
   return {
     product_url: appUrl,
     login_url: appUrl + "/login",
     product_name: process.env.APP_NAME,
-    support_email: process.env.REMIX_SUPPORT_EMAIL,
+    support_email: process.env.SUPPORT_EMAIL,
     sender_name: process.env.APP_NAME,
-    company_name: process.env.REMIX_COMPANY_NAME,
-    company_address: process.env.REMIX_COMPANY_ADDRESS,
+    company_name: process.env.COMPANY_NAME,
+    company_address: process.env.COMPANY_ADDRESS,
   };
 }
 
 export async function sendEmail(to: string, alias: string, data: any, Attachments?: { Name: string; Content: string; ContentType: string }[]) {
-  var client = new postmark.ServerClient(process.env.REMIX_POSTMARK_SERVER_TOKEN?.toString() ?? "");
+  var client = new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN?.toString() ?? "");
 
   await client.sendEmailWithTemplate({
-    From: process.env.REMIX_POSTMARK_FROM_EMAIL,
+    From: process.env.POSTMARK_FROM_EMAIL,
     To: to,
     TemplateAlias: alias,
     TemplateModel: {

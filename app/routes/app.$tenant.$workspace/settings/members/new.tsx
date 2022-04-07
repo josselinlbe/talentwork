@@ -82,7 +82,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     name: firstName,
     invite_sender_name: appData.user?.firstName,
     invite_sender_organization: appData.currentTenant?.name,
-    action_url: process.env.REMIX_SERVER_URL + `/invitation/${invitation.id}`,
+    action_url: process.env.SERVER_URL + `/invitation/${invitation.id}`,
   });
 
   return json({

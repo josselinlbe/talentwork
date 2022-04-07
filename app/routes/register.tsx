@@ -112,7 +112,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   await sendEmail(email, "welcome", {
-    action_url: process.env.REMIX_SERVER_URL + `/login`,
+    action_url: process.env.SERVER_URL + `/login`,
     name: firstName,
   });
 

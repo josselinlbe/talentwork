@@ -86,7 +86,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   await sendEmail(user.email, "invite-user-to-link-workspace", {
-    action_url: process.env.REMIX_SERVER_URL + `/app/links/pending`,
+    action_url: process.env.SERVER_URL + `/app/links/pending`,
     name: user.firstName,
     invite_sender_name: appData.user?.firstName,
     invite_sender_email: appData.user?.email,

@@ -24,7 +24,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   const data: LoaderData = {
     title: `${t("admin.pricing.title")} | ${process.env.APP_NAME}`,
     onStripe: true,
-    isStripeTest: process.env.REMIX_STRIPE_SK?.toString().startsWith("sk_test_") ?? true,
+    isStripeTest: process.env.STRIPE_SK?.toString().startsWith("sk_test_") ?? true,
     items: await getAllSubscriptionProducts(),
   };
 

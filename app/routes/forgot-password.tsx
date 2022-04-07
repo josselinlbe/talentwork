@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
   var verifyToken = crypto.randomBytes(20).toString("hex");
   await updateUserVerifyToken({ verifyToken }, user.id);
   await sendEmail(email, "password-reset", {
-    action_url: process.env.REMIX_SERVER_URL + `/reset?e=${email}&t=${verifyToken}`,
+    action_url: process.env.SERVER_URL + `/reset?e=${email}&t=${verifyToken}`,
     name: user.firstName,
   });
 

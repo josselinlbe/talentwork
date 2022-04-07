@@ -9,7 +9,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   return json({
     title: `${t("front.terms.title")} | ${process.env.APP_NAME}`,
     i18n: translations,
-    actionUrl: process.env.REMIX_INTEGRATIONS_CONTACT_FORMSPREE?.toString() ?? "",
+    actionUrl: process.env.INTEGRATIONS_CONTACT_FORMSPREE?.toString() ?? "",
   });
 };
 

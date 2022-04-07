@@ -81,10 +81,10 @@ async function createTenant(name: string, workspaces: string[], users: (User & {
 }
 
 async function seed() {
-  const adminEmail = process.env.REMIX_ADMIN_EMAIL?.toString();
-  const adminPassword = process.env.REMIX_ADMIN_PASSWORD?.toString();
+  const adminEmail = process.env.ADMIN_EMAIL?.toString();
+  const adminPassword = process.env.ADMIN_PASSWORD?.toString();
   if (!adminEmail || !adminPassword) {
-    throw new Error("REMIX_ADMIN_EMAIL and REMIX_ADMIN_PASSWORD must be set");
+    throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set");
   }
   const admin = await createUser("Admin", "User", adminEmail, adminPassword, UserType.Admin);
   const user1 = await createUser("John", "Doe", "john.doe@company.com", "password", UserType.Tenant);

@@ -139,7 +139,7 @@
       "send": "Send",
       "users": "Number of users",
       "comments": "Questions or comments",
-      "setup": "Update the .env variable REMIX_INTEGRATIONS_CONTACT_FORMSPREE"
+      "setup": "Update the .env variable INTEGRATIONS_CONTACT_FORMSPREE"
     },
     "changelog": {
       "title": "Changelog",
@@ -707,7 +707,7 @@
       "created": "Created",
       "createAll": "Create All",
       "noEmails": "No email templates",
-      "noEmailsDescription": "Set them up at app/application/emails folder and set the REMIX_POSTMARK_SERVER_TOKEN value.",
+      "noEmailsDescription": "Set them up at app/application/emails folder and set the POSTMARK_SERVER_TOKEN value.",
       "sendTest": "Send test"
     }
   },

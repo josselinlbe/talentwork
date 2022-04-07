@@ -42,9 +42,9 @@ export async function setLoggedUser(user: { id: string; email: string; defaultWo
   };
 }
 
-const sessionSecret = process.env.REMIX_SESSION_SECRET;
+const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
-  throw new Error("REMIX_SESSION_SECRET must be set");
+  throw new Error("SESSION_SECRET must be set");
 }
 
 const storage = createCookieSessionStorage({

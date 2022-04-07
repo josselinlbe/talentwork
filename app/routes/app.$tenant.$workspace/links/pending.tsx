@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (accepted) {
     await sendEmail(user.email, "link-invitation-accepted", {
-      action_url: process.env.REMIX_SERVER_URL + `/app/links/all`,
+      action_url: process.env.SERVER_URL + `/app/links/all`,
       name: user.firstName,
       user_invitee_name: appData.user?.firstName,
       user_invitee_email: appData.user?.email,
@@ -74,7 +74,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   } else {
     await sendEmail(user.email, "link-invitation-rejected", {
-      action_url: process.env.REMIX_SERVER_URL + `/app/links/all`,
+      action_url: process.env.SERVER_URL + `/app/links/all`,
       name: user.firstName,
       email: appData.user?.email,
       workspace: appData.currentWorkspace?.name,

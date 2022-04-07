@@ -18,13 +18,13 @@
 1. Create the `.env` file and set the following values:
 
 - **DATABASE_URL**
-- **REMIX_SESSION_SECRET** - any string
-- **REMIX_ADMIN_EMAIL** - this will be your admin user
-- **REMIX_ADMIN_PASSWORD** - don't commit your .env file
-- **REMIX_STRIPE_SK** - [click here to get the secret key](https://dashboard.stripe.com/test/developers)
-- **REMIX_POSTMARK_SERVER_TOKEN** - [create a free email server here](https://account.postmarkapp.com/servers)
-- **REMIX_INTEGRATIONS_CONTACT_FORMSPREE** - [create a free form here](https://formspree.io/forms)
-- **REMIX_COMPANY_ADDRESS** - used on emails
+- **SESSION_SECRET** - any string
+- **ADMIN_EMAIL** - this will be your admin user
+- **ADMIN_PASSWORD** - don't commit your .env file
+- **STRIPE_SK** - [click here to get the secret key](https://dashboard.stripe.com/test/developers)
+- **POSTMARK_SERVER_TOKEN** - [create a free email server here](https://account.postmarkapp.com/servers)
+- **INTEGRATIONS_CONTACT_FORMSPREE** - [create a free form here](https://formspree.io/forms)
+- **COMPANY_ADDRESS** - used on emails
 
 2. Generate and seed your database. If your using **sqlite** and your database gets messed up, you can always delete the `dev.db` file and run npx prisma db push again.
 
@@ -39,7 +39,7 @@ yarn
 yarn dev
 ```
 
-4. Log in with your `REMIX_ADMIN_EMAIL` and `REMIX_ADMIN_PASSWORD`.
+4. Log in with your `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
 
 5. Generate **Stripe products** at `/admin/pricing`.
 
@@ -53,7 +53,7 @@ yarn dev
 
 10. Click on `Click here to subscribe` and subscribe any plan using **Stripe checkout** (use any [Stripe test card](https://stripe.com/docs/testing#cards)).
 
-11. Click on the sidebar item `Links` and `New link`. Invite your **admin** user (`REMIX_ADMIN_EMAIL`) and its workspace **T1.Workspace 1** or **T1.Workspace 2**. You should get an `workspace link invitation` email, and be redirected to `/app/links/pending`.
+11. Click on the sidebar item `Links` and `New link`. Invite your **admin** user (`ADMIN_EMAIL`) and its workspace **T1.Workspace 1** or **T1.Workspace 2**. You should get an `workspace link invitation` email, and be redirected to `/app/links/pending`.
 
 12. Sign out, and log in as your **admin** user.
 

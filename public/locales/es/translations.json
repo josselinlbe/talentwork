@@ -139,7 +139,7 @@
       "send": "Enviar",
       "users": "¿Cuántos usuarios necesitas?",
       "comments": "Preguntas o comentarios",
-      "setup": "Actualiza la variable .env REMIX_INTEGRATIONS_CONTACT_FORMSPREE"
+      "setup": "Actualiza la variable .env INTEGRATIONS_CONTACT_FORMSPREE"
     },
     "changelog": {
       "title": "Changelog",
@@ -707,7 +707,7 @@
       "created": "Creado",
       "createAll": "Crear todos",
       "noEmails": "No hay plantillas de correo",
-      "noEmailsDescription": "Configuralas en la carpeta app/application/emails y establece la variable REMIX_POSTMARK_SERVER_TOKEN.",
+      "noEmailsDescription": "Configuralas en la carpeta app/application/emails y establece la variable POSTMARK_SERVER_TOKEN.",
       "sendTest": "Enviar prueba"
     }
   },
