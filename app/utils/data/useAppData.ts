@@ -2,25 +2,25 @@ import { redirect, useMatches } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { getUserInfo } from "../session.server";
-import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
+import { SubscriptionPrice, SubscriptionProduct, Tenant } from "@prisma/client";
 import { getStripeSubscription } from "../stripe.server";
 import { getLinksCount } from "../db/links.db.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { getSubscriptionPriceByStripeId, SubscriptionPriceWithProduct } from "../db/subscriptionProducts.db.server";
-import { getMyTenants, getTenant } from "../db/tenants.db.server";
-import { getUser } from "../db/users.db.server";
-import { getMyWorkspaces, getWorkspace, getWorkspaceUser } from "../db/workspaces.db.server";
+import { getMyTenants, getTenant, MyTenant } from "../db/tenants.db.server";
+import { getUser, UserWithoutPassword } from "../db/users.db.server";
+import { getMyWorkspaces, getWorkspace, getWorkspaceUser, MyWorkspace, WorkspaceWithUsers } from "../db/workspaces.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { Params } from "react-router";
 import UrlUtils from "../app/UrlUtils";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
-  user: Awaited<ReturnType<typeof getUser>>;
-  myTenants: Awaited<ReturnType<typeof getMyTenants>>;
-  currentTenant: Awaited<ReturnType<typeof getTenant>>;
-  myWorkspaces: Awaited<ReturnType<typeof getMyWorkspaces>>;
-  currentWorkspace: Awaited<ReturnType<typeof getWorkspace>>;
+  user: UserWithoutPassword;
+  myTenants: MyTenant[];
+  currentTenant: Tenant;
+  myWorkspaces: MyWorkspace[];
+  currentWorkspace: WorkspaceWithUsers;
   mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
   currentRole: TenantUserRole;
   isOwnerOrAdmin: boolean;
@@ -49,7 +49,7 @@ export async function loadAppData(request: Request, params: Params) {
     // No longer a workspace member
     // TODO
     // params.workspace = "";
-    // const userWorkspaces = await getMyWorkspaces(userInfo.userId, userInfo.currentTenantId);
+    // const userWorkspaces = await getMyWorkspaces(userInfo.userId, params.tenant ?? "");
     // if (userWorkspaces.length > 0) {
     //   params.workspace = userWorkspaces[0].workspace.id;
     // }

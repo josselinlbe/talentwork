@@ -6,7 +6,7 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useState } from "react";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { getTenantMember, getTenantUsers } from "~/utils/db/tenants.db.server";
+import { getTenantMember, getTenantUsers, TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData, useNavigate, useParams } from "remix";
 import { getUserInfo } from "~/utils/session.server";
 import { useAppData } from "~/utils/data/useAppData";
@@ -17,7 +17,7 @@ import UrlUtils from "~/utils/app/UrlUtils";
 
 type LoaderData = {
   title: string;
-  users: Awaited<ReturnType<typeof getTenantUsers>>;
+  users: TenantUserWithUser[];
   pendingInvitations: Awaited<ReturnType<typeof getUserInvitations>>;
 };
 

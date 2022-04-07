@@ -93,8 +93,6 @@ export const action: ActionFunction = async ({ request }) => {
     return createUserSession(
       {
         userId: userInfo?.userId ?? "",
-        // currentTenantId: userInfo?.currentTenantId ?? "",
-        // currentWorkspaceId: userInfo?.currentWorkspaceId ?? "",
         lng: userInfo?.lng ?? "en",
         lightOrDarkMode,
       },
@@ -106,8 +104,6 @@ export const action: ActionFunction = async ({ request }) => {
     return createUserSession(
       {
         userId: userInfo?.userId,
-        // currentTenantId: userInfo?.currentTenantId,
-        // currentWorkspaceId: userInfo?.currentWorkspaceId,
         lightOrDarkMode: userInfo?.lightOrDarkMode,
         lng,
       },

@@ -92,7 +92,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         lightOrDarkMode: userInfo.lightOrDarkMode,
         lng: userInfo.lng,
       },
-      `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+      `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
     );
   } else {
     // Existing user
@@ -117,7 +117,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         lightOrDarkMode: userInfo.lightOrDarkMode,
         lng: userInfo.lng,
       },
-      `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+      `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
     );
   }
 };

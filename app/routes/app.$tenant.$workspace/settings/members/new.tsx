@@ -2,7 +2,6 @@ import { loadAppData } from "~/utils/data/useAppData";
 import { Workspace } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, MetaFunction } from "remix";
 import { getWorkspaces } from "~/utils/db/workspaces.db.server";
-import { getUserInfo } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenantMember } from "~/utils/db/tenants.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
@@ -15,11 +14,10 @@ export type NewMemberLoaderData = {
   tenantWorkspaces: Workspace[];
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
 
-  const userInfo = await getUserInfo(request);
-  const tenantWorkspaces = await getWorkspaces(userInfo?.currentTenantId);
+  const tenantWorkspaces = await getWorkspaces(params.tenant ?? "");
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
     tenantWorkspaces: tenantWorkspaces ?? [],
@@ -40,12 +38,11 @@ export type NewMemberActionData = {
 };
 
 const badRequest = (data: NewMemberActionData) => json(data, { status: 400 });
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
 
-  const appData = await loadAppData(request);
+  const appData = await loadAppData(request, params);
 
-  const userInfo = await getUserInfo(request);
   const form = await request.formData();
   const email = form.get("email")?.toString().toLowerCase().trim() ?? "";
   const firstName = form.get("first-name")?.toString() ?? "";
@@ -61,7 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const user = await getUserByEmail(email);
   if (user) {
-    const tenantUser = await getTenantMember(user.id, userInfo?.currentTenantId);
+    const tenantUser = await getTenantMember(user.id, params.tenant ?? "");
     if (tenantUser) {
       return badRequest({
         error: "User already in organization",
@@ -69,7 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
   }
 
-  const invitation = await createUserInvitation(userInfo.currentTenantId, workspaces, {
+  const invitation = await createUserInvitation(params.tenant ?? "", workspaces, {
     email,
     firstName,
     lastName,

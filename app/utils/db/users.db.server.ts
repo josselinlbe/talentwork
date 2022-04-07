@@ -2,6 +2,17 @@ import bcrypt from "bcryptjs";
 import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
 
+export type UserWithoutPassword = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  phone: string;
+  type: UserType;
+  defaultWorkspaceId: string | null;
+};
+
 export async function adminGetAllUsers() {
   return db.user.findMany({
     include: {
@@ -14,7 +25,7 @@ export async function adminGetAllUsers() {
   });
 }
 
-export async function getUser(userId?: string) {
+export async function getUser(userId?: string): Promise<UserWithoutPassword | null> {
   if (!userId) {
     return null;
   }

@@ -90,7 +90,7 @@ export const action: ActionFunction = async ({ request }) => {
       ? redirectTo
       : user.type === UserType.Admin
       ? "/admin/tenants"
-      : `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+      : `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
   );
 };
 

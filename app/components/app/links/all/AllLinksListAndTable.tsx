@@ -50,8 +50,7 @@ export default function AllLinksListAndTable({ items }: Props) {
     }
   }
   function whoAmI(item: LinkWithWorkspaces) {
-    const currentWorkspaceId = appData.currentWorkspace?.id ?? "";
-    if (currentWorkspaceId === item.providerWorkspaceId) {
+    if (appData.currentWorkspace?.id ?? "" === item.providerWorkspaceId) {
       return 0;
     }
     return 1;

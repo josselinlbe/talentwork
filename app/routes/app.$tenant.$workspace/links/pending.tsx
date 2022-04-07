@@ -6,7 +6,6 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useRef, useState, useEffect } from "react";
 import { LoaderFunction, json, useLoaderData, useTransition, ActionFunction, useSubmit, MetaFunction, useActionData } from "remix";
 import { LinkWithWorkspaces, getLinks, updateLink, getLink } from "~/utils/db/links.db.server";
-import { getUserInfo } from "~/utils/session.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { sendEmail } from "~/utils/email.server";
@@ -18,11 +17,10 @@ type LoaderData = {
   title: string;
   items: LinkWithWorkspaces[];
 };
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
 
-  const userInfo = await getUserInfo(request);
-  const items = await getLinks(userInfo.currentWorkspaceId, LinkStatus.PENDING);
+  const items = await getLinks(params.workspace ?? "", LinkStatus.PENDING);
   const data: LoaderData = {
     title: `${t("app.links.pending.multiple")} | ${process.env.APP_NAME}`,
     items,
@@ -36,9 +34,8 @@ type ActionData = {
   items?: LinkWithWorkspaces[];
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-export const action: ActionFunction = async ({ request }) => {
-  const userInfo = await getUserInfo(request);
-  const appData = await loadAppData(request);
+export const action: ActionFunction = async ({ request, params }) => {
+  const appData = await loadAppData(request, params);
 
   const form = await request.formData();
   const linkId = form.get("link-id")?.toString();
@@ -86,7 +83,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   return json({
-    items: await getLinks(userInfo.currentWorkspaceId, LinkStatus.PENDING),
+    items: await getLinks(params.workspace ?? "", LinkStatus.PENDING),
   });
 };
 
@@ -159,8 +156,7 @@ export default function PendingLinksRoute() {
     });
   }
   function whoAmI(item: LinkWithWorkspaces) {
-    const currentWorkspaceId = appData.currentWorkspace?.id ?? "";
-    if (currentWorkspaceId === item.providerWorkspaceId) {
+    if (appData.currentWorkspace?.id ?? "" === item.providerWorkspaceId) {
       return 0;
     }
     return 1;

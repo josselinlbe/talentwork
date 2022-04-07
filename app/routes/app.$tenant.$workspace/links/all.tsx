@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { getLinks, LinkWithWorkspaces } from "~/utils/db/links.db.server";
-import { getUserInfo } from "~/utils/session.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { useState } from "react";
 import { i18nHelper } from "~/locale/i18n.utils";
@@ -12,11 +11,10 @@ type LoaderData = {
   items: LinkWithWorkspaces[];
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
 
-  const userInfo = await getUserInfo(request);
-  const items = await getLinks(userInfo.currentWorkspaceId, LinkStatus.LINKED);
+  const items = await getLinks(params.workspace ?? "", LinkStatus.LINKED);
   const data: LoaderData = {
     title: `${t("models.link.plural")} | ${process.env.APP_NAME}`,
     items,

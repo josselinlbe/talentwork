@@ -128,7 +128,7 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+    `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
   );
 };
 

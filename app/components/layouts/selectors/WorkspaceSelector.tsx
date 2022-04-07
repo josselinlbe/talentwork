@@ -3,7 +3,7 @@ import { Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
-import { getMyWorkspaces, getWorkspace } from "~/utils/db/workspaces.db.server";
+import { MyWorkspace, WorkspaceWithUsers } from "~/utils/db/workspaces.db.server";
 import { useLoaderData, useLocation, useParams, useSubmit } from "remix";
 import { Workspace, WorkspaceUser } from "@prisma/client";
 import UrlUtils from "~/utils/app/UrlUtils";
@@ -15,8 +15,8 @@ interface Props {
 }
 
 type LoaderData = {
-  myWorkspaces: Awaited<ReturnType<typeof getMyWorkspaces>>;
-  currentWorkspace?: Awaited<ReturnType<typeof getWorkspace>>;
+  myWorkspaces: MyWorkspace[];
+  currentWorkspace?: WorkspaceWithUsers;
 };
 
 export default function WorkspaceSelector({ className, onAdd, onSelected }: Props) {

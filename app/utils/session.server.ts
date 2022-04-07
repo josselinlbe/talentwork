@@ -5,8 +5,6 @@ import { getWorkspace, getMyWorkspaces } from "./db/workspaces.db.server";
 
 export type UserSession = {
   userId: string;
-  // currentTenantId: string;
-  // currentWorkspaceId: string;
   lightOrDarkMode: string;
   lng: string;
 };
@@ -22,8 +20,8 @@ export async function setLoggedUser(user: { id: string; email: string; defaultWo
     if (workspace) {
       return {
         userId: user.id,
-        currentTenantId: workspace.tenantId,
-        currentWorkspaceId: workspace.id,
+        defaultTenantId: workspace.tenantId,
+        defaultWorkspaceId: workspace.id,
       };
     }
   }
@@ -39,8 +37,8 @@ export async function setLoggedUser(user: { id: string; email: string; defaultWo
 
   return {
     userId: user.id,
-    currentTenantId,
-    currentWorkspaceId,
+    defaultTenantId: currentTenantId,
+    defaultWorkspaceId: currentWorkspaceId,
   };
 }
 
@@ -71,14 +69,10 @@ function getUserSession(request: Request) {
 export async function getUserInfo(request: Request): Promise<UserSession> {
   const session = await getUserSession(request);
   const userId = session.get("userId");
-  // const currentTenantId = session.get("currentTenantId");
-  // const currentWorkspaceId = session.get("currentWorkspaceId");
   const lightOrDarkMode = session.get("lightOrDarkMode");
   const lng = session.get("lng");
   return {
     userId,
-    // currentTenantId,
-    // currentWorkspaceId,
     lightOrDarkMode,
     lng,
   };
@@ -106,8 +100,6 @@ export async function logout(request: Request) {
 export async function createUserSession(userSession: UserSession, redirectTo: string = "") {
   const session = await storage.getSession();
   session.set("userId", userSession.userId);
-  // session.set("currentTenantId", userSession.currentTenantId);
-  // session.set("currentWorkspaceId", userSession.currentWorkspaceId);
   session.set("lightOrDarkMode", userSession.lightOrDarkMode);
   session.set("lng", userSession.lng);
   return redirect(redirectTo, {

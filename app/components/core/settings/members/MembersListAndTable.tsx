@@ -5,11 +5,11 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
-import { getTenantUsers } from "~/utils/db/tenants.db.server";
+import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import { TenantUser } from "@prisma/client";
 
 interface Props {
-  items: Awaited<ReturnType<typeof getTenantUsers>>;
+  items: TenantUserWithUser[];
 }
 export default function MembersListAndTable({ items }: Props) {
   const { t } = useTranslation();

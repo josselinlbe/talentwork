@@ -5,6 +5,14 @@ import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
 import { SubscriptionPriceWithProduct } from "./subscriptionProducts.db.server";
 
+export type MyTenant = TenantUser & {
+  tenant: Tenant & {
+    workspaces: (Workspace & {
+      tenant: Tenant;
+    })[];
+  };
+};
+
 export type TenantWithWorkspacesAndUsers = Tenant & {
   workspaces: Workspace[];
   users: (TenantUser & {
@@ -19,6 +27,10 @@ export type TenantWithWorkspacesAndUsers = Tenant & {
 
 export type WorkspaceWithTenant = Workspace & {
   tenant: Tenant;
+};
+
+export type TenantUserWithUser = TenantUser & {
+  user: User;
 };
 
 export async function adminGetAllTenants(): Promise<TenantWithWorkspacesAndUsers[]> {
@@ -60,7 +72,7 @@ export async function getTenantWithUsersAndWorkspaces(id?: string) {
   });
 }
 
-export async function getMyTenants(userId: string) {
+export async function getMyTenants(userId: string): Promise<MyTenant[]> {
   const tenants = await db.tenantUser.findMany({
     where: {
       userId,
@@ -113,9 +125,9 @@ export async function getTenantUsersCount(tenantId: string) {
   });
 }
 
-export async function getTenantUsers(tenantId?: string, types: UserType[] = [UserType.Admin, UserType.Tenant]) {
+export async function getTenantUsers(tenantId?: string, types: UserType[] = [UserType.Admin, UserType.Tenant]): Promise<TenantUserWithUser[]> {
   if (!tenantId) {
-    return null;
+    return [];
   }
   return await db.tenantUser.findMany({
     where: {

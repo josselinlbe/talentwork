@@ -16,7 +16,6 @@ type LoaderData = {
 };
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
-  // await new Promise((r) => setTimeout(r, 1000));
   const items = await getAllSubscriptionProducts();
   const data: LoaderData = {
     title: `${t("front.pricing.title")} | ${process.env.APP_NAME}`,

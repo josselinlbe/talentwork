@@ -1,7 +1,18 @@
+import { User, Workspace, WorkspaceUser } from ".prisma/client";
 import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import { db } from "~/utils/db.server";
 
-export async function getWorkspace(id?: string) {
+export type WorkspaceWithUsers = Workspace & {
+  users: (WorkspaceUser & {
+    user: User;
+  })[];
+};
+
+export type MyWorkspace = WorkspaceUser & {
+  workspace: Workspace;
+};
+
+export async function getWorkspace(id?: string): Promise<WorkspaceWithUsers | null> {
   if (!id) {
     return null;
   }
@@ -43,7 +54,7 @@ export async function getWorkspaceUsers(workspaceId: string) {
   });
 }
 
-export async function getMyWorkspaces(userId: string, currentTenantId: string | undefined) {
+export async function getMyWorkspaces(userId: string, currentTenantId: string | undefined): Promise<MyWorkspace[]> {
   const userWorkspaces = await db.workspaceUser.findMany({
     where: {
       userId: userId,

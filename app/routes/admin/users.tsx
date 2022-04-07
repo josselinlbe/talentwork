@@ -71,8 +71,8 @@ export const action: ActionFunction = async ({ request }) => {
           ...userInfo,
           ...userSession,
         },
-        userSession.currentTenantId && userSession.currentWorkspaceId
-          ? `/app/${userSession.currentTenantId}/${userSession.currentWorkspaceId}/dashboard`
+        userSession.defaultTenantId && userSession.defaultWorkspaceId
+          ? `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
           : "/app"
       );
     }

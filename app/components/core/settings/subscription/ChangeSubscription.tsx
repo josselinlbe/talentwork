@@ -4,9 +4,9 @@ import NumberUtils from "~/utils/shared/NumberUtils";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSubmit, useTransition } from "remix";
-import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
+import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 
 interface Props {
   current: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;

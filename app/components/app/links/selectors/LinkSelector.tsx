@@ -62,9 +62,6 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
       }
     }
   }
-  const currentWorkspaceId = () => {
-    return appData.currentWorkspace?.id ?? "";
-  };
   const filteredItems = () => {
     if (!items) {
       return [];
@@ -96,7 +93,7 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                 return (
                   <span className="w-full inline-flex truncate">
                     {(() => {
-                      if (selected.providerWorkspaceId === currentWorkspaceId()) {
+                      if (selected.providerWorkspaceId === appData.currentWorkspace?.id) {
                         return (
                           <div className="flex justify-between space-x-2 w-full">
                             <div className="font-normal truncate">{selected.clientWorkspace.name}</div>
@@ -184,7 +181,7 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                               onClick={() => select(link)}
                             >
                               {(() => {
-                                if (link.providerWorkspaceId === currentWorkspaceId()) {
+                                if (link.providerWorkspaceId === appData.currentWorkspace?.id) {
                                   return (
                                     <div className="mr-3 flex justify-between space-x-2 w-full">
                                       {/*Selected: "font-semibold", Not Selected: "font-normal" */}
