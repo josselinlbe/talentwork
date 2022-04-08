@@ -8,6 +8,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import DateUtils from "~/utils/shared/DateUtils";
 
 type LoaderData = {
   title: string;
@@ -40,7 +41,10 @@ export default function AdminTenantsRoute() {
       title: t("models.tenant.object"),
     },
     {
-      title: t("app.tenants.subscription.plan"),
+      title: t("shared.slug"),
+    },
+    {
+      title: t("admin.tenants.subscription.title"),
     },
     {
       title: t("models.user.plural"),
@@ -53,6 +57,9 @@ export default function AdminTenantsRoute() {
     },
     {
       title: t("models.employee.plural"),
+    },
+    {
+      title: t("shared.createdAt"),
     },
     {
       title: "", // actions
@@ -199,6 +206,11 @@ export default function AdminTenantsRoute() {
                                         </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        <Link to={`/app/${item.slug}`} className="hover:underline text-gray-800">
+                                          {item.slug}
+                                        </Link>
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex space-x-1">
                                           <div>
                                             {item.subscriptionPrice?.subscriptionProduct ? (
@@ -206,7 +218,7 @@ export default function AdminTenantsRoute() {
                                                 {t(item.subscriptionPrice?.subscriptionProduct?.title)}
                                                 {" - "}
                                                 <span className=" italic">
-                                                  ({item.subscriptionPrice?.price ?? 0}/{billingPeriodName(item)})
+                                                  ({item.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
                                                 </span>
                                               </Link>
                                             ) : (
@@ -218,18 +230,23 @@ export default function AdminTenantsRoute() {
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.usersCount}
-                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxUsers ?? 0}</span>
+                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxUsers ?? "-"}</span>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.workspacesCount}
-                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxWorkspaces ?? 0}</span>
+                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxWorkspaces ?? "-"}</span>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.contractsCount}
-                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.monthlyContracts ?? 0}</span>
+                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.monthlyContracts ?? "-"}</span>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.employeesCount === 0 ? "-" : item.employeesCount}
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        <time dateTime={DateUtils.dateYMDHMS(item.createdAt)} title={DateUtils.dateYMDHMS(item.createdAt)}>
+                                          {DateUtils.dateAgo(item.createdAt)}
+                                        </time>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex items-center space-x-2">

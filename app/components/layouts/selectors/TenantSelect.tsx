@@ -1,33 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppData } from "~/utils/data/useAppData";
-import ChangeWorkspaceCommandPalette from "./ChangeWorkspaceCommandPalette";
 
-export default function TenantSelect() {
+interface Props {
+  onOpenCommandPalette: () => void;
+}
+
+export default function TenantSelect({ onOpenCommandPalette }: Props) {
   const appData = useAppData();
-  const [showChangeTenant, setShowChangeTenant] = useState(false);
-  function open() {
-    setShowChangeTenant(true);
-  }
 
   useEffect(() => {
     function onKeydown(event: any) {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-        setShowChangeTenant(true);
+        onOpenCommandPalette();
       }
     }
     window.addEventListener("keydown", onKeydown);
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [setShowChangeTenant]);
+  }, [onOpenCommandPalette]);
 
   return (
     <>
-      <button type="button" onClick={open} className="group flex-shrink-0 flex bg-slate-800 p-4 focus:outline-none">
+      <button type="button" onClick={onOpenCommandPalette} className="group flex-shrink-0 flex bg-slate-800 p-4 focus:outline-none">
         <div className="flex-shrink-0 w-full group block">
           <div className="flex justify-between items-center">
             <div className="flex items-center text-left truncate">
-              {/*  */}
               {appData.currentTenant?.icon ? (
                 <img className="inline-block h-9 w-9 rounded-full bg-gray-500 shadow-sm" src={appData.currentTenant?.icon} alt="Tenant icon" />
               ) : (
@@ -39,10 +37,6 @@ export default function TenantSelect() {
                 <p className="text-sm font-medium text-gray-200 group-hover:text-white">{appData.currentWorkspace?.name}</p>
                 <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200 truncate">{appData.currentTenant?.name}</p>
               </div>
-              {/* <span className="ml-3 flex-none text-xs font-semibold text-gray-400">
-                <kbd className="font-sans">⌘</kbd>
-                <kbd className="font-sans">K</kbd>
-              </span> */}
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 group-hover:text-white" viewBox="0 0 20 20" fill="currentColor">
               <path
@@ -54,7 +48,6 @@ export default function TenantSelect() {
           </div>
         </div>
       </button>
-      {showChangeTenant && <ChangeWorkspaceCommandPalette isOpen={showChangeTenant} onClose={() => setShowChangeTenant(false)} />}
     </>
   );
 }

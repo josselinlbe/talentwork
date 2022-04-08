@@ -1,4 +1,4 @@
-export interface EmailTemplateDto {
+export type EmailTemplate = {
   type: "standard" | "layout";
   name: string;
   alias: string;
@@ -7,4 +7,4 @@ export interface EmailTemplateDto {
   active: boolean;
   associatedServerId: number;
   templateId: number;
-}
+};

@@ -1,7 +1,7 @@
-import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
+import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
 import { createPostmarkTemplate } from "../email.server";
 
-export async function createEmailTemplates(templates: EmailTemplateDto[]) {
+export async function createEmailTemplates(templates: EmailTemplate[]) {
   const template = templates.find((f) => f.type === "layout");
   if (template) {
     await createPostmarkTemplate(template);

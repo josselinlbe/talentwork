@@ -10,6 +10,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import clsx from "~/utils/shared/ClassesUtils";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 import { createPlans } from "~/utils/services/pricingService";
+import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 
 type LoaderData = {
   title: string;
@@ -107,7 +108,15 @@ export default function AdminPricingRoute() {
 
   return (
     <div>
-      <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
+      <Breadcrumb
+        className="w-full"
+        home="/admin"
+        menu={[
+          { title: "Set up", routePath: "/admin/setup" },
+          { title: "Pricing", routePath: "/admin/setup/pricing" },
+        ]}
+      />
+      {/* <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2 ">
           <h1 className="flex-1 font-bold flex items-center truncate">
             {t("admin.pricing.title")}
@@ -131,7 +140,7 @@ export default function AdminPricingRoute() {
             <ButtonSecondary to=".">{t("shared.reload")}</ButtonSecondary>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl overflow-auto">
         <div>
           {(() => {

@@ -66,7 +66,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
         <Links />
       </head>
       <body className="min-h-screen text-gray-800 dark:text-white bg-white dark:bg-slate-900 max-w-full max-h-full">
-        <TopBanner />
         {children}
         <Scripts />
         <LiveReload />
@@ -88,12 +87,12 @@ export const action: ActionFunction = async ({ request }) => {
   const type = form.get("type");
   const redirect = form.get("redirect")?.toString();
   if (type === "toggleLightOrDarkMode") {
-    const current = userInfo?.lightOrDarkMode ?? "dark";
+    const current = userInfo.lightOrDarkMode ?? "dark";
     const lightOrDarkMode = current === "dark" ? "light" : "dark";
     return createUserSession(
       {
-        userId: userInfo?.userId ?? "",
-        lng: userInfo?.lng ?? "en",
+        userId: userInfo.userId,
+        lng: userInfo.lng,
         lightOrDarkMode,
       },
       redirect

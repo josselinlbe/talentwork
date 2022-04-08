@@ -12,18 +12,22 @@ import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
 import TenantSelector from "./selectors/TenantSelector";
 import WorkspaceSelector from "./selectors/WorkspaceSelector";
-import TenantSelect from "./selectors/TenantSelect";
+import TenantSelect, { RefCommandPalette } from "./selectors/TenantSelect";
 import { useParams } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
+import LogoDark from "~/assets/img/logo-dark.png";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   layout: "app" | "admin";
   children: ReactNode;
+  onOpenCommandPalette: () => void;
 }
 
-export default function SidebarLayout({ layout, children }: Props) {
-  const params = useParams();
+export default function SidebarLayout({ layout, children, onOpenCommandPalette }: Props) {
+  const { t } = useTranslation();
   const appData = useAppData();
+
   const mainElement = useRef<HTMLElement>(null);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -73,17 +77,12 @@ export default function SidebarLayout({ layout, children }: Props) {
                   </button>
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                  <nav className="px-2 space-y-2">
-                    {layout === "app" && (
-                      <>
-                        <TenantSelector className="text-sm" />
-                        <WorkspaceSelector className="text-sm" />
-                      </>
-                    )}
+                  <nav className="px-2 space-y-3">
+                    <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
                 </div>
-                {layout == "app" && <TenantSelect />}
+                {layout == "app" && <TenantSelect onOpenCommandPalette={onOpenCommandPalette} />}
               </div>
             </Transition>
             <div className="flex-shrink-0 w-14">{/*Dummy element to force sidebar to shrink to fit close icon */}</div>
@@ -103,18 +102,15 @@ export default function SidebarLayout({ layout, children }: Props) {
           <div className="flex flex-col h-0 flex-1 shadow-md bg-theme-600">
             <div className="flex-1 flex flex-col overflow-y-auto">
               <nav className="flex-1 px-2 py-4 space-y-3 bg-gray-900 select-none">
-                {layout === "app" && (
-                  <>
-                    {/* <TenantSelector className="text-xs sm:text-sm" onAdd={onAddTenant} /> */}
-                    {/* <WorkspaceSelector className="text-xs sm:text-sm" onAdd={() => setSidebarOpen(false)} onSelected={() => setSidebarOpen(false)} /> */}
-                  </>
-                )}
+                <div className=" ">
+                  <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
+                </div>
                 <SidebarMenu layout={layout} />
               </nav>
             </div>
           </div>
 
-          {layout == "app" && <TenantSelect />}
+          {layout == "app" && <TenantSelect onOpenCommandPalette={onOpenCommandPalette} />}
         </div>
       </div>
 
@@ -131,21 +127,47 @@ export default function SidebarLayout({ layout, children }: Props) {
             </svg>
           </button>
 
-          <div className="flex-1 px-3 flex justify-between">
+          <div className="flex-1 px-3 flex justify-between space-x-2">
             <div className="flex-1 flex items-center flex-shrink-0">
               <div className="w-full flex md:ml-0">
                 <div className="align-baseline w-full text-slate-200 pl-1">
-                  <nav className="lg:hidden">
-                    <Link to={UrlUtils.appUrl(params, "dashboard")}>
+                  {/* <nav className="lg:hidden">
+                    <Link to={UrlUtils.currentTenantUrl(params, "dashboard")}>
                       <img alt="Logo" className="h-7 w-auto sm:hidden" src={IconLight} />
                       <img alt="Logo" className="h-7 w-auto hidden sm:block" src={LogoLight} />
                     </Link>
                   </nav>
                   <nav className="hidden lg:flex items-center text-base leading-5 font-medium">
-                    <Link to={UrlUtils.appUrl(params, "dashboard")}>
+                    <Link to={UrlUtils.currentTenantUrl(params, "dashboard")}>
                       <img alt="Logo" className="hidden sm:block h-7 sm:h-8 w-auto" src={LogoLight} />
                     </Link>
-                  </nav>
+                  </nav> */}
+
+                  {layout === "app" && (
+                    <div className="w-full">
+                      <label htmlFor="command-palette" className="sr-only">
+                        {t("shared.commandPalette")}
+                      </label>
+                      <div className="relative text-gray-400 hover:text-gray-500">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                              fillRule="evenodd"
+                              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={onOpenCommandPalette}
+                          className=" text-left block w-full pl-10 pr-3 py-1.5 text-sm sm:py-2 border border-gray-200 rounded-md leading-5 bg-gray-50 text-gray-400 focus:outline-none hover:ring-0 hover:placeholder-gray-500 hover:text-gray-500"
+                        >
+                          {t("shared.search")}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

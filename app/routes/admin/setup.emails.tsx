@@ -1,4 +1,4 @@
-import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
+import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -12,11 +12,12 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmailTemplates } from "~/utils/services/emailService";
+import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 
 type LoaderData = {
   title: string;
   onPostmark: boolean;
-  items: EmailTemplateDto[];
+  items: EmailTemplate[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -43,7 +44,7 @@ type ActionData = {
   error?: string;
   success?: string;
   onPostmark?: boolean;
-  items?: EmailTemplateDto[];
+  items?: EmailTemplate[];
 };
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
@@ -99,7 +100,7 @@ export default function EmailsRoute() {
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
 
-  const [items] = useState<EmailTemplateDto[]>(actionData?.items ?? data.items);
+  const [items] = useState<EmailTemplate[]>(actionData?.items ?? data.items);
   const headers = [
     {
       title: t("admin.emails.created"),
@@ -128,7 +129,7 @@ export default function EmailsRoute() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
-  function templateUrl(item: EmailTemplateDto) {
+  function templateUrl(item: EmailTemplate) {
     return `https://account.postmarkapp.com/servers/${item.associatedServerId}/templates/${item.templateId}/edit`;
   }
 
@@ -139,7 +140,7 @@ export default function EmailsRoute() {
       method: "post",
     });
   }
-  function sendTest(item: EmailTemplateDto): void {
+  function sendTest(item: EmailTemplate): void {
     const email = window.prompt("Email", appData.user?.email);
     if (!email || email.trim() === "") {
       return;
@@ -155,7 +156,7 @@ export default function EmailsRoute() {
 
   return (
     <div>
-      <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
+      {/* <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("admin.emails.title")}</h1>
           <Form method="post" className="flex items-center space-x-2">
@@ -167,7 +168,15 @@ export default function EmailsRoute() {
             </ButtonSecondary>
           </Form>
         </div>
-      </div>
+      </div> */}
+      <Breadcrumb
+        className="w-full"
+        home="/admin"
+        menu={[
+          { title: "Set up", routePath: "/admin/setup" },
+          { title: "Emails", routePath: "/admin/setup/emails" },
+        ]}
+      />
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
         <div className="flex flex-col">
           {(() => {

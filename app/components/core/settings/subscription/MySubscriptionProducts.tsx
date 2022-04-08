@@ -87,7 +87,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           </div>
 
           <Link
-            to={`${UrlUtils.appUrl(params, "contracts?status=pending")}`}
+            to={`${UrlUtils.currentTenantUrl(params, "contracts?status=pending")}`}
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
               billableStatus(maxDocumentsRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
@@ -110,7 +110,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           </Link>
 
           <Link
-            to={UrlUtils.appUrl(params, "settings/workspaces")}
+            to={UrlUtils.currentTenantUrl(params, "settings/workspaces")}
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
               billableStatus(maxWorkspacesRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
@@ -132,7 +132,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             </dd>
           </Link>
           <Link
-            to={UrlUtils.appUrl(params, "settings/members")}
+            to={UrlUtils.currentTenantUrl(params, "settings/members")}
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
               billableStatus(maxUsersRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",

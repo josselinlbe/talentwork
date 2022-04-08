@@ -14,6 +14,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { Tenant, TenantUser, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { UserType } from "~/application/enums/users/UserType";
+import DateUtils from "~/utils/shared/DateUtils";
 
 type LoaderData = {
   title: string;
@@ -119,6 +120,9 @@ export default function AdminUsersRoute() {
     },
     {
       title: t("models.user.tenants"),
+    },
+    {
+      title: t("shared.createdAt"),
     },
     {
       title: t("shared.actions"),
@@ -285,6 +289,11 @@ export default function AdminUsersRoute() {
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.tenants && item.tenants.length > 0 ? <span>{getUserTenants(item)}</span> : <span>?</span>}
+                                      </td>
+                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                        <time dateTime={DateUtils.dateYMDHMS(item.createdAt)} title={DateUtils.dateYMDHMS(item.createdAt)}>
+                                          {DateUtils.dateAgo(item.createdAt)}
+                                        </time>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex items-center space-x-2">

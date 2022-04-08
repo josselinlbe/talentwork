@@ -206,7 +206,7 @@ const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }
                             <div>
                               <EmptyState
                                 className="bg-white"
-                                to={UrlUtils.appUrl(params, "settings/members/new")}
+                                to={UrlUtils.currentTenantUrl(params, "settings/members/new")}
                                 captions={{
                                   new: t("shared.add"),
                                   thereAreNo: getNoMembers(),

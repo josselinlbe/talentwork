@@ -37,7 +37,7 @@ export default function WorkspaceSelector({ className, onAdd, onSelected }: Prop
       onAdd();
     }
     closeDropdown();
-    navigate(UrlUtils.appUrl(params, "settings/workspaces/new"));
+    navigate(UrlUtils.currentTenantUrl(params, "settings/workspaces/new"));
   }
   function closeDropdown() {
     setOpened(false);

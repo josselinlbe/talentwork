@@ -3,6 +3,7 @@ import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
+import UrlUtils from "../app/UrlUtils";
 import { SubscriptionPriceWithProduct } from "./subscriptionProducts.db.server";
 
 export type MyTenant = TenantUser & {
@@ -215,6 +216,7 @@ export async function createTenant(name: string, subscriptionCustomerId: string,
   return await db.tenant.create({
     data: {
       name,
+      slug: UrlUtils.slugify(name),
       subscriptionCustomerId,
       icon,
     },

@@ -7,6 +7,7 @@ import { json, LoaderFunction, MetaFunction, redirect, useLoaderData, useParams 
 import { getContracts } from "~/modules/contracts/db/contracts.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -14,6 +15,7 @@ type LoaderData = {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const url = new URL(request.url);
   const filterString = url.searchParams.get("status");
@@ -27,9 +29,9 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   } else if (filterString === "signed") {
     filter = ContractStatusFilter.SIGNED;
   } else {
-    throw redirect(UrlUtils.appUrl(params, "contracts?status=pending"));
+    throw redirect(UrlUtils.currentTenantUrl(params, "contracts?status=pending"));
   }
-  const items = await getContracts(params.workspace ?? "", filter);
+  const items = await getContracts(tenantUrl.workspaceId, filter);
   const data: LoaderData = {
     title: `${t("models.contract.plural")} | ${process.env.APP_NAME}`,
     items,
@@ -49,19 +51,19 @@ export default function ContractsRoute() {
   const tabs = [
     {
       name: t("shared.all"),
-      routePath: UrlUtils.appUrl(params, "contracts?status=all"),
+      routePath: UrlUtils.currentTenantUrl(params, "contracts?status=all"),
     },
     {
       name: t("app.contracts.pending.title"),
-      routePath: UrlUtils.appUrl(params, "contracts?status=pending"),
+      routePath: UrlUtils.currentTenantUrl(params, "contracts?status=pending"),
     },
     {
       name: t("app.contracts.signed.title"),
-      routePath: UrlUtils.appUrl(params, "contracts?status=signed"),
+      routePath: UrlUtils.currentTenantUrl(params, "contracts?status=signed"),
     },
     {
       name: t("app.contracts.archived.title"),
-      routePath: UrlUtils.appUrl(params, "contracts?status=archived"),
+      routePath: UrlUtils.currentTenantUrl(params, "contracts?status=archived"),
     },
   ];
 
@@ -71,7 +73,7 @@ export default function ContractsRoute() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("models.contract.plural")}</h1>
           <div className="flex items-center">
-            <ButtonPrimary to={UrlUtils.appUrl(params, "contract/new")}>
+            <ButtonPrimary to={UrlUtils.currentTenantUrl(params, "contract/new")}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
               </svg>

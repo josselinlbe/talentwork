@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: t("shared.notFound") });
     }
     await deleteLink(params.id);
-    return redirect(UrlUtils.appUrl(params, "links/all"));
+    return redirect(UrlUtils.currentTenantUrl(params, "links/all"));
   }
 
   return badRequest({ error: "Form not submitted correctly." });
@@ -70,7 +70,7 @@ export default function EditLinkRoute() {
 
   return (
     <div>
-      <Breadcrumb menu={[{ title: t("models.link.plural"), routePath: UrlUtils.appUrl(params, "links/all") }]} />
+      <Breadcrumb menu={[{ title: t("models.link.plural"), routePath: UrlUtils.currentTenantUrl(params, "links/all") }]} />
       {data.item && <LinkProfile item={data.item} />}
       <ErrorModal ref={errorModal} />
     </div>

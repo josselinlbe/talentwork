@@ -10,6 +10,7 @@ import { getTenantMember } from "~/utils/db/tenants.db.server";
 import { getWorkspaces } from "~/utils/db/workspaces.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 export type LoaderData = {
   title: string;
@@ -18,10 +19,10 @@ export type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-
+  const tenantUrl = await getTenantUrl(params);
   const userInfo = await getUserInfo(request);
-  const workspaces = await getWorkspaces(params.tenant ?? "");
-  const currentTenantUser = await getTenantMember(userInfo?.userId, params.tenant);
+  const workspaces = await getWorkspaces(tenantUrl.tenantId);
+  const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
   if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
     return redirect("/unauthorized");
   }
@@ -80,7 +81,7 @@ export default function WorkspacesRoute() {
               </div>
 
               <Link
-                to={UrlUtils.appUrl(params, "settings/workspaces/new")}
+                to={UrlUtils.currentTenantUrl(params, "settings/workspaces/new")}
                 className="inline-flex space-x-2 items-center px-2 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -55,7 +55,7 @@ export default function AddEmployees() {
     confirmCreate.current?.show(t("shared.confirmSave"), t("shared.confirm"), t("shared.back"));
   }
   function cancel() {
-    navigate(UrlUtils.appUrl(params, "employees"));
+    navigate(UrlUtils.currentTenantUrl(params, "employees"));
   }
   function confirmSave() {
     const form = new FormData();
@@ -67,7 +67,7 @@ export default function AddEmployees() {
     });
   }
   function goToProfile() {
-    navigate(UrlUtils.appUrl(params, "employees"));
+    navigate(UrlUtils.currentTenantUrl(params, "employees"));
   }
   function addEmployee() {
     setEmployees([

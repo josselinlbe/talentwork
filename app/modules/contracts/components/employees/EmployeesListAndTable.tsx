@@ -85,7 +85,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
             <div>
               <EmptyState
                 className="bg-white"
-                to={UrlUtils.appUrl(params, "employees/new")}
+                to={UrlUtils.currentTenantUrl(params, "employees/new")}
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.employees.errors.notDefined"),
@@ -103,7 +103,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
                     {sortedItems().map((employee, idxEmployee) => {
                       return (
                         <li key={idxEmployee}>
-                          <Link to={UrlUtils.appUrl(params, "employees/" + employee.id)} className="block hover:bg-gray-50">
+                          <Link to={UrlUtils.currentTenantUrl(params, "employees/" + employee.id)} className="block hover:bg-gray-50">
                             <div className="flex items-center px-4 py-2 sm:px-4">
                               <div className="min-w-0 flex-1 flex items-center">
                                 <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -225,7 +225,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
                                   {canEdit && (
                                     <td className="w-20 px-2 py-4 whitespace-nowrap text-sm text-gray-600">
                                       <div className="flex items-center space-x-2">
-                                        <ButtonTertiary to={UrlUtils.appUrl(params, "employees/" + employee.id)}>{t("shared.edit")}</ButtonTertiary>
+                                        <ButtonTertiary to={UrlUtils.currentTenantUrl(params, "employees/" + employee.id)}>{t("shared.edit")}</ButtonTertiary>
                                       </div>
                                     </td>
                                   )}

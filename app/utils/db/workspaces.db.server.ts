@@ -73,7 +73,7 @@ export async function getWorkspacesCount(tenantId: string) {
   });
 }
 
-export async function getWorkspaces(tenantId: string) {
+export async function getWorkspaces(tenantId: string): Promise<WorkspaceWithUsers[]> {
   const workspaces = await db.workspace.findMany({
     where: {
       tenantId,

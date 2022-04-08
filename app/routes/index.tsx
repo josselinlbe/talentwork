@@ -8,6 +8,7 @@ import { getUserInfo, UserSession } from "~/utils/session.server";
 import { MetaFunction, LoaderFunction, json } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import { UserType } from "~/application/enums/users/UserType";
+import TopBanner from "~/components/ui/banners/TopBanner";
 
 export type IndexLoaderData = {
   title: string;
@@ -26,7 +27,7 @@ export let loader: LoaderFunction = async ({ request }) => {
       title: `${process.env.APP_NAME}`,
       userSession,
       userType: user?.type ?? UserType.Tenant,
-      authenticated: userSession.userId.length > 0,
+      authenticated: userSession.userId?.length > 0,
       i18n: translations,
     };
     return json(data);
@@ -47,6 +48,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function IndexRoute() {
   return (
     <div>
+      <TopBanner />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200">
         <Hero />
         <Features className="relative z-10" />

@@ -29,8 +29,8 @@ export default function SettingsRoute() {
   const params = useParams();
 
   useEffect(() => {
-    if (UrlUtils.stripTrailingSlash(location.pathname) === UrlUtils.appUrl(params, "settings")) {
-      navigate(UrlUtils.appUrl(params, "settings/profile"));
+    if (UrlUtils.stripTrailingSlash(location.pathname) === UrlUtils.currentTenantUrl(params, "settings")) {
+      navigate(UrlUtils.currentTenantUrl(params, "settings/profile"));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
@@ -38,23 +38,23 @@ export default function SettingsRoute() {
   const tabs: TabItem[] = [
     {
       name: t("settings.profile.profileTitle"),
-      routePath: UrlUtils.appUrl(params, "settings/profile"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/profile"),
     },
     {
       name: t("models.workspace.plural"),
-      routePath: UrlUtils.appUrl(params, "settings/workspaces"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/workspaces"),
     },
     {
       name: t("settings.members.title"),
-      routePath: UrlUtils.appUrl(params, "settings/members"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/members"),
     },
     {
       name: t("settings.subscription.title"),
-      routePath: UrlUtils.appUrl(params, `settings/subscription`),
+      routePath: UrlUtils.currentTenantUrl(params, `settings/subscription`),
     },
     {
       name: t("settings.tenant.title"),
-      routePath: UrlUtils.appUrl(params, "settings/tenant"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
     },
   ];
   return (

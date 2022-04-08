@@ -10,4 +10,5 @@ export interface SideBarItem {
   userTypes?: UserType[];
   userRoles?: TenantUserRole[];
   items?: SideBarItem[];
+  isDemo?: boolean;
 }

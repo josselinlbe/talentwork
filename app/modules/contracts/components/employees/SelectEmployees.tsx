@@ -170,7 +170,7 @@ const SelectEmployees = ({ items, onSelected, onClosed, maxSize = "sm:max-w-lg" 
                             <div>
                               <EmptyState
                                 className="bg-white"
-                                to={UrlUtils.appUrl(params, "employees/new")}
+                                to={UrlUtils.currentTenantUrl(params, "employees/new")}
                                 captions={{
                                   new: t("shared.add"),
                                   thereAreNo: t("app.employees.errors.notDefined"),

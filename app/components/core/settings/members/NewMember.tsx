@@ -81,7 +81,7 @@ export default function NewMember() {
 
   function close() {
     if (location.pathname.startsWith("/app")) {
-      navigate(UrlUtils.appUrl(params, "settings/members"), { replace: true });
+      navigate(UrlUtils.currentTenantUrl(params, "settings/members"), { replace: true });
     } else {
       navigate("/admin/members", { replace: true });
     }
@@ -173,7 +173,7 @@ export default function NewMember() {
                   {maxUsersReached() && (
                     <div>
                       <WarningBanner
-                        redirect={UrlUtils.appUrl(params, `settings/subscription`)}
+                        redirect={UrlUtils.currentTenantUrl(params, `settings/subscription`)}
                         title={t("app.subscription.errors.limitReached")}
                         text={t("app.subscription.errors.limitReachedUsers", [maxUsers])}
                       />

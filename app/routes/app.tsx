@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, redirect, useLoaderData } from "remix";
 import { Language } from "remix-i18next";
 import Logo from "~/components/front/Logo";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
@@ -20,6 +20,9 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { translations } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
+  if (!userInfo.userId) {
+    throw redirect(`/login`);
+  }
   const myTenants = await getMyTenants(userInfo.userId);
   const data: LoaderData = {
     i18n: translations,
@@ -79,15 +82,15 @@ export default function AppRoute() {
                 <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
               </svg>
               <div className="text-center">
-                <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">Select a workspace</h1>
+                <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("app.workspaces.select")}</h1>
                 <p className="mt-4 text-lg leading-6 text-gray-500">
-                  {items.length === 1 ? <span>You belong to 1 workspace</span> : <span>You belong to {items.length} workspaces</span>}
+                  {items.length === 1 ? <span>{t("app.workspaces.youBelongToOne")}</span> : <span>{t("app.workspaces.youBelongToMany", [items.length])}</span>}
                 </p>
               </div>
               <div className="mt-12">
                 {items.length === 0 ? (
                   <EmptyState
-                    className="bg-white rounded-2xl"
+                    className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200 dark:border-gray-700 rounded-2xl"
                     captions={{
                       thereAreNo: t("api.errors.noTenants"),
                     }}
@@ -101,26 +104,24 @@ export default function AppRoute() {
                   >
                     <Combobox.Options static className="max-h-96 scroll-py-3 overflow-y-auto p-3">
                       {items.map((item) => (
-                        <Combobox.Option
-                          key={item.id}
-                          value={item}
-                          className={({ active }) => clsx("flex cursor-pointer select-none rounded-xl p-3", active && "bg-gray-100 dark:bg-gray-800")}
-                        >
+                        <Combobox.Option key={item.id} value={item}>
                           {({ active }) => (
                             <>
                               <Link
-                                to={`/app/${item.tenantId}/${item.id}/dashboard`}
-                                className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-theme-600")}
+                                to={`/app/${item.tenant.slug}/${item.id}/dashboard`}
+                                className={clsx("flex cursor-pointer select-none rounded-xl p-3", active && "bg-gray-100 dark:bg-gray-800")}
                               >
-                                <span className="inline-flex items-center justify-center h-9 w-9">
-                                  <span className="text-sm font-medium leading-none text-theme-200">{UserUtils.getWorkspacePrefix(item)}</span>
-                                </span>
-                              </Link>
-                              <Link to={`/app/${item.tenantId}/${item.id}/dashboard`} className="ml-4 flex-auto">
-                                <p className={clsx("text-sm font-medium", active ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-100")}>
-                                  {item.name}
-                                </p>
-                                <p className={clsx("text-sm", active ? "text-gray-700 dark:text-gray-400" : "text-gray-500")}>{item.tenant.name}</p>
+                                <div className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-theme-600")}>
+                                  <span className="inline-flex items-center justify-center h-9 w-9">
+                                    <span className="text-sm font-medium leading-none text-theme-200">{UserUtils.getWorkspacePrefix(item)}</span>
+                                  </span>
+                                </div>
+                                <div className="ml-4 flex-auto">
+                                  <p className={clsx("text-sm font-medium", active ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-100")}>
+                                    {item.name}
+                                  </p>
+                                  <p className={clsx("text-sm", active ? "text-gray-700 dark:text-gray-400" : "text-gray-500")}>{item.tenant.name}</p>
+                                </div>
                               </Link>
                             </>
                           )}

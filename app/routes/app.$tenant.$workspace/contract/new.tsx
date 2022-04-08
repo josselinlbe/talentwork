@@ -28,6 +28,7 @@ import IconContract from "~/modules/contracts/icons/IconContract";
 import IconSign from "~/modules/contracts/icons/IconSign";
 import SelectEmployees, { RefSelectEmployees } from "~/modules/contracts/components/employees/SelectEmployees";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -38,11 +39,12 @@ type LoaderData = {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-  const { tenant, workspace } = params;
+  const tenantUrl = await getTenantUrl(params);
+
   const url = new URL(request.url);
   const preselectLinkIdQueryParam = url.searchParams.get("l");
   let preselectLink: LinkWithWorkspacesAndMembers | undefined;
-  const links = await getLinksWithMembers(workspace ?? "");
+  const links = await getLinksWithMembers(tenantUrl.workspaceId);
   if (preselectLinkIdQueryParam) {
     preselectLink = links.find((f) => f.id === preselectLinkIdQueryParam);
   }
@@ -50,8 +52,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     title: `${t("app.employees.new.multiple")} | ${process.env.APP_NAME}`,
     links,
     preselectLink,
-    employees: await getEmployees(workspace ?? ""),
-    monthlyContractsCount: await getMonthlyContractsCount(tenant ?? ""),
+    employees: await getEmployees(tenantUrl.workspaceId),
+    monthlyContractsCount: await getMonthlyContractsCount(tenantUrl.tenantId),
   };
   return json(data);
 };
@@ -116,7 +118,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await sendContract(request, params, contract);
   }
 
-  return redirect(UrlUtils.appUrl(params, "contract/" + createdContract.id));
+  return redirect(UrlUtils.currentTenantUrl(params, "contract/" + createdContract.id));
 };
 
 export const meta: MetaFunction = ({ data }) => ({
@@ -239,11 +241,11 @@ export default function NewContractRoute() {
         menu={[
           {
             title: t("app.contracts.title"),
-            routePath: UrlUtils.appUrl(params, "contracts?status=pending"),
+            routePath: UrlUtils.currentTenantUrl(params, "contracts?status=pending"),
           },
           {
             title: t("app.contracts.new.title"),
-            routePath: UrlUtils.appUrl(params, "contract/new"),
+            routePath: UrlUtils.currentTenantUrl(params, "contract/new"),
           },
         ]}
       />
@@ -254,7 +256,7 @@ export default function NewContractRoute() {
               return (
                 <div>
                   <WarningBanner
-                    redirect={UrlUtils.appUrl(params, "settings/subscription")}
+                    redirect={UrlUtils.currentTenantUrl(params, "settings/subscription")}
                     title={t("app.subscription.errors.limitReached")}
                     text={t("app.subscription.errors.limitReachedContracts", [monthlyContracts])}
                   />

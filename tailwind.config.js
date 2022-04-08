@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Roboto", ...defaultTheme.fontFamily.sans],
+        sans: ["Roboto Mono", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         transparent: "transparent",

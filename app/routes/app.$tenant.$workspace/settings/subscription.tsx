@@ -30,6 +30,7 @@ import { UserType } from "~/application/enums/users/UserType";
 import MyInvoices from "~/components/core/settings/subscription/MyInvoices";
 import Stripe from "stripe";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -39,11 +40,12 @@ type LoaderData = DashboardLoaderData & {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   await requireOwnerOrAdminRole(request, params);
   const userInfo = await getUserInfo(request);
   const user = await getUser(userInfo.userId);
-  const tenant = await getTenant(params.tenant);
+  const tenant = await getTenant(tenantUrl.tenantId);
   if (!tenant) {
     return badRequest({ error: "Invalid tenant" });
   }
@@ -72,7 +74,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
         await updateTenantSubscriptionId(tenant.id, {
           subscriptionId: tenant.subscriptionId,
         });
-        return redirect(UrlUtils.appUrl(params, `settings/subscription`));
+        return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
       }
     } catch (e) {}
   }
@@ -108,7 +110,8 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  const tenant = await getTenant(params.tenant);
+  const tenantUrl = await getTenantUrl(params);
+  const tenant = await getTenant(tenantUrl.tenantId);
   const form = await request.formData();
 
   const type = form.get("type")?.toString();
@@ -126,7 +129,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: "Invalid price: " + priceId,
       });
     }
-    const session = await createStripeSession(tenant.id, params.workspace ?? "", tenant.subscriptionCustomerId, price.stripeId);
+    const session = await createStripeSession(tenant.id, tenantUrl.workspaceId, tenant.subscriptionCustomerId, price.stripeId);
     if (!session || !session.url) {
       return badRequest({
         error: "Could not update subscription",
@@ -276,7 +279,7 @@ export default function SubscriptionRoute() {
       {data.items.length === 0 ? (
         <>
           {appData.user?.type === UserType.Admin ? (
-            <WarningBanner redirect="/admin/pricing" title={t("shared.warning")} text={t("admin.pricing.noPricesInDatabase")} />
+            <WarningBanner redirect="/admin/setup/pricing" title={t("shared.warning")} text={t("admin.pricing.noPricesInDatabase")} />
           ) : (
             <WarningBanner title={t("shared.warning")} text={t("admin.pricing.noPricesConfigured")} />
           )}

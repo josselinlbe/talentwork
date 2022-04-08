@@ -25,12 +25,12 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
               disabled={disabled}
               className={clsx(
                 className,
-                "hover:underline inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
-                disabled && "cursor-not-allowed opacity-75",
-                !destructive && "text-gray-600",
-                destructive && "text-gray-600",
-                !disabled && !destructive && "hover:text-gray-800 focus:text-gray-900",
-                !disabled && destructive && "hover:text-gray-800 focus:text-gray-900"
+                "inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
+                disabled ? "cursor-not-allowed opacity-75" : "hover:underline",
+                !destructive && "text-theme-600",
+                destructive && "text-theme-600",
+                !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900",
+                !disabled && destructive && "hover:text-theme-800 focus:text-theme-900"
               )}
             >
               {children}
@@ -43,12 +43,12 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
               target={target}
               className={clsx(
                 className,
-                "hover:underline inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
-                disabled && "cursor-not-allowed opacity-75",
-                !destructive && "text-gray-600",
-                destructive && "text-gray-600",
-                !disabled && !destructive && "hover:text-gray-800 focus:text-gray-900",
-                !disabled && destructive && "hover:text-gray-800 focus:text-gray-900"
+                "inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
+                disabled ? "cursor-not-allowed opacity-75" : "hover:underline",
+                !destructive && "text-theme-600",
+                destructive && "text-theme-600",
+                !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900",
+                !disabled && destructive && "hover:text-theme-800 focus:text-theme-900"
               )}
             >
               {children}

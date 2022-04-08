@@ -12,6 +12,7 @@ import { sendEmail } from "~/utils/email.server";
 import { getUser } from "~/utils/db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import clsx from "clsx";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -19,8 +20,9 @@ type LoaderData = {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const items = await getLinks(params.workspace ?? "", LinkStatus.PENDING);
+  const items = await getLinks(tenantUrl.workspaceId, LinkStatus.PENDING);
   const data: LoaderData = {
     title: `${t("app.links.pending.multiple")} | ${process.env.APP_NAME}`,
     items,
@@ -82,8 +84,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
+  const tenantUrl = await getTenantUrl(params);
   return json({
-    items: await getLinks(params.workspace ?? "", LinkStatus.PENDING),
+    items: await getLinks(tenantUrl.workspaceId, LinkStatus.PENDING),
   });
 };
 

@@ -4,6 +4,7 @@ import { LoaderFunction, json, useLoaderData, MetaFunction } from "remix";
 import ProvidersListAndTable from "~/components/app/links/providers/ProvidersListAndTable";
 import { getProviderLinks, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -11,8 +12,9 @@ type LoaderData = {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const items = await getProviderLinks(params.workspace ?? "");
+  const items = await getProviderLinks(tenantUrl.workspaceId);
   const data: LoaderData = {
     title: `${t("models.provider.plural")} | ${process.env.APP_NAME}`,
     items,

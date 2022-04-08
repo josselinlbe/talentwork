@@ -18,6 +18,7 @@ import { getUserInfo } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getWorkspace, updateWorkspace, updateWorkspaceUsers, deleteWorkspace } from "~/utils/db/workspaces.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -27,12 +28,13 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   if (!params.id) {
     return null;
   }
   const workspace = await getWorkspace(params.id);
-  const tenantUsers = (await getTenantUsers(params.tenant)) ?? [];
+  const tenantUsers = (await getTenantUsers(tenantUrl.tenantId)) ?? [];
   const data: LoaderData = {
     title: `${t("app.workspaces.actions.edit")} | ${process.env.APP_NAME}`,
     workspace,
@@ -58,6 +60,7 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const { id } = params;
   if (!id) {
@@ -97,10 +100,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     await updateWorkspace(id, fields);
     await updateWorkspaceUsers(id, users);
 
-    return redirect(UrlUtils.appUrl(params, "settings/workspaces"));
+    return redirect(UrlUtils.currentTenantUrl(params, "settings/workspaces"));
   } else if (type === "delete") {
     const userInfo = await getUserInfo(request);
-    const currentTenantUser = await getTenantMember(userInfo?.userId, params.tenant);
+    const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
     if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
       return unauthorized({
         error: t("account.tenant.onlyAdmin"),
@@ -113,7 +116,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: e.toString(),
       });
     }
-    return redirect(UrlUtils.appUrl(params, "settings/workspaces"));
+    return redirect(UrlUtils.currentTenantUrl(params, "settings/workspaces"));
   }
 };
 
@@ -170,7 +173,7 @@ export default function EditWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
   }, []);
 
   function close() {
-    navigate(UrlUtils.appUrl(params, "settings/workspaces"));
+    navigate(UrlUtils.currentTenantUrl(params, "settings/workspaces"));
   }
   function remove() {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));

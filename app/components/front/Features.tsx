@@ -406,7 +406,7 @@ export default function Features({ className }: Props) {
                   />
                   <div>
                     {t("front.features.backend.features.stripe.description")}{" "}
-                    <Link to="/admin/pricing" className="underline text-theme-500 font-medium">
+                    <Link to="/admin/setup/pricing" className="underline text-theme-500 font-medium">
                       {t("front.features.backend.features.stripe.setup")}
                     </Link>
                   </div>

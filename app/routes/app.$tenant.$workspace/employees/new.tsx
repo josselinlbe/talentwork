@@ -9,6 +9,8 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmployees } from "~/modules/contracts/services/employeesService";
 import { getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { createUserActivityLog } from "~/utils/db/users.db.server";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -28,8 +30,8 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  // await new Promise((r) => setTimeout(r, 3000));
   const userInfo = await getUserInfo(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const form = await request.formData();
   const employeesArr = form.getAll("employees[]");
@@ -48,7 +50,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     } else if (!employee.lastName) {
       return `Last name required`;
     }
-    const existing = await getEmployeeByEmail(params.workspace ?? "", employee.email);
+    const existing = await getEmployeeByEmail(tenantUrl.workspaceId, employee.email);
     if (existing) {
       return `Employee with email ${existing.email} already added`;
     }
@@ -61,8 +63,16 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   try {
-    await createEmployees(userInfo.userId, params.tenant ?? "", params.workspace ?? "", employees);
-    return redirect(`${UrlUtils.appUrl(params, "employees")}`);
+    await createEmployees(userInfo.userId, tenantUrl.tenantId, tenantUrl.workspaceId, employees);
+    await createUserActivityLog(
+      {
+        tenantUrl,
+        userId: userInfo.userId,
+      },
+      `Created employees`,
+      employees.map((f) => `${f.firstName} ${f.lastName} (${f.email})`).join(" | ")
+    );
+    return redirect(`${UrlUtils.currentTenantUrl(params, "employees")}`);
   } catch (e: any) {
     return badRequest({ error: e?.toString() });
   }
@@ -92,7 +102,7 @@ export default function NewEmployeesRoute() {
         menu={[
           {
             title: t("models.employee.plural"),
-            routePath: `${UrlUtils.appUrl(params, "employees")}`,
+            routePath: `${UrlUtils.currentTenantUrl(params, "employees")}`,
           },
           {
             title: t("shared.new"),

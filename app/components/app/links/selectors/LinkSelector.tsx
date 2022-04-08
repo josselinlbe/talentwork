@@ -159,7 +159,7 @@ const LinkSelector = ({ items, className = "", onSelected }: Props, ref: Ref<Ref
                   />
                 </div>
                 <Link
-                  to={UrlUtils.appUrl(params, `link/new`)}
+                  to={UrlUtils.currentTenantUrl(params, `link/new`)}
                   className="-ml-px relative inline-flex items-center space-x-2 px-2 py-2 border border-gray-300 text-sm font-medium rounded-r-sm text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

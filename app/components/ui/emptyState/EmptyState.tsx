@@ -18,9 +18,9 @@ interface Props {
 
 export default function EmptyState({ className, captions, to, icon, onClick }: Props) {
   return (
-    <div className={clsx(className, "text-center border-2 border-dashed border-gray-200 py-16 px-1.6")}>
+    <div className={clsx(className, "text-center border-2 border-dashed border-gray-200 py-16 px-1.6 text-gray-900")}>
       <IconEmptyResults className="mx-auto w-10" />
-      <h3 className="mt-2 text-sm font-medium text-gray-900">{captions.thereAreNo}</h3>
+      <h3 className="mt-2 text-sm font-medium">{captions.thereAreNo}</h3>
       <p className="mt-1 text-sm text-gray-500">{captions.description}</p>
       {captions.new && (
         <div className="mt-6">

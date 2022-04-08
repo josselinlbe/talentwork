@@ -47,9 +47,9 @@ export default function TenantNew() {
   return (
     <div>
       <div className="flex-1 flex flex-col justify-between">
-        <div className="px-4 divide-y divide-gray-200 sm:px-6">
+        <Form method="post" className="px-4 divide-y divide-gray-200 dark:divide-gray-800 sm:px-6">
           <div className="space-y-3 pt-6 pb-5">
-            <Form method="post">
+            <div>
               <label className="block text-sm font-medium">{t("account.register.organization")}</label>
 
               <div className="mt-1 rounded-md shadow-sm -space-y-px">
@@ -72,7 +72,7 @@ export default function TenantNew() {
                   />
                 </div>
               </div>
-            </Form>
+            </div>
           </div>
 
           <div className="space-y-4 pt-4 pb-6 text-right text-gray-700">
@@ -82,7 +82,7 @@ export default function TenantNew() {
               </span>
             </div>
           </div>
-        </div>
+        </Form>
       </div>
       <SuccessModal ref={successModal} onClosed={createdTenant} />
       <ErrorModal ref={errorModal} />

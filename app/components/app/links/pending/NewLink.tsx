@@ -82,7 +82,7 @@ export default function NewLink({ linksCount }: Props) {
     <div>
       {maxLinksReached() ? (
         <WarningBanner
-          redirect={UrlUtils.appUrl(params, `settings/subscription`)}
+          redirect={UrlUtils.currentTenantUrl(params, `settings/subscription`)}
           title={t("app.subscription.errors.limitReached")}
           text={t("app.subscription.errors.limitReachedLinks", [maxLinks])}
         />
@@ -185,7 +185,7 @@ export default function NewLink({ linksCount }: Props) {
         </>
       )}
 
-      <SuccessModal ref={successModal} onClosed={() => navigate(UrlUtils.appUrl(params, `links/pending`))} />
+      <SuccessModal ref={successModal} onClosed={() => navigate(UrlUtils.currentTenantUrl(params, `links/pending`))} />
       <ConfirmModal ref={confirmCreateLinkModal} onYes={confirmCreateLink} />
       <ErrorModal ref={errorModal} />
     </div>

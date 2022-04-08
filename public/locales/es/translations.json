@@ -72,6 +72,7 @@
     "unlimited": "Ilimitados",
     "file": "Archivo",
     "enter": "Entrar",
+    "commandPalette": "Buscar (CTRL/Cmd + K)",
     "search": "Buscar",
     "searchDot": "Buscar...",
     "searching": "Buscando",
@@ -101,7 +102,8 @@
     "fakeLoading": "Cargando falso (sandbox)",
     "onlyFileTypes": "Solo documentos tipo {{0}}",
     "missingFields": "Faltan campos",
-    "goTo": "Ir a"
+    "goTo": "Ir a",
+    "slug": "Slug"
   },
   "front": {
     "navbar": {
@@ -416,6 +418,18 @@
         "YEARLY": "Anual"
       }
     },
+    "commands": {
+      "type": "Escribe o busca un comando",
+      "empty": {
+        "title": "No se encontraron comandos",
+        "description": "No se encontraron comandos con esta búsqueda. Intenta de nuevo."
+      },
+      "tenants": {
+        "title": "Organizaciones",
+        "description": "Cambia de organización y/o espacion de trabajo, o crea uno nuevo",
+        "switchTo": "Cambiar a"
+      }
+    },
     "navbar": {
       "tenant": "Organización",
       "subscription": "Subscripción",
@@ -428,7 +442,8 @@
     "sidebar": {
       "app": "Aplicación",
       "admin": "Admin",
-      "dashboard": "Portal"
+      "dashboard": "Portal",
+      "setup": "Configuración"
     },
     "subscription": {
       "limits": {
@@ -449,6 +464,8 @@
     },
     "workspaces": {
       "select": "Selecciona empresa",
+      "youBelongToOne": "Perteneces a un espacio de trabajo",
+      "youBelongToMany": "Perteneces a {{0}} espacio de trabajo",
       "seletAtLeastOne": "Selecciona al menos una empresa",
       "create": "Agrega un RFC",
       "createDescription": "Si tienes más de un RFC, agrega tus datos fiscales.",

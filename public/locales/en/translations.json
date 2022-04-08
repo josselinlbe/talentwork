@@ -72,6 +72,7 @@
     "unlimited": "Unlimited",
     "file": "File",
     "enter": "Enter",
+    "commandPalette": "Search (CTRL/Cmd + K)",
     "search": "Search",
     "searchDot": "Search...",
     "searching": "Searching",
@@ -101,7 +102,8 @@
     "fakeLoading": "Fake loading (sandbox)",
     "onlyFileTypes": "Only {{0}} files",
     "missingFields": "Missing fields",
-    "goTo": "Go to"
+    "goTo": "Go to",
+    "slug": "Slug"
   },
   "front": {
     "navbar": {
@@ -416,6 +418,19 @@
         "YEARLY": "Yearly"
       }
     },
+    "commands": {
+      "type": "Type or search a command",
+      "empty": {
+        "title": "No commands found",
+        "description": "No commands found for this search term. Please try again."
+      },
+      "tenants": {
+        "title": "Tenants",
+        "description": "Switch tenant workspace, or create one",
+        "switchTo": "Switch to",
+        "create": "Create tenant"
+      }
+    },
     "navbar": {
       "tenant": "Organization",
       "subscription": "Subscription",
@@ -428,7 +443,8 @@
     "sidebar": {
       "app": "App",
       "admin": "Admin",
-      "dashboard": "Dashboard"
+      "dashboard": "Dashboard",
+      "setup": "Set up"
     },
     "subscription": {
       "limits": {
@@ -450,6 +466,8 @@
     "workspaces": {
       "select": "Select workspace",
       "seletAtLeastOne": "Select at least one workspace",
+      "youBelongToOne": "You belong to one workspace",
+      "youBelongToMany": "You belong to {{0}} workspaces",
       "create": "Add a workspace",
       "createDescription": "If you have more than 1 workspace, add its details.",
       "empty": "There are no workspaces",

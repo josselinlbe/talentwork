@@ -14,6 +14,7 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { sendEmail } from "~/utils/email.server";
 import { loadAppData } from "~/utils/data/useAppData";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -21,10 +22,11 @@ type LoaderData = {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const data: LoaderData = {
     title: `${t("app.links.actions.new")} | ${process.env.APP_NAME}`,
-    linksCount: await getLinksCount(params.workspace ?? "", [LinkStatus.PENDING, LinkStatus.LINKED]),
+    linksCount: await getLinksCount(tenantUrl.workspaceId, [LinkStatus.PENDING, LinkStatus.LINKED]),
   };
   return json(data);
 };
@@ -37,6 +39,7 @@ export type NewLinkActionData = {
 const badRequest = (data: NewLinkActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const userInfo = await getUserInfo(request);
   const appData = await loadAppData(request, params);
@@ -64,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       error: t("app.links.invitation.notFound", [email, workspaceName]),
     });
   }
-  if (workspaceMember.workspace.tenantId === params.tenant) {
+  if (workspaceMember.workspace.tenantId === tenantUrl.tenantId) {
     return badRequest({ error: t("app.links.invitation.cannotInviteCurrentTenant") });
   }
   const tenantMember = await getTenantMember(user.id, workspaceMember.workspace.tenantId);
@@ -74,9 +77,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const link = await createLink({
     createdByUserId: userInfo.userId,
-    createdByWorkspaceId: params.workspace ?? "",
-    providerWorkspaceId: inviteeIsProvider ? workspaceMember.workspaceId : params.workspace ?? "",
-    clientWorkspaceId: inviteeIsProvider ? params.workspace ?? "" : workspaceMember.workspaceId,
+    createdByWorkspaceId: tenantUrl.workspaceId,
+    providerWorkspaceId: inviteeIsProvider ? workspaceMember.workspaceId : tenantUrl.workspaceId,
+    clientWorkspaceId: inviteeIsProvider ? tenantUrl.workspaceId : workspaceMember.workspaceId,
     status: LinkStatus.PENDING,
     userInvitedId: user.id,
   });
@@ -116,11 +119,11 @@ export default function NewLinkRoute() {
         menu={[
           {
             title: t("models.link.plural"),
-            routePath: UrlUtils.appUrl(params, "links/pending"),
+            routePath: UrlUtils.currentTenantUrl(params, "links/pending"),
           },
           {
             title: t("app.links.new"),
-            routePath: UrlUtils.appUrl(params, "link/new"),
+            routePath: UrlUtils.currentTenantUrl(params, "link/new"),
           },
         ]}
       />

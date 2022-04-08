@@ -66,7 +66,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     await deleteContract(params.id);
 
-    return redirect(UrlUtils.appUrl(params, "contracts?status=all"));
+    return redirect(UrlUtils.currentTenantUrl(params, "contracts?status=all"));
   } else if (type === "send") {
     const contract = await getContract(params.id);
     if (!contract) {
@@ -106,7 +106,7 @@ export default function ContractRoute() {
         menu={[
           {
             title: t("app.contracts.title"),
-            routePath: UrlUtils.appUrl(params, "contracts?status=pending"),
+            routePath: UrlUtils.currentTenantUrl(params, "contracts?status=pending"),
           },
         ]}
       ></Breadcrumb>

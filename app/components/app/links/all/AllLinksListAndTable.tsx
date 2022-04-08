@@ -175,10 +175,10 @@ export default function AllLinksListAndTable({ items }: Props) {
                               </td>
                               <td className="w-20 px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                 <div className="flex items-center space-x-2">
-                                  <ButtonTertiary to={UrlUtils.appUrl(params, `link/${link.id}`)}>
+                                  <ButtonTertiary to={UrlUtils.currentTenantUrl(params, `link/${link.id}`)}>
                                     <div>{t("app.links.profile.title")}</div>
                                   </ButtonTertiary>
-                                  <ButtonTertiary to={UrlUtils.appUrl(params, `contract/new?l=${link.id}`)}>
+                                  <ButtonTertiary to={UrlUtils.currentTenantUrl(params, `contract/new?l=${link.id}`)}>
                                     <div>{t("app.contracts.new.title")}</div>
                                   </ButtonTertiary>
                                 </div>

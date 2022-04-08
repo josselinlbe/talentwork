@@ -41,7 +41,7 @@ yarn dev
 
 4. Log in with your `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
 
-5. Generate **Stripe products** at `/admin/pricing`.
+5. Generate **Stripe products** at `/admin/setup/pricing`.
 
 6. Generate **Postmark email templates** at `/admin/emails`.
 

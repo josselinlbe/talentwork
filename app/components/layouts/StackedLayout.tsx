@@ -35,7 +35,7 @@ export default function StackedLayout({ layout, children }: Props) {
     if (layout === "admin") {
       setMenu(AdminSidebar);
     } else {
-      setMenu(AppSidebar(params.tenant ?? "", params.workspace ?? ""));
+      setMenu(AppSidebar(params));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -68,7 +68,7 @@ export default function StackedLayout({ layout, children }: Props) {
           <div className="flex items-center space-x-3 justify-between h-16">
             <div className="flex items-center space-x-2 overflow-x-auto py-1">
               <div className="flex-shrink-0">
-                <Link to={UrlUtils.appUrl(params, "dashboard")}>
+                <Link to={UrlUtils.currentTenantUrl(params, "dashboard")}>
                   <img className="h-8 w-auto" src={LogoLight} alt="Workflow" />
                 </Link>
               </div>
@@ -138,7 +138,7 @@ export default function StackedLayout({ layout, children }: Props) {
               <div className="px-2 space-y-1">
                 <Link
                   onClick={() => setMenuOpened(!menuOpened)}
-                  to={UrlUtils.appUrl(params, `settings/profile`)}
+                  to={UrlUtils.currentTenantUrl(params, `settings/profile`)}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                 >
                   {t("settings.profile.profileTitle")}

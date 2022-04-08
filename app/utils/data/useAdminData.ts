@@ -1,15 +1,14 @@
 import { redirect, useMatches } from "remix";
 import { Language } from "remix-i18next";
 import { getUserInfo } from "../session.server";
-import { getUser } from "../db/users.db.server";
+import { getUser, UserWithoutPassword } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { UserType } from "~/application/enums/users/UserType";
 import UrlUtils from "../app/UrlUtils";
-import { Params } from "react-router";
 
 export type AdminLoaderData = {
   i18n: Record<string, Language>;
-  user: Awaited<ReturnType<typeof getUser>>;
+  user: UserWithoutPassword;
 };
 
 export function useAdminData(): AdminLoaderData {
@@ -17,11 +16,11 @@ export function useAdminData(): AdminLoaderData {
   return (useMatches().find((f) => paths.includes(f.id.toLowerCase()))?.data ?? {}) as AdminLoaderData;
 }
 
-export async function loadAdminData(request: Request, params: Params) {
+export async function loadAdminData(request: Request) {
   const { translations } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
   if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === `/admin`) {
-    throw redirect(`/admin/tenants`);
+    throw redirect(`/admin/dashboard`);
   }
   const user = await getUser(userInfo?.userId);
   const redirectTo = new URL(request.url).pathname;

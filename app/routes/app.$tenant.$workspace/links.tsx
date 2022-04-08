@@ -14,8 +14,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   const newLocal = await i18nHelper(request);
   let { t } = newLocal;
 
-  if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === UrlUtils.appUrl(params, "links")) {
-    throw redirect(UrlUtils.appUrl(params, "links/all"));
+  if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === UrlUtils.currentTenantUrl(params, "links")) {
+    throw redirect(UrlUtils.currentTenantUrl(params, "links/all"));
   }
   const data: LoaderData = {
     title: `${t("models.link.plural")} | ${process.env.APP_NAME}`,
@@ -43,19 +43,19 @@ export default function LinksRoute() {
   const tabs: TabItem[] = [
     {
       name: t("shared.all"),
-      routePath: UrlUtils.appUrl(params, `links/all`),
+      routePath: UrlUtils.currentTenantUrl(params, `links/all`),
     },
     {
       name: t("models.provider.plural"),
-      routePath: UrlUtils.appUrl(params, `links/providers`),
+      routePath: UrlUtils.currentTenantUrl(params, `links/providers`),
     },
     {
       name: t("models.client.plural"),
-      routePath: UrlUtils.appUrl(params, `links/clients`),
+      routePath: UrlUtils.currentTenantUrl(params, `links/clients`),
     },
     {
       name: t("app.links.pending.title"),
-      routePath: UrlUtils.appUrl(params, `links/pending`),
+      routePath: UrlUtils.currentTenantUrl(params, `links/pending`),
     },
   ];
 
@@ -66,7 +66,7 @@ export default function LinksRoute() {
           <h1 className="flex-1 font-bold flex items-center truncate">{t("app.links.my")}</h1>
           <div className="flex items-center">
             <Link
-              to={UrlUtils.appUrl(params, "link/new")}
+              to={UrlUtils.currentTenantUrl(params, "link/new")}
               className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 lg:-ml-0.5 h-5 w-5 sm:h-4 sm:w-4" viewBox="0 0 20 20" fill="currentColor">

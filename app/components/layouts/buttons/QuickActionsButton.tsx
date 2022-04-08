@@ -58,7 +58,7 @@ export default function QuickActionsButton({ className }: Props) {
               aria-labelledby="listbox-label"
             >
               <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-0">
-                <Link to={UrlUtils.appUrl(params, "contract/new")} onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
+                <Link to={UrlUtils.currentTenantUrl(params, "contract/new")} onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
                   <div className="flex justify-between">
                     <p className="font-semibold">{t("app.contracts.new.title")}</p>
                   </div>
@@ -69,7 +69,7 @@ export default function QuickActionsButton({ className }: Props) {
                 <>
                   <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2">
                     <Link
-                      to={UrlUtils.appUrl(params, "link/new")}
+                      to={UrlUtils.currentTenantUrl(params, "link/new")}
                       onClick={() => setOpened(false)}
                       className="w-full text-left flex flex-col p-4 hover:bg-gray-50 focus:outline-none"
                     >
@@ -81,7 +81,7 @@ export default function QuickActionsButton({ className }: Props) {
                   </li>
                   <li className="text-gray-900 cursor-default select-none relative text-sm">
                     <Link
-                      to={UrlUtils.appUrl(params, "settings/workspaces/new")}
+                      to={UrlUtils.currentTenantUrl(params, "settings/workspaces/new")}
                       onClick={() => setOpened(false)}
                       className="flex flex-col p-4 hover:bg-gray-50"
                     >

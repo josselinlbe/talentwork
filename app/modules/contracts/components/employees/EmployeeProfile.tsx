@@ -65,7 +65,7 @@ export default function EmployeeProfile({ item }: Props) {
     confirmDeleteEmployee.current?.show(t("shared.confirmDelete"), t("shared.yes"), t("shared.cancel"), t("shared.warningCannotUndo"));
   }
   function successModalDeletedClosed() {
-    navigate(UrlUtils.appUrl(params, "employees"));
+    navigate(UrlUtils.currentTenantUrl(params, "employees"));
   }
   function confirmedDeleteEmployee() {
     const form = new FormData();

@@ -4,6 +4,7 @@ import ClientsListAndTable from "~/components/app/links/clients/ClientsListAndTa
 import { getClientLinks, LinkWithWorkspacesAndContracts } from "~/utils/db/links.db.server";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -12,8 +13,9 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const items = await getClientLinks(params.workspace ?? "");
+  const items = await getClientLinks(tenantUrl.workspaceId);
   const data: LoaderData = {
     title: `${t("models.client.plural")} | ${process.env.APP_NAME}`,
     items,

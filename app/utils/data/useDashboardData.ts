@@ -6,6 +6,7 @@ import { getWorkspacesCount } from "../db/workspaces.db.server";
 import { getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
 import { getEmployeesCount } from "~/modules/contracts/db/employees.db.server";
 import { Params } from "react-router";
+import { getTenantUrl } from "../services/urlService";
 
 export type DashboardLoaderData = {
   users: number;
@@ -23,17 +24,16 @@ export function useDashboardData(): DashboardLoaderData {
 }
 
 export async function loadDashboardData(params: Params) {
-  const tenant = params.tenant ?? "";
-  const workspace = params.workspace ?? "";
+  const tenantUrl = await getTenantUrl(params);
   const data: DashboardLoaderData = {
-    users: await getTenantUsersCount(tenant),
-    workspaces: await getWorkspacesCount(tenant),
-    clients: await getClientLinksCount(tenant),
-    providers: await getProviderLinksCount(tenant),
-    employees: await getEmployeesCount(tenant),
-    contracts: await getMonthlyContractsCount(tenant),
+    users: await getTenantUsersCount(tenantUrl.tenantId),
+    workspaces: await getWorkspacesCount(tenantUrl.tenantId),
+    clients: await getClientLinksCount(tenantUrl.tenantId),
+    providers: await getProviderLinksCount(tenantUrl.tenantId),
+    employees: await getEmployeesCount(tenantUrl.tenantId),
+    contracts: await getMonthlyContractsCount(tenantUrl.tenantId),
     storage: 10, // TODO: Implement your own storage limit
-    pendingInvitations: await getLinksCount(workspace, [LinkStatus.PENDING]),
+    pendingInvitations: await getLinksCount(tenantUrl.workspaceId, [LinkStatus.PENDING]),
   };
   return data;
 }

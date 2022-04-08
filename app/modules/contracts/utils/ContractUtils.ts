@@ -33,7 +33,7 @@ export async function sendContract(request: Request, params: Params, contract: C
       `${member.user.firstName} ${member.user.lastName} <${member.user.email}>`,
       "contract-new",
       {
-        action_url: process.env.SERVER_URL + UrlUtils.appUrl(params, "contract/" + contract.id),
+        action_url: process.env.SERVER_URL + UrlUtils.currentTenantUrl(params, "contract/" + contract.id),
         user_creator_firstName: appData.user?.firstName,
         user_creator_email: appData.user?.email,
         contract_name: contract.name,

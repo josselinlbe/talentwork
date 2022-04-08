@@ -92,7 +92,7 @@ export default function Plans({ items }: Props) {
           </div>
 
           <div className="space-y-6">
-            {testProducts && <WarningBanner redirect="/admin/pricing" title={t("shared.warning")} text={t("admin.pricing.thesePricesAreFromFiles")} />}
+            {testProducts && <WarningBanner redirect="/admin/setup/pricing" title={t("shared.warning")} text={t("admin.pricing.thesePricesAreFromFiles")} />}
 
             <div className={clsx("mt-16 grid gap-6 lg:gap-3", products.length === 2 && "lg:grid-cols-2", products.length > 2 && "lg:grid-cols-3")}>
               {products

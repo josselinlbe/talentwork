@@ -4,8 +4,10 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { UserType } from "~/application/enums/users/UserType";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
+import UrlUtils from "./app/UrlUtils";
 import { getTenantMember } from "./db/tenants.db.server";
 import { getUser } from "./db/users.db.server";
+import { getTenantUrl } from "./services/urlService";
 import { getUserInfo } from "./session.server";
 
 export async function requireAdminUser(request: Request) {
@@ -17,8 +19,9 @@ export async function requireAdminUser(request: Request) {
 }
 
 export async function requireOwnerOrAdminRole(request: Request, params: Params) {
+  const tenantUrl = await getTenantUrl(params);
   const userInfo = await getUserInfo(request);
-  const tenantMember = await getTenantMember(userInfo.userId, params.tenant);
+  const tenantMember = await getTenantMember(userInfo.userId, tenantUrl.tenantId);
   if (!tenantMember || (tenantMember.role !== TenantUserRole.OWNER && tenantMember.role !== TenantUserRole.ADMIN)) {
     throw redirect("/unauthorized");
   }
@@ -26,7 +29,7 @@ export async function requireOwnerOrAdminRole(request: Request, params: Params) 
 
 export async function requireAuthorization(currentPath: string, currentRole: TenantUserRole, params: Params) {
   let foundItem: SideBarItem | undefined;
-  AppSidebar(params.tenant ?? "", params.workspace ?? "").forEach((f) => {
+  AppSidebar(params).forEach((f) => {
     f.items?.forEach((item) => {
       if (currentPath.includes(item.path)) {
         foundItem = item;

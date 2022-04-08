@@ -15,10 +15,25 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "UserActivity" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "tenantId" TEXT,
+    "workspaceId" TEXT,
+    "userId" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    CONSTRAINT "UserActivity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "UserActivity_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "UserActivity_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Tenant" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
+    "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "icon" TEXT NOT NULL,
     "subscriptionCustomerId" TEXT NOT NULL,
@@ -214,6 +229,9 @@ CREATE TABLE "ContractActivity" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Tenant_slug_key" ON "Tenant"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TenantUserInvitation_createdUserId_key" ON "TenantUserInvitation"("createdUserId");

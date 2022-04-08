@@ -17,6 +17,7 @@ import { getUserInfo } from "~/utils/session.server";
 import clsx from "clsx";
 import { useAppData } from "~/utils/data/useAppData";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -27,10 +28,11 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const member = await getTenantUser(params.id);
-  const userWorkspaces = await getUserWorkspaces(params.tenant, member?.userId);
-  const tenantWorkspaces = await getWorkspaces(params.tenant ?? "");
+  const userWorkspaces = await getUserWorkspaces(tenantUrl.tenantId, member?.userId);
+  const tenantWorkspaces = await getWorkspaces(tenantUrl.tenantId);
   const data: LoaderData = {
     title: `${t("settings.members.actions.edit")} | ${process.env.APP_NAME}`,
     member,
@@ -56,6 +58,7 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const { id } = params;
   if (!id) {
@@ -72,7 +75,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const role = Number(form.get("tenant-user-role"));
   const workspaces = form.getAll("workspaces[]").map((f) => f.toString());
 
-  const tenantUsers = await getTenantUsers(params.tenant);
+  const tenantUsers = await getTenantUsers(tenantUrl.tenantId);
   const owners = tenantUsers?.filter((f) => f.role === TenantUserRole.OWNER);
   if (owners?.length === 1 && owners?.find((f) => f.user.email === email) && role !== TenantUserRole.OWNER) {
     return badRequest({
@@ -100,9 +103,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
     await updateUsersWorkspaces(tenantUser?.userId, workspaces);
 
-    return redirect(UrlUtils.appUrl(params, "settings/members"));
+    return redirect(UrlUtils.currentTenantUrl(params, "settings/members"));
   } else if (type === "delete") {
-    const currentTenantUser = await getTenantMember(userInfo?.userId, params.tenant);
+    const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
     if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
       return unauthorized({
         error: t("account.tenant.onlyAdmin"),
@@ -115,7 +118,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: e.toString(),
       });
     }
-    return redirect(UrlUtils.appUrl(params, "settings/members"));
+    return redirect(UrlUtils.currentTenantUrl(params, "settings/members"));
   }
 };
 
@@ -191,7 +194,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function close() {
-    navigate(UrlUtils.appUrl(params, "settings/members"));
+    navigate(UrlUtils.currentTenantUrl(params, "settings/members"));
   }
   function remove() {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"));

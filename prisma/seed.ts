@@ -4,6 +4,7 @@ import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { UserType } from "~/application/enums/users/UserType";
+import UrlUtils from "~/utils/app/UrlUtils";
 const db = new PrismaClient();
 
 async function createUser(firstName: string, lastName: string, email: string, password: string, type: UserType) {
@@ -26,6 +27,7 @@ async function createTenant(name: string, workspaces: string[], users: (User & {
   const tenant = await db.tenant.create({
     data: {
       name,
+      slug: UrlUtils.slugify(name),
       icon: "",
       subscriptionCustomerId: "",
     },
@@ -50,7 +52,6 @@ async function createTenant(name: string, workspaces: string[], users: (User & {
         role: user.role,
         joined: TenantUserJoined.CREATOR,
         status: TenantUserStatus.ACTIVE,
-        // current: false,
       },
     });
   });
@@ -71,7 +72,6 @@ async function createTenant(name: string, workspaces: string[], users: (User & {
         data: {
           workspaceId: workspace.id,
           userId: user.id,
-          // current: false,
         },
       });
     });

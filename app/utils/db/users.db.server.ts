@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
+import { TenantUrl } from "../services/urlService";
+import { getUserInfo } from "../session.server";
 
 export type UserWithoutPassword = {
   id: string;
@@ -118,5 +120,17 @@ export async function updateUserDefaultWorkspaceId(data: { defaultWorkspaceId: s
 export async function deleteUser(userId: string) {
   return await db.user.delete({
     where: { id: userId },
+  });
+}
+
+export async function createUserActivityLog(session: { tenantUrl: TenantUrl; userId: string }, title: string, description: string) {
+  db.userActivity.create({
+    data: {
+      tenantId: session.tenantUrl.tenantId,
+      workspaceId: session.tenantUrl.workspaceId,
+      userId: session.userId,
+      title,
+      description,
+    },
   });
 }

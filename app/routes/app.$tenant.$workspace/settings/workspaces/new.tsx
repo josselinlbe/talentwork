@@ -16,6 +16,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { useAppData } from "~/utils/data/useAppData";
 import { createWorkspace, createWorkspaceUser, getWorkspacesCount } from "~/utils/db/workspaces.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -25,12 +26,13 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const tenantUsers = (await getTenantUsers(params.tenant)) ?? [];
+  const tenantUsers = (await getTenantUsers(tenantUrl.tenantId)) ?? [];
   const data: LoaderData = {
     title: `${t("app.workspaces.actions.new")} | ${process.env.APP_NAME}`,
     tenantUsers,
-    workspacesCount: await getWorkspacesCount(params.tenant ?? ""),
+    workspacesCount: await getWorkspacesCount(tenantUrl.tenantId),
   };
   return json(data);
 };
@@ -52,7 +54,9 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-  if (!params.tenant) {
+  const tenantUrl = await getTenantUrl(params);
+
+  if (!tenantUrl.tenantId) {
     return unauthorized({
       error: "Current tenant is undefined",
     });
@@ -86,14 +90,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   };
 
   const workspace = await createWorkspace({
-    tenantId: params.tenant,
+    tenantId: tenantUrl.tenantId,
     ...fields,
   });
   users.forEach(async (userId) => {
     await createWorkspaceUser({ workspaceId: workspace.id, userId });
   });
 
-  return redirect(UrlUtils.appUrl(params, "settings/workspaces"));
+  return redirect(UrlUtils.currentTenantUrl(params, "settings/workspaces"));
 };
 
 export const meta: MetaFunction = ({ data }) => ({
@@ -137,7 +141,7 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
   }, []);
 
   function close() {
-    navigate(UrlUtils.appUrl(params, "settings/workspaces"));
+    navigate(UrlUtils.currentTenantUrl(params, "settings/workspaces"));
   }
   function selectWorkspaceUsers() {
     selectUsers.current?.show(users.map((f) => f.id));
@@ -232,7 +236,7 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
                     return (
                       <div>
                         <WarningBanner
-                          redirect={UrlUtils.appUrl(params, `settings/subscription`)}
+                          redirect={UrlUtils.currentTenantUrl(params, `settings/subscription`)}
                           title={t("app.subscription.errors.limitReached")}
                           text={t("app.subscription.errors.limitReachedWorkspaces", [maxWorkspaces])}
                         />

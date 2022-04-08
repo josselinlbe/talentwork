@@ -45,7 +45,7 @@ export default function WorkspacesListAndTable({ items }: Props) {
             <div>
               <EmptyState
                 className="bg-white"
-                to={UrlUtils.appUrl(params, "settings/workspaces/new")}
+                to={UrlUtils.currentTenantUrl(params, "settings/workspaces/new")}
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.workspaces.errors.noWorkspaces"),
@@ -93,7 +93,7 @@ export default function WorkspacesListAndTable({ items }: Props) {
                               <td className="w-20 px-2 py-2 whitespace-nowrap text-sm text-gray-600">
                                 <div className="flex items-center space-x-2">
                                   <Link
-                                    to={UrlUtils.appUrl(params, "settings/workspaces/edit/" + item.id)}
+                                    to={UrlUtils.currentTenantUrl(params, "settings/workspaces/edit/" + item.id)}
                                     className="flex items-center space-x-2 text-theme-600 hover:text-theme-900 hover:underline"
                                   >
                                     <div>{t("shared.edit")}</div>

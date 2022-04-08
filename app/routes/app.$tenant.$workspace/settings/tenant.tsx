@@ -6,6 +6,7 @@ import { updateTenant } from "~/utils/db/tenants.db.server";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { useState } from "react";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -30,7 +31,8 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-  const { tenant } = params;
+  const tenantUrl = await getTenantUrl(params);
+
   const form = await request.formData();
   const name = form.get("name")?.toString() ?? "";
   const icon = form.get("icon")?.toString() ?? "";
@@ -43,7 +45,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  await updateTenant({ name, icon }, tenant);
+  await updateTenant({ name, icon }, tenantUrl.tenantId);
 
   const actionData: ActionData = {
     success: t("settings.tenant.updated"),

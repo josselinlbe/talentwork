@@ -7,6 +7,11 @@ export const AdminSidebar: SideBarItem[] = [
     path: "",
     items: [
       {
+        title: "app.sidebar.dashboard",
+        path: "/admin/dashboard",
+        icon: SvgIcon.DASHBOARD,
+      },
+      {
         title: "admin.tenants.title",
         path: "/admin/tenants",
         icon: SvgIcon.TENANTS,
@@ -24,35 +29,35 @@ export const AdminSidebar: SideBarItem[] = [
       //   icon: SvgIcon.NAVIGATION,
       //   items: [],
       // },
+      // {
+      //   title: "admin.components.title",
+      //   path: "/admin/components",
+      //   icon: SvgIcon.COMPONENTS,
+      //   items: [],
+      // },
+      // {
+      //   title: "app.navbar.profile",
+      //   path: "/admin/profile",
+      //   icon: SvgIcon.PROFILE,
+      // },
       {
-        title: "admin.components.title",
-        path: "/admin/components",
-        icon: SvgIcon.COMPONENTS,
-        items: [],
-      },
-      {
-        title: "app.navbar.profile",
-        path: "/admin/profile",
-        icon: SvgIcon.PROFILE,
-      },
-      {
-        title: "app.navbar.settings",
-        path: "",
+        title: "app.sidebar.setup",
+        path: "/admin/setup",
         icon: SvgIcon.SETTINGS,
-        items: [
-          {
-            title: "admin.pricing.title",
-            path: "/admin/pricing",
-            items: [],
-            // icon: SvgIcon.PRICING,
-          },
-          {
-            title: "admin.emails.title",
-            path: "/admin/emails",
-            // icon: SvgIcon.EMAILS,
-            items: [],
-          },
-        ],
+        // items: [
+        //   {
+        //     title: "admin.pricing.title",
+        //     path: "/admin/setup/pricing",
+        //     items: [],
+        //     // icon: SvgIcon.PRICING,
+        //   },
+        //   {
+        //     title: "admin.emails.title",
+        //     path: "/admin/emails",
+        //     // icon: SvgIcon.EMAILS,
+        //     items: [],
+        //   },
+        // ],
       },
       // {
       //   title: "settings.members.title",

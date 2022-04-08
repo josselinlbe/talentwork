@@ -8,5 +8,5 @@ export type MembersLoaderData = {
 };
 
 export function useMembersData(params: Params): MembersLoaderData {
-  return (useMatches().find((f) => f.pathname === UrlUtils.appUrl(params, "settings/members"))?.data ?? {}) as MembersLoaderData;
+  return (useMatches().find((f) => f.pathname === UrlUtils.currentTenantUrl(params, "settings/members"))?.data ?? {}) as MembersLoaderData;
 }

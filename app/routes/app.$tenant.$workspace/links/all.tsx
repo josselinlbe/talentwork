@@ -5,6 +5,7 @@ import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { useState } from "react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import AllLinksListAndTable from "~/components/app/links/all/AllLinksListAndTable";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -13,8 +14,9 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const items = await getLinks(params.workspace ?? "", LinkStatus.LINKED);
+  const items = await getLinks(tenantUrl.workspaceId, LinkStatus.LINKED);
   const data: LoaderData = {
     title: `${t("models.link.plural")} | ${process.env.APP_NAME}`,
     items,

@@ -45,6 +45,10 @@ const dateHMS = (value: Date | string | null | undefined): string => {
   return moment(value).format("HH:mm:ss");
 };
 
+const daysFromDate = (value: Date, days: number) => {
+  return new Date(new Date().setDate(value.getDate() - days));
+};
+
 export default {
   dateAgo,
   dateYMD,
@@ -54,4 +58,5 @@ export default {
   dateDM,
   dateHMS,
   dateMonthDayYear,
+  daysFromDate,
 };

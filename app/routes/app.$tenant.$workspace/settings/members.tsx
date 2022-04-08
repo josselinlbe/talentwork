@@ -14,6 +14,7 @@ import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/u
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -23,12 +24,12 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-  const { tenant } = params;
+  const tenantUrl = await getTenantUrl(params);
 
   const userInfo = await getUserInfo(request);
-  const users = await getTenantUsers(tenant);
-  const pendingInvitations = await getUserInvitations(tenant);
-  const currentTenantUser = await getTenantMember(userInfo?.userId, tenant);
+  const users = await getTenantUsers(tenantUrl.tenantId);
+  const pendingInvitations = await getUserInvitations(tenantUrl.tenantId);
+  const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
   if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
     return redirect("/unauthorized");
   }
@@ -78,7 +79,7 @@ export default function MembersRoute() {
   const [searchInput, setSearchInput] = useState("");
 
   function yesUpdateSubscription() {
-    navigate(UrlUtils.appUrl(params, `settings/subscription`));
+    navigate(UrlUtils.currentTenantUrl(params, `settings/subscription`));
   }
 
   const maxUsers = (): number => {
@@ -144,7 +145,7 @@ export default function MembersRoute() {
                   />
                 </div>
                 <Link
-                  to={UrlUtils.appUrl(params, "settings/members/new")}
+                  to={UrlUtils.currentTenantUrl(params, "settings/members/new")}
                   className="inline-flex space-x-2 items-center px-2 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

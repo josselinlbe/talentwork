@@ -89,7 +89,7 @@ export default function ProfileButton({ layout }: Props) {
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
                   onClick={closeDropdownUser}
-                  to={UrlUtils.appUrl(params, `settings/profile`)}
+                  to={UrlUtils.currentTenantUrl(params, `settings/profile`)}
                 >
                   {t("app.navbar.profile")}
                 </Link>
@@ -97,7 +97,7 @@ export default function ProfileButton({ layout }: Props) {
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
                   onClick={closeDropdownUser}
-                  to={UrlUtils.appUrl(params, "settings/workspaces")}
+                  to={UrlUtils.currentTenantUrl(params, "settings/workspaces")}
                 >
                   {t("app.navbar.workspaces")}
                 </Link>
@@ -106,7 +106,7 @@ export default function ProfileButton({ layout }: Props) {
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
                   onClick={closeDropdownUser}
-                  to={UrlUtils.appUrl(params, "settings/members")}
+                  to={UrlUtils.currentTenantUrl(params, "settings/members")}
                 >
                   {t("app.navbar.members")}
                 </Link>
@@ -114,7 +114,7 @@ export default function ProfileButton({ layout }: Props) {
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
                   onClick={closeDropdownUser}
-                  to={UrlUtils.appUrl(params, `settings/subscription`)}
+                  to={UrlUtils.currentTenantUrl(params, `settings/subscription`)}
                 >
                   {t("app.navbar.subscription")}
                 </Link>
@@ -122,7 +122,7 @@ export default function ProfileButton({ layout }: Props) {
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
                   onClick={closeDropdownUser}
-                  to={UrlUtils.appUrl(params, "settings/tenant")}
+                  to={UrlUtils.currentTenantUrl(params, "settings/tenant")}
                 >
                   {t("app.navbar.tenant")}
                 </Link>

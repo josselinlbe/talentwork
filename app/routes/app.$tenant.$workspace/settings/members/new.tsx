@@ -8,6 +8,7 @@ import { getUserByEmail } from "~/utils/db/users.db.server";
 import { createUserInvitation } from "~/utils/db/tenantUserInvitations.db.server";
 import { sendEmail } from "~/utils/email.server";
 import NewMember from "~/components/core/settings/members/NewMember";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 export type NewMemberLoaderData = {
   title: string;
@@ -16,8 +17,9 @@ export type NewMemberLoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const tenantWorkspaces = await getWorkspaces(params.tenant ?? "");
+  const tenantWorkspaces = await getWorkspaces(tenantUrl.tenantId);
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
     tenantWorkspaces: tenantWorkspaces ?? [],
@@ -40,6 +42,7 @@ export type NewMemberActionData = {
 const badRequest = (data: NewMemberActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
   const appData = await loadAppData(request, params);
 
@@ -58,7 +61,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const user = await getUserByEmail(email);
   if (user) {
-    const tenantUser = await getTenantMember(user.id, params.tenant ?? "");
+    const tenantUser = await getTenantMember(user.id, tenantUrl.tenantId);
     if (tenantUser) {
       return badRequest({
         error: "User already in organization",
@@ -66,7 +69,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   }
 
-  const invitation = await createUserInvitation(params.tenant ?? "", workspaces, {
+  const invitation = await createUserInvitation(tenantUrl.tenantId, workspaces, {
     email,
     firstName,
     lastName,

@@ -7,6 +7,9 @@ import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import EmployeeProfile from "~/modules/contracts/components/employees/EmployeeProfile";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { createUserActivityLog } from "~/utils/db/users.db.server";
+import { getTenantUrl } from "~/utils/services/urlService";
+import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
   title: string;
@@ -28,6 +31,8 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const userInfo = await getUserInfo(request);
+  const tenantUrl = await getTenantUrl(params);
 
   if (!params.id) {
     return badRequest({ error: t("shared.notFound") });
@@ -53,14 +58,22 @@ export const action: ActionFunction = async ({ request, params }) => {
       lastName,
     });
 
-    return redirect(UrlUtils.appUrl(params, "employees/" + params.id));
+    return redirect(UrlUtils.currentTenantUrl(params, "employees/" + params.id));
   } else if (type === "delete") {
     const existing = await getEmployee(params.id);
     if (!existing) {
       return badRequest({ error: t("shared.notFound") });
     }
     await deleteEmployee(params.id);
-    return redirect(UrlUtils.appUrl(params, "employees"));
+    await createUserActivityLog(
+      {
+        tenantUrl,
+        userId: userInfo.userId,
+      },
+      `Deleted employee`,
+      `${existing.firstName} ${existing.lastName} (${existing.email})`
+    );
+    return redirect(UrlUtils.currentTenantUrl(params, "employees"));
   } else {
     return badRequest({ error: "Form not submitted correctly" });
   }
@@ -87,7 +100,7 @@ export default function EmployeeRoute() {
 
   return (
     <div>
-      <Breadcrumb menu={[{ title: t("models.employee.plural"), routePath: UrlUtils.appUrl(params, "employees") }]} />
+      <Breadcrumb menu={[{ title: t("models.employee.plural"), routePath: UrlUtils.currentTenantUrl(params, "employees") }]} />
       {data.item ? <EmployeeProfile item={data.item} /> : <div>{t("shared.notFound")} </div>}
       <ErrorModal ref={errorModal} />
     </div>

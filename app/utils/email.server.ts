@@ -2,7 +2,7 @@
 var postmark = require("postmark");
 
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
-import { EmailTemplateDto } from "~/application/dtos/email/EmailTemplateDto";
+import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
 
 function getClient() {
   try {
@@ -13,10 +13,10 @@ function getClient() {
 }
 
 function getBaseTemplateModel() {
-  const appUrl = process.env.SERVER_URL?.toString();
+  const currentTenantUrl = process.env.SERVER_URL?.toString();
   return {
-    product_url: appUrl,
-    login_url: appUrl + "/login",
+    product_url: currentTenantUrl,
+    login_url: currentTenantUrl + "/login",
     product_name: process.env.APP_NAME,
     support_email: process.env.SUPPORT_EMAIL,
     sender_name: process.env.APP_NAME,
@@ -40,7 +40,7 @@ export async function sendEmail(to: string, alias: string, data: any, Attachment
   });
 }
 
-export async function getPostmarkTemplates(): Promise<EmailTemplateDto[]> {
+export async function getPostmarkTemplates(): Promise<EmailTemplate[]> {
   const client = getClient();
   if (!client) {
     return [];
@@ -48,7 +48,7 @@ export async function getPostmarkTemplates(): Promise<EmailTemplateDto[]> {
   const items: TemplateInList[] = (await client.getTemplates()).Templates;
   const templatesPromises = items.map(async (item: TemplateInList) => {
     const postmarkTemplate: Template = await client.getTemplate(item.Alias ?? "");
-    const template: EmailTemplateDto = {
+    const template: EmailTemplate = {
       type: item.TemplateType === TemplateTypes.Standard ? "standard" : "layout",
       name: postmarkTemplate.Name,
       alias: postmarkTemplate.Alias ?? "",
@@ -64,7 +64,7 @@ export async function getPostmarkTemplates(): Promise<EmailTemplateDto[]> {
   return templates;
 }
 
-export async function createPostmarkTemplate(template: EmailTemplateDto, layoutTemplate?: string | undefined) {
+export async function createPostmarkTemplate(template: EmailTemplate, layoutTemplate?: string | undefined) {
   const client = getClient();
   if (!client) {
     throw Error("Undefined Postmark client");

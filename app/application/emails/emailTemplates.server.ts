@@ -1,9 +1,9 @@
-import { EmailTemplateDto } from "../dtos/email/EmailTemplateDto";
+import { EmailTemplate } from "../dtos/email/EmailTemplate";
 import fs from "fs";
 import path from "path";
 
-export default async function emailTemplates(): Promise<EmailTemplateDto[]> {
-  const items: EmailTemplateDto[] = [];
+export default async function emailTemplates(): Promise<EmailTemplate[]> {
+  const items: EmailTemplate[] = [];
 
   const dir = path.join("./", "./app/application/emails");
   const fileNames = fs.readdirSync(dir);
