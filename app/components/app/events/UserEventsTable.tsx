@@ -210,8 +210,8 @@ export default function UserEventsTable({ withTenant, withWorkspace, items }: Pr
                                 <td className="px-2 py-2 whitespace-nowrap">
                                   <div className="text-xs text-gray-600">{item.createdAt && <span>{DateUtils.dateYMDHMS(item.createdAt)}</span>}</div>
                                 </td>
-                                {withTenant && <td className="px-2 py-2 whitespace-nowrap">{item.tenant?.name ?? "?"}</td>}
-                                {withWorkspace && <td className="px-2 py-2 whitespace-nowrap">{item.workspace?.name ?? "?"}</td>}
+                                {withTenant && <td className="px-2 py-2 whitespace-nowrap">{item.tenant?.name ?? "-"}</td>}
+                                {withWorkspace && <td className="px-2 py-2 whitespace-nowrap">{item.workspace?.name ?? "-"}</td>}
                                 <td className="px-2 py-2 whitespace-nowrap text-gray-700 text-sm">
                                   {item.user.firstName} {item.user.lastName} <span className=" text-gray-500 text-xs">({item.user.email})</span>
                                 </td>

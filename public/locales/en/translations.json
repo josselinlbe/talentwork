@@ -706,7 +706,7 @@
       "thesePricesAreFromFiles": "These prices are not in the database, they're loaded from: src/application/pricing/plans.ts.",
       "noPricesInDatabase": "There are no prices. Log in as admin and configure plans and prices.",
       "noPricesConfigured": "There are no prices.",
-      "generateFromFiles": "Click here to generate these prices on your Database and your Subscription provider"
+      "generateFromFiles": "Click here to create them"
     },
     "tenants": {
       "title": "Organizations",
@@ -733,7 +733,8 @@
       "headline": "Some components used in the application"
     },
     "setup": {
-      "title": "Set up your application",
+      "title": "Set up",
+      "headline": "Set up your application",
       "description": "Generate your pricing plans and create your email templates"
     },
     "emails": {
@@ -745,7 +746,9 @@
       "createAll": "Create All",
       "noEmails": "No email templates",
       "noEmailsDescription": "Set them up at app/application/emails folder and set the POSTMARK_SERVER_TOKEN value.",
-      "sendTest": "Send test"
+      "sendTest": "Send test",
+      "notSaved": "These email templates are not saved, they're loaded from: app/application/emails.",
+      "generateFromFiles": "Click here to create them"
     }
   },
   "account": {

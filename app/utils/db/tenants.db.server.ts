@@ -58,6 +58,14 @@ export async function getTenant(id?: string) {
   });
 }
 
+export async function getTenantBySlug(slug: string) {
+  return await db.tenant.findUnique({
+    where: {
+      slug,
+    },
+  });
+}
+
 export async function getTenantWithUsersAndWorkspaces(id?: string) {
   if (!id) {
     return null;
@@ -173,7 +181,7 @@ export async function getTenantMember(userId?: string, tenantId?: string) {
   });
 }
 
-export async function updateTenant(data: { name: string; icon: string }, id?: string) {
+export async function updateTenant(data: { name: string; icon: string; slug: string }, id?: string) {
   if (!id) {
     return;
   }

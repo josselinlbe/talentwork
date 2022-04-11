@@ -45,6 +45,7 @@ model UserEvent {
   workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url         String
   action      String
   details     String
 }

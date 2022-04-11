@@ -84,7 +84,7 @@ export default function AdminNavigationRoute() {
               </svg>
             </div> */}
             <div className="space-y-3">
-              <h3 className=" font-bold text-lg">{t("admin.setup.title")}</h3>
+              <h3 className=" font-bold text-lg">{t("admin.setup.headline")}</h3>
               <p className="text-gray-600">{t("admin.setup.description")}</p>
               <ul className=" space-y-4">
                 {data.items.map((item, idx) => {

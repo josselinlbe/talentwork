@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
+import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { updateTenant } from "~/utils/db/tenants.db.server";
+import { getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { useState } from "react";
 import { getTenantUrl } from "~/utils/services/urlService";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 type LoaderData = {
   title: string;
@@ -25,6 +26,7 @@ type ActionData = {
   success?: string;
   fields?: {
     name: string;
+    slug: string;
   };
 };
 
@@ -35,22 +37,60 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const form = await request.formData();
   const name = form.get("name")?.toString() ?? "";
+  const slug = form.get("slug")?.toString().toLowerCase() ?? "";
   const icon = form.get("icon")?.toString() ?? "";
+  const fields = { name, slug, icon };
   if ((name?.length ?? 0) < 2) {
     return badRequest({
-      fields: {
-        name,
-      },
+      fields,
       error: "Tenant name must have at least 2 characters",
     });
   }
+  if (!slug || slug.length < 5) {
+    return badRequest({
+      fields,
+      error: "Tenant slug must have at least 5 characters",
+    });
+  }
 
-  await updateTenant({ name, icon }, tenantUrl.tenantId);
+  if (["settings"].includes(slug.toLowerCase())) {
+    return badRequest({
+      fields,
+      error: "Slug cannot be " + slug,
+    });
+  }
+  const regexExp = /^[a-z0-9]+(?:-[a-z0-9]+)*$/g;
+  if (!regexExp.test(slug)) {
+    return badRequest({
+      fields,
+      error: "Invalid slug, use only lowercase letters and/or numbers",
+    });
+  }
+  if (slug.includes(" ")) {
+    return badRequest({
+      fields,
+      error: "Slug cannot contain white spaces",
+    });
+  }
 
-  const actionData: ActionData = {
-    success: t("settings.tenant.updated"),
-  };
-  return json(actionData);
+  const existing = await getTenant(tenantUrl.tenantId);
+  if (existing?.slug !== slug) {
+    const existingSlug = await getTenantBySlug(slug);
+    if (existingSlug) {
+      return badRequest({
+        fields,
+        error: "Slug already taken",
+      });
+    }
+    await updateTenant({ name, icon, slug }, tenantUrl.tenantId);
+    return redirect(`/app/${slug}/${params.workspace}/settings/tenant`);
+  } else {
+    await updateTenant({ name, icon, slug }, tenantUrl.tenantId);
+    const actionData: ActionData = {
+      success: t("settings.tenant.updated"),
+    };
+    return json(actionData);
+  }
 };
 
 export const meta: MetaFunction = ({ data }) => ({
@@ -92,6 +132,18 @@ export default function TenantRoute() {
                       name="name"
                       defaultValue={appData.currentTenant?.name}
                       className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                    />
+                  </div>
+                  <div className="col-span-6 sm:col-span-6">
+                    <label htmlFor="slug" className="block text-sm font-medium leading-5 text-gray-700">
+                      {t("shared.slug")}
+                    </label>
+                    <input
+                      required
+                      id="slug"
+                      name="slug"
+                      defaultValue={appData.currentTenant?.slug}
+                      className="lowercase mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     />
                   </div>
                   <div className="col-span-6 sm:col-span-6">

@@ -64,14 +64,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   try {
     await createEmployees(userInfo.userId, tenantUrl.tenantId, tenantUrl.workspaceId, employees);
-    await createUserEvent(
-      {
-        tenantUrl,
-        userId: userInfo.userId,
-      },
-      `Created employees`,
-      employees.map((f) => `${f.firstName} ${f.lastName} (${f.email})`).join(" | ")
-    );
+    await createUserEvent(request, tenantUrl, `Created employees`, employees.map((f) => `${f.firstName} ${f.lastName} (${f.email})`).join(" | "));
     return redirect(`${UrlUtils.currentTenantUrl(params, "employees")}`);
   } catch (e: any) {
     return badRequest({ error: e?.toString() });

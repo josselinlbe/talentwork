@@ -705,7 +705,7 @@
       "thesePricesAreFromFiles": "Estos precios no están en la base de datos, están cargados desde: src/application/pricing/plans.ts.",
       "noPricesInDatabase": "No hay precios configurados. Inicia como admin para configurar los planes y precios.",
       "noPricesConfigured": "No hay precios configurados.",
-      "generateFromFiles": "Clic aquí para generar estos precios en tu Base de Datos y en tu proveedor de Subscripciones"
+      "generateFromFiles": "Clic aquí para generarlos"
     },
     "tenants": {
       "title": "Organizaciones",
@@ -732,7 +732,8 @@
       "headline": "Algunos componentes usados en toda la aplicación"
     },
     "setup": {
-      "title": "Configura tu aplicación",
+      "title": "Configuración",
+      "headline": "Configura tu aplicación",
       "description": "Genera tus planes de precios, y crea tus plantillas de correo"
     },
     "emails": {
@@ -744,7 +745,9 @@
       "createAll": "Crear todos",
       "noEmails": "No hay plantillas de correo",
       "noEmailsDescription": "Configuralas en la carpeta app/application/emails y establece la variable POSTMARK_SERVER_TOKEN.",
-      "sendTest": "Enviar prueba"
+      "sendTest": "Enviar prueba",
+      "notSaved": "Estas plantillas de correo no están en la base de datos, están cargados desde: app/application/emails.",
+      "generateFromFiles": "Clic aquí para generarlos"
     }
   },
   "account": {

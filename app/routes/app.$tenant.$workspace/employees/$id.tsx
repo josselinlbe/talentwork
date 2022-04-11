@@ -65,14 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: t("shared.notFound") });
     }
     await deleteEmployee(params.id);
-    await createUserEvent(
-      {
-        tenantUrl,
-        userId: userInfo.userId,
-      },
-      `Deleted employee`,
-      `${existing.firstName} ${existing.lastName} (${existing.email})`
-    );
+    await createUserEvent(request, tenantUrl, `Deleted employee`, `${existing.firstName} ${existing.lastName} (${existing.email})`);
     return redirect(UrlUtils.currentTenantUrl(params, "employees"));
   } else {
     return badRequest({ error: "Form not submitted correctly" });

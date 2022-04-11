@@ -2,7 +2,7 @@ import { SubscriptionProductDto } from "../../application/dtos/subscriptions/Sub
 import { createSubscriptionProduct, createSubscriptionPrice, createSubscriptionFeature } from "../db/subscriptionProducts.db.server";
 import { createStripeProduct, createStripePrice } from "../stripe.server";
 
-export async function createPlans(plans: SubscriptionProductDto[]) {
+export async function createPlans(plans: SubscriptionProductDto[]): Promise<void> {
   plans.forEach(async (plan) => {
     // Create stripe product
     const stripeProduct = await createStripeProduct({ title: plan.title });

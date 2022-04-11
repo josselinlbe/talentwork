@@ -12,8 +12,8 @@ interface Props {
 export default function WarningBanner({ title = "Warning", text = "", redirect, children }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="bg-yellow-50 mb-2 rounded-sm border border-yellow-300 mt-4">
-      <div className="rounded-sm bg-yellow-50 p-4">
+    <div className="bg-yellow-50 mb-2 rounded-md border border-yellow-300 mt-4">
+      <div className="rounded-md bg-yellow-50 p-4">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">

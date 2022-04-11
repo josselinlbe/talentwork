@@ -23,7 +23,7 @@ export function DashboardStats({ items }: Props) {
             <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
               <div className="flex items-baseline text-2xl font-semibold text-gray-800">
                 <div>{loading ? "..." : item.stat}</div>
-                <span className="ml-2 text-sm font-medium text-gray-500 hidden xl:block">{loading ? "..." : `from ${item.previousStat}`}</span>
+                <span className="ml-2 text-sm font-medium text-gray-500 hidden xl:block">{!loading ?? `from ${item.previousStat}`}</span>
               </div>
 
               {!loading && (

@@ -172,12 +172,27 @@ export async function getUserEvents(tenantId: string): Promise<UserEventWithDeta
   });
 }
 
-export async function createUserEvent(session: { tenantUrl: TenantUrl; userId: string }, action: string, details: string) {
+export async function createUserEvent(request: Request, tenantUrl: TenantUrl, action: string, details: string) {
+  const userInfo = await getUserInfo(request);
+
   await db.userEvent.create({
     data: {
-      tenantId: session.tenantUrl.tenantId,
-      workspaceId: session.tenantUrl.workspaceId,
-      userId: session.userId,
+      tenantId: tenantUrl.tenantId,
+      workspaceId: tenantUrl.workspaceId,
+      userId: userInfo.userId,
+      url: request.url.toString(),
+      action,
+      details,
+    },
+  });
+}
+
+export async function createAdminUserEvent(request: Request, action: string, details: string) {
+  const userInfo = await getUserInfo(request);
+  await db.userEvent.create({
+    data: {
+      userId: userInfo.userId,
+      url: request.url.toString(),
       action,
       details,
     },

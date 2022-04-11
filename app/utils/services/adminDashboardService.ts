@@ -28,11 +28,11 @@ async function getMMRStat(lastDays: number) {
   const tenantStat: Stat = {
     name: "MRR",
     hint: "Monthly recurring revenue",
-    stat: "$29,900",
-    previousStat: "$23,920",
-    change: "15%",
-    changeType: getStatChangeType(29900 - 23920, 29900),
-    path: "https://dashboard.stripe.com/",
+    stat: "TODO",
+    previousStat: "TODO",
+    change: "TODO",
+    changeType: getStatChangeType(0, 0),
+    path: "TODO",
   };
   return tenantStat;
 }
@@ -41,11 +41,11 @@ async function getActiveUsersStat(lastDays: number) {
   const activeUsersStat: Stat = {
     name: "MAU",
     hint: "Monthly active users",
-    stat: "30",
-    previousStat: "45",
-    change: "33.40%",
-    changeType: getStatChangeType(-15, 30),
-    path: "/admin/users",
+    stat: "TODO",
+    previousStat: "TODO",
+    change: "TODO",
+    changeType: getStatChangeType(0, 0),
+    path: "TODO",
   };
   return activeUsersStat;
 }

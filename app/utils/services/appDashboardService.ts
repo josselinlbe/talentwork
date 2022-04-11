@@ -29,12 +29,12 @@ async function getMMRStat(lastDays: number) {
   const contractsStatsInfo = await getContractsCreatedSince(lastDays);
   const tenantStat: Stat = {
     name: "TODO",
-    hint: "...",
-    stat: "...",
-    previousStat: "...",
-    change: "...",
+    hint: "TODO",
+    stat: "TODO",
+    previousStat: "TODO",
+    change: "TODO",
     changeType: getStatChangeType(0, 1),
-    path: "",
+    path: "TODO",
   };
   return tenantStat;
 }
@@ -42,12 +42,12 @@ async function getMMRStat(lastDays: number) {
 async function getActiveUsersStat(lastDays: number) {
   const activeUsersStat: Stat = {
     name: "TODO",
-    hint: "...",
-    stat: "...",
-    previousStat: "...",
-    change: "...",
+    hint: "TODO",
+    stat: "TODO",
+    previousStat: "TODO",
+    change: "TODO",
     changeType: getStatChangeType(0, 1),
-    path: "",
+    path: "TODO",
   };
   return activeUsersStat;
 }

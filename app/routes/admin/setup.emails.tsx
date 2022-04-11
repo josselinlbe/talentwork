@@ -1,5 +1,4 @@
 import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
-import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useEffect, useRef, useState } from "react";
@@ -7,12 +6,14 @@ import { useTranslation } from "react-i18next";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useCatch, useLoaderData, useSubmit, useTransition } from "remix";
 import { getPostmarkTemplates, sendEmail } from "~/utils/email.server";
 import emailTemplates from "~/application/emails/emailTemplates.server";
-import { useAppData } from "~/utils/data/useAppData";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmailTemplates } from "~/utils/services/emailService";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
+import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
+import { useAdminData } from "~/utils/data/useAdminData";
+import { createAdminUserEvent } from "~/utils/db/users.db.server";
 
 type LoaderData = {
   title: string;
@@ -61,6 +62,7 @@ export const action: ActionFunction = async ({ request }) => {
     try {
       const templates = await emailTemplates();
       await createEmailTemplates(templates);
+      await createAdminUserEvent(request, "Created email templates", templates.map((f) => f.alias).join(", "));
 
       return success({
         onPostmark: true,
@@ -89,7 +91,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function EmailsRoute() {
-  const appData = useAppData();
+  const adminData = useAdminData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
   const { t } = useTranslation();
@@ -141,7 +143,7 @@ export default function EmailsRoute() {
     });
   }
   function sendTest(item: EmailTemplate): void {
-    const email = window.prompt("Email", appData.user?.email);
+    const email = window.prompt("Email", adminData.user?.email);
     if (!email || email.trim() === "") {
       return;
     }
@@ -156,27 +158,28 @@ export default function EmailsRoute() {
 
   return (
     <div>
-      {/* <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
-        <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
-          <h1 className="flex-1 font-bold flex items-center truncate">{t("admin.emails.title")}</h1>
-          <Form method="post" className="flex items-center space-x-2">
-            <ButtonSecondary to="." disabled={loading}>
-              {t("shared.reload")}
-            </ButtonSecondary>
-            <ButtonSecondary type="button" onClick={createPostmarkEmails} disabled={loading || data.onPostmark}>
-              {t("admin.emails.createAll")}
-            </ButtonSecondary>
-          </Form>
-        </div>
-      </div> */}
       <Breadcrumb
         className="w-full"
         home="/admin"
         menu={[
-          { title: "Set up", routePath: "/admin/setup" },
-          { title: "Emails", routePath: "/admin/setup/emails" },
+          { title: t("app.sidebar.setup"), routePath: "/admin/setup" },
+          { title: t("admin.emails.title"), routePath: "/admin/setup/emails" },
         ]}
       />
+      <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
+        <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
+          <h1 className="flex-1 font-bold flex items-center truncate">{t("admin.emails.title")}</h1>
+          <Form method="post" className="flex items-center space-x-2">
+            {/* <ButtonSecondary to="." disabled={loading}>
+              {t("shared.reload")}
+            </ButtonSecondary> */}
+            <ButtonPrimary type="button" onClick={createPostmarkEmails} disabled={loading || data.onPostmark}>
+              {t("admin.emails.createAll")}
+            </ButtonPrimary>
+          </Form>
+        </div>
+      </div>
+
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
         <div className="flex flex-col">
           {(() => {
@@ -194,6 +197,24 @@ export default function EmailsRoute() {
               return (
                 <div className="overflow-x-auto">
                   <div className="py-2 align-middle inline-block min-w-full">
+                    {/* {!data.onPostmark && (
+                      <WarningBanner title={t("shared.warning")} text={t("admin.emails.notSaved")}>
+                        <div className="text-sm leading-5 right-0 -ml-3 mt-2">
+                          <span className="inline-flex rounded-sm ml-2">
+                            <button
+                              disabled={loading}
+                              type="submit"
+                              className={clsx(
+                                "ml-1 h-8 inline-flex items-center px-4 py-2 border border-orange-200 text-xs leading-5 font-medium rounded-sm text-orange-700 bg-orange-100 focus:outline-none transition duration-150 ease-in-out",
+                                loading ? "bg-opacity-80 cursor-not-allowed" : "hover:bg-orange-200"
+                              )}
+                            >
+                              {t("admin.emails.generateFromFiles")}
+                            </button>
+                          </span>
+                        </div>
+                      </WarningBanner>
+                    )} */}
                     <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -284,6 +305,7 @@ export default function EmailsRoute() {
           })()}
         </div>
       </div>
+
       <SuccessModal ref={successModal} />
       <ErrorModal ref={errorModal} />
     </div>
