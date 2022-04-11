@@ -1,3 +1,4 @@
+import { Tenant, User, UserEvent, Workspace } from ".prisma/client";
 import bcrypt from "bcryptjs";
 import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
@@ -14,6 +15,31 @@ export type UserWithoutPassword = {
   type: UserType;
   defaultWorkspaceId: string | null;
 };
+
+export type UserEventWithDetails = UserEvent & {
+  user: User;
+  workspace?: Workspace | null;
+  tenant?: Tenant | null;
+};
+
+export async function adminGetAllTenantUsers(tenantId: string) {
+  return db.user.findMany({
+    where: {
+      tenants: {
+        every: {
+          tenantId,
+        },
+      },
+    },
+    include: {
+      tenants: {
+        include: {
+          tenant: true,
+        },
+      },
+    },
+  });
+}
 
 export async function adminGetAllUsers() {
   return db.user.findMany({
@@ -123,14 +149,37 @@ export async function deleteUser(userId: string) {
   });
 }
 
-export async function createUserActivityLog(session: { tenantUrl: TenantUrl; userId: string }, title: string, description: string) {
-  db.userActivity.create({
+export async function getAllUserEvents(): Promise<UserEventWithDetails[]> {
+  return await db.userEvent.findMany({
+    include: {
+      user: true,
+      workspace: true,
+      tenant: true,
+    },
+  });
+}
+
+export async function getUserEvents(tenantId: string): Promise<UserEventWithDetails[]> {
+  return await db.userEvent.findMany({
+    where: {
+      tenantId,
+    },
+    include: {
+      user: true,
+      workspace: true,
+      tenant: true,
+    },
+  });
+}
+
+export async function createUserEvent(session: { tenantUrl: TenantUrl; userId: string }, action: string, details: string) {
+  await db.userEvent.create({
     data: {
       tenantId: session.tenantUrl.tenantId,
       workspaceId: session.tenantUrl.workspaceId,
       userId: session.userId,
-      title,
-      description,
+      action,
+      details,
     },
   });
 }

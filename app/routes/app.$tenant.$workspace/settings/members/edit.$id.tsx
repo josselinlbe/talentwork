@@ -223,7 +223,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
 
   const currentWorkspacesDescription = (workspaces: Workspace[]) => {
     if (workspaces.length === 0) {
-      return t("app.workspaces.seletAtLeastOne");
+      return t("app.workspaces.selectAtLeastOne");
     }
     return workspaces.map((f) => f.name).join(", ");
   };

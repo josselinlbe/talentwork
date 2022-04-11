@@ -20,7 +20,7 @@ async function getContractsStat(lastDays: number) {
     previousStat: (total - added).toString(),
     change: getStatChangePercentage(added, total) + "%",
     changeType: getStatChangeType(added, total),
-    path: "contracts",
+    path: "/app/:tenant/:workspace/contracts",
   };
   return contractsStat;
 }
@@ -28,26 +28,26 @@ async function getContractsStat(lastDays: number) {
 async function getMMRStat(lastDays: number) {
   const contractsStatsInfo = await getContractsCreatedSince(lastDays);
   const tenantStat: Stat = {
-    name: "MRR",
-    hint: "Monthly recurring revenue",
-    stat: "$29,900",
-    previousStat: "$23,920",
-    change: "15%",
-    changeType: getStatChangeType(0, 0),
-    path: "https://dashboard.stripe.com/",
+    name: "TODO",
+    hint: "...",
+    stat: "...",
+    previousStat: "...",
+    change: "...",
+    changeType: getStatChangeType(0, 1),
+    path: "",
   };
   return tenantStat;
 }
 
 async function getActiveUsersStat(lastDays: number) {
   const activeUsersStat: Stat = {
-    name: "MAU",
-    hint: "Monthly active users",
-    stat: "30",
-    previousStat: "45",
-    change: "33.40%",
-    changeType: getStatChangeType(-1, 2),
-    path: "/admin/users",
+    name: "TODO",
+    hint: "...",
+    stat: "...",
+    previousStat: "...",
+    change: "...",
+    changeType: getStatChangeType(0, 1),
+    path: "",
   };
   return activeUsersStat;
 }

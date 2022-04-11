@@ -7,6 +7,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import { TenantUser } from "@prisma/client";
+import UserUtils from "~/utils/app/UserUtils";
 
 interface Props {
   items: TenantUserWithUser[];
@@ -43,18 +44,7 @@ export default function MembersListAndTable({ items }: Props) {
   function getUserStatus(item: TenantUser) {
     return t("settings.profile.status." + TenantUserStatus[item.status]);
   }
-  function getUserRoleClass(item: TenantUser) {
-    switch (item.role as TenantUserRole) {
-      case TenantUserRole.OWNER:
-        return "bg-slate-50 text-gray-800 border border-slate-300";
-      case TenantUserRole.ADMIN:
-        return "bg-rose-50 border border-rose-200";
-      case TenantUserRole.MEMBER:
-        return "bg-blue-50 border border-blue-200";
-      case TenantUserRole.GUEST:
-        return "bg-gray-50 border border-gray-200";
-    }
-  }
+
   function sortBy(column: string | undefined) {
     if (column) {
       setSortDirection(sortDirection === -1 ? 1 : -1);
@@ -140,7 +130,7 @@ export default function MembersListAndTable({ items }: Props) {
                                 <span
                                   className={clsx(
                                     "text-xs w-28 justify-center inline-flex items-center px-1 py-1 rounded-sm font-medium",
-                                    getUserRoleClass(item)
+                                    UserUtils.getUserRoleClass(item)
                                   )}
                                 >
                                   {getUserRole(item)}

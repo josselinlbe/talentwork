@@ -98,7 +98,7 @@ export default function NewMember() {
   }
   const currentWorkspacesDescription = (workspaces: Workspace[]) => {
     if (workspaces.length === 0) {
-      return t("app.workspaces.seletAtLeastOne");
+      return t("app.workspaces.selectAtLeastOne");
     }
     return workspaces.map((f) => f.name).join(", ");
   };

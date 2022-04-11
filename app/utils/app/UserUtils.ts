@@ -1,4 +1,5 @@
-import { Workspace } from "@prisma/client";
+import { TenantUser, Workspace } from "@prisma/client";
+import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 
 const avatarText = (user: any): string => {
   if (user) {
@@ -64,6 +65,19 @@ const validatePasswords = (password?: string, passwordConfirm?: string) => {
   }
 };
 
+const getUserRoleClass = (item: TenantUser) => {
+  switch (item.role as TenantUserRole) {
+    case TenantUserRole.OWNER:
+      return "bg-slate-50 text-gray-800 border border-slate-300";
+    case TenantUserRole.ADMIN:
+      return "bg-rose-50 border border-rose-200";
+    case TenantUserRole.MEMBER:
+      return "bg-blue-50 border border-blue-200";
+    case TenantUserRole.GUEST:
+      return "bg-gray-50 border border-gray-200";
+  }
+};
+
 export default {
   avatarText,
   profileName,
@@ -71,4 +85,5 @@ export default {
   validatePassword,
   validatePasswords,
   getWorkspacePrefix,
+  getUserRoleClass,
 };

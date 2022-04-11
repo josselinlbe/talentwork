@@ -2,8 +2,9 @@ import { Fragment, useEffect, useState } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { useNavigate } from "remix";
+import { useNavigate, useParams } from "remix";
 import { useTranslation } from "react-i18next";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   isOpen: boolean;
@@ -16,6 +17,7 @@ type Command = {
   description: string;
   bgClassName?: string;
   textClassName?: string;
+  toPath?: string;
   onSelected?: () => void;
 };
 
@@ -23,12 +25,18 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   const { t } = useTranslation();
   const appData = useAppData();
   const navigate = useNavigate();
+  const params = useParams();
 
   const defaultCommands: Command[] = [
     {
       command: "T",
       title: t("app.commands.tenants.title"),
       description: t("app.commands.tenants.description"),
+    },
+    {
+      command: "P",
+      title: t("app.commands.profile.title"),
+      description: t("app.commands.profile.description"),
     },
   ];
 
@@ -44,7 +52,10 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
       setCommandSearchTitle(t("app.commands.type"));
       setItems(defaultCommands);
     } else {
-      if (selectedCommand.onSelected) {
+      if (selectedCommand.toPath) {
+        navigate(selectedCommand.toPath);
+        onClosed();
+      } else if (selectedCommand.onSelected) {
         selectedCommand.onSelected();
       } else {
         setCommandSearchTitle(`${selectedCommand.title}`);
@@ -60,22 +71,52 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
                 command: (++idx).toString(),
                 bgClassName: "bg-indigo-600",
                 textClassName: "text-indigo-200",
-                onSelected: () =>
-                  onSwitchWorkspace({
-                    tenantId: workspace.tenant.slug,
-                    workspaceId: workspace.id,
-                  }),
+                toPath: `/app/${workspace.tenant.slug}/${workspace.id}/dashboard`,
               });
             });
           });
 
           items.push({
+            title: `${t("app.commands.tenants.viewAll")}`,
+            description: ``,
+            command: "V",
+            bgClassName: "bg-gray-600",
+            textClassName: "text-gray-200",
+            toPath: "/app",
+          });
+          items.push({
+            title: `${t("app.commands.tenants.edit")}`,
+            description: ``,
+            command: "V",
+            bgClassName: "bg-gray-600",
+            textClassName: "text-gray-200",
+            toPath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
+          });
+          items.push({
             title: `${t("app.commands.tenants.create")}`,
             description: ``,
             command: "+",
+            bgClassName: "bg-teal-600",
+            textClassName: "text-teal-200",
+            toPath: "/app/new-tenant",
+          });
+        }
+        if (selectedCommand.command === "P") {
+          items.push({
+            title: `${t("app.commands.profile.update")}`,
+            description: `${t("app.commands.profile.updateDescription")}`,
+            command: "U",
+            bgClassName: "bg-pink-600",
+            textClassName: "text-pink-200",
+            toPath: UrlUtils.currentTenantUrl(params, "settings/profile"),
+          });
+          items.push({
+            title: `${t("app.commands.profile.logout")}`,
+            description: `${t("app.commands.profile.logoutDescription")}`,
+            command: "L",
             bgClassName: "bg-gray-600",
             textClassName: "text-gray-200",
-            onSelected: () => navigate("/app/new-tenant"),
+            toPath: "/logout",
           });
         }
         setItems(items);
@@ -117,11 +158,6 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
   function onClose() {
     setSelectedCommand(undefined);
-    onClosed();
-  }
-
-  function onSwitchWorkspace({ tenantId, workspaceId }: { tenantId: string; workspaceId: string }) {
-    navigate(`/app/${tenantId}/${workspaceId}/dashboard`);
     onClosed();
   }
 

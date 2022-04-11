@@ -155,7 +155,7 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
   }
   const currentUsersDescription = () => {
     if (users.length === 0) {
-      return t("app.users.seletAtLeastOne");
+      return t("app.users.selectAtLeastOne");
     }
     return users.map((f) => `${f.firstName} (${f.email})`).join(", ");
   };

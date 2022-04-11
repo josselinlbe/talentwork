@@ -9,7 +9,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmployees } from "~/modules/contracts/services/employeesService";
 import { getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { createUserActivityLog } from "~/utils/db/users.db.server";
+import { createUserEvent } from "~/utils/db/users.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
@@ -64,7 +64,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   try {
     await createEmployees(userInfo.userId, tenantUrl.tenantId, tenantUrl.workspaceId, employees);
-    await createUserActivityLog(
+    await createUserEvent(
       {
         tenantUrl,
         userId: userInfo.userId,

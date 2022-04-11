@@ -61,7 +61,7 @@ export const AppSidebar = (params: Params): SideBarItem[] => {
       path: "",
       items: [
         {
-          title: "app.navbar.settings",
+          title: "app.sidebar.settings",
           icon: SvgIcon.SETTINGS,
           userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
           path: `${currentTenantUrl}/settings`,
@@ -91,6 +91,12 @@ export const AppSidebar = (params: Params): SideBarItem[] => {
           //     userRoles: [TenantUserRole.OWNER],
           //   },
           // ],
+        },
+        {
+          title: "app.sidebar.events",
+          icon: SvgIcon.EVENTS,
+          userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
+          path: `${currentTenantUrl}/events`,
         },
         {
           title: "admin.switchToAdmin",

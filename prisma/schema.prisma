@@ -33,10 +33,10 @@ model User {
   createdEmployees   Employee[]
   contractActivities ContractActivity[]
   linkInvitations    Link[]                @relation("userInvited")
-  activity           UserActivity[]
+  activity           UserEvent[]
 }
 
-model UserActivity {
+model UserEvent {
   id          String     @id @default(cuid())
   createdAt   DateTime   @default(now())
   tenantId    String?
@@ -45,8 +45,8 @@ model UserActivity {
   workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  description String
+  action      String
+  details     String
 }
 
 model Tenant {
@@ -62,7 +62,7 @@ model Tenant {
   workspaces             Workspace[]
   invitations            TenantUserInvitation[]
   employees              Employee[]
-  activity               UserActivity[]
+  activity               UserEvent[]
 }
 
 // model TenantFeatures {
@@ -125,7 +125,7 @@ model Workspace {
   createdLinks         Link[]          @relation("createdByWorkspace")
   asProviderLinks      Link[]          @relation("providerWorkspace")
   asClientLinks        Link[]          @relation("clientWorkspace")
-  activity             UserActivity[]
+  activity             UserEvent[]
 }
 
 model WorkspaceUser {

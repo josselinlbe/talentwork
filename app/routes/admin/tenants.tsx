@@ -206,9 +206,15 @@ export default function AdminTenantsRoute() {
                                         </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        <Link to={`/app/${item.slug}`} className="hover:underline text-gray-800">
-                                          {item.slug}
-                                        </Link>
+                                        {item.workspaces.length === 0 ? (
+                                          <Link to={`/app/${item.slug}`} className="hover:underline text-gray-800">
+                                            {item.slug}
+                                          </Link>
+                                        ) : (
+                                          <Link to={`/app/${item.slug}/${item.workspaces[0].id}`} className="hover:underline text-gray-800">
+                                            {item.slug}
+                                          </Link>
+                                        )}
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex space-x-1">
@@ -229,8 +235,10 @@ export default function AdminTenantsRoute() {
                                         </div>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        {item.usersCount}
-                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxUsers ?? "-"}</span>
+                                        <Link to={`/admin/tenant/${item.id}/users`} className="hover:underline">
+                                          {item.usersCount}
+                                          <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxUsers ?? "-"}</span>
+                                        </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.workspacesCount}

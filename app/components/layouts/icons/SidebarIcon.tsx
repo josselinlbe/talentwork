@@ -18,6 +18,8 @@ import IconEmployees from "~/modules/contracts/icons/IconEmployees";
 import IconContracts from "~/modules/contracts/icons/IconContracts";
 import IconMembers from "./IconMembers";
 import IconProfile from "./IconProfile";
+import IconHistory from "./IconHistory";
+import IconCode from "./IconCode";
 
 interface Props {
   className: string;
@@ -41,6 +43,8 @@ export default function SidebarIcon(props: Props) {
       {icon === SvgIcon.APP && <IconApp className={props.className} />}
       {icon === SvgIcon.DASHBOARD && <IconDashboard className={props.className} />}
       {icon === SvgIcon.SETTINGS && <IconSettings className={props.className} />}
+      {icon === SvgIcon.SETUP && <IconCode className={props.className} />}
+      {icon === SvgIcon.EVENTS && <IconHistory className={props.className} />}
 
       {/* App */}
       {icon === SvgIcon.LINKS && <IconLinks className={props.className} />}

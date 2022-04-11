@@ -23,6 +23,10 @@ export default function AdminTenantRoute() {
       name: t("admin.tenants.profile.title"),
     },
     {
+      routePath: `/admin/tenant/${params.id}/users`,
+      name: t("models.user.plural"),
+    },
+    {
       routePath: `/admin/tenant/${params.id}/subscription`,
       name: t("admin.tenants.subscription.title"),
     },

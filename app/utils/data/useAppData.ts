@@ -39,7 +39,8 @@ export async function loadAppData(request: Request, params: Params) {
 
   const { translations } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
-  if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === UrlUtils.currentTenantUrl(params)) {
+
+  if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === UrlUtils.stripTrailingSlash(UrlUtils.currentTenantUrl(params))) {
     throw redirect(UrlUtils.currentTenantUrl(params, "dashboard"));
   }
   const user = await getUser(userInfo?.userId);

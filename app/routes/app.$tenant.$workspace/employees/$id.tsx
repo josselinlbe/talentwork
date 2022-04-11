@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import EmployeeProfile from "~/modules/contracts/components/employees/EmployeeProfile";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { createUserActivityLog } from "~/utils/db/users.db.server";
+import { createUserEvent } from "~/utils/db/users.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 import { getUserInfo } from "~/utils/session.server";
 
@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: t("shared.notFound") });
     }
     await deleteEmployee(params.id);
-    await createUserActivityLog(
+    await createUserEvent(
       {
         tenantUrl,
         userId: userInfo.userId,

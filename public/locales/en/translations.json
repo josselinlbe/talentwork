@@ -196,7 +196,7 @@
           "account": "Account",
           "accountPages": "(Login, Register...)",
           "admin": "Admin",
-          "adminPages": "(Tenants, Users...)",
+          "adminPages": "(Organizations, Users...)",
           "core": "Core",
           "corePages": "(Dashboard, Links...)",
           "app": "and Sample app",
@@ -248,7 +248,7 @@
           },
           "multiTenant": {
             "title": "Multi-organization & multi-workspace",
-            "description": "Designed to have tenants per account/subscription. Each tenant can have 1 or more workspaces."
+            "description": "Designed to have tenants per account/subscription. Each organization can have 1 or more workspaces."
           },
           "memberManagement": {
             "title": "Member management",
@@ -425,10 +425,20 @@
         "description": "No commands found for this search term. Please try again."
       },
       "tenants": {
-        "title": "Tenants",
-        "description": "Switch tenant workspace, or create one",
+        "title": "Organizations",
+        "description": "Switch between organizations, or create one",
         "switchTo": "Switch to",
-        "create": "Create tenant"
+        "create": "Create organization",
+        "viewAll": "View all my organizations",
+        "edit": "Edit organization name, slug and icon"
+      },
+      "profile": {
+        "title": "Profile",
+        "description": "Update your profile or log out",
+        "update": "Update profile",
+        "updateDescription": "Update your name, avatar, password, and/or preferences",
+        "logout": "Log out",
+        "logoutDescription": "Log out and go back to /login"
       }
     },
     "navbar": {
@@ -444,6 +454,8 @@
       "app": "App",
       "admin": "Admin",
       "dashboard": "Dashboard",
+      "settings": "Settings",
+      "events": "Events",
       "setup": "Set up"
     },
     "subscription": {
@@ -465,7 +477,7 @@
     },
     "workspaces": {
       "select": "Select workspace",
-      "seletAtLeastOne": "Select at least one workspace",
+      "selectAtLeastOne": "Select at least one workspace",
       "youBelongToOne": "You belong to one workspace",
       "youBelongToMany": "You belong to {{0}} workspaces",
       "create": "Add a workspace",
@@ -496,7 +508,10 @@
       }
     },
     "users": {
-      "seletAtLeastOne": "Select at least one user"
+      "selectAtLeastOne": "Select at least one user",
+      "events": {
+        "empty": "There are no user events"
+      }
     },
     "dashboard": {
       "summary": "Summary"
@@ -632,7 +647,7 @@
         "invite": "Invite user to join.",
         "notFound": "User {{0}} does not have workspace '{{1}}'.",
         "cannotInviteSelf": "You cannot invite yourself",
-        "cannotInviteCurrentTenant": "You cannot invite the current tenant",
+        "cannotInviteCurrentTenant": "You cannot invite the current organization",
         "inviteOwnersOrAdmins": "You can only invite owners or admins"
       },
       "actions": {
@@ -658,7 +673,7 @@
       }
     },
     "tenants": {
-      "empty": "There are no tenants",
+      "empty": "There are no organizations",
       "members": {
         "noMembers": "No members found",
         "noMembersFoundIn": "No members found",
@@ -694,7 +709,7 @@
       "generateFromFiles": "Click here to generate these prices on your Database and your Subscription provider"
     },
     "tenants": {
-      "title": "Tenants",
+      "title": "Organizations",
       "overview": "Overview",
       "profile": {
         "title": "Profile"
@@ -704,7 +719,7 @@
       }
     },
     "users": {
-      "deleteWarning": "WARNING: If the user it's a tenant owner, the subscription will be cancelled and the tenant will be deleted. You cannot undo this action."
+      "deleteWarning": "WARNING: If the user it's a organization owner, the subscription will be cancelled and the organization will be deleted. You cannot undo this action."
     },
     "navigation": {
       "title": "Navigation",
@@ -716,6 +731,10 @@
     "components": {
       "title": "Components",
       "headline": "Some components used in the application"
+    },
+    "setup": {
+      "title": "Set up your application",
+      "description": "Generate your pricing plans and create your email templates"
     },
     "emails": {
       "title": "Emails",
@@ -836,8 +855,8 @@
       "content": "Content"
     },
     "tenant": {
-      "object": "Tenant",
-      "plural": "Tenants",
+      "object": "Organization",
+      "plural": "Organizations",
       "subscription": "Subscription"
     },
     "user": {
@@ -847,8 +866,14 @@
       "firstName": "First name",
       "lastName": "Last name",
       "role": "Role",
-      "tenants": "Tenants",
+      "tenants": "Organizations",
       "impersonate": "Impersonate"
+    },
+    "userEvent": {
+      "object": "User Event",
+      "plural": "User Events",
+      "action": "Action",
+      "details": "Details"
     },
     "subscriptionProduct": {
       "serviceId": "Stripe ID",
@@ -1046,7 +1071,7 @@
       "alreadyAMember": "Already a member",
       "noChanges": "No changes",
       "noSubscription": "No active subscription",
-      "noTenants": "You don't belong to any organization",
+      "noOrganizations": "You don't belong to any organization",
       "limitReachedWorkspaces": "You have reached the workspaces limit"
     }
   },

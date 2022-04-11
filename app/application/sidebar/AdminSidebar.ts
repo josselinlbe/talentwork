@@ -23,6 +23,11 @@ export const AdminSidebar: SideBarItem[] = [
         icon: SvgIcon.USERS,
         items: [],
       },
+      {
+        title: "app.sidebar.events",
+        path: "/admin/events",
+        icon: SvgIcon.EVENTS,
+      },
       // {
       //   title: "admin.navigation.title",
       //   path: "/admin/navigation",
@@ -40,25 +45,25 @@ export const AdminSidebar: SideBarItem[] = [
       //   path: "/admin/profile",
       //   icon: SvgIcon.PROFILE,
       // },
-      {
-        title: "app.sidebar.setup",
-        path: "/admin/setup",
-        icon: SvgIcon.SETTINGS,
-        // items: [
-        //   {
-        //     title: "admin.pricing.title",
-        //     path: "/admin/setup/pricing",
-        //     items: [],
-        //     // icon: SvgIcon.PRICING,
-        //   },
-        //   {
-        //     title: "admin.emails.title",
-        //     path: "/admin/emails",
-        //     // icon: SvgIcon.EMAILS,
-        //     items: [],
-        //   },
-        // ],
-      },
+      // {
+      //   title: "app.sidebar.setup",
+      //   path: "/admin/setup",
+      //   icon: SvgIcon.SETTINGS,
+      //   // items: [
+      //   //   {
+      //   //     title: "admin.pricing.title",
+      //   //     path: "/admin/setup/pricing",
+      //   //     items: [],
+      //   //     // icon: SvgIcon.PRICING,
+      //   //   },
+      //   //   {
+      //   //     title: "admin.emails.title",
+      //   //     path: "/admin/emails",
+      //   //     // icon: SvgIcon.EMAILS,
+      //   //     items: [],
+      //   //   },
+      //   // ],
+      // },
       // {
       //   title: "settings.members.title",
       //   path: "/admin/members",
@@ -71,6 +76,11 @@ export const AdminSidebar: SideBarItem[] = [
     title: "App",
     path: "",
     items: [
+      {
+        title: "app.sidebar.setup",
+        path: "/admin/setup",
+        icon: SvgIcon.SETUP,
+      },
       {
         title: "admin.switchToApp",
         path: "/app",

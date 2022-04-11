@@ -10,6 +10,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UserUtils from "~/utils/app/UserUtils";
 import { getMyTenants, WorkspaceWithTenant } from "~/utils/db/tenants.db.server";
+import { getUser } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
@@ -20,10 +21,14 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { translations } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
-  if (!userInfo.userId) {
+  const user = await getUser(userInfo.userId);
+  if (!user) {
     throw redirect(`/login`);
   }
   const myTenants = await getMyTenants(userInfo.userId);
+  // if (myTenants.length > 0 && myTenants[0].tenant?.workspaces.length > 0) {
+  //   throw redirect(`/app/${myTenants[0].tenant.slug}/${myTenants[0].tenant.workspaces[0].id}/dashboard`);
+  // }
   const data: LoaderData = {
     i18n: translations,
     myTenants,
@@ -43,7 +48,6 @@ export default function AppRoute() {
         items.push(workspace);
       });
     });
-    console.log({ items });
     setItems(items);
   }, [data.myTenants]);
 
@@ -92,7 +96,7 @@ export default function AppRoute() {
                   <EmptyState
                     className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200 dark:border-gray-700 rounded-2xl"
                     captions={{
-                      thereAreNo: t("api.errors.noTenants"),
+                      thereAreNo: t("api.errors.noOrganizations"),
                     }}
                   />
                 ) : (

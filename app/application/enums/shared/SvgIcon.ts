@@ -11,6 +11,8 @@ export enum SvgIcon {
   APP,
   DASHBOARD,
   SETTINGS,
+  SETUP,
+  EVENTS,
   LINKS,
   PROVIDERS,
   CLIENTS,

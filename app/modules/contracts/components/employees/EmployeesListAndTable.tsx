@@ -223,7 +223,7 @@ export default function EmployeesListAndTable({ className = "", canEdit = true, 
                                   {canEdit && <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{employee.email}</td>}
 
                                   {canEdit && (
-                                    <td className="w-20 px-2 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td className="w-20 px-2 py-1 whitespace-nowrap text-sm text-gray-600">
                                       <div className="flex items-center space-x-2">
                                         <ButtonTertiary to={UrlUtils.currentTenantUrl(params, "employees/" + employee.id)}>{t("shared.edit")}</ButtonTertiary>
                                       </div>

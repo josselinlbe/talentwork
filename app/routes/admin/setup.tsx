@@ -8,6 +8,7 @@ import SidebarIcon from "~/components/layouts/icons/SidebarIcon";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
+import { getSetupSteps } from "~/utils/services/setupService";
 
 type SetupItem = {
   title: string;
@@ -24,20 +25,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
 
-  const items: SetupItem[] = [
-    {
-      title: "Pricing",
-      description: "Create a good pricing strategy using the plans.server.ts and generate them on your Payments provider.",
-      completed: true,
-      path: "/admin/setup/pricing",
-    },
-    {
-      title: "Emails",
-      description: "Add your email templates at /app/application/emails and generate them on your Email provider.",
-      completed: false,
-      path: "/admin/setup/pricing",
-    },
-  ];
+  const items = await getSetupSteps();
 
   const data: LoaderData = {
     title: `${t("app.sidebar.setup")} | ${process.env.APP_NAME}`,
@@ -96,16 +84,14 @@ export default function AdminNavigationRoute() {
               </svg>
             </div> */}
             <div className="space-y-3">
-              <h3 className=" font-bold text-lg">Set up the application</h3>
-              <p className="text-gray-600">
-                Agrega la siguiente información para obtener tu llave secreta de ambiente Live y emitir facturas con validez fiscal.
-              </p>
+              <h3 className=" font-bold text-lg">{t("admin.setup.title")}</h3>
+              <p className="text-gray-600">{t("admin.setup.description")}</p>
               <ul className=" space-y-4">
                 {data.items.map((item, idx) => {
                   return (
                     <li key={idx} className="bg-white p-4 border border-gray-300 space-y-3 rounded-lg">
                       <div className="flex items-center space-x-2">
-                        {item.completed ? (
+                        {!item.completed ? (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6 text-gray-300 border border-gray-300 rounded-full"

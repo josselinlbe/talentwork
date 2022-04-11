@@ -426,8 +426,18 @@
       },
       "tenants": {
         "title": "Organizaciones",
-        "description": "Cambia de organización y/o espacion de trabajo, o crea uno nuevo",
-        "switchTo": "Cambiar a"
+        "description": "Cambia de organización, o crea uno nuevo",
+        "switchTo": "Cambiar a",
+        "viewAll": "Ver todas mis organizaciones",
+        "edit": "Editar nombre, URL e ícono de organización"
+      },
+      "profile": {
+        "title": "Perfil",
+        "description": "Actualiza tu perfil o cierra sesión",
+        "update": "Actualiza tu perfil",
+        "updateDescription": "Actualiza tu nombre, avatar, contraseña, y/o tus preferencias",
+        "logout": "Cerrar sesión",
+        "logoutDescription": "Cierra sesión y vuelve a /login"
       }
     },
     "navbar": {
@@ -443,6 +453,8 @@
       "app": "Aplicación",
       "admin": "Admin",
       "dashboard": "Portal",
+      "events": "Eventos",
+      "settings": "Ajustes",
       "setup": "Configuración"
     },
     "subscription": {
@@ -466,7 +478,7 @@
       "select": "Selecciona empresa",
       "youBelongToOne": "Perteneces a un espacio de trabajo",
       "youBelongToMany": "Perteneces a {{0}} espacio de trabajo",
-      "seletAtLeastOne": "Selecciona al menos una empresa",
+      "selectAtLeastOne": "Selecciona al menos una empresa",
       "create": "Agrega un RFC",
       "createDescription": "Si tienes más de un RFC, agrega tus datos fiscales.",
       "empty": "No hay empresas",
@@ -495,7 +507,10 @@
       }
     },
     "users": {
-      "seletAtLeastOne": "Selecciona al menos un usuario"
+      "selectAtLeastOne": "Selecciona al menos un usuario",
+      "events": {
+        "empty": "No hay eventos de usuarios"
+      }
     },
     "dashboard": {
       "summary": "Resumen"
@@ -716,6 +731,10 @@
       "title": "Componentes",
       "headline": "Algunos componentes usados en toda la aplicación"
     },
+    "setup": {
+      "title": "Configura tu aplicación",
+      "description": "Genera tus planes de precios, y crea tus plantillas de correo"
+    },
     "emails": {
       "title": "Correos",
       "name": "Nombre",
@@ -848,6 +867,12 @@
       "role": "Rol",
       "tenants": "Organizaciones",
       "impersonate": "Simular"
+    },
+    "userEvent": {
+      "object": "Evento de Usuario",
+      "plural": "Eventos de Usuarios",
+      "action": "Acción",
+      "details": "Detalles"
     },
     "subscriptionProduct": {
       "serviceId": "Stripe ID",
@@ -1045,7 +1070,7 @@
       "alreadyAMember": "Ya pertenece a la empresa",
       "noChanges": "No hay cambios",
       "noSubscription": "No hay subscripción activa",
-      "noTenants": "No perteneces a ninguna organización",
+      "noOrganizations": "No perteneces a ninguna organización",
       "limitReachedWorkspaces": "Has llegado al límite de empresas"
     }
   },
