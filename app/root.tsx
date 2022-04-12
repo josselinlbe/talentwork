@@ -52,7 +52,7 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 function Document({ children }: { children: React.ReactNode; title?: string }) {
-  let { userSession } = useRootData();
+  let { userSession, debug } = useRootData();
   return (
     <html lang={userSession?.lng ?? "en"} className={userSession?.lightOrDarkMode === "dark" ? "dark" : ""}>
       <head>
@@ -70,11 +70,15 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
         <LiveReload />
         <ScrollRestoration />
         <FloatingLoader />
-        
-        <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-        <noscript>
-          <img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="privacy-friendly-simpleanalytics" referrerPolicy="no-referrer-when-downgrade" />
-        </noscript>
+
+        {!debug && (
+          <>
+            <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+            <noscript>
+              <img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="privacy-friendly-simpleanalytics" referrerPolicy="no-referrer-when-downgrade" />
+            </noscript>
+          </>
+        )}
       </body>
     </html>
   );
