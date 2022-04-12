@@ -56,9 +56,7 @@ export default function AppRoute() {
       <div className="bg-white dark:bg-gray-900 pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
           <div className="flex-shrink-0 flex justify-center">
-            <Link to="/" className="inline-flex">
-              <Logo />
-            </Link>
+            <Logo />
           </div>
           <div className="sm:flex sm:flex-col sm:align-center">
             <div className="relative max-w-xl mx-auto py-12 sm:py-6 w-full overflow-hidden px-2">
