@@ -5,7 +5,7 @@ import { createLink, getLinksCount } from "~/utils/db/links.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import NewLink from "~/components/app/links/pending/NewLink";
-import { getUserByEmail } from "~/utils/db/users.db.server";
+import { createUserEvent, getUserByEmail } from "~/utils/db/users.db.server";
 import { getUserWorkspacesByUserId } from "~/utils/db/workspaces.db.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
 import { Link } from "@prisma/client";
@@ -97,6 +97,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     workspace_creator: appData.currentWorkspace?.name,
     invitation_role: inviteeIsProvider ? "as a provider" : "as a client",
   });
+
+  await createUserEvent(request, tenantUrl, "Created link", `${workspaceName} ${inviteeIsProvider ? "as a provider" : "as a client"}`);
 
   const data: NewLinkActionData = {
     link,

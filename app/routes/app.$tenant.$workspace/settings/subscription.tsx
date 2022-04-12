@@ -16,7 +16,7 @@ import {
 } from "~/utils/stripe.server";
 import { getUserInfo } from "~/utils/session.server";
 import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
-import { getUser } from "~/utils/db/users.db.server";
+import { createUserEvent, getUser } from "~/utils/db/users.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ChangeSubscription from "~/components/core/settings/subscription/ChangeSubscription";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -80,7 +80,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
       const session = await getStripeSession(session_id);
       if (session.subscription) {
         const stripeSubscription = await getStripeSubscription(session.subscription.toString());
-        let price: SubscriptionPrice | null = null;
+        let price: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
         if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
           price = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
         }
@@ -88,6 +88,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
           subscriptionPriceId: price?.id ?? "",
           stripeSubscriptionId: session.subscription.toString(),
         });
+        await createUserEvent(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
       }
     } catch (e) {}

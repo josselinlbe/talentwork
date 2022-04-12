@@ -60,9 +60,10 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
     } else {
       if (selectedCommand.toPath) {
         navigate(selectedCommand.toPath);
-        onClosed();
+        onClose();
       } else if (selectedCommand.onSelected) {
         selectedCommand.onSelected();
+        onClose();
       } else {
         setCommandSearchTitle(`${selectedCommand.title}`);
 
@@ -150,6 +151,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
   function onClose() {
     setSelectedCommand(undefined);
+    setItems(defaultCommands);
     onClosed();
   }
 
