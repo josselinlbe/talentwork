@@ -1238,16 +1238,16 @@ select {
   order: 3;
 }
 
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
 .col-span-6 {
   grid-column: span 6 / span 6;
 }
 
 .col-span-3 {
   grid-column: span 3 / span 3;
-}
-
-.col-span-1 {
-  grid-column: span 1 / span 1;
 }
 
 .col-span-2 {
@@ -1297,6 +1297,10 @@ select {
 
 .ml-4 {
   margin-left: 1rem;
+}
+
+.-mb-1 {
+  margin-bottom: -0.25rem;
 }
 
 .mt-9 {
@@ -1445,14 +1449,6 @@ select {
 
 .mt-16 {
   margin-top: 4rem;
-}
-
-.-mb-2 {
-  margin-bottom: -0.5rem;
-}
-
-.-mb-1 {
-  margin-bottom: -0.25rem;
 }
 
 .block {
@@ -1715,16 +1711,16 @@ select {
   max-width: 36rem;
 }
 
+.max-w-2xl {
+  max-width: 42rem;
+}
+
 .max-w-md {
   max-width: 28rem;
 }
 
 .max-w-5xl {
   max-width: 64rem;
-}
-
-.max-w-2xl {
-  max-width: 42rem;
 }
 
 .max-w-lg {
@@ -1924,14 +1920,6 @@ select {
 
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.grid-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .flex-col {
@@ -2142,12 +2130,6 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(0px * var(--tw-space-x-reverse));
   margin-left: calc(0px * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-x-20 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(5rem * var(--tw-space-x-reverse));
-  margin-left: calc(5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-reverse > :not([hidden]) ~ :not([hidden]) {
@@ -2925,6 +2907,10 @@ select {
   padding-top: 0.5rem;
 }
 
+.pl-2 {
+  padding-left: 0.5rem;
+}
+
 .pl-3 {
   padding-left: 0.75rem;
 }
@@ -3045,14 +3031,6 @@ select {
   padding-bottom: 1.25rem;
 }
 
-.pl-4 {
-  padding-left: 1rem;
-}
-
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
 .text-left {
   text-align: left;
 }
@@ -3138,12 +3116,12 @@ select {
   font-weight: 500;
 }
 
-.font-black {
-  font-weight: 900;
-}
-
 .font-normal {
   font-weight: 400;
+}
+
+.font-black {
+  font-weight: 900;
 }
 
 .font-light {
@@ -4445,6 +4423,11 @@ select {
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
+.dark .dark\:text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
 .dark .dark\:text-slate-300 {
   --tw-text-opacity: 1;
   color: rgb(203 213 225 / var(--tw-text-opacity));
@@ -4468,11 +4451,6 @@ select {
 .dark .dark\:text-yellow-300 {
   --tw-text-opacity: 1;
   color: rgb(253 224 71 / var(--tw-text-opacity));
-}
-
-.dark .dark\:text-gray-300 {
-  --tw-text-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 
 .dark .dark\:shadow-lg {
@@ -4943,6 +4921,11 @@ select {
   .sm\:text-3xl {
     font-size: 1.875rem;
     line-height: 2.25rem;
+  }
+
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   .sm\:leading-5 {
