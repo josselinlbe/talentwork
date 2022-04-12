@@ -6,8 +6,6 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
 import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
@@ -52,7 +50,7 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
   const type = form.get("type");
@@ -91,6 +89,12 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
 
+      if (user?.admin) {
+        return badRequest({
+          profileError: `Cannot update admin user.`,
+        });
+      }
+
       const profile = await updateUserProfile({ firstName, lastName, avatar }, userInfo?.userId);
       if (!profile) {
         return badRequest({
@@ -122,6 +126,12 @@ export const action: ActionFunction = async ({ request }) => {
       }
 
       if (!user) return null;
+
+      if (user.admin) {
+        return badRequest({
+          passwordError: `Cannot change an admin password`,
+        });
+      }
 
       const isCorrectPassword = await bcrypt.compare(passwordCurrent, user.passwordHash);
       if (!isCorrectPassword) {
@@ -319,6 +329,10 @@ export default function ProfileRoute() {
                             {actionData.profileSuccess}
                           </p>
                         </>
+                      ) : actionData?.profileError ? (
+                        <p className="text-red-500 text-sm py-2" role="alert">
+                          {actionData?.profileError}
+                        </p>
                       ) : null}
                     </div>
                     <button

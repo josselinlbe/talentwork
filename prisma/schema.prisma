@@ -22,7 +22,6 @@ model User {
   avatar             String
   defaultWorkspaceId String?
   verifyToken        String?
-  adminId            String?
   admin              AdminUser?
   jokes              Joke[]
   tenants            TenantUser[]

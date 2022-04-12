@@ -76,10 +76,10 @@ export default function Hero() {
           </div>
           <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
             <Link
-              to="/contact"
+              to="/changelog"
               className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-theme-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
             >
-              {t("front.hero.contact")}
+              {t("front.changelog.title")}
             </Link>
           </div>
         </div>
