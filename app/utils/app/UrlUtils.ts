@@ -18,16 +18,18 @@ const replaceVariables = (params: Params, path?: string) => {
   return path?.replace(":tenant", params.tenant ?? "").replace(":workspace", params.workspace ?? "");
 };
 
-const slugify = (str: string) =>
-  str
+const slugify = (str: string, max: number = 25) => {
+  let value = str
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, "")
     .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .padEnd(25, "")
-    .substring(0, 25)
-    .trim();
+    .replace(/^-+|-+$/g, "");
+  if (max > 0) {
+    value = value.padEnd(25, "").substring(0, 25);
+  }
+  return value.trim();
+};
 
 export default {
   currentTenantUrl,

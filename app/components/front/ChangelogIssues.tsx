@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export type ChangelogItem = {
   date: string;
+  title: string;
   closed: Issue[];
   added: Issue[];
 };
@@ -33,6 +34,9 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
     }
     return "";
   }
+  function imageCount() {
+    return items.filter((f) => (f.img?.length ?? 0) > 0).length;
+  }
   return (
     <div className="mx-auto ">
       <div className="prose text-sm text-black dark:text-white">
@@ -40,10 +44,12 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
           {items.length > 0 && (
             <>
               <div className=" flex space-x-1 items-baseline">
-                <h3 className="text-black dark:text-white">{title}</h3>
-                <button className=" text-xs underline" type="button" onClick={() => setViewImages(!viewImages)}>
-                  ({!viewImages ? "Click here to view images" : "Close images"})
-                </button>
+                <h3 className="text-black dark:text-white font-semibold text-sm">{title}</h3>
+                {imageCount() > 0 && (
+                  <button className=" text-xs underline" type="button" onClick={() => setViewImages(!viewImages)}>
+                    ({!viewImages ? "Click here to view images" : "Close images"})
+                  </button>
+                )}
               </div>
               <ul>
                 {items.map((issue, idx) => {

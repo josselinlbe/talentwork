@@ -4,6 +4,7 @@ import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
 import ChangelogIssues, { ChangelogItem } from "~/components/front/ChangelogIssues";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 type LoaderData = {
   items: ChangelogItem[];
@@ -14,7 +15,64 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const changelogItems: ChangelogItem[] = [
     {
+      date: "April 12, 2022",
+      title: "Tenant on URL, Command palette, Dashboards, and User events",
+      added: [
+        {
+          title: "Feature flags #19",
+          img: "",
+        },
+        {
+          title: "Add Module (a minimal version): Support Desk #20",
+          img: "",
+        },
+        {
+          title: "Add Module (a minimal version): CRM #21",
+          img: "",
+        },
+        {
+          title: "Add Module (a minimal version): Email #22",
+          img: "",
+        },
+        {
+          title: "Add multiple Admin users #28",
+          img: "",
+        },
+        {
+          title: "API Keys for end-users #29",
+          img: "",
+        },
+      ],
+      closed: [
+        {
+          title: "Remove TenantSelector and WorkspaceSelector and have {tenantId}/{workspaceId} on the URL #13",
+          img: "https://user-images.githubusercontent.com/8606530/162983102-142dc22c-f2f5-491f-a463-7904bf22220c.png",
+        },
+        {
+          title: "Extend command palette #18",
+          img: "https://user-images.githubusercontent.com/8606530/162983412-baa7de1f-60a3-4554-bd08-1774cfd1d646.png",
+        },
+        {
+          title: "Add Page: Admin dashboard with indicators #23",
+          img: "https://user-images.githubusercontent.com/8606530/162983569-bd1f8979-0f4b-4928-812d-c6dd23f8a185.png",
+        },
+        {
+          title: "Tenant with their own alias instead of cuid on the URL #24",
+          img: "https://user-images.githubusercontent.com/8606530/162983928-0cae787f-dc8e-4701-bf2f-a51dd7c4b0e4.png",
+        },
+        {
+          title: "Add user activity logs #27",
+          img: "https://user-images.githubusercontent.com/8606530/162984096-5272af36-af99-4cd9-8117-e36d9772f7a6.png",
+        },
+        {
+          title: "Modify Subscriptions on Tenants as Admin #30",
+          img: "https://user-images.githubusercontent.com/8606530/162986904-5e3a9679-2795-4206-8a5e-7c9d5353c401.png",
+        },
+      ],
+    },
+    {
       date: "April 4, 2022",
+      title: "Language selector, Page loader component, and Deployment",
       added: [
         {
           title: "Upgrade to React 18 #6",
@@ -99,9 +157,9 @@ export default function ContactRoute() {
       <div>
         <Header />
         <div className="bg-white dark:bg-gray-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center">
-              <div className="relative max-w-xl mx-auto py-12 sm:py-6 w-full overflow-hidden px-2">
+              <div className="relative max-w-2xl mx-auto py-12 sm:py-6 w-full overflow-hidden px-2">
                 <svg className="absolute left-full transform translate-x-1/2" width="404" height="404" fill="none" viewBox="0 0 404 404" aria-hidden="true">
                   <defs>
                     <pattern id="85737c0e-0916-41d7-917f-596dc7edfa27" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -129,12 +187,29 @@ export default function ContactRoute() {
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.changelog.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500">{t("front.changelog.headline")}</p>
                 </div>
-                <div className="mt-12 mx-auto ">
+                <div className="mt-12 mx-auto">
                   <div className="prose text-sm text-black dark:text-white">
+                    {/* <div className=" col-span-1">
+                        {data.items.map((item) => {
+                          return (
+                            <div className="">
+                              <a className="text-black dark:text-white" href={"#" + UrlUtils.slugify(item.date, 0)}>
+                                {item.date}
+                              </a>
+                            </div>
+                          );
+                        })}
+                      </div> */}
                     {data.items.map((item) => {
                       return (
                         <>
-                          <h2 className="text-black dark:text-white">{item.date}</h2>
+                          <h2 id={UrlUtils.slugify(item.date, 0)} className="text-black dark:text-white -mb-1 w-full">
+                            {item.date}
+                            <span id={UrlUtils.slugify(item.title, 0)} className=" font-normal pl-2 text-gray-700 dark:text-gray-300 text-sm">
+                              - {item.title}
+                            </span>
+                          </h2>
+
                           <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
                           <ChangelogIssues title="Closed issues" items={item.closed} icon="✅" />
                         </>
