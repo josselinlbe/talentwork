@@ -17,11 +17,23 @@ async function getPricingStep(): Promise<SetupItem> {
 }
 
 async function getEmailStep(): Promise<SetupItem> {
-  const items = await getPostmarkTemplates();
-  return Promise.resolve({
-    title: "Emails",
-    description: "Add your email templates at /app/application/emails and generate them on your Email provider.",
-    completed: items.length > 0,
-    path: "/admin/setup/emails",
+  return new Promise((resolve) => {
+    getPostmarkTemplates()
+      .then((items) => {
+        resolve({
+          title: "Emails",
+          description: "Add your email templates at /app/application/emails and generate them on your Email provider.",
+          completed: items.length > 0,
+          path: "/admin/setup/emails",
+        });
+      })
+      .catch(() => {
+        resolve({
+          title: "Emails",
+          description: "Add your email templates at /app/application/emails and generate them on your Email provider.",
+          completed: false,
+          path: "/admin/setup/emails",
+        });
+      });
   });
 }
