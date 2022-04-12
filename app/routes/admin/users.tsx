@@ -1,20 +1,11 @@
 import { useTranslation } from "react-i18next";
-import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
-import { useEffect, useRef, useState } from "react";
-import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
-import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { ActionFunction, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useSubmit, useTransition } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenantUsers, adminGetAllUsers, deleteUser, getUser, updateUserPassword } from "~/utils/db/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { Tenant, TenantUser, User } from "@prisma/client";
+import { Tenant } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { UserType } from "~/application/enums/users/UserType";
-import DateUtils from "~/utils/shared/DateUtils";
 import { getTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import UsersTable from "~/components/core/users/UsersTable";
@@ -41,7 +32,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export enum UsersActionType {
@@ -89,7 +80,7 @@ export const action: ActionFunction = async ({ request }) => {
       const passwordNew = form.get("password-new")?.toString();
       if (!passwordNew || passwordNew.length < 8) {
         return badRequest({ error: "Set a password with 8 characters minimum" });
-      } else if (user?.type === UserType.Admin) {
+      } else if (user?.admin) {
         return badRequest({ error: "You cannot change password for admin user" });
       }
 

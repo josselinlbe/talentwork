@@ -7,12 +7,11 @@ import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import Icon from "./Icon";
 import { useLoaderData } from "remix";
-import { UserType } from "~/application/enums/users/UserType";
 import LocaleSelector from "../ui/selectors/LocaleSelector";
 import { IndexLoaderData } from "~/routes";
 
 export default function Header() {
-  const { userType, authenticated } = useLoaderData<IndexLoaderData>();
+  const { authenticated, isAdmin } = useLoaderData<IndexLoaderData>();
   const { t } = useTranslation();
 
   const location = useLocation();
@@ -33,7 +32,7 @@ export default function Header() {
     if (!authenticated) {
       return "/login";
     }
-    return userType === UserType.Tenant ? `/app` : "/admin";
+    return !isAdmin ? `/app` : "/admin";
   };
 
   return (

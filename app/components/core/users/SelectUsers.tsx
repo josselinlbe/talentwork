@@ -29,7 +29,6 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
 
   useImperativeHandle(ref, () => ({ show }));
   function show(_selected: string[]) {
-    console.log({ _selected });
     setSelected(_selected);
     setShowing(true);
   }

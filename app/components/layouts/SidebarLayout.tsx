@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useRef, useState } from "react";
 import SidebarMenu from "./SidebarMenu";
@@ -6,15 +5,9 @@ import ChatSupportButton from "./buttons/ChatSupportButton";
 import PendingInvitationsButton from "./buttons/PendingInvitationsButton";
 import ProfileButton from "./buttons/ProfileButton";
 import QuickActionsButton from "./buttons/QuickActionsButton";
-import LogoLight from "~/assets/img/logo-light.png";
-import IconLight from "~/assets/img/icon-light.png";
 import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
-import TenantSelector from "./selectors/TenantSelector";
-import WorkspaceSelector from "./selectors/WorkspaceSelector";
-import TenantSelect, { RefCommandPalette } from "./selectors/TenantSelect";
-import { useParams } from "remix";
-import UrlUtils from "~/utils/app/UrlUtils";
+import TenantSelect from "./selectors/TenantSelect";
 import LogoDark from "~/assets/img/logo-dark.png";
 import { useTranslation } from "react-i18next";
 
@@ -143,31 +136,29 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                     </Link>
                   </nav> */}
 
-                  {layout === "app" && (
-                    <div className="w-full">
-                      <label htmlFor="command-palette" className="sr-only">
-                        {t("shared.commandPalette")}
-                      </label>
-                      <div className="relative text-gray-400 hover:text-gray-500">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path
-                              fillRule="evenodd"
-                              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={onOpenCommandPalette}
-                          className=" text-left block w-full pl-10 pr-3 py-1.5 text-sm sm:py-2 border border-gray-200 rounded-md leading-5 bg-gray-50 text-gray-400 focus:outline-none hover:ring-0 hover:placeholder-gray-500 hover:text-gray-500"
-                        >
-                          {t("shared.search")}
-                        </button>
+                  <div className="w-full">
+                    <label htmlFor="command-palette" className="sr-only">
+                      {t("shared.commandPalette")}
+                    </label>
+                    <div className="relative text-gray-400 hover:text-gray-500">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path
+                            fillRule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </div>
+                      <button
+                        type="button"
+                        onClick={onOpenCommandPalette}
+                        className=" text-left block w-full pl-10 pr-3 py-1.5 text-sm sm:py-2 border border-gray-200 rounded-md leading-5 bg-gray-50 text-gray-400 focus:outline-none hover:ring-0 hover:placeholder-gray-500 hover:text-gray-500"
+                      >
+                        {t("shared.search")}
+                      </button>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>

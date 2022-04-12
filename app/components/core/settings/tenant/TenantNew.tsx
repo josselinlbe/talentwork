@@ -22,7 +22,6 @@ export default function TenantNew() {
   }, []);
 
   useEffect(() => {
-    console.log({ actionData });
     if (actionData?.error) {
       errorModal.current?.show(actionData.error);
     } else if (actionData?.success) {

@@ -103,7 +103,9 @@
     "onlyFileTypes": "Only {{0}} files",
     "missingFields": "Missing fields",
     "goTo": "Go to",
-    "slug": "Slug"
+    "slug": "Slug",
+    "admin": "Admin",
+    "member": "Member"
   },
   "front": {
     "navbar": {
@@ -252,7 +254,7 @@
           },
           "memberManagement": {
             "title": "Member management",
-            "description": "Invite users as Owner, Admin, Member or Guest. Or add your custom roles."
+            "description": "Invite users as Owner, Admin, or Member. Or add your custom roles."
           },
           "stripe": {
             "title": "Stripe Subscriptions",
@@ -945,14 +947,12 @@
       "roles": {
         "OWNER": "Owner",
         "ADMIN": "Admin",
-        "MEMBER": "Member",
-        "GUEST": "Guest"
+        "MEMBER": "Member"
       },
       "permissions": {
         "OWNER": "Controls the account, its subscription and its users",
         "ADMIN": "Manages subscription and users",
-        "MEMBER": "Creates and signs contracts",
-        "GUEST": "Views contracts"
+        "MEMBER": "Creates and signs contracts"
       },
       "status": {
         "PENDING_INVITATION": "Pending Invitation",

@@ -2,19 +2,17 @@ import { redirect, useMatches } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { getUserInfo } from "../session.server";
-import { SubscriptionPrice, SubscriptionProduct, Tenant } from "@prisma/client";
-import { getStripeSubscription } from "../stripe.server";
+import { Tenant } from "@prisma/client";
 import { getLinksCount } from "../db/links.db.server";
 import { LinkStatus } from "~/application/enums/links/LinkStatus";
-import { getSubscriptionPriceByStripeId, SubscriptionPriceWithProduct } from "../db/subscriptionProducts.db.server";
 import { getMyTenants, getTenant, MyTenant } from "../db/tenants.db.server";
 import { getUser, UserWithoutPassword } from "../db/users.db.server";
 import { getMyWorkspaces, getWorkspace, getWorkspaceUser, MyWorkspace, WorkspaceWithUsers } from "../db/workspaces.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { Params } from "react-router";
 import UrlUtils from "../app/UrlUtils";
-import { UserType } from "~/application/enums/users/UserType";
 import { getTenantUrl } from "../services/urlService";
+import { getTenantSubscription, TenantSubscriptionWithDetails } from "../db/tenantSubscriptions.db.server";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -23,7 +21,7 @@ export type AppLoaderData = {
   currentTenant: Tenant;
   myWorkspaces: MyWorkspace[];
   currentWorkspace: WorkspaceWithUsers;
-  mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
+  mySubscription: TenantSubscriptionWithDetails | null;
   currentRole: TenantUserRole;
   isOwnerOrAdmin: boolean;
   pendingInvitations: number;
@@ -71,14 +69,15 @@ export async function loadAppData(request: Request, params: Params) {
   const myWorkspaces = await getMyWorkspaces(user.id, currentTenant?.id);
   const tenantMembership = myTenants.find((f) => f.tenantId === tenantUrl.tenantId);
 
-  const stripeSubscription = await getStripeSubscription(currentTenant?.subscriptionId ?? "");
-  let mySubscription: SubscriptionPriceWithProduct | null = null;
-  if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
-    mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
-  }
+  const mySubscription = await getTenantSubscription(tenantUrl.tenantId);
+  // const stripeSubscription = await getStripeSubscription(currentTenant?.subscriptionId ?? "");
+  // let mySubscription: SubscriptionPriceWithProduct | null = null;
+  // if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
+  //   mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
+  // }
 
-  let currentRole = tenantMembership?.role ?? TenantUserRole.GUEST;
-  if (user.type === UserType.Admin) {
+  let currentRole = tenantMembership?.role ?? TenantUserRole.MEMBER;
+  if (user.admin) {
     currentRole = TenantUserRole.ADMIN;
   }
   const isOwnerOrAdmin = currentRole == TenantUserRole.OWNER || currentRole == TenantUserRole.ADMIN;

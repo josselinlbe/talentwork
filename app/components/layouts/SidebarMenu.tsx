@@ -4,7 +4,6 @@ import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SidebarGroup } from "~/application/sidebar/SidebarGroup";
-import { UserType } from "~/application/enums/users/UserType";
 import clsx from "~/utils/shared/ClassesUtils";
 import SidebarIcon from "./icons/SidebarIcon";
 import { useTranslation } from "react-i18next";
@@ -52,13 +51,16 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     }
   }
   function getPath(item: SideBarItem) {
-    return item.path.replace(":tenant", appData.currentTenant?.id ?? "").replace(":workspace", appData.currentWorkspace?.id ?? "");
+    return UrlUtils.replaceVariables(params, item.path) ?? "";
   }
   function isCurrent(menuItem: SideBarItem) {
     return location.pathname?.includes(getPath(menuItem));
   }
   function allowCurrentUserType(item: SideBarItem) {
-    return !item.userTypes || item.userTypes.includes(appData.user?.type ?? UserType.Tenant);
+    if (!item.adminOnly) {
+      return true;
+    }
+    return appData.user?.admin !== null;
   }
   function allowCurrentRole(item: SideBarItem) {
     return !item.userRoles || item.userRoles.includes(appData.currentRole);

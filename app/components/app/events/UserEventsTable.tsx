@@ -4,8 +4,6 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useEffect, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { UserEventWithDetails } from "~/utils/db/users.db.server";
-import { UserType } from "~/application/enums/users/UserType";
-import UserUtils from "~/utils/app/UserUtils";
 
 interface Props {
   items: UserEventWithDetails[];

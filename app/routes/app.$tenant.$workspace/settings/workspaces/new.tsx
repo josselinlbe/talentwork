@@ -101,7 +101,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 interface Props {
@@ -159,7 +159,7 @@ export default function NewWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
     }
     return users.map((f) => `${f.firstName} (${f.email})`).join(", ");
   };
-  const maxWorkspaces = appData.mySubscription?.subscriptionProduct.maxWorkspaces ?? 0;
+  const maxWorkspaces = appData.mySubscription?.maxWorkspaces ?? 0;
   const maxWorkspacesReached = () => {
     if (!appData.mySubscription) {
       return true;

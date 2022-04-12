@@ -35,7 +35,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: t("shared.notFound") });
   }
   const form = await request.formData();
-  console.log({ form });
   const type = form.get("type")?.toString();
   if (type === "delete") {
     const existing = await getLink(params.id);
@@ -50,7 +49,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function EditLinkRoute() {

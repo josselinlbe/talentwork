@@ -51,11 +51,6 @@ export default function NewMember() {
       name: t("settings.profile.roles.MEMBER"),
       description: t("settings.profile.permissions.MEMBER"),
     },
-    {
-      value: 3,
-      name: t("settings.profile.roles.GUEST"),
-      description: t("settings.profile.permissions.GUEST"),
-    },
   ];
   const [workspaces, setWorkspaces] = useState<Workspace[]>(appData.myWorkspaces.map((f) => f.workspace));
 
@@ -103,7 +98,7 @@ export default function NewMember() {
     return workspaces.map((f) => f.name).join(", ");
   };
   const maxUsers = (): number => {
-    return appData.mySubscription?.subscriptionProduct.maxUsers ?? 0;
+    return appData.mySubscription?.maxUsers ?? 0;
   };
   const maxUsersReached = () => {
     return maxUsers() > 0 && (membersData.users?.length ?? 0) >= maxUsers();

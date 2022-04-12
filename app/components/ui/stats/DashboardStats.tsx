@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Link, useTransition } from "remix";
+import { useTransition } from "remix";
 import { Stat } from "~/application/dtos/stats/Stat";
 import { StatChange } from "~/application/dtos/stats/StatChange";
 
@@ -15,7 +15,8 @@ export function DashboardStats({ items }: Props) {
       <h3 className=" leading-4 font-medium text-gray-900">Last 30 days</h3>
       <dl className="mt-3 grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
         {items.map((item) => (
-          <Link to={item.path} key={item.name} className="px-4 py-5 sm:p-6">
+          // <Link to={UrlUtils.replaceVariables(params, item.path) ?? ""} key={item.name} className="px-4 py-5 sm:p-6"></Link>
+          <span key={item.name} className="px-4 py-5 sm:p-6">
             <dt className="text-base font-normal text-gray-900 flex space-x-1 items-baseline">
               <div>{item.name}</div>
               <div className="text-xs hidden xl:block text-gray-400">({item.hint})</div>
@@ -23,7 +24,7 @@ export function DashboardStats({ items }: Props) {
             <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
               <div className="flex items-baseline text-2xl font-semibold text-gray-800">
                 <div>{loading ? "..." : item.stat}</div>
-                <span className="ml-2 text-sm font-medium text-gray-500 hidden xl:block">{!loading ?? `from ${item.previousStat}`}</span>
+                <span className="ml-2 text-sm font-medium text-gray-500 hidden xl:block">{!loading && <span>from {item.previousStat}</span>}</span>
               </div>
 
               {!loading && (
@@ -68,7 +69,7 @@ export function DashboardStats({ items }: Props) {
                 </div>
               )}
             </dd>
-          </Link>
+          </span>
         ))}
       </dl>
     </div>

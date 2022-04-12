@@ -68,19 +68,15 @@ export default function UploadDocuments({ title = "", accept, multiple, descript
     files.forEach((file) => {
       const promise = getBase64(file);
       promises.push(promise);
-      promise
-        .then((response: string) => {
-          filesArray.push({
-            file,
-            base64: response,
-          });
-          if (onDropped) {
-            onDropped(response, file);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
+      promise.then((response: string) => {
+        filesArray.push({
+          file,
+          base64: response,
         });
+        if (onDropped) {
+          onDropped(response, file);
+        }
+      });
     });
     await Promise.all(promises).then(() => {
       if (onDroppedFiles) {

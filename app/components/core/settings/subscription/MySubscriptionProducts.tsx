@@ -36,26 +36,26 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
       return 1;
     }
     const links = data.providers + data.clients;
-    const remaining = appData.mySubscription.subscriptionProduct.maxLinks - links;
+    const remaining = appData.mySubscription.maxLinks - links;
     return remaining;
   };
   const maxDocumentsRemaining = () => {
     if (!appData.mySubscription || !data) {
       return 1;
     }
-    return appData.mySubscription.subscriptionProduct.monthlyContracts - data.contracts;
+    return appData.mySubscription.monthlyContracts - data.contracts;
   };
   const maxWorkspacesRemaining = () => {
     if (!appData.mySubscription || !data) {
       return 1;
     }
-    return appData.mySubscription.subscriptionProduct.maxWorkspaces - data.workspaces;
+    return appData.mySubscription.maxWorkspaces - data.workspaces;
   };
   const maxUsersRemaining = () => {
     if (!appData.mySubscription || !data) {
       return 1;
     }
-    return appData.mySubscription.subscriptionProduct.maxUsers - data.users;
+    return appData.mySubscription.maxUsers - data.users;
   };
 
   const links = data.clients + data.providers;
@@ -77,11 +77,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             <dd className="mt-1 text-xl font-semibold text-gray-900">
               <span>
                 {links ? <span>{links}</span> : <span>0</span>} /{" "}
-                {appData.mySubscription?.subscriptionProduct ? (
-                  <span>{appData.mySubscription?.subscriptionProduct.maxLinks}</span>
-                ) : (
-                  <span className="text-gray-500">0</span>
-                )}
+                {appData.mySubscription ? <span>{appData.mySubscription?.maxLinks}</span> : <span className="text-gray-500">0</span>}
               </span>
             </dd>
           </div>
@@ -100,11 +96,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             <dd className="mt-1 text-xl font-semibold text-gray-900">
               <span>
                 {data && data.contracts ? <span>{data.contracts}</span> : <span>0</span>} /{" "}
-                {appData.mySubscription?.subscriptionProduct ? (
-                  <span>{appData.mySubscription?.subscriptionProduct.monthlyContracts}</span>
-                ) : (
-                  <span className="text-gray-500">0</span>
-                )}
+                {appData.mySubscription ? <span>{appData.mySubscription?.monthlyContracts}</span> : <span className="text-gray-500">0</span>}
               </span>
             </dd>
           </Link>
@@ -123,11 +115,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             <dd className="mt-1 text-xl font-semibold text-gray-900">
               <span>
                 {data ? <span>{data.workspaces}</span> : <span>0</span>} /{" "}
-                {appData.mySubscription?.subscriptionProduct ? (
-                  <span>{appData.mySubscription?.subscriptionProduct.maxWorkspaces}</span>
-                ) : (
-                  <span className="text-gray-500">0</span>
-                )}
+                {appData.mySubscription ? <span>{appData.mySubscription?.maxWorkspaces}</span> : <span className="text-gray-500">0</span>}
               </span>
             </dd>
           </Link>
@@ -145,11 +133,7 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             <dd className="mt-1 text-xl font-semibold text-gray-900">
               <span>
                 {data ? <span>{data.users}</span> : <span>0</span>} /{" "}
-                {appData.mySubscription?.subscriptionProduct ? (
-                  <span>{appData.mySubscription?.subscriptionProduct.maxUsers}</span>
-                ) : (
-                  <span className="text-gray-500">0</span>
-                )}
+                {appData.mySubscription ? <span>{appData.mySubscription?.maxUsers}</span> : <span className="text-gray-500">0</span>}
               </span>
             </dd>
           </Link>

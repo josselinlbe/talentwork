@@ -7,14 +7,13 @@ import { Language } from "remix-i18next";
 import { getUserInfo, UserSession } from "~/utils/session.server";
 import { MetaFunction, LoaderFunction, json } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
-import { UserType } from "~/application/enums/users/UserType";
 import TopBanner from "~/components/ui/banners/TopBanner";
 
 export type IndexLoaderData = {
   title: string;
   userSession: UserSession;
   authenticated: boolean;
-  userType: UserType;
+  isAdmin: boolean;
   i18n: Record<string, Language>;
 };
 
@@ -26,15 +25,12 @@ export let loader: LoaderFunction = async ({ request }) => {
     const data: IndexLoaderData = {
       title: `${process.env.APP_NAME}`,
       userSession,
-      userType: user?.type ?? UserType.Tenant,
+      isAdmin: user?.admin !== null,
       authenticated: userSession.userId?.length > 0,
       i18n: translations,
     };
     return json(data);
   } catch (e) {
-    console.error({
-      error: e,
-    });
     return json({
       i18n: translations,
     });
@@ -42,7 +38,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function IndexRoute() {

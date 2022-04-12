@@ -69,7 +69,7 @@ export default function NewLink({ linksCount }: Props) {
     });
   }
 
-  const maxLinks = appData.mySubscription?.subscriptionProduct.maxLinks ?? 0;
+  const maxLinks = appData.mySubscription?.maxLinks ?? 0;
   const maxLinksReached = () => {
     if (!appData.mySubscription) {
       return true;

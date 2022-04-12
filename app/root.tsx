@@ -16,7 +16,6 @@ import styles from "./styles/app.css";
 import { useSetupTranslations } from "remix-i18next";
 import { createUserSession, getUserInfo } from "./utils/session.server";
 import { loadRootData, useRootData } from "./utils/data/useRootData";
-import TopBanner from "./components/ui/banners/TopBanner";
 import FloatingLoader from "./components/ui/loaders/FloatingLoader";
 import Page404 from "./components/pages/Page404";
 
@@ -71,11 +70,11 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
         <LiveReload />
         <ScrollRestoration />
         <FloatingLoader />
-
+        {/* 
         <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
         <noscript>
           <img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="privacy-friendly-simpleanalytics" referrerPolicy="no-referrer-when-downgrade" />
-        </noscript>
+        </noscript> */}
       </body>
     </html>
   );

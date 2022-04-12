@@ -1,8 +1,6 @@
-import { json, LoaderFunction, MetaFunction, useLoaderData, useParams } from "remix";
-import TenantProfile from "~/components/core/tenants/TenantProfile";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import UsersTable from "~/components/core/users/UsersTable";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { useAdminTenantData } from "~/utils/data/useAdminTenantData";
 import { adminGetAllTenantUsers, adminGetAllUsers } from "~/utils/db/users.db.server";
 
 type LoaderData = {
@@ -21,7 +19,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function AdminTenantUsersRoute() {

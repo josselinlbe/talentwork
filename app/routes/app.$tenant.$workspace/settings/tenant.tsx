@@ -7,7 +7,6 @@ import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { useState } from "react";
 import { getTenantUrl } from "~/utils/services/urlService";
-import UrlUtils from "~/utils/app/UrlUtils";
 
 type LoaderData = {
   title: string;
@@ -94,7 +93,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function TenantRoute() {

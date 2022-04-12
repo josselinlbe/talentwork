@@ -1,10 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SideBarItem } from "~/application/sidebar/SidebarItem";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
-import { AppSidebar } from "~/application/sidebar/AppSidebar";
-import SidebarIcon from "~/components/layouts/icons/SidebarIcon";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
@@ -35,7 +29,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function AdminNavigationRoute() {

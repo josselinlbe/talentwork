@@ -10,14 +10,14 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import SelectWorkspaces, { RefSelectWorkspaces } from "~/components/core/workspaces/SelectWorkspaces";
 import { TenantUser, User, Workspace } from "@prisma/client";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit, useTransition } from "remix";
-import { deleteTenantUser, getTenantMember, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/tenants.db.server";
+import { deleteTenantUser, getTenantUser, getTenantUsers, updateTenantUser } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserWorkspaces, getWorkspace, getWorkspaces, updateUsersWorkspaces } from "~/utils/db/workspaces.db.server";
-import { getUserInfo } from "~/utils/session.server";
 import clsx from "clsx";
 import { useAppData } from "~/utils/data/useAppData";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 
 type LoaderData = {
   title: string;
@@ -55,7 +55,6 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
@@ -66,7 +65,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       error: t("shared.notFound"),
     });
   }
-  const userInfo = await getUserInfo(request);
   const form = await request.formData();
   const type = form.get("type")?.toString();
   const email = form.get("email")?.toString().toLowerCase().trim();
@@ -98,19 +96,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     await updateTenantUser(id, { role });
     workspaces.forEach(async (workspaceId) => {
-      const workspace = await getWorkspace(workspaceId);
-      console.log({ workspace: workspace?.name });
+      await getWorkspace(workspaceId);
     });
     await updateUsersWorkspaces(tenantUser?.userId, workspaces);
 
     return redirect(UrlUtils.currentTenantUrl(params, "settings/members"));
   } else if (type === "delete") {
-    const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
-    if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
-      return unauthorized({
-        error: t("account.tenant.onlyAdmin"),
-      });
-    }
+    await requireOwnerOrAdminRole(request, params);
     try {
       await deleteTenantUser(id);
     } catch (e: any) {
@@ -123,7 +115,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 interface Props {
@@ -170,11 +162,6 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
       name: t("settings.profile.roles.MEMBER"),
       description: t("settings.profile.permissions.MEMBER"),
     },
-    {
-      value: TenantUserRole.GUEST,
-      name: t("settings.profile.roles.GUEST"),
-      description: t("settings.profile.permissions.GUEST"),
-    },
   ];
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
 
@@ -200,7 +187,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"));
   }
   function yesRemove() {
-    if (appData.currentRole === TenantUserRole.MEMBER || appData.currentRole === TenantUserRole.GUEST) {
+    if (appData.currentRole === TenantUserRole.MEMBER) {
       errorModal.current?.show(t("account.tenant.onlyAdmin"));
     } else {
       const form = new FormData();

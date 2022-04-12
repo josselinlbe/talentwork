@@ -44,7 +44,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!linkId) {
     return badRequest({ error: "Invalid link" });
   }
-  console.log({ form: JSON.stringify(form) });
   const link = await getLink(linkId);
   const accepted = form.get("accepted")?.toString() === "true";
 
@@ -91,7 +90,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function PendingLinksRoute() {

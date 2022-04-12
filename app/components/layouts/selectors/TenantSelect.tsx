@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAppData } from "~/utils/data/useAppData";
 
 interface Props {
@@ -7,18 +6,6 @@ interface Props {
 
 export default function TenantSelect({ onOpenCommandPalette }: Props) {
   const appData = useAppData();
-
-  useEffect(() => {
-    function onKeydown(event: any) {
-      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
-        onOpenCommandPalette();
-      }
-    }
-    window.addEventListener("keydown", onKeydown);
-    return () => {
-      window.removeEventListener("keydown", onKeydown);
-    };
-  }, [onOpenCommandPalette]);
 
   return (
     <>

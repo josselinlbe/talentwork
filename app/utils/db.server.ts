@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { getUserInfo } from "./session.server";
 
 let db: PrismaClient;
 

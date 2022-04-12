@@ -7,5 +7,5 @@ export type Stat = {
   previousStat: string;
   change: string;
   changeType: StatChange;
-  path: string;
+  path?: string;
 };

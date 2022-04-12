@@ -80,7 +80,6 @@ export async function createSubscriptionPrice(data: {
   trialDays: number;
   active: boolean;
 }): Promise<SubscriptionPrice> {
-  console.log("price", { data });
   return await db.subscriptionPrice.create({ data });
 }
 

@@ -13,12 +13,12 @@ import { useAppData } from "~/utils/data/useAppData";
 import SelectUsers, { RefSelectUsers } from "~/components/core/users/SelectUsers";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
 import { TenantUser, User, Workspace, WorkspaceUser } from "@prisma/client";
-import { getTenantMember, getTenantUsers } from "~/utils/db/tenants.db.server";
-import { getUserInfo } from "~/utils/session.server";
+import { getTenantUsers } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getWorkspace, updateWorkspace, updateWorkspaceUsers, deleteWorkspace } from "~/utils/db/workspaces.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 
 type LoaderData = {
   title: string;
@@ -57,10 +57,8 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-const unauthorized = (data: ActionData) => json(data, { status: 401 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-  const tenantUrl = await getTenantUrl(params);
 
   const { id } = params;
   if (!id) {
@@ -102,13 +100,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     return redirect(UrlUtils.currentTenantUrl(params, "settings/workspaces"));
   } else if (type === "delete") {
-    const userInfo = await getUserInfo(request);
-    const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
-    if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
-      return unauthorized({
-        error: t("account.tenant.onlyAdmin"),
-      });
-    }
+    await requireOwnerOrAdminRole(request, params);
     try {
       await deleteWorkspace(id);
     } catch (e: any) {
@@ -121,7 +113,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 interface Props {
@@ -179,7 +171,7 @@ export default function EditWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));
   }
   function yesRemove() {
-    if (appData.currentRole == TenantUserRole.MEMBER || appData.currentRole == TenantUserRole.GUEST) {
+    if (appData.currentRole == TenantUserRole.MEMBER) {
       errorModal.current?.show(t("account.tenant.onlyAdmin"));
     } else {
       const form = new FormData();
@@ -197,9 +189,6 @@ export default function EditWorkspaceRoute({ maxSize = "sm:max-w-lg" }: Props) {
     const _type: WorkspaceType = Number(e.target.value);
     setType(_type);
   }
-  // const currentRole = useSelector((state: RootState): TenantUserRole => {
-  //   return state.tenant.current?.currentUser.role ?? TenantUserRole.GUEST;
-  // });
   const currentUsersDescription = () => {
     if (users.length === 0) {
       return t("app.users.selectAtLeastOne");

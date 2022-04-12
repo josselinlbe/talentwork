@@ -3,14 +3,12 @@ import { useTranslation } from "react-i18next";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import WorkspacesListAndTable from "~/components/core/workspaces/WorkspacesListAndTable";
 import { useRef, useState } from "react";
-import { json, LoaderFunction, MetaFunction, redirect, useLoaderData, useParams } from "remix";
-import { getUserInfo } from "~/utils/session.server";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { getTenantMember } from "~/utils/db/tenants.db.server";
+import { json, LoaderFunction, MetaFunction, useLoaderData, useParams } from "remix";
 import { getWorkspaces } from "~/utils/db/workspaces.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 
 export type LoaderData = {
   title: string;
@@ -18,14 +16,12 @@ export type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
+  await requireOwnerOrAdminRole(request, params);
+
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
-  const userInfo = await getUserInfo(request);
   const workspaces = await getWorkspaces(tenantUrl.tenantId);
-  const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
-  if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
-    return redirect("/unauthorized");
-  }
+
   const data: LoaderData = {
     title: `${t("models.workspace.object")} | ${process.env.APP_NAME}`,
     workspaces,
@@ -34,7 +30,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function WorkspacesRoute() {

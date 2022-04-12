@@ -103,7 +103,9 @@
     "onlyFileTypes": "Solo documentos tipo {{0}}",
     "missingFields": "Faltan campos",
     "goTo": "Ir a",
-    "slug": "Slug"
+    "slug": "Slug",
+    "admin": "Admin",
+    "member": "Miembro"
   },
   "front": {
     "navbar": {
@@ -944,14 +946,12 @@
       "roles": {
         "OWNER": "Propietario",
         "ADMIN": "Administrador",
-        "MEMBER": "Miembro",
-        "GUEST": "Invitado"
+        "MEMBER": "Miembro"
       },
       "permissions": {
         "OWNER": "Puede controlar la cuenta y la subscripción",
         "ADMIN": "Gestiona subscripción y usuarios",
-        "MEMBER": "Crea y firma contratos",
-        "GUEST": "Consulta contratos"
+        "MEMBER": "Crea y firma contratos"
       },
       "status": {
         "PENDING_INVITATION": "Pendiente",

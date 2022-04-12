@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import clsx from "~/utils/shared/ClassesUtils";
-import { useAppData } from "~/utils/data/useAppData";
 import { useNavigate, useParams } from "remix";
 import { useTranslation } from "react-i18next";
 import UrlUtils from "~/utils/app/UrlUtils";
@@ -18,13 +17,11 @@ type Command = {
   bgClassName?: string;
   textClassName?: string;
   toPath?: string;
-  adminOnly?: boolean;
   onSelected?: () => void;
 };
 
 export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   const { t } = useTranslation();
-  const appData = useAppData();
   const navigate = useNavigate();
   const params = useParams();
 
@@ -41,12 +38,11 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
     },
     {
       command: "Z",
-      title: "Switch to Admin",
-      description: "Go to the admin panel",
+      title: "Switch to App",
+      description: "Go to the app",
       bgClassName: "bg-red-600",
       textClassName: "text-red-200",
-      toPath: "/admin/dashboard",
-      adminOnly: true,
+      toPath: "/app",
     },
   ];
 
@@ -58,14 +54,9 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   const [commandSearchTitle, setCommandSearchTitle] = useState<string>(t("app.commands.type"));
 
   useEffect(() => {
-    setItems(getAllowedCommands(defaultCommands));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (!selectedCommand) {
       setCommandSearchTitle(t("app.commands.type"));
-      setItems(getAllowedCommands(defaultCommands));
+      setItems(defaultCommands);
     } else {
       if (selectedCommand.toPath) {
         navigate(selectedCommand.toPath);
@@ -77,20 +68,6 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
         const items: Command[] = [];
         if (selectedCommand.command === "T") {
-          let idx = 0;
-          appData.myTenants.forEach((tenantUser) => {
-            tenantUser.tenant.workspaces.forEach((workspace) => {
-              items.push({
-                title: `${t("app.commands.tenants.switchTo")} ${workspace.name}`,
-                description: tenantUser.tenant.name,
-                command: (++idx).toString(),
-                bgClassName: "bg-indigo-600",
-                textClassName: "text-indigo-200",
-                toPath: `/app/${workspace.tenant.slug}/${workspace.id}/dashboard`,
-              });
-            });
-          });
-
           items.push({
             title: `${t("app.commands.tenants.viewAll")}`,
             description: ``,
@@ -134,11 +111,16 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
             toPath: "/logout",
           });
         }
-        setItems(getAllowedCommands(items));
+        setItems(items);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCommand]);
+
+  useEffect(() => {
+    setItems(defaultCommands);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!query || query.trim() === "") {
@@ -161,10 +143,6 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
       }
     }
   }, [items, query]);
-
-  function getAllowedCommands(items: Command[]) {
-    return items.filter((f) => !f.adminOnly || appData.user.admin);
-  }
 
   function onChange(value: any) {
     setSelectedCommand(value as Command);

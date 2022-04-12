@@ -1,8 +1,6 @@
-import { useTranslation } from "react-i18next";
-import { json, Link, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { AdminLoaderData, loadAdminData } from "~/utils/data/useAdminData";
-import UserUtils from "~/utils/app/UserUtils";
 import { Stat } from "~/application/dtos/stats/Stat";
 import { DashboardStats } from "~/components/ui/stats/DashboardStats";
 import { SetupItem } from "~/application/dtos/setup/SetupItem";
@@ -34,11 +32,10 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function AdminNavigationRoute() {
-  const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
 
   return (

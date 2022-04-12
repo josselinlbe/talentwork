@@ -1,20 +1,18 @@
 import { useTranslation } from "react-i18next";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { UserType } from "~/application/enums/users/UserType";
 import MembersListAndTable from "~/components/core/settings/members/MembersListAndTable";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useState } from "react";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { getTenantMember, getTenantUsers, TenantUserWithUser } from "~/utils/db/tenants.db.server";
-import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData, useNavigate, useParams } from "remix";
-import { getUserInfo } from "~/utils/session.server";
+import { getTenantUsers, TenantUserWithUser } from "~/utils/db/tenants.db.server";
+import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, useLoaderData, useNavigate, useParams } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 
 type LoaderData = {
   title: string;
@@ -23,16 +21,12 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
+  await requireOwnerOrAdminRole(request, params);
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
 
-  const userInfo = await getUserInfo(request);
   const users = await getTenantUsers(tenantUrl.tenantId);
   const pendingInvitations = await getUserInvitations(tenantUrl.tenantId);
-  const currentTenantUser = await getTenantMember(userInfo?.userId, tenantUrl.tenantId);
-  if (currentTenantUser?.role !== TenantUserRole.OWNER && currentTenantUser?.role !== TenantUserRole.ADMIN) {
-    return redirect("/unauthorized");
-  }
   const data: LoaderData = {
     title: `${t("settings.members.title")} | ${process.env.APP_NAME}`,
     users,
@@ -63,7 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function MembersRoute() {
@@ -83,10 +77,10 @@ export default function MembersRoute() {
   }
 
   const maxUsers = (): number => {
-    if (appData.user?.type === UserType.Admin) {
+    if (appData.user?.admin !== null) {
       return 0;
     }
-    return appData.mySubscription?.subscriptionProduct.maxUsers ?? 0;
+    return appData.mySubscription?.maxUsers ?? 0;
   };
   const maxUsersReached = () => {
     return maxUsers() > 0 && (data.users?.length ?? 0) >= maxUsers();

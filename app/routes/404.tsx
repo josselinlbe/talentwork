@@ -1,11 +1,11 @@
 import { Link } from "remix";
-import Footer from "../front/Footer";
-import Logo from "../front/Logo";
+import Footer from "~/components/front/Footer";
+import Logo from "~/components/front/Logo";
 
-export default function Page401() {
+export default function Page404() {
   return (
     <>
-      <div className="">
+      <div className="dark">
         <div className="min-h-full pt-16 pb-12 flex flex-col">
           <main className="flex-grow flex flex-col justify-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex-shrink-0 flex justify-center">

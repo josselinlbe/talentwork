@@ -1,48 +1,55 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
-import { UserType } from "~/application/enums/users/UserType";
 import UrlUtils from "~/utils/app/UrlUtils";
 const db = new PrismaClient();
 
-async function createUser(firstName: string, lastName: string, email: string, password: string, type: UserType) {
+async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserRole) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
     data: {
       email,
       passwordHash,
       avatar: "",
-      type,
       firstName,
       lastName,
       phone: "",
     },
   });
+  if (adminRole !== undefined) {
+    await db.adminUser.create({
+      data: {
+        userId: user.id,
+        role: adminRole,
+      },
+    });
+  }
   return user;
 }
 
-async function createTenant(name: string, workspaces: string[], users: (User & { role: TenantUserRole })[]) {
+async function createTenant(name: string, workspaces: string[], users: { id: string; role: TenantUserRole }[]) {
   const tenant = await db.tenant.create({
     data: {
       name,
       slug: UrlUtils.slugify(name),
       icon: "",
-      subscriptionCustomerId: "",
     },
   });
 
-  // await db.tenantFeatures.create({
-  //   data: {
-  //     tenantId: tenant.id,
-  //     maxWorkspaces: 3,
-  //     maxUsers: 5,
-  //     maxLinks: 45,
-  //     maxStorage: 100 * 1024,
-  //     monthlyContracts: 45,
-  //   },
-  // });
+  await db.tenantSubscription.create({
+    data: {
+      tenantId: tenant.id,
+      stripeCustomerId: "",
+      stripeSubscriptionId: "",
+      maxWorkspaces: 3,
+      maxUsers: 5,
+      maxLinks: 45,
+      maxStorage: 100 * 1024,
+      monthlyContracts: 45,
+    },
+  });
 
   users.forEach(async (user) => {
     await db.tenantUser.create({
@@ -86,18 +93,19 @@ async function seed() {
   if (!adminEmail || !adminPassword) {
     throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set");
   }
-  const admin = await createUser("Admin", "User", adminEmail, adminPassword, UserType.Admin);
-  const user1 = await createUser("John", "Doe", "john.doe@company.com", "password", UserType.Tenant);
-  const user2 = await createUser("Luna", "Davis", "luna.davis@company.com", "password", UserType.Tenant);
+  const admin = await createUser("Admin", "User", adminEmail, adminPassword, TenantUserRole.OWNER);
+  await createUser("Demo", "Admin", "demo@admin.com", "password", TenantUserRole.MEMBER);
+  const user1 = await createUser("John", "Doe", "john.doe@company.com", "password");
+  const user2 = await createUser("Luna", "Davis", "luna.davis@company.com", "password");
 
   // User without tenants
-  await createUser("Alex", "Martinez", "alex.martinez@company.com", "password", UserType.Tenant);
+  await createUser("Alex", "Martinez", "alex.martinez@company.com", "password");
 
   await createTenant(
     "Tenant 1",
     ["T1.Workspace 1", "T1.Workspace 2"],
     [
-      { ...admin, role: TenantUserRole.OWNER },
+      { ...admin, role: TenantUserRole.ADMIN },
       { ...user1, role: TenantUserRole.ADMIN },
       { ...user2, role: TenantUserRole.MEMBER },
     ]

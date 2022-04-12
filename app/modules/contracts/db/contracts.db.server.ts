@@ -21,33 +21,28 @@ export async function getMonthlyContractsCount(tenantId: string) {
   var date = new Date();
   var firstDayCurrentMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDayCurrentMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  try {
-    return await db.contract.count({
-      where: {
-        createdAt: {
-          gte: firstDayCurrentMonth,
-          lt: lastDayCurrentMonth,
-        },
-        link: {
-          OR: [
-            {
-              providerWorkspace: {
-                tenantId,
-              },
-            },
-            {
-              clientWorkspace: {
-                tenantId,
-              },
-            },
-          ],
-        },
+  return await db.contract.count({
+    where: {
+      createdAt: {
+        gte: firstDayCurrentMonth,
+        lt: lastDayCurrentMonth,
       },
-    });
-  } catch (e) {
-    console.error(e);
-    return 0;
-  }
+      link: {
+        OR: [
+          {
+            providerWorkspace: {
+              tenantId,
+            },
+          },
+          {
+            clientWorkspace: {
+              tenantId,
+            },
+          },
+        ],
+      },
+    },
+  });
 }
 
 export async function getContract(id?: string): Promise<ContractWithDetails | null> {

@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, useLoaderData, useTransition } from "remix";
 import UserEventsTable from "~/components/app/events/UserEventsTable";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
+import Loading from "~/components/ui/loaders/Loading";
 import { getAllUserEvents, UserEventWithDetails } from "~/utils/db/users.db.server";
 
 type LoaderData = {
@@ -20,6 +21,9 @@ export let loader: LoaderFunction = async ({ params }) => {
 export default function Events() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
+  const transition = useTransition();
+  const loading = transition.state === "loading";
+
   return (
     <div>
       <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
@@ -38,7 +42,7 @@ export default function Events() {
         </div>
       </div> */}
       <div className="pt-2 space-y-2 max-w-5xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <UserEventsTable withTenant={true} withWorkspace={true} items={data.items} />
+        {loading ? <Loading /> : <UserEventsTable withTenant={true} withWorkspace={true} items={data.items} />}
       </div>
     </div>
   );

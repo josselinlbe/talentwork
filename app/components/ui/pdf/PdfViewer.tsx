@@ -60,10 +60,10 @@ export default function PdfViewer({ className, file, onRemoveFile, fileName = ""
     loadingTask.promise.then(
       (loadedPdf) => {
         setPdfRef(loadedPdf);
-      },
-      function (reason) {
-        console.error(reason);
       }
+      // function (reason) {
+      //   console.error(reason);
+      // }
     );
   }, [file]);
 

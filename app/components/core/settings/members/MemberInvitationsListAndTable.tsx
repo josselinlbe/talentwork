@@ -40,8 +40,6 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
         return "bg-rose-50 border border-rose-200";
       case TenantUserRole.MEMBER:
         return "bg-blue-50 border border-blue-200";
-      case TenantUserRole.GUEST:
-        return "bg-gray-50 border border-gray-200";
     }
   }
   function sortBy(column: string | undefined) {

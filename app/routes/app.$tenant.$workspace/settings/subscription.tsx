@@ -14,7 +14,6 @@ import {
   getStripeSession,
   getStripeSubscription,
 } from "~/utils/stripe.server";
-import { getTenant, updateTenantSubscriptionCustomerId, updateTenantSubscriptionId } from "~/utils/db/tenants.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 import { getUser } from "~/utils/db/users.db.server";
@@ -26,11 +25,17 @@ import MySubscriptionProducts from "~/components/core/settings/subscription/MySu
 import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
 import { i18nHelper } from "~/locale/i18n.utils";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
-import { UserType } from "~/application/enums/users/UserType";
 import MyInvoices from "~/components/core/settings/subscription/MyInvoices";
 import Stripe from "stripe";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
+import {
+  getOrPersistTenantSubscription,
+  getTenantSubscription,
+  updateTenantSubscriptionCustomerId,
+  updateTenantStripeSubscriptionId,
+} from "~/utils/db/tenantSubscriptions.db.server";
+import { getTenant } from "~/utils/db/tenants.db.server";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -45,21 +50,26 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   await requireOwnerOrAdminRole(request, params);
   const userInfo = await getUserInfo(request);
   const user = await getUser(userInfo.userId);
+
   const tenant = await getTenant(tenantUrl.tenantId);
   if (!tenant) {
-    return badRequest({ error: "Invalid tenant" });
+    return badRequest({ error: "Invalid tenant with id: " + tenantUrl.tenantId });
   }
+
+  const tenantSubscription = await getOrPersistTenantSubscription(tenantUrl.tenantId);
+
   if (!user) {
     return badRequest({ error: "Invalid user" });
   }
 
-  if (!tenant.subscriptionCustomerId) {
+  if (!tenantSubscription.stripeCustomerId) {
     const customer = await createStripeCustomer(user.email, tenant.name);
     if (!customer) {
       return badRequest({ error: "Could not create stripe customer" });
     }
-    await updateTenantSubscriptionCustomerId(tenant.id, {
-      subscriptionCustomerId: customer.id,
+    tenantSubscription.stripeCustomerId = customer.id;
+    await updateTenantSubscriptionCustomerId(tenantUrl.tenantId, {
+      stripeCustomerId: customer.id,
     });
   }
 
@@ -69,27 +79,32 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     try {
       const session = await getStripeSession(session_id);
       if (session.subscription) {
-        tenant.subscriptionId = session.subscription.toString();
-
-        await updateTenantSubscriptionId(tenant.id, {
-          subscriptionId: tenant.subscriptionId,
+        const stripeSubscription = await getStripeSubscription(session.subscription.toString());
+        let price: SubscriptionPrice | null = null;
+        if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
+          price = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
+        }
+        await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
+          subscriptionPriceId: price?.id ?? "",
+          stripeSubscriptionId: session.subscription.toString(),
         });
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
       }
     } catch (e) {}
   }
 
-  const stripeSubscription = await getStripeSubscription(tenant.subscriptionId ?? "");
+  const stripeSubscription = await getStripeSubscription(tenantSubscription.stripeSubscriptionId ?? "");
   let mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
   if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
     mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
-  } else if (tenant.subscriptionId) {
-    await updateTenantSubscriptionId(tenant.id, {
-      subscriptionId: "",
+  } else if (tenantSubscription.stripeSubscriptionId) {
+    await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
+      subscriptionPriceId: "",
+      stripeSubscriptionId: "",
     });
   }
 
-  const myInvoices = (await getStripeInvoices(tenant.subscriptionCustomerId)) ?? [];
+  const myInvoices = (await getStripeInvoices(tenantSubscription.stripeCustomerId ?? "")) ?? [];
 
   const dashboardData = await loadDashboardData(params);
 
@@ -111,14 +126,14 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const tenantUrl = await getTenantUrl(params);
-  const tenant = await getTenant(tenantUrl.tenantId);
+  const tenantSubscription = await getTenantSubscription(tenantUrl.tenantId);
   const form = await request.formData();
 
   const type = form.get("type")?.toString();
   const priceId = form.get("price-id")?.toString();
   const price = await getSubscriptionPrice(priceId ?? "");
 
-  if (!tenant || !tenant.subscriptionCustomerId) {
+  if (!tenantSubscription || !tenantSubscription?.stripeCustomerId) {
     return badRequest({
       error: "Invalid stripe customer",
     });
@@ -129,7 +144,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: "Invalid price: " + priceId,
       });
     }
-    const session = await createStripeSession(tenant.id, tenantUrl.workspaceId, tenant.subscriptionCustomerId, price.stripeId);
+    const session = await createStripeSession(tenantUrl.tenantId, tenantUrl.workspaceId, tenantSubscription.stripeCustomerId, price.stripeId);
     if (!session || !session.url) {
       return badRequest({
         error: "Could not update subscription",
@@ -137,13 +152,16 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     return redirect(session.url);
   } else if (type === "cancel") {
-    if (!tenant.subscriptionId) {
+    if (!tenantSubscription.stripeSubscriptionId) {
       return badRequest({
         error: "Not subscribed",
       });
     }
-    await cancelStripeSubscription(tenant.subscriptionId);
-    await updateTenantSubscriptionId(tenant.id, { subscriptionId: "" });
+    await cancelStripeSubscription(tenantSubscription.stripeSubscriptionId);
+    await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
+      subscriptionPriceId: "",
+      stripeSubscriptionId: "",
+    });
     const actionData: ActionData = {
       success: "Successfully cancelled",
     };
@@ -152,7 +170,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function SubscriptionRoute() {
@@ -166,7 +184,9 @@ export default function SubscriptionRoute() {
   const successModal = useRef<RefSuccessModal>(null);
   const confirmModal = useRef<RefConfirmModal>(null);
 
-  const [billingPeriod, setBillingPeriod] = useState<SubscriptionBillingPeriod>(appData.mySubscription?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY);
+  const [billingPeriod, setBillingPeriod] = useState<SubscriptionBillingPeriod>(
+    appData.mySubscription?.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY
+  );
   const [currency] = useState("usd");
 
   useEffect(() => {
@@ -278,7 +298,7 @@ export default function SubscriptionRoute() {
 
       {data.items.length === 0 ? (
         <>
-          {appData.user?.type === UserType.Admin ? (
+          {appData.user.admin ? (
             <WarningBanner redirect="/admin/setup/pricing" title={t("shared.warning")} text={t("admin.pricing.noPricesInDatabase")} />
           ) : (
             <WarningBanner title={t("shared.warning")} text={t("admin.pricing.noPricesConfigured")} />

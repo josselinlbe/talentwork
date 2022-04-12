@@ -1,10 +1,9 @@
-import { Tenant, TenantUser, User, Workspace } from "@prisma/client";
+import { AdminUser, Tenant, TenantUser, User, Workspace } from "@prisma/client";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
-import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
 import UrlUtils from "../app/UrlUtils";
-import { SubscriptionPriceWithProduct } from "./subscriptionProducts.db.server";
+import { createTenantSubscription, TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
 
 export type MyTenant = TenantUser & {
   tenant: Tenant & {
@@ -14,14 +13,14 @@ export type MyTenant = TenantUser & {
   };
 };
 
-export type TenantWithWorkspacesAndUsers = Tenant & {
+export type TenantWithDetails = Tenant & {
   workspaces: Workspace[];
   users: (TenantUser & {
     user: User;
   })[];
+  subscription: TenantSubscriptionWithDetails | null;
   usersCount?: number;
   workspacesCount?: number;
-  subscriptionPrice?: SubscriptionPriceWithProduct | null;
   contractsCount?: number;
   employeesCount?: number;
 };
@@ -31,16 +30,27 @@ export type WorkspaceWithTenant = Workspace & {
 };
 
 export type TenantUserWithUser = TenantUser & {
-  user: User;
+  user: User & {
+    admin?: AdminUser | null;
+  };
 };
 
-export async function adminGetAllTenants(): Promise<TenantWithWorkspacesAndUsers[]> {
+export async function adminGetAllTenants(): Promise<TenantWithDetails[]> {
   return await db.tenant.findMany({
     include: {
       workspaces: true,
       users: {
         include: {
           user: true,
+        },
+      },
+      subscription: {
+        include: {
+          subscriptionPrice: {
+            include: {
+              subscriptionProduct: true,
+            },
+          },
         },
       },
     },
@@ -54,6 +64,9 @@ export async function getTenant(id?: string) {
   return await db.tenant.findUnique({
     where: {
       id,
+    },
+    include: {
+      subscription: true,
     },
   });
 }
@@ -134,21 +147,20 @@ export async function getTenantUsersCount(tenantId: string) {
   });
 }
 
-export async function getTenantUsers(tenantId?: string, types: UserType[] = [UserType.Admin, UserType.Tenant]): Promise<TenantUserWithUser[]> {
+export async function getTenantUsers(tenantId?: string): Promise<TenantUserWithUser[]> {
   if (!tenantId) {
     return [];
   }
   return await db.tenantUser.findMany({
     where: {
       tenantId,
-      user: {
-        type: {
-          in: types,
-        },
-      },
     },
     include: {
-      user: true,
+      user: {
+        include: {
+          admin: true,
+        },
+      },
     },
   });
 }
@@ -193,24 +205,6 @@ export async function updateTenant(data: { name: string; icon: string; slug: str
   });
 }
 
-export async function updateTenantSubscriptionCustomerId(id: string, data: { subscriptionCustomerId: string }) {
-  return await db.tenant.update({
-    where: {
-      id,
-    },
-    data,
-  });
-}
-
-export async function updateTenantSubscriptionId(id: string, data: { subscriptionId: string }) {
-  return await db.tenant.update({
-    where: {
-      id,
-    },
-    data,
-  });
-}
-
 export async function updateTenantUser(id: string, data: { role: number }) {
   return await db.tenantUser.update({
     where: {
@@ -221,14 +215,17 @@ export async function updateTenantUser(id: string, data: { role: number }) {
 }
 
 export async function createTenant(name: string, subscriptionCustomerId: string, icon: string) {
-  return await db.tenant.create({
+  const tenant = await db.tenant.create({
     data: {
       name,
       slug: UrlUtils.slugify(name),
-      subscriptionCustomerId,
       icon,
     },
   });
+
+  await createTenantSubscription(tenant.id, subscriptionCustomerId);
+
+  return tenant;
 }
 
 export async function createTenantUser(data: { tenantId: string; userId: string; role: number }) {

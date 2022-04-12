@@ -3,7 +3,6 @@ import { Language } from "remix-i18next";
 import { getUserInfo } from "../session.server";
 import { getUser, UserWithoutPassword } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { UserType } from "~/application/enums/users/UserType";
 import UrlUtils from "../app/UrlUtils";
 
 export type AdminLoaderData = {
@@ -29,8 +28,8 @@ export async function loadAdminData(request: Request) {
     throw redirect(`/login?${searchParams}`);
   }
 
-  if (user.type !== UserType.Admin) {
-    throw redirect(`/unauthorized`);
+  if (!user.admin) {
+    throw redirect("/401");
   }
 
   const data: AdminLoaderData = {

@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
-import { UserType } from "~/application/enums/users/UserType";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
@@ -73,6 +72,9 @@ export const action: ActionFunction = async ({ request }) => {
 
   const user = await db.user.findUnique({
     where: { id: userInfo?.userId },
+    include: {
+      admin: true,
+    },
   });
 
   switch (type) {
@@ -145,7 +147,7 @@ export const action: ActionFunction = async ({ request }) => {
       if (!user) {
         return null;
       }
-      if (user.type === UserType.Admin) {
+      if (user.admin !== null) {
         return badRequest({
           deleteError: "Cannot delete an admin",
         });
@@ -159,7 +161,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function ProfileRoute() {
@@ -202,7 +204,7 @@ export default function ProfileRoute() {
       return;
     }
 
-    if (appData.user?.type === UserType.Admin) {
+    if (appData.user?.admin !== null) {
       errorModal.current?.show(t("settings.profile.errors.cannotDeleteAdmin"));
     } else {
       confirmModal.current?.show(t("settings.danger.confirmDelete"), t("shared.confirm"), t("shared.cancel"), t("shared.warningCannotUndo"));

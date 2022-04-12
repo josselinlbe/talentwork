@@ -1,5 +1,4 @@
-import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, useCatch, useLoaderData, useParams } from "remix";
+import { json, LoaderFunction, MetaFunction, useCatch, useLoaderData } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
 import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
 import { i18nHelper } from "~/locale/i18n.utils";
@@ -7,6 +6,7 @@ import { getAppDashboardStats } from "~/utils/services/appDashboardService";
 import { Stat } from "~/application/dtos/stats/Stat";
 import ProfileBanner from "~/components/app/ProfileBanner";
 import { DashboardStats } from "~/components/ui/stats/DashboardStats";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -15,8 +15,9 @@ type LoaderData = DashboardLoaderData & {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
 
-  const stats = await getAppDashboardStats(30);
+  const stats = await getAppDashboardStats(tenantUrl.tenantId, 30);
 
   const data: LoaderData = {
     title: `${t("app.sidebar.dashboard")} | ${process.env.APP_NAME}`,
@@ -27,14 +28,12 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function DashboardRoute() {
-  const params = useParams();
   const appData = useAppData();
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation();
 
   return (
     <main className="flex-1 relative pb-8 z-0 overflow-y-auto">

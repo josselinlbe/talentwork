@@ -15,7 +15,7 @@ import { sendEmail } from "~/utils/email.server";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export let loader: LoaderFunction = async ({ request }) => {

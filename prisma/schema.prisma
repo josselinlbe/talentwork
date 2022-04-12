@@ -16,13 +16,14 @@ model User {
   updatedAt          DateTime              @updatedAt
   email              String                @unique
   passwordHash       String
-  type               Int
   firstName          String
   lastName           String
   phone              String
   avatar             String
   defaultWorkspaceId String?
   verifyToken        String?
+  adminId            String?
+  admin              AdminUser?
   jokes              Joke[]
   tenants            TenantUser[]
   workspaces         WorkspaceUser[]
@@ -34,6 +35,12 @@ model User {
   contractActivities ContractActivity[]
   linkInvitations    Link[]                @relation("userInvited")
   activity           UserEvent[]
+}
+
+model AdminUser {
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Int
 }
 
 model UserEvent {
@@ -51,31 +58,34 @@ model UserEvent {
 }
 
 model Tenant {
-  id                     String                 @id @default(cuid())
-  createdAt              DateTime               @default(now())
-  updatedAt              DateTime               @updatedAt
-  slug                   String                 @unique
-  name                   String
-  icon                   String
-  subscriptionCustomerId String
-  subscriptionId         String?
-  users                  TenantUser[]
-  workspaces             Workspace[]
-  invitations            TenantUserInvitation[]
-  employees              Employee[]
-  activity               UserEvent[]
+  id             String                 @id @default(cuid())
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  slug           String                 @unique
+  name           String
+  icon           String
+  subscriptionId String?
+  subscription   TenantSubscription?
+  users          TenantUser[]
+  workspaces     Workspace[]
+  invitations    TenantUserInvitation[]
+  employees      Employee[]
+  activity       UserEvent[]
 }
 
-// model TenantFeatures {
-//   id               String @id @default(cuid())
-//   tenantId         String @unique
-//   tenant           Tenant @relation(fields: [tenantId], references: [id])
-//   maxWorkspaces    Int
-//   maxUsers         Int
-//   maxLinks         Int
-//   maxStorage       Int
-//   monthlyContracts Int
-// }
+model TenantSubscription {
+  tenantId             String             @unique
+  tenant               Tenant             @relation(fields: [tenantId], references: [id])
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  subscriptionPriceId  String?
+  subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
+  maxWorkspaces        Int
+  maxUsers             Int
+  maxLinks             Int
+  maxStorage           Int
+  monthlyContracts     Int
+}
 
 model TenantUser {
   id       String @id @default(cuid())
@@ -167,9 +177,9 @@ model SubscriptionProduct {
 }
 
 model SubscriptionPrice {
-  id                    String              @id @default(cuid())
+  id                    String               @id @default(cuid())
   subscriptionProductId String
-  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
+  subscriptionProduct   SubscriptionProduct  @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   stripeId              String
   type                  Int
   billingPeriod         Int
@@ -177,6 +187,7 @@ model SubscriptionPrice {
   currency              String
   trialDays             Int
   active                Boolean
+  TenantSubscription    TenantSubscription[]
 }
 
 model SubscriptionFeature {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { json, Link, LoaderFunction, MetaFunction, useLoaderData } from "remix";
-import { adminGetAllTenants, TenantWithWorkspacesAndUsers } from "~/utils/db/tenants.db.server";
+import { adminGetAllTenants, TenantWithDetails } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
@@ -12,7 +12,7 @@ import DateUtils from "~/utils/shared/DateUtils";
 
 type LoaderData = {
   title: string;
-  items: TenantWithWorkspacesAndUsers[];
+  items: TenantWithDetails[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -28,7 +28,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function AdminTenantsRoute() {
@@ -108,11 +108,8 @@ export default function AdminTenantsRoute() {
     }
     return data.items.filter((f) => f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()));
   };
-  function billingPeriodName(item: TenantWithWorkspacesAndUsers) {
-    return t("pricing." + SubscriptionBillingPeriod[item.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY] + "Short");
-  }
-  function getSubscribedProduct(item: TenantWithWorkspacesAndUsers) {
-    return item.subscriptionPrice?.subscriptionProduct;
+  function billingPeriodName(item: TenantWithDetails) {
+    return t("pricing." + SubscriptionBillingPeriod[item.subscription?.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY] + "Short");
   }
   return (
     <div>
@@ -218,35 +215,36 @@ export default function AdminTenantsRoute() {
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex space-x-1">
-                                          <div>
-                                            {item.subscriptionPrice?.subscriptionProduct ? (
-                                              <Link to={`/admin/tenant/${item.id}/subscription`} className="hover:underline text-gray-800">
-                                                {t(item.subscriptionPrice?.subscriptionProduct?.title)}
-                                                {" - "}
-                                                <span className=" italic">
-                                                  ({item.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
-                                                </span>
-                                              </Link>
-                                            ) : (
-                                              // <span className=" font-light text-gray-400 line-through">{t("settings.subscription.noSubscription")}</span>
-                                              "-"
-                                            )}
-                                          </div>
+                                          <Link to={`/admin/tenant/${item.id}/subscription`} className="hover:underline text-gray-800">
+                                            <span>
+                                              {item.subscription?.subscriptionPrice?.subscriptionProduct ? (
+                                                <>
+                                                  {t(item.subscription?.subscriptionPrice?.subscriptionProduct?.title)}
+                                                  {" - "}
+                                                  <span className=" ">
+                                                    ({item.subscription?.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
+                                                  </span>
+                                                </>
+                                              ) : (
+                                                <span className="italic text-gray-500">{t("settings.subscription.noSubscription")}</span>
+                                              )}
+                                            </span>
+                                          </Link>
                                         </div>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <Link to={`/admin/tenant/${item.id}/users`} className="hover:underline">
                                           {item.usersCount}
-                                          <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxUsers ?? "-"}</span>
+                                          <span className=" text-gray-400">/{item.subscription?.maxUsers ?? "-"}</span>
                                         </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.workspacesCount}
-                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.maxWorkspaces ?? "-"}</span>
+                                        <span className=" text-gray-400">/{item.subscription?.maxWorkspaces ?? "-"}</span>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.contractsCount}
-                                        <span className=" text-gray-400">/{getSubscribedProduct(item)?.monthlyContracts ?? "-"}</span>
+                                        <span className=" text-gray-400">/{item.subscription?.monthlyContracts ?? "-"}</span>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.employeesCount === 0 ? "-" : item.employeesCount}

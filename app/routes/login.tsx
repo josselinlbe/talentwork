@@ -5,11 +5,9 @@ import Logo from "~/components/front/Logo";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { deleteUser, getUserByEmail } from "~/utils/db/users.db.server";
+import { getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
-import { getMyTenants } from "~/utils/db/tenants.db.server";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
-import { UserType } from "~/application/enums/users/UserType";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
@@ -71,14 +69,6 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const userTenants = await getMyTenants(user.id);
-  if (userTenants.length === 0) {
-    await deleteUser(user.id);
-    return badRequest({
-      error: "You didn't have any tenants, account deleted. Please register again.",
-    });
-  }
-
   const userSession = await setLoggedUser(user);
   return createUserSession(
     {
@@ -88,14 +78,14 @@ export const action: ActionFunction = async ({ request }) => {
     },
     redirectTo.length > 0
       ? redirectTo
-      : user.type === UserType.Admin
+      : user.admin !== null
       ? "/admin/dashboard"
       : `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
   );
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function LoginRoute() {

@@ -14,6 +14,10 @@ const currentTenantUrl = (params: Params, path?: string) => {
   return `/app/${tenant}/${workspace}/`;
 };
 
+const replaceVariables = (params: Params, path?: string) => {
+  return path?.replace(":tenant", params.tenant ?? "").replace(":workspace", params.workspace ?? "");
+};
+
 const slugify = (str: string) =>
   str
     .toLowerCase()
@@ -29,4 +33,5 @@ export default {
   currentTenantUrl,
   stripTrailingSlash,
   slugify,
+  replaceVariables,
 };

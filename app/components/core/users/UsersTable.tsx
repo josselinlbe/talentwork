@@ -9,6 +9,8 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { UsersActionData, UsersActionType } from "~/routes/admin/users";
+import { useAdminData } from "~/utils/data/useAdminData";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { adminGetAllUsers, deleteUser } from "~/utils/db/users.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 
@@ -16,6 +18,7 @@ interface Props {
   items: Awaited<ReturnType<typeof adminGetAllUsers>>;
 }
 export default function UsersTable({ items }: Props) {
+  const adminData = useAdminData();
   const { t } = useTranslation();
   const submit = useSubmit();
   const actionData = useActionData<UsersActionData>();
@@ -104,6 +107,18 @@ export default function UsersTable({ items }: Props) {
       method: "post",
     });
   }
+  function adminHasPermission(action: "impersonate" | "change-password" | "delete-user") {
+    switch (action) {
+      case "impersonate":
+        return adminData.user.admin?.role === TenantUserRole.OWNER;
+      case "change-password":
+        return adminData.user.admin?.role === TenantUserRole.OWNER;
+      case "delete-user":
+        return adminData.user.admin?.role === TenantUserRole.OWNER;
+      default:
+        return false;
+    }
+  }
 
   return (
     <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
@@ -177,8 +192,15 @@ export default function UsersTable({ items }: Props) {
                                     <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                       <div className="flex items-center space-x-4">
                                         <div>
-                                          <div className="text-sm font-medium text-gray-900">
-                                            {item.firstName} {item.lastName}
+                                          <div className="text-sm font-medium text-gray-900 flex items-baseline space-x-1">
+                                            <div>
+                                              {item.firstName} {item.lastName}{" "}
+                                            </div>
+                                            {item.admin && (
+                                              <div>
+                                                <div className="text-xs text-theme-500">({t("shared.admin")})</div>
+                                              </div>
+                                            )}
                                           </div>
                                           <div className="text-sm text-gray-500">{item.email}</div>
                                         </div>
@@ -194,13 +216,13 @@ export default function UsersTable({ items }: Props) {
                                     </td>
                                     <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                       <div className="flex items-center space-x-2">
-                                        <ButtonTertiary disabled={item.type === 0} onClick={() => impersonate(item)}>
+                                        <ButtonTertiary disabled={!adminHasPermission("impersonate")} onClick={() => impersonate(item)}>
                                           {t("models.user.impersonate")}
                                         </ButtonTertiary>
-                                        <ButtonTertiary disabled={item.type === 0} onClick={() => changePassword(item)}>
+                                        <ButtonTertiary disabled={!adminHasPermission("change-password")} onClick={() => changePassword(item)}>
                                           {t("settings.profile.changePassword")}
                                         </ButtonTertiary>
-                                        <ButtonTertiary disabled={item.type === 0} onClick={() => deleteUser(item)} destructive={true}>
+                                        <ButtonTertiary disabled={!adminHasPermission("delete-user")} onClick={() => deleteUser(item)} destructive={true}>
                                           {t("shared.delete")}
                                         </ButtonTertiary>
                                       </div>

@@ -4,8 +4,6 @@ import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import { ReactNode, useEffect, useState } from "react";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
-import { UserType } from "~/application/enums/users/UserType";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { SidebarGroup } from "~/application/sidebar/SidebarGroup";
 import clsx from "~/utils/shared/ClassesUtils";
 import QuickActionsButton from "./buttons/QuickActionsButton";
@@ -39,11 +37,14 @@ export default function StackedLayout({ layout, children }: Props) {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function allowCurrentUserType(types: UserType[] | undefined) {
-    return !types || types.includes(appData.user?.type ?? UserType.Tenant);
+  function allowCurrentUserType(item: SideBarItem) {
+    if (!item.adminOnly) {
+      return true;
+    }
+    return appData.user?.admin !== null;
   }
-  function allowCurrentRole(roles: TenantUserRole[] | undefined) {
-    return !roles || roles.includes(appData.currentRole);
+  function allowCurrentRole(item: SideBarItem) {
+    return !item.userRoles || item.userRoles.includes(appData.currentRole);
   }
   function signOut() {
     submit(null, { method: "post", action: "/logout" });
@@ -51,11 +52,11 @@ export default function StackedLayout({ layout, children }: Props) {
   const getMenu = (): SidebarGroup[] => {
     const _menu: SidebarGroup[] = [];
     menu
-      .filter((f) => allowCurrentUserType(f.userTypes) && allowCurrentRole(f.userRoles))
+      .filter((f) => allowCurrentUserType(f) && allowCurrentRole(f))
       .forEach(({ title, items }) => {
         _menu.push({
           title: title.toString(),
-          items: items?.filter((f) => allowCurrentUserType(f.userTypes) && allowCurrentRole(f.userRoles)) ?? [],
+          items: items?.filter((f) => allowCurrentUserType(f) && allowCurrentRole(f)) ?? [],
         });
       });
     return _menu.filter((f) => f.items.length > 0);

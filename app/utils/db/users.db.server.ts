@@ -1,6 +1,5 @@
-import { Tenant, User, UserEvent, Workspace } from ".prisma/client";
+import { AdminUser, Tenant, User, UserEvent, Workspace } from ".prisma/client";
 import bcrypt from "bcryptjs";
-import { UserType } from "~/application/enums/users/UserType";
 import { db } from "~/utils/db.server";
 import { TenantUrl } from "../services/urlService";
 import { getUserInfo } from "../session.server";
@@ -12,7 +11,7 @@ export type UserWithoutPassword = {
   lastName: string;
   avatar: string;
   phone: string;
-  type: UserType;
+  admin?: AdminUser | null;
   defaultWorkspaceId: string | null;
 };
 
@@ -44,6 +43,7 @@ export async function adminGetAllTenantUsers(tenantId: string) {
 export async function adminGetAllUsers() {
   return db.user.findMany({
     include: {
+      admin: true,
       tenants: {
         include: {
           tenant: true,
@@ -59,15 +59,8 @@ export async function getUser(userId?: string): Promise<UserWithoutPassword | nu
   }
   return await db.user.findUnique({
     where: { id: userId },
-    select: {
-      id: true,
-      email: true,
-      firstName: true,
-      lastName: true,
-      avatar: true,
-      phone: true,
-      type: true,
-      defaultWorkspaceId: true,
+    include: {
+      admin: true,
     },
   });
 }
@@ -80,6 +73,7 @@ export async function getUserByEmail(email?: string) {
     where: { email },
     include: {
       tenants: true,
+      admin: true,
     },
   });
 }
@@ -90,7 +84,6 @@ export async function register(email: string, password: string, firstName: strin
     data: {
       email,
       passwordHash,
-      type: UserType.Tenant,
       firstName,
       lastName,
       avatar: "",

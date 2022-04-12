@@ -122,7 +122,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function NewContractRoute() {
@@ -226,7 +226,7 @@ export default function NewContractRoute() {
   const imProvider = () => {
     return appData.currentWorkspace?.id === link?.providerWorkspaceId;
   };
-  const monthlyContracts = appData.mySubscription?.subscriptionProduct.monthlyContracts ?? 0;
+  const monthlyContracts = appData.mySubscription?.monthlyContracts ?? 0;
   const maxContractsReached = () => {
     if (!appData.mySubscription) {
       return true;

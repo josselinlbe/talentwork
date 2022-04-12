@@ -1,5 +1,4 @@
 import { TenantUserRole } from "../enums/tenants/TenantUserRole";
-import { UserType } from "../enums/users/UserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 
 export interface SideBarItem {
@@ -7,7 +6,7 @@ export interface SideBarItem {
   path: string;
   icon?: SvgIcon;
   open?: boolean;
-  userTypes?: UserType[];
+  adminOnly?: boolean;
   userRoles?: TenantUserRole[];
   items?: SideBarItem[];
   isDemo?: boolean;

@@ -25,6 +25,7 @@ async function getTenantStat(lastDays: number) {
 }
 
 async function getMMRStat(lastDays: number) {
+  // const { added, total } = await getTenantsCreatedSince(lastDays);
   const tenantStat: Stat = {
     name: "MRR",
     hint: "Monthly recurring revenue",
@@ -38,16 +39,36 @@ async function getMMRStat(lastDays: number) {
 }
 
 async function getActiveUsersStat(lastDays: number) {
+  const { added, total } = await getUserEventsCreatedSince(lastDays);
   const activeUsersStat: Stat = {
     name: "MAU",
     hint: "Monthly active users",
-    stat: "TODO",
-    previousStat: "TODO",
-    change: "TODO",
-    changeType: getStatChangeType(0, 0),
-    path: "TODO",
+    stat: added.toString(),
+    previousStat: (total - added).toString(),
+    change: "+" + added.toString(),
+    changeType: getStatChangeType(added, total),
   };
   return activeUsersStat;
+}
+
+async function getUserEventsCreatedSince(lastDays: number) {
+  const from = DateUtils.daysFromDate(new Date(), lastDays);
+  const added = await db.userEvent.groupBy({
+    by: ["userId"],
+    where: {
+      createdAt: {
+        gte: from,
+      },
+    },
+  });
+  const total = await db.userEvent.groupBy({
+    by: ["userId"],
+  });
+
+  return {
+    added: added.length,
+    total: total.length,
+  };
 }
 
 async function getTenantsCreatedSince(lastDays: number) {

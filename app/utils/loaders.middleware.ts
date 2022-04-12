@@ -1,10 +1,8 @@
 import { Params } from "react-router";
 import { redirect } from "remix";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { UserType } from "~/application/enums/users/UserType";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
-import UrlUtils from "./app/UrlUtils";
 import { getTenantMember } from "./db/tenants.db.server";
 import { getUser } from "./db/users.db.server";
 import { getTenantUrl } from "./services/urlService";
@@ -13,17 +11,20 @@ import { getUserInfo } from "./session.server";
 export async function requireAdminUser(request: Request) {
   const userInfo = await getUserInfo(request);
   const user = await getUser(userInfo.userId);
-  if ((user?.type ?? UserType.Tenant) !== UserType.Admin) {
-    throw redirect("/unauthorized");
+  if (!user?.admin) {
+    throw redirect("/401");
   }
 }
 
 export async function requireOwnerOrAdminRole(request: Request, params: Params) {
   const tenantUrl = await getTenantUrl(params);
   const userInfo = await getUserInfo(request);
-  const tenantMember = await getTenantMember(userInfo.userId, tenantUrl.tenantId);
-  if (!tenantMember || (tenantMember.role !== TenantUserRole.OWNER && tenantMember.role !== TenantUserRole.ADMIN)) {
-    throw redirect("/unauthorized");
+  const user = await getUser(userInfo.userId);
+  if (!user?.admin) {
+    const tenantMember = await getTenantMember(userInfo.userId, tenantUrl.tenantId);
+    if (!tenantMember || (tenantMember.role !== TenantUserRole.OWNER && tenantMember.role !== TenantUserRole.ADMIN)) {
+      throw redirect("/401");
+    }
   }
 }
 
@@ -37,6 +38,6 @@ export async function requireAuthorization(currentPath: string, currentRole: Ten
     });
   });
   if (foundItem && foundItem.userRoles && !foundItem.userRoles.includes(currentRole)) {
-    throw redirect("/unauthorized");
+    throw redirect("/401");
   }
 }

@@ -5,6 +5,7 @@ export default function SampleComponent() {
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log("mounted");
   }, []);
 

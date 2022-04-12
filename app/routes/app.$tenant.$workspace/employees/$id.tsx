@@ -9,7 +9,6 @@ import EmployeeProfile from "~/modules/contracts/components/employees/EmployeePr
 import UrlUtils from "~/utils/app/UrlUtils";
 import { createUserEvent } from "~/utils/db/users.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
   title: string;
@@ -31,7 +30,6 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-  const userInfo = await getUserInfo(request);
   const tenantUrl = await getTenantUrl(params);
 
   if (!params.id) {
@@ -73,7 +71,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => ({
-  title: data.title,
+  title: data?.title,
 });
 
 export default function EmployeeRoute() {
