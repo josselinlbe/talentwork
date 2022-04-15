@@ -90,7 +90,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Could not create link" });
   }
 
-  await sendEmail(user.email, "invite-user-to-link-tenant", {
+  await sendEmail(user.email, "create-tenant-relationship", {
     action_url: process.env.SERVER_URL + `/app/${tenantMember.tenant.slug}/settings/tenant-relationships`,
     name: user.firstName,
     invite_sender_name: appData.user?.firstName,

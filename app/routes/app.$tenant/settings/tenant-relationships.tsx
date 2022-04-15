@@ -73,7 +73,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const relatedTenant = existing.providerTenantId === appData.currentTenant.id ? existing.clientTenant : existing.providerTenant;
     if (accepted) {
-      await sendEmail(user.email, "link-invitation-accepted", {
+      await sendEmail(user.email, "tenant-relationship-accepted", {
         action_url: process.env.SERVER_URL + `/app/settings/${relatedTenant.slug}/settings/tenant-relationships`,
         name: user.firstName,
         user_invitee_name: appData.user?.firstName,
@@ -82,7 +82,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         action_text: "View tenant relationships",
       });
     } else {
-      await sendEmail(user.email, "link-invitation-rejected", {
+      await sendEmail(user.email, "tenant-relationship-rejected", {
         action_url: process.env.SERVER_URL + `/app/${relatedTenant.slug}/settings/tenant-relationships`,
         name: user.firstName,
         email: appData.user?.email,
