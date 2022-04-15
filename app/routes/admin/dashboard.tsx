@@ -8,11 +8,15 @@ import { getAdminDashboardStats } from "~/utils/services/adminDashboardService";
 import { getSetupSteps } from "~/utils/services/setupService";
 import SetupSteps from "~/components/admin/SetupSteps";
 import ProfileBanner from "~/components/app/ProfileBanner";
+import { adminGetAllTenants, TenantWithDetails } from "~/utils/db/tenants.db.server";
+import TenantsTable from "~/components/core/tenants/TenantsTable";
+import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
 
 type LoaderData = AdminLoaderData & {
   title: string;
   stats: Stat[];
   setupSteps: SetupItem[];
+  tenants: TenantWithDetails[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -21,12 +25,15 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const stats = await getAdminDashboardStats(30);
   const setupSteps = await getSetupSteps();
+  const tenants = await adminGetAllTenants();
+  await loadTenantsSubscriptionAndUsage(tenants);
 
   const data: LoaderData = {
     ...adminData,
     title: `${t("app.sidebar.dashboard")} | ${process.env.APP_NAME}`,
     stats,
     setupSteps,
+    tenants,
   };
   return json(data);
 };
@@ -49,7 +56,10 @@ export default function AdminNavigationRoute() {
         <div className="space-y-5">
           <DashboardStats items={data.stats} />
 
-          <SetupSteps items={data.setupSteps} />
+          {data.setupSteps.filter((f) => f.completed).length < data.setupSteps.length && <SetupSteps items={data.setupSteps} />}
+
+          <h3 className="leading-4 font-medium text-gray-900">Tenants</h3>
+          <TenantsTable items={data.tenants} withSearch={false} />
         </div>
       </div>
     </main>
