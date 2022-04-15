@@ -20,8 +20,8 @@ export default function ContractsList({ items }: Props) {
       (f) =>
         f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.description?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.link?.providerWorkspace.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.link?.clientWorkspace.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.link?.providerTenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.link?.clientTenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.createdByUser?.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
     );
   };

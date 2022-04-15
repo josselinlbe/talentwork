@@ -136,8 +136,7 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                   <div className="max-w-lg mx-auto">
                     <div>
                       <div className="text-center">
-                        <h2 className="mt-2 text-lg font-medium text-gray-900">{t("app.workspaces.actions.selectWorkspaceUsers")}</h2>
-                        <p className="mt-1 text-sm text-gray-500">{t("app.workspaces.actions.selectUsers")}</p>
+                        <h2 className="mt-2 text-lg font-medium text-gray-900">{t("app.users.select")}</h2>
                       </div>
                       {allowSearch && (
                         <form action="#" className="mt-6 flex">
@@ -165,7 +164,7 @@ const SelectUsers = ({ items, allowSearch, onClosed, onSelected }: Props, ref: R
                               <EmptyState
                                 className="bg-white"
                                 captions={{
-                                  thereAreNo: t("app.workspaces.errors.noUsers"),
+                                  thereAreNo: t("app.users.empty"),
                                 }}
                               />
                             </div>

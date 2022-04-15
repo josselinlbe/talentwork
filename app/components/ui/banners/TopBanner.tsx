@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { Link } from "remix";
-import RemixDark from "~/assets/img/remix-dark.png";
 
 export default function TopBanner() {
-  const location = useLocation();
   const [open, setOpen] = useState(true);
 
   return (

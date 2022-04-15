@@ -121,26 +121,14 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
           </button>
 
           <div className="flex-1 px-3 flex justify-between space-x-2">
-            <div className="flex-1 flex items-center flex-shrink-0">
+            <div className="flex-1 flex items-center">
               <div className="w-full flex md:ml-0">
                 <div className="align-baseline w-full text-slate-200 pl-1">
-                  {/* <nav className="lg:hidden">
-                    <Link to={UrlUtils.currentTenantUrl(params, "dashboard")}>
-                      <img alt="Logo" className="h-7 w-auto sm:hidden" src={IconLight} />
-                      <img alt="Logo" className="h-7 w-auto hidden sm:block" src={LogoLight} />
-                    </Link>
-                  </nav>
-                  <nav className="hidden lg:flex items-center text-base leading-5 font-medium">
-                    <Link to={UrlUtils.currentTenantUrl(params, "dashboard")}>
-                      <img alt="Logo" className="hidden sm:block h-7 sm:h-8 w-auto" src={LogoLight} />
-                    </Link>
-                  </nav> */}
-
                   <div className="w-full">
                     <label htmlFor="command-palette" className="sr-only">
                       {t("shared.commandPalette")}
                     </label>
-                    <div className="relative text-gray-400 hover:text-gray-500">
+                    <div className="relative text-gray-400 hover:text-gray-500 truncate">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                           <path
@@ -153,9 +141,11 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                       <button
                         type="button"
                         onClick={onOpenCommandPalette}
-                        className=" text-left block w-full pl-10 pr-3 py-1.5 text-sm sm:py-2 border border-gray-200 rounded-md leading-5 bg-gray-50 text-gray-400 focus:outline-none hover:ring-0 hover:placeholder-gray-500 hover:text-gray-500"
+                        className="flex space-x-2 text-left w-full pl-10 pr-3 py-1.5 text-sm sm:py-2 border border-gray-200 rounded-md leading-5 bg-gray-50 text-gray-400 focus:outline-none hover:ring-0 hover:placeholder-gray-500 hover:text-gray-500 truncate"
                       >
-                        {t("shared.search")}
+                        <div className="font-medium hidden lg:block">⌘K</div>
+                        <div className="hidden lg:block truncate">{t("shared.commandPalette")}</div>
+                        <div className="lg:hidden">{t("shared.search")}</div>
                       </button>
                     </div>
                   </div>
@@ -175,7 +165,7 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
         </div>
 
         <main ref={mainElement} className="flex-1 focus:outline-none overflow-y-auto bg-gray-50" tabIndex={0}>
-          <div key={appData.currentWorkspace?.id ?? ""} className="pb-20 sm:pb-0">
+          <div key={appData.currentTenant?.id ?? ""} className="pb-20 sm:pb-0">
             {children}
           </div>
         </main>

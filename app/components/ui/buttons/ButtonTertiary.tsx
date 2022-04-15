@@ -28,9 +28,9 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
                 "inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
                 disabled ? "cursor-not-allowed opacity-75" : "hover:underline",
                 !destructive && "text-theme-600",
-                destructive && "text-theme-600",
+                destructive && "text-red-600",
                 !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900",
-                !disabled && destructive && "hover:text-theme-800 focus:text-theme-900"
+                !disabled && destructive && "hover:text-red-800 focus:text-red-900"
               )}
             >
               {children}
@@ -46,9 +46,9 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
                 "inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
                 disabled ? "cursor-not-allowed opacity-75" : "hover:underline",
                 !destructive && "text-theme-600",
-                destructive && "text-theme-600",
+                destructive && "text-red-600",
                 !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900",
-                !disabled && destructive && "hover:text-theme-800 focus:text-theme-900"
+                !disabled && destructive && "hover:text-red-800 focus:text-red-900"
               )}
             >
               {children}

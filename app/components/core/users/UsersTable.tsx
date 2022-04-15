@@ -154,7 +154,7 @@ export default function UsersTable({ items }: Props) {
                 <EmptyState
                   className="bg-white"
                   captions={{
-                    thereAreNo: t("app.workspaces.errors.noUsers"),
+                    thereAreNo: t("app.users.empty"),
                   }}
                 />
               </div>

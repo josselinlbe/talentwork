@@ -76,11 +76,7 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    redirectTo.length > 0
-      ? redirectTo
-      : user.admin !== null
-      ? "/admin/dashboard"
-      : `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
+    redirectTo.length > 0 ? redirectTo : user.admin !== null ? "/admin/dashboard" : `/app/${userSession.defaultTenantId}/dashboard`
   );
 };
 

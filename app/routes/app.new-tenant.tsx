@@ -2,13 +2,11 @@ import { Link } from "react-router-dom";
 import { ActionFunction, json, LoaderFunction, redirect, useActionData, useNavigate } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import TenantNew from "~/components/core/settings/tenant/TenantNew";
 import Logo from "~/components/front/Logo";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { createTenant, createTenantUser, getMyTenants } from "~/utils/db/tenants.db.server";
-import { getUser, updateUserDefaultWorkspaceId } from "~/utils/db/users.db.server";
-import { createWorkspace, createWorkspaceUser } from "~/utils/db/workspaces.db.server";
+import { getUser, updateUserDefaultTenantId } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { createStripeCustomer } from "~/utils/stripe.server";
 
@@ -56,25 +54,10 @@ export const action: ActionFunction = async ({ request }) => {
     userId: user.id,
     role: TenantUserRole.OWNER,
   });
-  const defaultWorkspace = await createWorkspace({
-    tenantId: tenant.id,
-    name: "Default workspace",
-    type: WorkspaceType.PRIVATE,
-    businessMainActivity: "",
-    registrationNumber: "",
-  });
 
-  if (!defaultWorkspace) {
-    return badRequest({ error: "Could not create default workspace" });
-  }
-  await createWorkspaceUser({
-    workspaceId: defaultWorkspace.id,
-    userId: user.id,
-  });
+  await updateUserDefaultTenantId({ defaultTenantId: tenant.id }, user.id);
 
-  await updateUserDefaultWorkspaceId({ defaultWorkspaceId: defaultWorkspace.id }, user.id);
-
-  return redirect(`/app/${tenant.id}/${defaultWorkspace.id}/dashboard`);
+  return redirect(`/app/${tenant.id}/dashboard`);
 };
 
 export default function AppRoute() {

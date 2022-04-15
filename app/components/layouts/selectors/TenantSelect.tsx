@@ -21,8 +21,8 @@ export default function TenantSelect({ onOpenCommandPalette }: Props) {
                 </span>
               )}
               <div className="ml-3 truncate">
-                <p className="text-sm font-medium text-gray-200 group-hover:text-white">{appData.currentWorkspace?.name}</p>
-                <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200 truncate">{appData.currentTenant?.name}</p>
+                <p className="text-sm font-medium text-gray-200 group-hover:text-white">{appData.currentTenant?.name}</p>
+                <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200 truncate">{appData.user.email}</p>
               </div>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 group-hover:text-white" viewBox="0 0 20 20" fill="currentColor">

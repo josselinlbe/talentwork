@@ -13,10 +13,10 @@ export default function PendingInvitationsButton() {
     <div>
       {/*Pending invitations (links) */}
       {appData.currentRole < 3 && (
-        <div className="inline-flex shadow-none rounded-sm divide-x divide-gray-300">
+        <div className="hidden sm:inline-flex shadow-none rounded-sm divide-x divide-gray-300">
           <div className="text-sm relative z-0 inline-flex shadow-none rounded-full">
             <Link
-              to={UrlUtils.currentTenantUrl(params, "links/pending")}
+              to={UrlUtils.currentTenantUrl(params, "settings/tenant-relationships")}
               type="button"
               className={clsx(
                 "text-gray-800 bg-gray-50 border-gray-100 shadow-inner border relative inline-flex items-center p-2 rounded-full font-medium hover:bg-theme-300 hover:text-theme-800 focus:bg-theme-400 focus:text-theme-900 focus:outline-none focus:z-10 focus:ring-2 focus:ring-offset-2 focus:ring-offset-theme-50 focus:ring-theme-100",
@@ -35,9 +35,9 @@ export default function PendingInvitationsButton() {
                   <span>{appData.pendingInvitations} </span>
                   {(() => {
                     if (appData.pendingInvitations === 1) {
-                      return <span className="hidden md:inline-block lowercase">{t("app.links.pending.one")}</span>;
+                      return <span className="hidden md:inline-block lowercase">{t("app.tenantRelationships.pending.one")}</span>;
                     } else {
-                      return <span className="hidden md:inline-block lowercase">{t("app.links.pending.multiple")}</span>;
+                      return <span className="hidden md:inline-block lowercase">{t("app.tenantRelationships.pending.multiple")}</span>;
                     }
                   })()}
                 </div>

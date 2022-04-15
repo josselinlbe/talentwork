@@ -42,7 +42,7 @@ export default function Tabs({ className = "", tabs = [], asLinks = true, onSele
   }
   const currentTab = () => {
     if (asLinks) {
-      return tabs.find((element) => element.routePath && location.pathname + location.search === element.routePath);
+      return tabs.find((element) => element.routePath && (location.pathname + location.search).includes(element.routePath));
     } else {
       return tabs[selected];
     }

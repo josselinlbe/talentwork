@@ -11,7 +11,7 @@ export default function CurrentSubscriptionButton() {
 
   return (
     <div>
-      <div className="inline-flex shadow-none rounded-sm divide-x divide-gray-300">
+      <div className="hidden sm:inline-flex shadow-none rounded-sm divide-x divide-gray-300">
         <div className="text-xs sm:text-sm relative z-0 inline-flex shadow-none rounded-full">
           <Link
             to={UrlUtils.currentTenantUrl(params, `settings/subscription`)}

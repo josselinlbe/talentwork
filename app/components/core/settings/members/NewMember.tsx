@@ -1,25 +1,22 @@
 import { Transition } from "@headlessui/react";
-import { Workspace } from "@prisma/client";
 import clsx from "clsx";
 import { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useLoaderData, useActionData, useNavigate, useTransition, Form, useLocation, useParams } from "remix";
+import { useActionData, useNavigate, useTransition, Form, useLocation, useParams } from "remix";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import { NewMemberActionData, NewMemberLoaderData } from "~/routes/app.$tenant.$workspace/settings/members/new";
+import { NewMemberActionData } from "~/routes/app.$tenant/settings/members/new";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { useMembersData } from "~/utils/data/useMembersData";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
-import SelectWorkspaces, { RefSelectWorkspaces } from "../../workspaces/SelectWorkspaces";
 
 export default function NewMember() {
   const params = useParams();
   const location = useLocation();
   const appData = useAppData();
-  const data = useLoaderData<NewMemberLoaderData>();
   const actionData = useActionData<NewMemberActionData>();
   const membersData = useMembersData(params);
   const { t } = useTranslation();
@@ -30,7 +27,6 @@ export default function NewMember() {
 
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
-  const selectWorkspaces = useRef<RefSelectWorkspaces>(null);
   const inputEmail = useRef<HTMLInputElement>(null);
 
   const [showing, setShowing] = useState(false);
@@ -52,7 +48,6 @@ export default function NewMember() {
       description: t("settings.profile.permissions.MEMBER"),
     },
   ];
-  const [workspaces, setWorkspaces] = useState<Workspace[]>(appData.myWorkspaces.map((f) => f.workspace));
 
   useEffect(() => {
     if (actionData?.error) {
@@ -81,22 +76,10 @@ export default function NewMember() {
       navigate("/admin/members", { replace: true });
     }
   }
-  function selectUserWorkspaces() {
-    selectWorkspaces.current?.show(workspaces.map((f) => f.id));
-  }
-  function selectedWorkspaces(items: Workspace[]) {
-    setWorkspaces(items);
-  }
   function changedRole(e: any) {
     const _role: TenantUserRole = Number(e.target.value);
     setRole(_role);
   }
-  const currentWorkspacesDescription = (workspaces: Workspace[]) => {
-    if (workspaces.length === 0) {
-      return t("app.workspaces.selectAtLeastOne");
-    }
-    return workspaces.map((f) => f.name).join(", ");
-  };
   const maxUsers = (): number => {
     return appData.mySubscription?.maxUsers ?? 0;
   };
@@ -302,33 +285,6 @@ export default function NewMember() {
                         </div>
                       </div>
                       {/*User Role: End */}
-
-                      {/*User Workspaces */}
-                      <div className="col-span-2">
-                        <label htmlFor="description" className="block text-xs font-medium text-gray-700 truncate">
-                          {t("models.workspace.plural")}
-                        </label>
-                        <div className="mt-2 rounded-md w-full space-y-2">
-                          {workspaces.map((workspace, idx) => {
-                            return <input hidden key={idx} type="text" id="workspaces[]" name="workspaces[]" value={workspace.id} readOnly />;
-                          })}
-                          <input
-                            type="text"
-                            id="description"
-                            autoComplete="off"
-                            disabled
-                            value={currentWorkspacesDescription(workspaces)}
-                            className="bg-gray-100 cursor-not-allowed w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300"
-                          />
-                          <button type="button" onClick={selectUserWorkspaces} className="flex items-center space-x-1 text-xs text-theme-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            <span className="uppercase font-medium">{t("app.workspaces.actions.selectUserWorkspaces")}</span>
-                          </button>
-                        </div>
-                      </div>
-                      {/*User Workspaces: End */}
                     </div>
 
                     <div className="flex items-center justify-between mt-4">
@@ -368,7 +324,6 @@ export default function NewMember() {
 
       <ErrorModal ref={errorModal} />
       <SuccessModal ref={successModal} onClosed={close} />
-      <SelectWorkspaces ref={selectWorkspaces} onSelected={selectedWorkspaces} items={data?.tenantWorkspaces} />
     </div>
   );
 }

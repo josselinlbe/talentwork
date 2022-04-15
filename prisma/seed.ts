@@ -29,7 +29,7 @@ async function createUser(firstName: string, lastName: string, email: string, pa
   return user;
 }
 
-async function createTenant(name: string, workspaces: string[], users: { id: string; role: TenantUserRole }[]) {
+async function createTenant(name: string, users: { id: string; role: TenantUserRole }[]) {
   const tenant = await db.tenant.create({
     data: {
       name,
@@ -43,9 +43,8 @@ async function createTenant(name: string, workspaces: string[], users: { id: str
       tenantId: tenant.id,
       stripeCustomerId: "",
       stripeSubscriptionId: "",
-      maxWorkspaces: 3,
       maxUsers: 5,
-      maxLinks: 45,
+      maxTenantRelationships: 45,
       maxStorage: 100 * 1024,
       monthlyContracts: 45,
     },
@@ -60,27 +59,6 @@ async function createTenant(name: string, workspaces: string[], users: { id: str
         joined: TenantUserJoined.CREATOR,
         status: TenantUserStatus.ACTIVE,
       },
-    });
-  });
-
-  workspaces.forEach(async (name) => {
-    const workspace = await db.workspace.create({
-      data: {
-        tenantId: tenant.id,
-        name,
-        type: 0,
-        businessMainActivity: "",
-        registrationNumber: "",
-      },
-    });
-
-    users.forEach(async (user) => {
-      await db.workspaceUser.create({
-        data: {
-          workspaceId: workspace.id,
-          userId: user.id,
-        },
-      });
     });
   });
 
@@ -101,65 +79,15 @@ async function seed() {
   // User without tenants
   await createUser("Alex", "Martinez", "alex.martinez@company.com", "password");
 
-  await createTenant(
-    "Tenant 1",
-    ["T1.Workspace 1", "T1.Workspace 2"],
-    [
-      { ...admin, role: TenantUserRole.ADMIN },
-      { ...user1, role: TenantUserRole.ADMIN },
-      { ...user2, role: TenantUserRole.MEMBER },
-    ]
-  );
-  await createTenant(
-    "Tenant 2",
-    ["T2.Workspace 1", "T2.Workspace 2"],
-    [
-      { ...user1, role: TenantUserRole.OWNER },
-      { ...user2, role: TenantUserRole.MEMBER },
-    ]
-  );
-
-  await Promise.all(
-    getJokes().map((joke) => {
-      const data = { jokesterId: admin.id, ...joke };
-      return db.joke.create({ data });
-    })
-  );
+  await createTenant("Tenant 1", [
+    { ...admin, role: TenantUserRole.ADMIN },
+    { ...user1, role: TenantUserRole.ADMIN },
+    { ...user2, role: TenantUserRole.MEMBER },
+  ]);
+  await createTenant("Tenant 2", [
+    { ...user1, role: TenantUserRole.OWNER },
+    { ...user2, role: TenantUserRole.MEMBER },
+  ]);
 }
 
 seed();
-
-function getJokes() {
-  // shout-out to https://icanhazdadjoke.com/
-
-  return [
-    {
-      name: "Road worker",
-      content: `I never wanted to believe that my Dad was stealing from his job as a road worker. But when I got home, all the signs were there.`,
-    },
-    {
-      name: "Frisbee",
-      content: `I was wondering why the frisbee was getting bigger, then it hit me.`,
-    },
-    {
-      name: "Trees",
-      content: `Why do trees seem suspicious on sunny days? Dunno, they're just a bit shady.`,
-    },
-    {
-      name: "Skeletons",
-      content: `Why don't skeletons ride roller coasters? They don't have the stomach for it.`,
-    },
-    {
-      name: "Hippos",
-      content: `Why don't you find hippopotamuses hiding in trees? They're really good at it.`,
-    },
-    {
-      name: "Dinner",
-      content: `What did one plate say to the other plate? Dinner is on me!`,
-    },
-    {
-      name: "Elevator",
-      content: `My first time using an elevator was an uplifting experience. The second time let me down.`,
-    },
-  ];
-}

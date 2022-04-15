@@ -9,8 +9,6 @@ import UserUtils from "~/utils/app/UserUtils";
 import { createStripeCustomer } from "~/utils/stripe.server";
 import { createTenant, createTenantUser } from "~/utils/db/tenants.db.server";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import { createWorkspace, createWorkspaceUser } from "~/utils/db/workspaces.db.server";
-import { WorkspaceType } from "~/application/enums/tenants/WorkspaceType";
 import { sendEmail } from "~/utils/email.server";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 
@@ -99,26 +97,9 @@ export const action: ActionFunction = async ({ request }) => {
     role: TenantUserRole.OWNER,
   });
 
-  const defaultWorkspace = await createWorkspace({
-    tenantId: tenant.id,
-    name: "Default workspace",
-    type: WorkspaceType.PRIVATE,
-    businessMainActivity: "",
-    registrationNumber: "",
-  });
-
-  if (!defaultWorkspace) {
-    return badRequest({ error: "Could not create default workspace" });
-  }
-
   await sendEmail(email, "welcome", {
     action_url: process.env.SERVER_URL + `/login`,
     name: firstName,
-  });
-
-  await createWorkspaceUser({
-    workspaceId: defaultWorkspace.id,
-    userId: user.id,
   });
 
   const userSession = await setLoggedUser(user);
@@ -128,7 +109,7 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
+    `/app/${userSession.defaultTenantId}/dashboard`
   );
 };
 
@@ -155,20 +136,20 @@ export default function RegisterRoute() {
           <InfoBanner title="Demo" text={"No email verification required nor a credit card to test the app."} />
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
-            {/* Workspace */}
+            {/* Tenant */}
             <div>
               <label className="block text-sm font-medium">{t("account.register.organization")}</label>
 
               <div className="mt-1 rounded-md shadow-sm -space-y-px">
                 <div>
                   <label htmlFor="company" className="sr-only">
-                    {t("models.workspace.object")}
+                    {t("models.tenant.object")}
                   </label>
                   <input
                     type="text"
                     name="company"
                     id="company"
-                    placeholder={t("models.workspace.name")}
+                    placeholder={t("shared.name")}
                     required
                     defaultValue={actionData?.fields?.company}
                     className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:bg-gray-900 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-theme-500 focus:border-theme-500 focus:z-10 sm:text-sm"
@@ -176,7 +157,8 @@ export default function RegisterRoute() {
                 </div>
               </div>
             </div>
-            {/* Workspace: End  */}
+            {/* Tenant: End  */}
+
             {/* Personal Info */}
             <div>
               <legend className="block text-sm font-medium">{t("account.register.personalInfo")}</legend>

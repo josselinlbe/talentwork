@@ -1,10 +1,10 @@
 import { Params } from "react-router";
 import { useMatches } from "remix";
 import UrlUtils from "../app/UrlUtils";
-import { getWorkspaces } from "../db/workspaces.db.server";
+import { TenantUserWithUser } from "../db/tenants.db.server";
 
 export type MembersLoaderData = {
-  users: Awaited<ReturnType<typeof getWorkspaces>>;
+  users: TenantUserWithUser[];
 };
 
 export function useMembersData(params: Params): MembersLoaderData {

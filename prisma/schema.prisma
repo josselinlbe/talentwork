@@ -6,34 +6,32 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                 String                @id @default(cuid())
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @updatedAt
-  email              String                @unique
-  passwordHash       String
-  firstName          String
-  lastName           String
-  phone              String
-  avatar             String
-  defaultWorkspaceId String?
-  verifyToken        String?
-  admin              AdminUser?
-  jokes              Joke[]
-  tenants            TenantUser[]
-  workspaces         WorkspaceUser[]
-  invitation         TenantUserInvitation?
-  contracts          ContractMember[]
-  link               Link[]
-  createdContracts   Contract[]
-  createdEmployees   Employee[]
-  contractActivities ContractActivity[]
-  linkInvitations    Link[]                @relation("userInvited")
-  activity           UserEvent[]
+  id                            String                @id @default(cuid())
+  createdAt                     DateTime              @default(now())
+  updatedAt                     DateTime              @updatedAt
+  email                         String                @unique
+  passwordHash                  String
+  firstName                     String
+  lastName                      String
+  phone                         String
+  avatar                        String
+  defaultTenantId               String?
+  verifyToken                   String?
+  admin                         AdminUser?
+  tenants                       TenantUser[]
+  invitation                    TenantUserInvitation?
+  contracts                     ContractMember[]
+  tenantRelationships           TenantRelationship[]
+  createdContracts              Contract[]
+  createdEmployees              Employee[]
+  contractActivities            ContractActivity[]
+  tenantRelationshipInvitations TenantRelationship[]  @relation("userInvited")
+  activity                      UserEvent[]
 }
 
 model AdminUser {
@@ -43,47 +41,46 @@ model AdminUser {
 }
 
 model UserEvent {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  tenantId    String?
-  tenant      Tenant?    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  workspaceId String?
-  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  url         String
-  action      String
-  details     String
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url       String
+  action    String
+  details   String
 }
 
 model Tenant {
-  id             String                 @id @default(cuid())
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
-  slug           String                 @unique
-  name           String
-  icon           String
-  subscriptionId String?
-  subscription   TenantSubscription?
-  users          TenantUser[]
-  workspaces     Workspace[]
-  invitations    TenantUserInvitation[]
-  employees      Employee[]
-  activity       UserEvent[]
+  id                            String                 @id @default(cuid())
+  createdAt                     DateTime               @default(now())
+  updatedAt                     DateTime               @updatedAt
+  slug                          String                 @unique
+  name                          String
+  icon                          String
+  subscriptionId                String?
+  subscription                  TenantSubscription?
+  users                         TenantUser[]
+  invitations                   TenantUserInvitation[]
+  employees                     Employee[]
+  activity                      UserEvent[]
+  createdTenantRelationships    TenantRelationship[]   @relation("createdByTenant")
+  asProviderTenantRelationships TenantRelationship[]   @relation("providerTenant")
+  asClientTenantRelationships   TenantRelationship[]   @relation("clientTenant")
 }
 
 model TenantSubscription {
-  tenantId             String             @unique
-  tenant               Tenant             @relation(fields: [tenantId], references: [id])
-  stripeCustomerId     String?
-  stripeSubscriptionId String?
-  subscriptionPriceId  String?
-  subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
-  maxWorkspaces        Int
-  maxUsers             Int
-  maxLinks             Int
-  maxStorage           Int
-  monthlyContracts     Int
+  tenantId               String             @unique
+  tenant                 Tenant             @relation(fields: [tenantId], references: [id])
+  stripeCustomerId       String?
+  stripeSubscriptionId   String?
+  subscriptionPriceId    String?
+  subscriptionPrice      SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
+  maxUsers               Int
+  maxTenantRelationships Int
+  maxStorage             Int
+  monthlyContracts       Int
 }
 
 model TenantUser {
@@ -99,80 +96,33 @@ model TenantUser {
 }
 
 model TenantUserInvitation {
-  id            String                          @id @default(cuid())
+  id            String  @id @default(cuid())
   tenantId      String
-  tenant        Tenant                          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   email         String
   firstName     String
   lastName      String
   role          Int
   pending       Boolean
-  workspaces    TenantUserInvitationWorkspace[]
-  createdUserId String?                         @unique
-  user          User?                           @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
-}
-
-model TenantUserInvitationWorkspace {
-  id           String               @id @default(cuid())
-  invitationId String
-  invitation   TenantUserInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
-  workspaceId  String
-}
-
-model Workspace {
-  id                   String          @id @default(cuid())
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-  tenantId             String
-  tenant               Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  name                 String
-  type                 Int
-  businessMainActivity String
-  registrationNumber   String
-  registrationDate     DateTime?
-  users                WorkspaceUser[]
-  employees            Employee[]
-  createdLinks         Link[]          @relation("createdByWorkspace")
-  asProviderLinks      Link[]          @relation("providerWorkspace")
-  asClientLinks        Link[]          @relation("clientWorkspace")
-  activity             UserEvent[]
-}
-
-model WorkspaceUser {
-  id          String    @id @default(cuid())
-  workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  // current     Boolean
-}
-
-model Joke {
-  id         String   @id @default(cuid())
-  jokesterId String
-  jokester   User     @relation(fields: [jokesterId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String
-  content    String
+  createdUserId String? @unique
+  user          User?   @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
 }
 
 model SubscriptionProduct {
-  id               String                @id @default(cuid())
-  stripeId         String
-  tier             Int
-  title            String
-  description      String
-  badge            String
-  active           Boolean
-  contactUs        Boolean
-  maxWorkspaces    Int
-  maxUsers         Int
-  maxLinks         Int
-  maxStorage       Int
-  monthlyContracts Int
-  prices           SubscriptionPrice[]
-  features         SubscriptionFeature[]
+  id                     String                @id @default(cuid())
+  stripeId               String
+  tier                   Int
+  title                  String
+  description            String
+  badge                  String
+  active                 Boolean
+  contactUs              Boolean
+  maxUsers               Int
+  maxTenantRelationships Int
+  maxStorage             Int
+  monthlyContracts       Int
+  prices                 SubscriptionPrice[]
+  features               SubscriptionFeature[]
 }
 
 model SubscriptionPrice {
@@ -199,21 +149,21 @@ model SubscriptionFeature {
   included              Boolean
 }
 
-model Link {
-  id                   String     @id @default(cuid())
-  createdAt            DateTime   @default(now())
-  createdByUserId      String
-  createdByUser        User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  createdByWorkspaceId String
-  createdByWorkspace   Workspace  @relation("createdByWorkspace", fields: [createdByWorkspaceId], references: [id], onDelete: Cascade)
-  providerWorkspaceId  String
-  providerWorkspace    Workspace  @relation("providerWorkspace", fields: [providerWorkspaceId], references: [id], onDelete: Cascade)
-  clientWorkspaceId    String
-  clientWorkspace      Workspace  @relation("clientWorkspace", fields: [clientWorkspaceId], references: [id], onDelete: Cascade)
-  status               Int
-  userInvitedId        String
-  userInvited          User       @relation("userInvited", fields: [userInvitedId], references: [id], onDelete: Cascade)
-  contracts            Contract[]
+model TenantRelationship {
+  id                String     @id @default(cuid())
+  createdAt         DateTime   @default(now())
+  createdByUserId   String
+  createdByUser     User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByTenantId String
+  createdByTenant   Tenant     @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
+  providerTenantId  String
+  providerTenant    Tenant     @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
+  clientTenantId    String
+  clientTenant      Tenant     @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
+  status            Int
+  userInvitedId     String
+  userInvited       User       @relation("userInvited", fields: [userInvitedId], references: [id], onDelete: Cascade)
+  contracts         Contract[]
 }
 
 model Employee {
@@ -223,8 +173,6 @@ model Employee {
   createdByUser    User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   tenantId         String
   tenant           Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  workspaceId      String
-  workspace        Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   firstName        String
   lastName         String
   email            String
@@ -232,19 +180,19 @@ model Employee {
 }
 
 model Contract {
-  id              String             @id @default(cuid())
-  createdAt       DateTime           @default(now())
-  createdByUserId String
-  createdByUser   User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  linkId          String
-  link            Link               @relation(fields: [linkId], references: [id], onDelete: Cascade)
-  name            String
-  description     String
-  file            String
-  status          Int
-  members         ContractMember[]
-  employees       ContractEmployee[]
-  activity        ContractActivity[]
+  id                   String             @id @default(cuid())
+  createdAt            DateTime           @default(now())
+  createdByUserId      String
+  createdByUser        User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenantRelationshipId String
+  tenantRelationship   TenantRelationship @relation(fields: [tenantRelationshipId], references: [id], onDelete: Cascade)
+  name                 String
+  description          String
+  file                 String
+  status               Int
+  members              ContractMember[]
+  employees            ContractEmployee[]
+  activity             ContractActivity[]
 }
 
 model ContractMember {

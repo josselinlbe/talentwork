@@ -10,9 +10,8 @@ export interface SubscriptionProductDto {
   badge: string;
   active: boolean;
   contactUs: boolean;
-  maxWorkspaces: number;
   maxUsers: number;
-  maxLinks: number;
+  maxTenantRelationships: number;
   maxStorage: number;
   monthlyContracts: number;
   prices: SubscriptionPriceDto[];

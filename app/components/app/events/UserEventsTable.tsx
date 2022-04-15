@@ -8,7 +8,6 @@ import { UserEventWithDetails } from "~/utils/db/users.db.server";
 interface Props {
   items: UserEventWithDetails[];
   withTenant: boolean;
-  withWorkspace: boolean;
 }
 
 type Header = {
@@ -17,7 +16,7 @@ type Header = {
   sortable?: boolean;
 };
 
-export default function UserEventsTable({ withTenant, withWorkspace, items }: Props) {
+export default function UserEventsTable({ withTenant, items }: Props) {
   const { t } = useTranslation();
 
   const [searchInput, setSearchInput] = useState("");
@@ -32,7 +31,6 @@ export default function UserEventsTable({ withTenant, withWorkspace, items }: Pr
         f.action?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.details?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.tenant?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.workspace?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.user?.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         (f.user?.firstName?.toString() + " " + f.user?.lastName?.toString()).toUpperCase().includes(searchInput.toUpperCase())
     );
@@ -55,11 +53,6 @@ export default function UserEventsTable({ withTenant, withWorkspace, items }: Pr
         title: t("models.tenant.object"),
       });
     }
-    if (withWorkspace) {
-      headers.push({
-        title: t("models.workspace.object"),
-      });
-    }
     headers = [
       ...headers,
       {
@@ -76,7 +69,7 @@ export default function UserEventsTable({ withTenant, withWorkspace, items }: Pr
     ];
     setHeaders(headers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [withTenant, withWorkspace]);
+  }, [withTenant]);
 
   function sortBy(column: string | undefined) {
     if (column) {
@@ -209,7 +202,6 @@ export default function UserEventsTable({ withTenant, withWorkspace, items }: Pr
                                   <div className="text-xs text-gray-600">{item.createdAt && <span>{DateUtils.dateYMDHMS(item.createdAt)}</span>}</div>
                                 </td>
                                 {withTenant && <td className="px-2 py-2 whitespace-nowrap">{item.tenant?.name ?? "-"}</td>}
-                                {withWorkspace && <td className="px-2 py-2 whitespace-nowrap">{item.workspace?.name ?? "-"}</td>}
                                 <td className="px-2 py-2 whitespace-nowrap text-gray-700 text-sm">
                                   {item.user.firstName} {item.user.lastName} <span className=" text-gray-500 text-xs">({item.user.email})</span>
                                 </td>

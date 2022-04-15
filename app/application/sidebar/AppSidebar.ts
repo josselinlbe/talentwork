@@ -19,30 +19,17 @@ export const AppSidebar = (params: Params): SideBarItem[] => {
         },
         {
           title: "models.contract.plural",
-          path: `${currentTenantUrl}/contracts`,
           icon: SvgIcon.CONTRACTS,
+          path: `${currentTenantUrl}/contracts`,
           userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
           isDemo: true,
-          items: [
-            {
-              title: "models.link.plural",
-              path: `${currentTenantUrl}/links`,
-              userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
-              isDemo: true,
-            },
-            {
-              title: "models.contract.plural",
-              path: `${currentTenantUrl}/contracts`,
-              userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
-              isDemo: true,
-            },
-            {
-              title: "models.employee.plural",
-              path: `${currentTenantUrl}/employees`,
-              userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
-              isDemo: true,
-            },
-          ],
+        },
+        {
+          title: "models.employee.plural",
+          icon: SvgIcon.EMPLOYEES,
+          path: `${currentTenantUrl}/employees`,
+          userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
+          isDemo: true,
         },
       ],
     },

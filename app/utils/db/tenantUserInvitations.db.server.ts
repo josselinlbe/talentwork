@@ -9,7 +9,6 @@ export async function getUserInvitation(id: string) {
     },
     include: {
       tenant: true,
-      workspaces: true,
     },
   });
 }
@@ -28,7 +27,6 @@ export async function getUserInvitations(tenantId?: string) {
 
 export async function createUserInvitation(
   tenantId: string,
-  workspaces: string[],
   data: {
     email: string;
     firstName: string;
@@ -42,14 +40,6 @@ export async function createUserInvitation(
       ...data,
       pending: true,
     },
-  });
-  workspaces.forEach(async (workspaceId) => {
-    await db.tenantUserInvitationWorkspace.create({
-      data: {
-        invitationId: invitation.id,
-        workspaceId,
-      },
-    });
   });
 
   return invitation;

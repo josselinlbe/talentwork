@@ -7,14 +7,10 @@ const linkCondition = (tenantId: string) => {
   return {
     OR: [
       {
-        providerWorkspace: {
-          tenantId,
-        },
+        providerTenantId: tenantId,
       },
       {
-        clientWorkspace: {
-          tenantId,
-        },
+        clientTenantId: tenantId,
       },
     ],
   };
@@ -30,14 +26,14 @@ export async function getLinksStat(tenantId: string, lastDays: number) {
     previousStat: (total - added).toString(),
     change: getStatChangePercentage(added, total) + "%",
     changeType: getStatChangeType(added, total),
-    // path: "/app/:tenant/:workspace/contracts",
+    // path: "/app/:tenant/contracts",
   };
   return linksStat;
 }
 
 async function getLinksCreatedSince(tenantId: string, lastDays: number) {
   const from = DateUtils.daysFromDate(new Date(), lastDays);
-  const added = await db.link.count({
+  const added = await db.tenantRelationship.count({
     where: {
       ...linkCondition(tenantId),
       createdAt: {
@@ -45,7 +41,7 @@ async function getLinksCreatedSince(tenantId: string, lastDays: number) {
       },
     },
   });
-  const total = await db.link.count({
+  const total = await db.tenantRelationship.count({
     where: {
       ...linkCondition(tenantId),
     },
@@ -67,7 +63,7 @@ export async function getContractsStat(tenantId: string, lastDays: number) {
     previousStat: (total - added).toString(),
     change: getStatChangePercentage(added, total) + "%",
     changeType: getStatChangeType(added, total),
-    // path: "/app/:tenant/:workspace/contracts",
+    // path: "/app/:tenant/contracts",
   };
   return contractsStat;
 }
@@ -76,7 +72,7 @@ async function getContractsCreatedSince(tenantId: string, lastDays: number) {
   const from = DateUtils.daysFromDate(new Date(), lastDays);
   const added = await db.contract.count({
     where: {
-      link: {
+      tenantRelationship: {
         ...linkCondition(tenantId),
       },
       createdAt: {
@@ -86,7 +82,7 @@ async function getContractsCreatedSince(tenantId: string, lastDays: number) {
   });
   const total = await db.contract.count({
     where: {
-      link: {
+      tenantRelationship: {
         ...linkCondition(tenantId),
       },
     },
@@ -108,7 +104,7 @@ export async function getEmployeesStat(tenantId: string, lastDays: number) {
     previousStat: (total - added).toString(),
     change: getStatChangePercentage(added, total) + "%",
     changeType: getStatChangeType(added, total),
-    // path: "/app/:tenant/:workspace/contracts",
+    // path: "/app/:tenant/contracts",
   };
   return contractsStat;
 }

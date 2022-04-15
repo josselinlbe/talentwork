@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { json, Link, LoaderFunction, MetaFunction, useNavigate } from "remix";
+import { json, LoaderFunction, MetaFunction, useNavigate } from "remix";
 import Footer from "~/components/front/Footer";
 import Logo from "~/components/front/Logo";
 import { i18nHelper } from "~/locale/i18n.utils";

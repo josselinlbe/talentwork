@@ -50,9 +50,6 @@ export default function AdminTenantsRoute() {
       title: t("models.user.plural"),
     },
     {
-      title: t("models.workspace.plural"),
-    },
-    {
       title: t("models.contract.plural"),
     },
     {
@@ -66,29 +63,6 @@ export default function AdminTenantsRoute() {
     },
   ];
 
-  // function getWorkspaces(item: Tenant & { workspaces: Workspace[] }) {
-  //   return item.workspaces?.map((f) => `${f.name}`).join(", ");
-  // }
-  // function getUsers(item: Tenant & { users: (TenantUser & { user: User })[] }) {
-  //   return item.users?.map((f) => `${f.user.firstName} ${f.user.lastName} (${f.user.email})`).join(", ");
-  // }
-  // function getProducts(item: Tenant & { users: (TenantUser & { user: User })[] }) {
-  //   return item.products
-  //     ?.map(
-  //       (f) =>
-  //         `${f.subscriptionProduct.tier} - ${t(f.subscriptionProduct.title)} (${NumberUtils.decimalFormat(f.subscriptionPrice.price)} ${
-  //           f.subscriptionPrice.currency
-  //         }${priceBillingPeriod(f.subscriptionPrice)})`
-  //     )
-  //     .join(", ");
-  // }
-  // function priceBillingPeriod(price: SubscriptionPriceDto): string {
-  //   if (price.billingPeriod === SubscriptionBillingPeriod.ONCE) {
-  //     return t("pricing.once").toString();
-  //   } else {
-  //     return "/" + t("pricing." + SubscriptionBillingPeriod[price.billingPeriod] + "Short");
-  //   }
-  // }
   const orderedItems = () => {
     if (!filteredItems()) {
       return [];
@@ -203,15 +177,9 @@ export default function AdminTenantsRoute() {
                                         </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        {item.workspaces.length === 0 ? (
-                                          <Link to={`/app/${item.slug}`} className="hover:underline text-gray-800">
-                                            {item.slug}
-                                          </Link>
-                                        ) : (
-                                          <Link to={`/app/${item.slug}/${item.workspaces[0].id}`} className="hover:underline text-gray-800">
-                                            {item.slug}
-                                          </Link>
-                                        )}
+                                        <Link to={`/app/${item.slug}`} className="hover:underline text-gray-800">
+                                          {item.slug}
+                                        </Link>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         <div className="flex space-x-1">
@@ -237,10 +205,6 @@ export default function AdminTenantsRoute() {
                                           {item.usersCount}
                                           <span className=" text-gray-400">/{item.subscription?.maxUsers ?? "-"}</span>
                                         </Link>
-                                      </td>
-                                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        {item.workspacesCount}
-                                        <span className=" text-gray-400">/{item.subscription?.maxWorkspaces ?? "-"}</span>
                                       </td>
                                       <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                         {item.contractsCount}

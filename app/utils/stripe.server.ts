@@ -4,12 +4,12 @@ const stripe = new Stripe(process.env.STRIPE_SK?.toString() ?? "", {
   apiVersion: "2020-08-27",
 });
 
-export async function createStripeSession(tenant: string, workspace: string, customer: string, price: string) {
+export async function createStripeSession(tenant: string, customer: string, price: string) {
   const site = process.env.SERVER_URL?.toString() ?? "";
   return await stripe.checkout.sessions.create({
     customer,
-    success_url: site + `/app/${tenant}/${workspace}/settings/subscription?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: site + `/app/${tenant}/${workspace}/settings/subscription`,
+    success_url: site + `/app/${tenant}/settings/subscription?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: site + `/app/${tenant}/settings/subscription`,
     line_items: [{ price, quantity: 1 }],
     mode: "subscription",
   });

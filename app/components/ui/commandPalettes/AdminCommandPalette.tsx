@@ -40,8 +40,8 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
       command: "Z",
       title: "Switch to App",
       description: "Go to the app",
-      bgClassName: "bg-red-600",
-      textClassName: "text-red-200",
+      bgClassName: "bg-teal-600",
+      textClassName: "text-teal-200",
       toPath: "/app",
     },
   ];

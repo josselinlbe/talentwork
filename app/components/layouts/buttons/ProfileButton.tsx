@@ -93,14 +93,6 @@ export default function ProfileButton({ layout }: Props) {
                 >
                   {t("app.navbar.profile")}
                 </Link>
-                <Link
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
-                  role="menuitem"
-                  onClick={closeDropdownUser}
-                  to={UrlUtils.currentTenantUrl(params, "settings/workspaces")}
-                >
-                  {t("app.navbar.workspaces")}
-                </Link>
 
                 <Link
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"

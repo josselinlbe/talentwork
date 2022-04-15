@@ -15,9 +15,8 @@ export async function createPlans(plans: SubscriptionProductDto[]): Promise<void
       badge: plan.badge,
       active: plan.active,
       contactUs: plan.contactUs,
-      maxWorkspaces: plan.maxWorkspaces,
       maxUsers: plan.maxUsers,
-      maxLinks: plan.maxLinks,
+      maxTenantRelationships: plan.maxTenantRelationships,
       maxStorage: plan.maxStorage,
       monthlyContracts: plan.monthlyContracts,
     });

@@ -200,7 +200,7 @@
           "admin": "Admin",
           "adminPages": "(Organizaciones, Usuarios...)",
           "core": "Core",
-          "corePages": "(Dashboard, Enlaces...)",
+          "corePages": "(Dashboard, Ajustes...)",
           "app": "y vistas de apliación de muestra",
           "appPages": "(Contratos, Empleados...)",
           "views": ".",
@@ -250,7 +250,7 @@
           },
           "multiTenant": {
             "title": "Multi-organización & multi-empresa",
-            "description": "Diseñado para tener una organización por cuenta/subscripción. Cada organización puede tener 1 o más empresas/workspaces."
+            "description": "Diseñado para tener una organización por cuenta/subscripción."
           },
           "memberManagement": {
             "title": "Administración de miembros",
@@ -311,12 +311,10 @@
     "features": {
       "oneUser": "1 usuario",
       "maxUsers": "{{0}} usuarios",
-      "oneWorkspace": "1 RFC",
-      "maxWorkspaces": "{{0}} RFCs",
       "maxStorage": "{{0}} de almacenamiento",
       "prioritySupport": "Soporte prioritario",
-      "oneLink": "1 enlace",
-      "maxLinks": "{{0}} enlaces",
+      "oneTenantRelationship": "1 enlace con organización",
+      "maxTenantRelationships": "{{0}} enlaces con organizaciones",
       "oneContract": "1 contrato",
       "maxContracts": "{{0}} contratos/mes"
     }
@@ -445,7 +443,6 @@
     "navbar": {
       "tenant": "Organización",
       "subscription": "Subscripción",
-      "workspaces": "Empresas",
       "members": "Miembros",
       "profile": "Perfil",
       "settings": "Ajustes",
@@ -470,46 +467,15 @@
       },
       "errors": {
         "limitReached": "Límite alcanzado",
-        "limitReachedLinks": "Has llegado al límite de enlaces.",
-        "limitReachedWorkspaces": "Has llegado al límite de empresas",
+        "limitReachedTenantRelationships": "Has llegado al límite de enlaces con organizaciones.",
         "limitReachedUsers": "Has llegado al límite de usuarios.",
         "limitReachedContracts": "Has llegado al límite de contratos ({{0}})."
       }
     },
-    "workspaces": {
-      "select": "Selecciona empresa",
-      "youBelongToOne": "Perteneces a un espacio de trabajo",
-      "youBelongToMany": "Perteneces a {{0}} espacio de trabajo",
-      "selectAtLeastOne": "Selecciona al menos una empresa",
-      "create": "Agrega un RFC",
-      "createDescription": "Si tienes más de un RFC, agrega tus datos fiscales.",
-      "empty": "No hay empresas",
-      "added": "Empresa agregada",
-      "types": {
-        "PRIVATE": "Privada",
-        "PUBLIC": "Pública"
-      },
-      "typesDescription": {
-        "PRIVATE": "Empresa privada",
-        "PUBLIC": "Empresa pública"
-      },
-      "actions": {
-        "new": "Nueva empresa",
-        "edit": "Editar empresa",
-        "selectWorkspaces": "Selecciona empresas del usuario",
-        "select": "Selecciona los espacios de trabajo a los que podrá acceder el usuario",
-        "selectUserWorkspaces": "Seleccionar empresas del usuario",
-        "selectUsers": "Selecciona usuarios para la empresa actual",
-        "selectWorkspaceUsers": "Selecciona usuarios de la empresa"
-      },
-      "errors": {
-        "noWorkspaces": "No tienes empresas",
-        "noUsers": "No hay usuarios",
-        "addAtLeastOneWorkspace": "Agrega al menos una empresa"
-      }
-    },
     "users": {
       "selectAtLeastOne": "Selecciona al menos un usuario",
+      "select": "Selecciona usuarios",
+      "empty": "No hay usuarios",
       "events": {
         "empty": "No hay eventos de usuarios"
       }
@@ -574,7 +540,7 @@
         "nameRequired": "El contrato debe de tener nombre.",
         "descriptionRequired": "El contrato debe de tener una descripción.",
         "fileRequired": "Falta el archivo PDF.",
-        "linkRequired": "Selecciona un enlace (cliente o proveedor).",
+        "tenantRelationshipRequired": "Selecciona un enlace (cliente o proveedor).",
         "atLeastNSignatories": "Agrega al menos 2 firmantes."
       }
     },
@@ -604,8 +570,8 @@
         "notDefined": "No se definieron colaboradores"
       }
     },
-    "links": {
-      "my": "Enlaces",
+    "tenantRelationships": {
+      "my": "Enlaces con organizaciones",
       "profile": {
         "title": "Perfil",
         "company": "Perfil de empresa",
@@ -615,7 +581,7 @@
         "title": "Pendientes",
         "one": "Invitación pendiente",
         "multiple": "Invitaciones pendientes",
-        "description": "Administra los enlaces pendientes por aceptar.",
+        "description": "Administra los enlaces con organizaciones pendientes por aceptar.",
         "invitationSent": "Invitación enviada",
         "invitationSentDescription": "Se ha enviado un correo a {{0}} para que cree su cuenta y acepte tu invitación.",
         "empty": "No tienes invitaciones pendientes"
@@ -629,12 +595,12 @@
       "newDescription": "Enlaza con otra empresa para compartir contratos",
       "link": "Enlazar",
       "invited": "Has invitado a {{0}} a unirse como {{1}} tu empresa {{2}}.",
-      "thereAreNo": "No se encontraron enlaces activos",
+      "thereAreNo": "No se encontraron enlaces con organizaciones activos",
       "accountFound": "Cuenta encontrada",
       "accountNotFound": "Cuenta no encontrada",
       "invitation": {
         "toBe": "Invitación a ser",
-        "hasInvitedYou": "te ha invitado a crear enlace entre su empresa",
+        "hasInvitedYou": "te ha invitado a crear enlace entre su organización",
         "andYourCompany": "y tu empresa",
         "reasonAsProvider": "para compartir contratos",
         "reasonAsClient": "para compartir contratos",
@@ -649,11 +615,12 @@
         "notFound": "El usuario {{0}} no tiene la empresa '{{1}}'.",
         "cannotInviteSelf": "No puedes invitarte a ti",
         "cannotInviteCurrentTenant": "No puedes invitar a la organización actual",
-        "inviteOwnersOrAdmins": "Solo puedes invitar a propietarios o administradores"
+        "inviteOwnersOrAdmins": "Solo puedes invitar a propietarios o administradores",
+        "existing": "Ya existe un enlace con esta organización"
       },
       "actions": {
         "selectOne": "Selecciona un cliente o proveedor",
-        "new": "Nuevo enlace",
+        "new": "Nuevo enlace con organización",
         "edit": "Editar enlace"
       }
     },
@@ -675,6 +642,9 @@
     },
     "tenants": {
       "empty": "No hay organizaciones",
+      "select": "Selecciona organización",
+      "youBelongToOne": "Perteneces a una organización",
+      "youBelongToMany": "Perteneces a {{0}} organizaciones",
       "members": {
         "noMembers": "No se encontraron miembros",
         "noMembersFoundIn": "No se encontraron miembros",
@@ -688,9 +658,8 @@
         "ends": "Termina",
         "isTrial": "Es prueba",
         "status": "Estatus",
-        "workspaces": "Empresas",
         "members": "Miembros",
-        "links": "Enlaces",
+        "tenantRelationships": "Enlaces con organizaciones",
         "storage": "Almacenamiento"
       },
       "actions": {
@@ -720,7 +689,7 @@
       }
     },
     "users": {
-      "deleteWarning": "ADVERTENCIA: Si el usuario es propietario de organizaciones, se cancelará su subscripción y se eliminarán todas sus empresas. No se puede recuperar un usuario eliminado."
+      "deleteWarning": "ADVERTENCIA: Si el usuario es propietario de organizaciones, se cancelará su subscripción y se eliminarán todas sus organizaciones. No se puede recuperar un usuario eliminado."
     },
     "navigation": {
       "title": "Menú",
@@ -838,17 +807,7 @@
       "button": "Verificar y continuar"
     },
     "tenant": {
-      "onlyAdmin": "Solo administradores o propietarios pueden realizar esta operación",
-      "members": {
-        "errors": {
-          "atLeastOneWorkspace": "Asigna permiso a al menos a 1 empresa"
-        }
-      },
-      "workspaces": {
-        "errors": {
-          "atLeastOneUser": "Asigna permiso a al menos a 1 usuario"
-        }
-      }
+      "onlyAdmin": "Solo administradores o propietarios pueden realizar esta operación"
     }
   },
   "models": {
@@ -885,20 +844,10 @@
       "title": "Título",
       "badge": "Leyenda",
       "status": "Estatus",
-      "workspaces": "Empresas",
       "users": "Usuarios",
-      "links": "Enlaces",
+      "tenantRelationships": "Enlaces con organizaciones",
       "storage": "Almacenamiento",
       "monthlyContracts": "Contratos"
-    },
-    "workspace": {
-      "object": "Empresa",
-      "plural": "Empresas",
-      "name": "Nombre",
-      "type": "Tipo",
-      "businessMainActivity": "Objeto social",
-      "registrationNumber": "Número legal de registro",
-      "registrationDate": "Fecha de registro"
     },
     "contract": {
       "object": "Contrato",
@@ -918,9 +867,9 @@
       "email": "Correo electrónico",
       "fullName": "Nombre completo"
     },
-    "link": {
-      "object": "Enlace",
-      "plural": "Enlaces",
+    "tenantRelationship": {
+      "object": "Enlace con organización",
+      "plural": "Enlaces con organizaciones",
       "type": "Tipo"
     },
     "provider": {
@@ -937,11 +886,9 @@
       "profileTitle": "Perfil",
       "profileText": "Actualiza tu perfil",
       "securityTitle": "Seguridad",
-      "passwordUpdated": "Nueva contraseña guardada",
       "name": "Nombre",
       "firstName": "Nombre",
       "lastName": "Apellido",
-      "phone": "Teléfono",
       "role": "Rol",
       "roles": {
         "OWNER": "Propietario",
@@ -1032,27 +979,25 @@
   },
   "api": {
     "errors": {
-      "youDontBelong": "No tienes acceso a esta empresa",
+      "youDontBelong": "No tienes acceso a esta organización",
       "alreadyAdded": "Ya agregado",
       "invalidCoupon": "Cupón inválido",
       "couponInactive": "Cupón inactivo",
       "couponMaxRedeems": "El cupón ya llegó a su límite de usos",
       "invalidStripeCustomerId": "ID de cliente inválido",
       "maxFileReached": "Sube un documento menor a 20 MB",
-      "notLinked": "No tienes permiso a esta empresa",
+      "notLinked": "No tienes permiso a esta organización",
       "canBeModifiedByCreator": "Solo puede ser eliminado por el creador",
       "cannotUpdateNotPending": "No puedes modificar si no está pendiente",
       "cannotDeleteIfNotPending": "No puedes eliminar un contrato firmado o archivado",
       "nameCannotBeEmpty": "Especifica un nombre",
       "descriptionCannotBeEmpty": "Especifica una descripción",
       "fileCannotBeEmpty": "Sube el archivo en formato PDF",
-      "userNotInWorkspace": "El usuario no pertenece a la empresa indicada o no tiene privilegios",
-      "alreadyLinkedProvider": "Esta empresa ya es tu proveedor",
-      "alreadyLinkedClient": "Esta empresa ya es tu cliente",
+      "alreadyLinkedProvider": "Esta organización ya es tu proveedor",
+      "alreadyLinkedClient": "Esta organización ya es tu cliente",
       "invalidSubscription": "Selecciona un plan de acuerdo a lo que necesitas",
       "noActiveSubscriptions": "No hay subscripciones activas",
       "invalidCard": "Tarjeta inválida",
-      "atLeastOneWorkspace": "Asigna permiso a al menos a 1 empresa",
       "existingUser": "Usuario ya existe en organización",
       "maxNumberOfUsers": "Has llegado al límite de usuarios",
       "invalidPassword": "Credenciales inválidas",
@@ -1068,13 +1013,12 @@
       "invalidLinkInvitation": "Invitación inválida",
       "notPendingLinkInvitation": "Invitación inválida",
       "emailInvalidLinkInvitation": "El correo no coincide con la invitación aceptada",
-      "workspaceInvalidLinkInvitation": "La empresa no coincide con la invitación aceptada",
+      "tenantInvalidLinkInvitation": "La empresa no coincide con la invitación aceptada",
       "cannotDeleteAdmin": "No puedes eliminar un usuario administrador de sistema",
       "alreadyAMember": "Ya pertenece a la empresa",
       "noChanges": "No hay cambios",
       "noSubscription": "No hay subscripción activa",
-      "noOrganizations": "No perteneces a ninguna organización",
-      "limitReachedWorkspaces": "Has llegado al límite de empresas"
+      "noOrganizations": "No perteneces a ninguna organización"
     }
   },
   "demo": {

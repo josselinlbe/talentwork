@@ -59,7 +59,7 @@
     "updateSubscriptionTo": "Update subscription to {{0}}?",
     "notFound": "Not found",
     "invite": "Invite",
-    "invalidInvitation": "Invalid invitation link",
+    "invalidInvitation": "Invalid invitation tenant relationship",
     "download": "Download",
     "loading": "Loading",
     "processing": "Processing",
@@ -72,7 +72,7 @@
     "unlimited": "Unlimited",
     "file": "File",
     "enter": "Enter",
-    "commandPalette": "Search (CTRL/Cmd + K)",
+    "commandPalette": "Search anything...",
     "search": "Search",
     "searchDot": "Search...",
     "searching": "Searching",
@@ -200,7 +200,7 @@
           "admin": "Admin",
           "adminPages": "(Organizations, Users...)",
           "core": "Core",
-          "corePages": "(Dashboard, Links...)",
+          "corePages": "(Dashboard, Settings...)",
           "app": "and Sample app",
           "appPages": "(Contracts, Employees...)",
           "views": "views.",
@@ -249,8 +249,8 @@
             "description": "Almost every controller method has its own integration test."
           },
           "multiTenant": {
-            "title": "Multi-organization & multi-workspace",
-            "description": "Designed to have tenants per account/subscription. Each organization can have 1 or more workspaces."
+            "title": "Multi-tenant/organization",
+            "description": "Designed to have tenants per account/subscription."
           },
           "memberManagement": {
             "title": "Member management",
@@ -311,12 +311,10 @@
     "features": {
       "oneUser": "1 user",
       "maxUsers": "{{0}} users",
-      "oneWorkspace": "1 workspace",
-      "maxWorkspaces": "{{0}} workspaces",
       "maxStorage": "{{0}} storage",
       "prioritySupport": "Priority support",
-      "oneLink": "1 link",
-      "maxLinks": "{{0}} links",
+      "oneTenantRelationship": "1 tenant relationship",
+      "maxTenantRelationships": "{{0}} tenant relationships",
       "oneContract": "1 contract",
       "maxContracts": "{{0}} contracts/month"
     }
@@ -446,7 +444,6 @@
     "navbar": {
       "tenant": "Organization",
       "subscription": "Subscription",
-      "workspaces": "Workspaces",
       "profile": "Profile",
       "settings": "Settings",
       "signOut": "Sign out",
@@ -471,46 +468,15 @@
       },
       "errors": {
         "limitReached": "Limit reached",
-        "limitReachedLinks": "You have reached the links limit ({{0}}), upgrade your subscription.",
-        "limitReachedWorkspaces": "You have reached the workspaces limit, upgrade your subscription.",
+        "limitReachedTenantRelationships": "You have reached the tenant relationships limit ({{0}}), upgrade your subscription.",
         "limitReachedUsers": "You have reached the members limit, upgrade your subscription.",
         "limitReachedContracts": "You have reached the contracts limit ({{0}}), upgrade your subscription."
       }
     },
-    "workspaces": {
-      "select": "Select workspace",
-      "selectAtLeastOne": "Select at least one workspace",
-      "youBelongToOne": "You belong to one workspace",
-      "youBelongToMany": "You belong to {{0}} workspaces",
-      "create": "Add a workspace",
-      "createDescription": "If you have more than 1 workspace, add its details.",
-      "empty": "There are no workspaces",
-      "added": "Workspace added",
-      "types": {
-        "PRIVATE": "Private",
-        "PUBLIC": "Public"
-      },
-      "typesDescription": {
-        "PRIVATE": "Private company",
-        "PUBLIC": "Public company"
-      },
-      "actions": {
-        "new": "New workspace",
-        "edit": "Edit workspace",
-        "selectWorkspaces": "Select workspaces",
-        "select": "Select workspaces for the current user",
-        "selectUserWorkspaces": "Select the user workspaces",
-        "selectUsers": "Select users for the current workspace",
-        "selectWorkspaceUsers": "Select the workspace users"
-      },
-      "errors": {
-        "noWorkspaces": "No workspaces",
-        "noUsers": "No users",
-        "addAtLeastOneWorkspace": "Add at least one workspace"
-      }
-    },
     "users": {
       "selectAtLeastOne": "Select at least one user",
+      "select": "Select users",
+      "empty": "There are no users",
       "events": {
         "empty": "There are no user events"
       }
@@ -575,7 +541,7 @@
         "nameRequired": "Name required.",
         "descriptionRequired": "Description required.",
         "fileRequired": "File required.",
-        "linkRequired": "Select a link (client or provider).",
+        "tenantRelationshipRequired": "Select a tenant relationship (client or provider).",
         "atLeastNSignatories": "Add at least 2 signatories."
       }
     },
@@ -605,8 +571,8 @@
         "notDefined": "There are no employees"
       }
     },
-    "links": {
-      "my": "Links",
+    "tenantRelationships": {
+      "my": "Tenant Relationships",
       "profile": {
         "title": "Profile",
         "company": "Company profile",
@@ -614,29 +580,29 @@
       },
       "pending": {
         "title": "Pending",
-        "one": "Pending link",
-        "multiple": "Pending links",
+        "one": "Pending invitation",
+        "multiple": "Pending invitations",
         "description": "Manage your pending invitations.",
         "invitationSent": "Invitation sent",
         "invitationSentDescription": "An email has been sent to {{0}} for creating an account and to accept your invitation.",
         "empty": "No pending invitations"
       },
       "rejected": {},
-      "empty": "You don't have any links",
+      "empty": "You don't have any tenant relationships",
       "imTheProvider": "I'm the provider",
       "newProvider": "New provider",
       "newClient": "New client",
-      "new": "New link",
-      "newDescription": "Link with another workspace to share contracts with them",
-      "link": "Link",
+      "new": "New relationship",
+      "newDescription": "Link with another organization to share contracts with them",
+      "link": "Link with another tenant",
       "invited": "You have invited {{0}} to join as {{1}} on your company {{2}}.",
-      "thereAreNo": "No active links",
+      "thereAreNo": "No active tenant relationships",
       "accountFound": "Account found",
       "accountNotFound": "Account not found",
       "invitation": {
         "toBe": "Invitation to be a",
-        "hasInvitedYou": "has invited you to create a link between their company",
-        "andYourCompany": "and your company",
+        "hasInvitedYou": "has invited you to create a tenant relationship between their organization",
+        "andYourCompany": "and your organization",
         "reasonAsProvider": "to share contracts",
         "reasonAsClient": "to share contracts",
         "message": "Message from",
@@ -647,15 +613,16 @@
         "confirmAccept": "Accept invitation as {{0}}?",
         "acceptWarning": "Accept invitatiom from {{0}}.",
         "invite": "Invite user to join.",
-        "notFound": "User {{0}} does not have workspace '{{1}}'.",
+        "notFound": "User {{0}} does not have organization '{{1}}'.",
         "cannotInviteSelf": "You cannot invite yourself",
         "cannotInviteCurrentTenant": "You cannot invite the current organization",
-        "inviteOwnersOrAdmins": "You can only invite owners or admins"
+        "inviteOwnersOrAdmins": "You can only invite owners or admins",
+        "existing": "There's an existing relationship with this organization"
       },
       "actions": {
         "selectOne": "Select a client or provider",
-        "new": "New link",
-        "edit": "Edit link"
+        "new": "New tenant relationship",
+        "edit": "Edit tenant relationship"
       }
     },
     "providers": {
@@ -676,6 +643,9 @@
     },
     "tenants": {
       "empty": "There are no organizations",
+      "select": "Select organization",
+      "youBelongToOne": "You belong to one organization",
+      "youBelongToMany": "You belong to {{0}} organizations",
       "members": {
         "noMembers": "No members found",
         "noMembersFoundIn": "No members found",
@@ -689,9 +659,8 @@
         "ends": "Ends",
         "isTrial": "Is trial",
         "status": "Status",
-        "workspaces": "Workspaces",
         "members": "Members",
-        "links": "Links",
+        "tenantRelationships": "Tenant relationships",
         "storage": "Storage"
       },
       "actions": {
@@ -711,7 +680,7 @@
       "generateFromFiles": "Click here to create them"
     },
     "tenants": {
-      "title": "Organizations",
+      "title": "Tenants",
       "overview": "Overview",
       "profile": {
         "title": "Profile"
@@ -839,17 +808,7 @@
       "button": "Verify and continue"
     },
     "tenant": {
-      "onlyAdmin": "Only admins or owners can perform this operation",
-      "members": {
-        "errors": {
-          "atLeastOneWorkspace": "Asign at least one workspace to user"
-        }
-      },
-      "workspaces": {
-        "errors": {
-          "atLeastOneUser": "Asign at least one user to workspace"
-        }
-      }
+      "onlyAdmin": "Only admins or owners can perform this operation"
     }
   },
   "models": {
@@ -860,8 +819,8 @@
       "content": "Content"
     },
     "tenant": {
-      "object": "Organization",
-      "plural": "Organizations",
+      "object": "Tenant",
+      "plural": "Tenants",
       "subscription": "Subscription"
     },
     "user": {
@@ -871,7 +830,7 @@
       "firstName": "First name",
       "lastName": "Last name",
       "role": "Role",
-      "tenants": "Organizations",
+      "tenants": "Tenants",
       "impersonate": "Impersonate"
     },
     "userEvent": {
@@ -886,20 +845,10 @@
       "title": "Title",
       "badge": "Badge",
       "status": "Estatus",
-      "workspaces": "Workspaces",
       "users": "Users",
-      "links": "Links",
+      "tenantRelationships": "Tenant relationships",
       "storage": "Storage",
       "monthlyContracts": "Contracts"
-    },
-    "workspace": {
-      "object": "Workspace",
-      "plural": "Workspaces",
-      "name": "Name",
-      "type": "Type",
-      "registrationDate": "Registration date",
-      "registrationNumber": "Legal registration number",
-      "businessMainActivity": "Business main activity"
     },
     "contract": {
       "object": "Contract",
@@ -919,9 +868,9 @@
       "email": "Email",
       "fullName": "Full name"
     },
-    "link": {
-      "object": "Link",
-      "plural": "Links",
+    "tenantRelationship": {
+      "object": "Tenant Relationship",
+      "plural": "Tenant Relationships",
       "type": "Type"
     },
     "provider": {
@@ -938,11 +887,9 @@
       "profileTitle": "Profile",
       "profileText": "Change your user profile",
       "securityTitle": "Security",
-      "passwordUpdated": "New password saved",
       "name": "Name",
       "firstName": "First name",
       "lastName": "Last name",
-      "phone": "Phone",
       "role": "Role",
       "roles": {
         "OWNER": "Owner",
@@ -1033,27 +980,25 @@
   },
   "api": {
     "errors": {
-      "youDontBelong": "You don't belong to this workspace",
+      "youDontBelong": "You don't belong to this organization",
       "alreadyAdded": "Already added",
       "invalidCoupon": "Invalid coupon",
       "couponInactive": "Inactive coupon",
       "couponMaxRedeems": "Coupon code limit has been reached",
       "invalidStripeCustomerId": "Invalid Stripe customer ID",
       "maxFileReached": "Max file size: 20 MB",
-      "notLinked": "You don't have access to this workspace",
+      "notLinked": "You don't have access to this organization",
       "canBeModifiedByCreator": "Can only be modified/deleted by the creator",
       "cannotUpdateNotPending": "Cannot modify if not pending",
       "cannotDeleteIfNotPending": "Cannot delete if not pending",
       "nameCannotBeEmpty": "Name not specified",
       "descriptionCannotBeEmpty": "Description not specified",
       "fileCannotBeEmpty": "File cannot be empty",
-      "userNotInWorkspace": "User does not belong to this workspace",
       "alreadyLinkedProvider": "This company is already your provider",
       "alreadyLinkedClient": "This company is already your client",
       "invalidSubscription": "Invalid subscription",
       "noActiveSubscriptions": "No active recurring subscriptions",
       "invalidCard": "Invalid card",
-      "atLeastOneWorkspace": "Asign at least one workspace",
       "existingUser": "User already in organization",
       "maxNumberOfUsers": "Maximum limit of users reached",
       "invalidPassword": "Invalid credentials",
@@ -1068,14 +1013,13 @@
       "invalidEmail": "Invalid email",
       "invalidLinkInvitation": "Invalid invitation",
       "notPendingLinkInvitation": "Invalid invitation",
-      "emailInvalidLinkInvitation": "Invalid link invitation email",
-      "workspaceInvalidLinkInvitation": "Invalid workspace in link invitation",
+      "emailInvalidLinkInvitation": "Invalid tenant relationship invitation email",
+      "tenantInvalidLinkInvitation": "Invalid organization in tenant relationship invitation",
       "cannotDeleteAdmin": "You cannot delete a system admin",
       "alreadyAMember": "Already a member",
       "noChanges": "No changes",
       "noSubscription": "No active subscription",
-      "noOrganizations": "You don't belong to any organization",
-      "limitReachedWorkspaces": "You have reached the workspaces limit"
+      "noOrganizations": "You don't belong to any organization"
     }
   },
   "demo": {

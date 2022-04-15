@@ -53,8 +53,8 @@ export default function ContractsListAndTable({ items }: Props) {
       setSortByColumn(column);
     }
   }
-  function isCurrentWorkspace(id: string) {
-    return appData.currentWorkspace?.id === id;
+  function isCurrentTenant(id: string) {
+    return appData.currentTenant?.id === id;
   }
   function dateMonthName(value: Date | undefined) {
     return DateUtils.dateMonthName(value);
@@ -63,7 +63,7 @@ export default function ContractsListAndTable({ items }: Props) {
     return DateUtils.dateDM(value);
   }
   function clicked(item: Contract) {
-    navigate(UrlUtils.currentTenantUrl(params, "contract/" + item.id));
+    navigate(UrlUtils.currentTenantUrl(params, "contracts/" + item.id));
   }
   const sortedItems = () => {
     if (!items) {
@@ -93,7 +93,7 @@ export default function ContractsListAndTable({ items }: Props) {
             <div>
               <EmptyState
                 className="bg-white"
-                to={UrlUtils.currentTenantUrl(params, "contract/new")}
+                to={UrlUtils.currentTenantUrl(params, "contracts/new")}
                 captions={{
                   new: t("shared.add"),
                   thereAreNo: t("app.contracts.errors.noContracts"),
@@ -111,7 +111,7 @@ export default function ContractsListAndTable({ items }: Props) {
                     {sortedItems().map((contract, idxContract) => {
                       return (
                         <li key={idxContract}>
-                          <Link to={UrlUtils.currentTenantUrl(params, "contract/" + contract.id)} className="block hover:bg-gray-50">
+                          <Link to={UrlUtils.currentTenantUrl(params, "contracts/" + contract.id)} className="block hover:bg-gray-50">
                             <div className="flex items-center px-4 py-4 sm:px-6">
                               <div className="min-w-0 flex-1 flex items-center">
                                 <div className="flex-shrink-0">
@@ -127,8 +127,8 @@ export default function ContractsListAndTable({ items }: Props) {
                                     </div>
                                     <div className="mt-2 flex items-center text-sm text-gray-500 space-x-1">
                                       <div className="truncate">
-                                        {contract.link.providerWorkspace.name}{" "}
-                                        {isCurrentWorkspace(contract.link.providerWorkspaceId) && (
+                                        {contract.tenantRelationship.providerTenant.name}{" "}
+                                        {isCurrentTenant(contract.tenantRelationship.providerTenantId) && (
                                           <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                         )}
                                       </div>
@@ -140,8 +140,8 @@ export default function ContractsListAndTable({ items }: Props) {
                                         />
                                       </svg>
                                       <div className="truncate">
-                                        {contract.link.clientWorkspace.name}{" "}
-                                        {isCurrentWorkspace(contract.link.clientWorkspace.name) && (
+                                        {contract.tenantRelationship.clientTenant.name}{" "}
+                                        {isCurrentTenant(contract.tenantRelationship.clientTenant.name) && (
                                           <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                         )}
                                       </div>
@@ -265,16 +265,16 @@ export default function ContractsListAndTable({ items }: Props) {
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-700">
-                                      {contract.link.providerWorkspace.name}{" "}
-                                      {isCurrentWorkspace(contract.link.providerWorkspace.name) && (
+                                      {contract.tenantRelationship.providerTenant.name}{" "}
+                                      {isCurrentTenant(contract.tenantRelationship.providerTenant.name) && (
                                         <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                       )}
                                     </div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-700">
-                                      {contract.link.clientWorkspace.name}{" "}
-                                      {isCurrentWorkspace(contract.link.clientWorkspace.name) && (
+                                      {contract.tenantRelationship.clientTenant.name}{" "}
+                                      {isCurrentTenant(contract.tenantRelationship.clientTenant.name) && (
                                         <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                       )}
                                     </div>

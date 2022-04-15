@@ -5,17 +5,17 @@ const stripTrailingSlash = (str: string) => {
 };
 
 const currentTenantUrl = (params: Params, path?: string) => {
-  const { tenant, workspace } = params;
+  const { tenant } = params;
   if (path) {
     const appPath = path.startsWith("/") ? path.substring(1, path.length - 1) : path;
     // console.log({ appPath });
-    return `/app/${tenant}/${workspace}/${appPath}`;
+    return `/app/${tenant}/${appPath}`;
   }
-  return `/app/${tenant}/${workspace}/`;
+  return `/app/${tenant}/`;
 };
 
 const replaceVariables = (params: Params, path?: string) => {
-  return path?.replace(":tenant", params.tenant ?? "").replace(":workspace", params.workspace ?? "");
+  return path?.replace(":tenant", params.tenant ?? "");
 };
 
 const slugify = (str: string, max: number = 25) => {

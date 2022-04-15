@@ -1,4 +1,3 @@
-import { Link } from "remix";
 import Footer from "~/components/front/Footer";
 import Logo from "~/components/front/Logo";
 

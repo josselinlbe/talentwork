@@ -1,11 +1,12 @@
 alias: `user-invitation`
 
-subject: `{{invite_sender_name}} invited you to {{ product_name }}`
+subject: `{{ invite_sender_name }} invited you to {{ product_name }}`
 
 body:
 `
+
 <h1>Hi, {{name}}!</h1>
-<p>{{invite_sender_name}} with {{invite_sender_organization}} has invited you to use {{ product_name }} to collaborate with them. Use the button below to set up your account and get started:</p>
+<p>{{ invite_sender_name }} with {{invite_sender_organization}} has invited you to use {{ product_name }} to collaborate with them. Use the button below to set up your account and get started:</p>
 <!-- Action -->
 <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0">
   <tr>

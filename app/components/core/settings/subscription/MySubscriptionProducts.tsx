@@ -31,12 +31,12 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
     return 0;
   }
 
-  const maxLinksRemaining = () => {
+  const maxTenantRelationshipsRemaining = () => {
     if (!appData.mySubscription || !data) {
       return 1;
     }
     const links = data.providers + data.clients;
-    const remaining = appData.mySubscription.maxLinks - links;
+    const remaining = appData.mySubscription.maxTenantRelationships - links;
     return remaining;
   };
   const maxDocumentsRemaining = () => {
@@ -44,12 +44,6 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
       return 1;
     }
     return appData.mySubscription.monthlyContracts - data.contracts;
-  };
-  const maxWorkspacesRemaining = () => {
-    if (!appData.mySubscription || !data) {
-      return 1;
-    }
-    return appData.mySubscription.maxWorkspaces - data.workspaces;
   };
   const maxUsersRemaining = () => {
     if (!appData.mySubscription || !data) {
@@ -67,17 +61,17 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
           <div
             className={clsx(
               "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6",
-              billableStatus(maxLinksRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
-              billableStatus(maxLinksRemaining()) === 1 && "bg-yellow-50 border-yellow-300 hover:bg-yellow-100 cursor-pointer",
-              billableStatus(maxLinksRemaining()) === 2 && "bg-white",
-              billableStatus(maxLinksRemaining()) === 3 && "bg-teal-50 border-teal-300 hover:bg-teal-100 cursor-pointer"
+              billableStatus(maxTenantRelationshipsRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
+              billableStatus(maxTenantRelationshipsRemaining()) === 1 && "bg-yellow-50 border-yellow-300 hover:bg-yellow-100 cursor-pointer",
+              billableStatus(maxTenantRelationshipsRemaining()) === 2 && "bg-white",
+              billableStatus(maxTenantRelationshipsRemaining()) === 3 && "bg-teal-50 border-teal-300 hover:bg-teal-100 cursor-pointer"
             )}
           >
-            <dt className="text-sm font-medium text-gray-500 truncate">{t("models.link.plural")}</dt>
+            <dt className="text-sm font-medium text-gray-500 truncate">{t("models.tenantRelationship.plural")}</dt>
             <dd className="mt-1 text-xl font-semibold text-gray-900">
               <span>
                 {links ? <span>{links}</span> : <span>0</span>} /{" "}
-                {appData.mySubscription ? <span>{appData.mySubscription?.maxLinks}</span> : <span className="text-gray-500">0</span>}
+                {appData.mySubscription ? <span>{appData.mySubscription?.maxTenantRelationships}</span> : <span className="text-gray-500">0</span>}
               </span>
             </dd>
           </div>
@@ -101,24 +95,6 @@ export default function MySubscriptionProducts({ className = "", withCurrentPlan
             </dd>
           </Link>
 
-          <Link
-            to={UrlUtils.currentTenantUrl(params, "settings/workspaces")}
-            className={clsx(
-              "bg-white px-4 py-5 border border-gray-300 shadow-md rounded-lg overflow-hidden sm:p-6 hover:bg-gray-50",
-              billableStatus(maxWorkspacesRemaining()) === 0 && "bg-rose-50 border-rose-300 hover:bg-rose-100 cursor-pointer",
-              billableStatus(maxWorkspacesRemaining()) === 1 && "bg-yellow-50 border-yellow-300 hover:bg-yellow-100 cursor-pointer",
-              billableStatus(maxWorkspacesRemaining()) === 2 && "bg-white",
-              billableStatus(maxWorkspacesRemaining()) === 3 && "bg-teal-50 border-teal-300 hover:bg-teal-100 cursor-pointer"
-            )}
-          >
-            <dt className="text-sm font-medium text-gray-500 truncate">{t("models.workspace.plural")}</dt>
-            <dd className="mt-1 text-xl font-semibold text-gray-900">
-              <span>
-                {data ? <span>{data.workspaces}</span> : <span>0</span>} /{" "}
-                {appData.mySubscription ? <span>{appData.mySubscription?.maxWorkspaces}</span> : <span className="text-gray-500">0</span>}
-              </span>
-            </dd>
-          </Link>
           <Link
             to={UrlUtils.currentTenantUrl(params, "settings/members")}
             className={clsx(
