@@ -76,11 +76,7 @@ export const action: ActionFunction = async ({ request }) => {
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    redirectTo.length > 0
-      ? redirectTo
-      : user.admin !== null
-      ? "/admin/dashboard"
-      : `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
+    redirectTo.length > 0 ? redirectTo : user.admin !== null ? "/admin/dashboard" : `/app/${userSession.defaultTenantId}/dashboard`
   );
 };
 
@@ -109,15 +105,16 @@ export default function LoginRoute() {
             </p>
           </div>
           <InfoBanner title="Demo" text={t("account.login.createTestAccount")} redirect="/register">
-            <p className="mt-2 border-t pt-1 border-pink-300 w-full">
-              {t("account.login.useTestAccount")}
+            <div className="mt-2 border-t pt-1 border-pink-300 w-full text-xs">
+              {/* {t("account.login.useTestAccount")} */}
               <p className="mt-1">
-                <span className="font-bold">Email</span>: john.doe@company.com
+                <span className="font-bold">Email</span>: john.doe@company.com <span className="italic">(tenant)</span> demo@admin.com
+                <span className="italic">(admin)</span>
               </p>
               <p>
                 <span className="font-bold">Password</span>: password
               </p>
-            </p>
+            </div>
           </InfoBanner>
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />

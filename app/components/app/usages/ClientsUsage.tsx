@@ -11,7 +11,7 @@ export default function ClientsUsage() {
 
   return (
     <Link
-      to={UrlUtils.currentTenantUrl(params, "links/clients")}
+      to={UrlUtils.currentTenantUrl(params, "settings/tenant-relationships")}
       className="px-4 py-5 border shadow-md rounded-lg overflow-hidden sm:p-6 bg-white border-gray-300 hover:bg-gray-50"
     >
       <div>

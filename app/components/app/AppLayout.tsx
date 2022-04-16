@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import SidebarLayout from "../layouts/SidebarLayout";
-import { useAppData } from "~/utils/data/useAppData";
 import AppCommandPalette from "../ui/commandPalettes/AppCommandPalette";
 import AdminCommandPalette from "../ui/commandPalettes/AdminCommandPalette";
 
@@ -10,8 +9,6 @@ interface Props {
 }
 
 export default function AppLayout({ layout, children }: Props) {
-  const appData = useAppData();
-
   const [showCommandPalette, setShowCommandPalette] = useState(false);
 
   useEffect(() => {
@@ -27,7 +24,7 @@ export default function AppLayout({ layout, children }: Props) {
   }, []);
 
   return (
-    <div key={appData.currentWorkspace?.id}>
+    <div>
       <SidebarLayout layout={layout} onOpenCommandPalette={() => setShowCommandPalette(true)}>
         {children}
       </SidebarLayout>

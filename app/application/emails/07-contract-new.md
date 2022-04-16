@@ -4,11 +4,12 @@ subject: `New contract - {{ contract_name }}`
 
 body:
 `
-<p>{{ user_creator_firstName }} ({{ user_creator_email }}) has created a contract with <strong>{{ workspace_creator }}</strong>.</p>
+
+<p>{{ user_creator_firstName }} ({{ user_creator_email }}) has created a contract with <strong>{{ tenant_creator }}</strong>.</p>
 <p>
   <strong>Name</strong>: {{ contract_name }}<br/>
-  <strong>Provider</strong>: {{ workspace_provider }}.<br/>
-  <strong>Client</strong>: {{ workspace_client }}.<br/>
+  <strong>Provider</strong>: {{ tenant_provider }}.<br/>
+  <strong>Client</strong>: {{ tenant_client }}.<br/>
 </p>
 
 <p>
@@ -42,7 +43,6 @@ body:
     {{/each}}
   </table>
 {{/employees}}
-
 
 <p>
   <strong>Description</strong>: {{ contract_description }}

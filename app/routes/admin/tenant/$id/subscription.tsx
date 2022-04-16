@@ -38,16 +38,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
   const form = await request.formData();
 
-  const maxWorkspaces = Number(form.get("max-workspaces"));
   const maxUsers = Number(form.get("max-users"));
-  const maxLinks = Number(form.get("max-links"));
+  const maxTenantRelationships = Number(form.get("max-links"));
   const maxStorage = Number(form.get("max-storage"));
   const monthlyContracts = Number(form.get("monthly-contracts"));
 
   await updateTenantSubscriptionLimits(params.id, {
-    maxWorkspaces,
     maxUsers,
-    maxLinks,
+    maxTenantRelationships,
     maxStorage,
     monthlyContracts,
   });

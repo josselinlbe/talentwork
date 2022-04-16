@@ -1,4 +1,4 @@
-import { AdminUser, Tenant, User, UserEvent, Workspace } from ".prisma/client";
+import { AdminUser, Tenant, User, UserEvent } from ".prisma/client";
 import bcrypt from "bcryptjs";
 import { db } from "~/utils/db.server";
 import { TenantUrl } from "../services/urlService";
@@ -12,12 +12,11 @@ export type UserWithoutPassword = {
   avatar: string;
   phone: string;
   admin?: AdminUser | null;
-  defaultWorkspaceId: string | null;
+  defaultTenantId: string | null;
 };
 
 export type UserEventWithDetails = UserEvent & {
   user: User;
-  workspace?: Workspace | null;
   tenant?: Tenant | null;
 };
 
@@ -31,6 +30,7 @@ export async function adminGetAllTenantUsers(tenantId: string) {
       },
     },
     include: {
+      admin: true,
       tenants: {
         include: {
           tenant: true,
@@ -90,7 +90,7 @@ export async function register(email: string, password: string, firstName: strin
       phone: "",
     },
   });
-  return { id: user.id, email, defaultWorkspaceId: "" };
+  return { id: user.id, email, defaultTenantId: "" };
 }
 
 export async function updateUserProfile(data: { firstName: string; lastName: string; avatar: string }, userId?: string) {
@@ -126,7 +126,7 @@ export async function updateUserPassword(data: { passwordHash: string }, userId?
   });
 }
 
-export async function updateUserDefaultWorkspaceId(data: { defaultWorkspaceId: string }, userId: string) {
+export async function updateUserDefaultTenantId(data: { defaultTenantId: string }, userId: string) {
   if (!userId) {
     return null;
   }
@@ -146,7 +146,6 @@ export async function getAllUserEvents(): Promise<UserEventWithDetails[]> {
   return await db.userEvent.findMany({
     include: {
       user: true,
-      workspace: true,
       tenant: true,
     },
   });
@@ -159,7 +158,6 @@ export async function getUserEvents(tenantId: string): Promise<UserEventWithDeta
     },
     include: {
       user: true,
-      workspace: true,
       tenant: true,
     },
   });
@@ -171,7 +169,6 @@ export async function createUserEvent(request: Request, tenantUrl: TenantUrl, ac
   await db.userEvent.create({
     data: {
       tenantId: tenantUrl.tenantId,
-      workspaceId: tenantUrl.workspaceId,
       userId: userInfo.userId,
       url: request.url.toString(),
       action,

@@ -1,6 +1,5 @@
 import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import clsx from "~/utils/shared/ClassesUtils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useCatch, useLoaderData, useSubmit, useTransition } from "remix";
@@ -9,30 +8,27 @@ import emailTemplates from "~/application/emails/emailTemplates.server";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { createEmailTemplates } from "~/utils/services/emailService";
+import { createEmailTemplates, deleteEmailTemplate, getEmailTemplates } from "~/utils/services/emailService";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { createAdminUserEvent } from "~/utils/db/users.db.server";
+import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 type LoaderData = {
   title: string;
-  onPostmark: boolean;
   items: EmailTemplate[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
+
+  const items = await getEmailTemplates();
+
   const data: LoaderData = {
     title: `${t("admin.emails.title")} | ${process.env.APP_NAME}`,
-    onPostmark: true,
-    items: await getPostmarkTemplates(),
+    items,
   };
-
-  if (data.items.length === 0) {
-    data.onPostmark = false;
-    data.items = await emailTemplates();
-  }
 
   return json(data);
 };
@@ -44,7 +40,6 @@ export const meta: MetaFunction = ({ data }) => ({
 type ActionData = {
   error?: string;
   success?: string;
-  onPostmark?: boolean;
   items?: EmailTemplate[];
 };
 const success = (data: ActionData) => json(data, { status: 200 });
@@ -54,10 +49,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   const form = await request.formData();
   const type = form.get("type")?.toString();
-  if (type === "create-postmark-emails") {
+  if (type === "create-all-postmark-templates") {
     const items = await getPostmarkTemplates();
     if (items.length > 0) {
-      return redirect("/admin/emails");
+      return redirect("/admin/setup/emails");
     }
     try {
       const templates = await emailTemplates();
@@ -65,8 +60,42 @@ export const action: ActionFunction = async ({ request }) => {
       await createAdminUserEvent(request, "Created email templates", templates.map((f) => f.alias).join(", "));
 
       return success({
-        onPostmark: true,
-        items: await getPostmarkTemplates(),
+        success: "All templates created",
+        items: await getEmailTemplates(),
+      });
+    } catch (e: any) {
+      return badRequest({ error: e?.toString() });
+    }
+  } else if (type === "create-postmark-template") {
+    try {
+      const alias = form.get("alias")?.toString();
+      if (!alias) {
+        return badRequest({ error: `Alias ${alias} not found` });
+      }
+
+      const templates = await getEmailTemplates();
+      await createEmailTemplates(templates, alias);
+      await createAdminUserEvent(request, "Created email template", alias);
+
+      return success({
+        success: "Template created",
+        items: await getEmailTemplates(),
+      });
+    } catch (e: any) {
+      return badRequest({ error: e?.toString() });
+    }
+  } else if (type === "delete-postmark-email") {
+    try {
+      const alias = form.get("alias")?.toString();
+      if (!alias) {
+        return badRequest({ error: `Alias ${alias} not found` });
+      }
+      await deleteEmailTemplate(alias);
+      await createAdminUserEvent(request, "Deleted email template", alias);
+
+      return success({
+        success: "Template deleted",
+        items: await getEmailTemplates(),
       });
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
@@ -102,7 +131,8 @@ export default function EmailsRoute() {
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
 
-  const [items] = useState<EmailTemplate[]>(actionData?.items ?? data.items);
+  const [items, setItems] = useState<EmailTemplate[]>(actionData?.items ?? data.items);
+
   const headers = [
     {
       title: t("admin.emails.created"),
@@ -126,7 +156,8 @@ export default function EmailsRoute() {
       errorModal.current?.show(actionData.error);
     }
     if (actionData?.success) {
-      successModal.current?.show(t("shared.success"), actionData.success);
+      // successModal.current?.show(t("shared.success"), actionData.success);
+      setItems(actionData?.items ?? data.items);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
@@ -137,11 +168,18 @@ export default function EmailsRoute() {
 
   function createPostmarkEmails() {
     const form = new FormData();
-    form.set("type", "create-postmark-emails");
+    form.set("type", "create-all-postmark-templates");
     submit(form, {
       method: "post",
     });
   }
+  // function performPrimaryAction(item: EmailTemplate) {
+  //   if (item.associatedServerId > 0) {
+  //     sendTest(item);
+  //   } else {
+  //     createTemplate(item);
+  //   }
+  // }
   function sendTest(item: EmailTemplate): void {
     const email = window.prompt("Email", adminData.user?.email);
     if (!email || email.trim() === "") {
@@ -155,7 +193,25 @@ export default function EmailsRoute() {
       method: "post",
     });
   }
-
+  function createTemplate(item: EmailTemplate): void {
+    const form = new FormData();
+    form.set("type", "create-postmark-template");
+    form.set("alias", item.alias);
+    submit(form, {
+      method: "post",
+    });
+  }
+  function deleteTemplate(item: EmailTemplate): void {
+    const form = new FormData();
+    form.set("type", "delete-postmark-email");
+    form.set("alias", item.alias);
+    submit(form, {
+      method: "post",
+    });
+  }
+  function createdTemplates() {
+    return data.items.filter((f) => f.active).length;
+  }
   return (
     <div>
       <Breadcrumb
@@ -170,10 +226,7 @@ export default function EmailsRoute() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("admin.emails.title")}</h1>
           <Form method="post" className="flex items-center space-x-2">
-            {/* <ButtonSecondary to="." disabled={loading}>
-              {t("shared.reload")}
-            </ButtonSecondary> */}
-            <ButtonPrimary type="button" onClick={createPostmarkEmails} disabled={loading || data.onPostmark}>
+            <ButtonPrimary type="button" onClick={createPostmarkEmails} disabled={loading || createdTemplates() > 0}>
               {t("admin.emails.createAll")}
             </ButtonPrimary>
           </Form>
@@ -241,7 +294,7 @@ export default function EmailsRoute() {
                                 <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
                                   <div className="flex justify-center">
                                     {(() => {
-                                      if (data.onPostmark) {
+                                      if (item.associatedServerId > 0) {
                                         return (
                                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-theme-600" viewBox="0 0 20 20" fill="currentColor">
                                             <path
@@ -269,28 +322,42 @@ export default function EmailsRoute() {
                                 <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.alias}</td>
                                 <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.subject}</td>
                                 <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
-                                  {data.onPostmark && (
-                                    <div className="flex items-center space-x-2">
+                                  <div className="flex items-center space-x-2">
+                                    {item.associatedServerId <= 0 ? (
+                                      <ButtonTertiary
+                                        className="w-14 py-1"
+                                        disabled={loading || item.associatedServerId > 0}
+                                        onClick={() => createTemplate(item)}
+                                      >
+                                        {t("shared.create")}
+                                      </ButtonTertiary>
+                                    ) : (
                                       <a
+                                        className="w-14 py-1 text-theme-600 inline-flex space-x-2 items-center px-1 text-sm font-medium focus:outline-none"
                                         href={templateUrl(item)}
-                                        target="_blank"
                                         rel="noreferrer"
-                                        className={clsx("text-theme-600 hover:text-theme-800 hover:underline")}
+                                        target="_blank"
                                       >
                                         {t("shared.edit")}
                                       </a>
-                                      <button
-                                        disabled={item.alias.includes("layout")}
-                                        type="button"
-                                        onClick={() => sendTest(item)}
-                                        className={clsx(
-                                          item.alias.includes("layout") ? "text-gray-300" : "text-theme-600 hover:text-theme-800 hover:underline"
-                                        )}
-                                      >
-                                        {t("admin.emails.sendTest")}
-                                      </button>
-                                    </div>
-                                  )}
+                                    )}
+                                    <ButtonTertiary
+                                      className="py-1"
+                                      disabled={loading || item.alias.includes("layout") || item.associatedServerId <= 0}
+                                      onClick={() => sendTest(item)}
+                                    >
+                                      {t("admin.emails.sendTest")}
+                                    </ButtonTertiary>
+
+                                    <ButtonTertiary
+                                      className="py-1"
+                                      destructive={true}
+                                      disabled={loading || item.associatedServerId <= 0}
+                                      onClick={() => deleteTemplate(item)}
+                                    >
+                                      {t("shared.delete")}
+                                    </ButtonTertiary>
+                                  </div>
                                 </td>
                               </tr>
                             );

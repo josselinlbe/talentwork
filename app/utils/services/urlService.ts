@@ -4,12 +4,11 @@ import { Params } from "react-router";
 
 export type TenantUrl = {
   tenantId: string;
-  workspaceId: string;
 };
 
 export async function getTenantUrl(params: Params, withRedirect: boolean = true) {
-  const { tenant, workspace } = params;
-  if (withRedirect && (!tenant || !workspace)) {
+  const { tenant } = params;
+  if (withRedirect && !tenant) {
     if (tenant) {
       throw redirect("/app/" + tenant);
     }
@@ -18,7 +17,6 @@ export async function getTenantUrl(params: Params, withRedirect: boolean = true)
 
   const current: TenantUrl = {
     tenantId: "",
-    workspaceId: workspace ?? "",
   };
 
   // if :tenant param is shorter than 25, it's an id

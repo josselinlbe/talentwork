@@ -54,14 +54,14 @@ export default function TenantNew() {
               <div className="mt-1 rounded-md shadow-sm -space-y-px">
                 <div>
                   <label htmlFor="tax-id" className="sr-only">
-                    {t("models.workspace.name")}
+                    {t("shared.name")}
                   </label>
                   <input
                     ref={inputName}
                     type="text"
                     name="name"
                     id="name"
-                    placeholder={t("models.workspace.name")}
+                    placeholder={t("shared.name")}
                     required
                     value={name}
                     onChange={(e) => {

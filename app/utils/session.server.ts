@@ -1,7 +1,6 @@
 import { createCookieSessionStorage, redirect } from "remix";
 import { URLSearchParams } from "url";
-import { getMyTenants } from "./db/tenants.db.server";
-import { getWorkspace, getMyWorkspaces } from "./db/workspaces.db.server";
+import { getMyTenants, getTenant } from "./db/tenants.db.server";
 
 export type UserSession = {
   userId: string;
@@ -9,19 +8,17 @@ export type UserSession = {
   lng: string;
 };
 
-export async function setLoggedUser(user: { id: string; email: string; defaultWorkspaceId: string | null }) {
+export async function setLoggedUser(user: { id: string; email: string; defaultTenantId: string | null }) {
   const userTenants = await getMyTenants(user.id);
 
   let currentTenantId = "";
-  let currentWorkspaceId = "";
 
-  if (user.defaultWorkspaceId) {
-    const workspace = await getWorkspace(user.defaultWorkspaceId);
-    if (workspace) {
+  if (user.defaultTenantId) {
+    const tenant = await getTenant(user.defaultTenantId);
+    if (tenant) {
       return {
         userId: user.id,
-        defaultTenantId: workspace.tenantId,
-        defaultWorkspaceId: workspace.id,
+        defaultTenantId: tenant.id,
       };
     }
   }
@@ -29,16 +26,11 @@ export async function setLoggedUser(user: { id: string; email: string; defaultWo
   if (userTenants.length > 0) {
     const tenant = userTenants[0].tenant;
     currentTenantId = tenant.id;
-    const userWorkspaces = await getMyWorkspaces(user.id, tenant.id);
-    if (userWorkspaces.length > 0) {
-      currentWorkspaceId = userWorkspaces[0].workspace.id;
-    }
   }
 
   return {
     userId: user.id,
     defaultTenantId: currentTenantId,
-    defaultWorkspaceId: currentWorkspaceId,
   };
 }
 

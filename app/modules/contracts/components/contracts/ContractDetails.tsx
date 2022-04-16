@@ -122,14 +122,14 @@ export default function ContractDetails({ item }: Props) {
     }
   }
   const clientFullName = () => {
-    if (item && item.link?.clientWorkspace) {
-      return `${item.link.clientWorkspace.name}`;
+    if (item && item.tenantRelationship?.clientTenant) {
+      return `${item.tenantRelationship.clientTenant.name}`;
     }
     return "";
   };
   const providerFullName = () => {
-    if (item && item.link?.providerWorkspace) {
-      return `${item.link.providerWorkspace.name}`;
+    if (item && item.tenantRelationship?.providerTenant) {
+      return `${item.tenantRelationship.providerTenant.name}`;
     }
     return "";
   };

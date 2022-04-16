@@ -40,8 +40,8 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
       command: "Z",
       title: "Switch to App",
       description: "Go to the app",
-      bgClassName: "bg-red-600",
-      textClassName: "text-red-200",
+      bgClassName: "bg-teal-600",
+      textClassName: "text-teal-200",
       toPath: "/app",
     },
   ];
@@ -60,9 +60,10 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
     } else {
       if (selectedCommand.toPath) {
         navigate(selectedCommand.toPath);
-        onClosed();
+        onClose();
       } else if (selectedCommand.onSelected) {
         selectedCommand.onSelected();
+        onClose();
       } else {
         setCommandSearchTitle(`${selectedCommand.title}`);
 
@@ -150,6 +151,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
   function onClose() {
     setSelectedCommand(undefined);
+    setItems(defaultCommands);
     onClosed();
   }
 

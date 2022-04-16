@@ -1,4 +1,4 @@
-import { AdminUser, Tenant, TenantUser, User, Workspace } from "@prisma/client";
+import { AdminUser, Tenant, TenantUser, User } from "@prisma/client";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
@@ -6,27 +6,17 @@ import UrlUtils from "../app/UrlUtils";
 import { createTenantSubscription, TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
 
 export type MyTenant = TenantUser & {
-  tenant: Tenant & {
-    workspaces: (Workspace & {
-      tenant: Tenant;
-    })[];
-  };
+  tenant: Tenant;
 };
 
 export type TenantWithDetails = Tenant & {
-  workspaces: Workspace[];
   users: (TenantUser & {
     user: User;
   })[];
   subscription: TenantSubscriptionWithDetails | null;
   usersCount?: number;
-  workspacesCount?: number;
   contractsCount?: number;
   employeesCount?: number;
-};
-
-export type WorkspaceWithTenant = Workspace & {
-  tenant: Tenant;
 };
 
 export type TenantUserWithUser = TenantUser & {
@@ -38,7 +28,6 @@ export type TenantUserWithUser = TenantUser & {
 export async function adminGetAllTenants(): Promise<TenantWithDetails[]> {
   return await db.tenant.findMany({
     include: {
-      workspaces: true,
       users: {
         include: {
           user: true,
@@ -79,7 +68,7 @@ export async function getTenantBySlug(slug: string) {
   });
 }
 
-export async function getTenantWithUsersAndWorkspaces(id?: string) {
+export async function getTenantWithUsers(id?: string) {
   if (!id) {
     return null;
   }
@@ -88,7 +77,6 @@ export async function getTenantWithUsersAndWorkspaces(id?: string) {
       id,
     },
     include: {
-      workspaces: true,
       users: true,
     },
   });
@@ -100,44 +88,10 @@ export async function getMyTenants(userId: string): Promise<MyTenant[]> {
       userId,
     },
     include: {
-      tenant: {
-        include: {
-          workspaces: {
-            include: {
-              tenant: true,
-            },
-          },
-        },
-      },
+      tenant: true,
     },
   });
-  // if (tenants.length > 0) {
-  //   const currentTenants = tenants.filter((f) => f.current);
-  //   if (currentTenants.length > 1) {
-  //     currentTenants.forEach(async (tenantUser) => {
-  //       await db.tenantUser.update({
-  //         where: {
-  //           id: tenantUser.id,
-  //         },
-  //         data: {
-  //           current: false,
-  //         },
-  //       });
-  //       tenantUser.current = false;
-  //     });
-  //   }
-  //   if (currentTenants.length === 0) {
-  //     await db.tenantUser.update({
-  //       where: {
-  //         id: tenants[0].id,
-  //       },
-  //       data: {
-  //         current: true,
-  //       },
-  //     });
-  //     tenants[0].current = true;
-  //   }
-  // }
+
   return tenants;
 }
 

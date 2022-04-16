@@ -185,13 +185,10 @@ export default function AdminPricingRoute() {
                               {t("models.subscriptionProduct.status")}
                             </th>
                             <th className="px-3 py-3 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
-                              {t("models.subscriptionProduct.workspaces")}
-                            </th>
-                            <th className="px-3 py-3 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.users")}
                             </th>
                             <th className="px-3 py-3 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
-                              {t("models.subscriptionProduct.links")}
+                              {t("models.subscriptionProduct.tenantRelationships")}
                             </th>
                             <th className="px-3 py-3 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.storage")}
@@ -219,20 +216,17 @@ export default function AdminPricingRoute() {
                     </td>*/}
                                 <td className="truncate px-3 py-3 text-sm leading-3">{item.active ? t("shared.active") : t("shared.inactive")}</td>
                                 <td className="truncate px-3 py-3 text-sm leading-3">
-                                  {!item.maxWorkspaces || item.maxWorkspaces === 0 ? t("shared.unlimited") : item.maxWorkspaces}
-                                </td>
-                                <td className="truncate px-3 py-3 text-sm leading-3">
                                   {!item.maxUsers || item.maxUsers === 0 ? t("shared.unlimited") : item.maxUsers}
                                 </td>
                                 <td className="truncate px-3 py-3 text-sm leading-3">
-                                  {!item.maxLinks || item.maxLinks === 0 ? t("shared.unlimited") : item.maxLinks}
+                                  {!item.maxTenantRelationships || item.maxTenantRelationships === 0 ? t("shared.unlimited") : item.maxTenantRelationships}
                                 </td>
                                 <td className="truncate px-3 py-3 text-sm leading-3">
                                   {!item.maxStorage || item.maxStorage === 0 ? t("shared.unlimited") : item.maxStorage / 1024}
                                   {item.maxStorage > 0 && <span>{t("shared.storage.gb")}</span>}
                                 </td>
                                 <td className="truncate px-3 py-3 text-sm leading-3">
-                                  {!item.monthlyContracts || item.maxLinks === 0 ? t("shared.unlimited") : item.monthlyContracts}
+                                  {!item.monthlyContracts || item.maxTenantRelationships === 0 ? t("shared.unlimited") : item.monthlyContracts}
                                 </td>
                                 <td className="truncate px-3 py-3 text-sm leading-3 text-theme-700">
                                   {!item.stripeId ? (

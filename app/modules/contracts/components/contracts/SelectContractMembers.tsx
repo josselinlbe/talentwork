@@ -7,14 +7,14 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { User, Workspace, WorkspaceUser } from "@prisma/client";
-import { LinkWithWorkspacesAndMembers } from "~/utils/db/links.db.server";
+import { Tenant, TenantUser, User } from "@prisma/client";
+import { TenantRelationshipWithDetailsAndMembers } from "~/utils/db/tenantRelationships.db.server";
 import IconSign from "../../icons/IconSign";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useParams } from "react-router";
 
 export interface RefSelectContractMembers {
-  show: (link: LinkWithWorkspacesAndMembers, selected: string[]) => void;
+  show: (link: TenantRelationshipWithDetailsAndMembers, selected: string[]) => void;
 }
 
 interface Props {
@@ -31,52 +31,38 @@ const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }
 
   const [showing, setShowing] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const [items, setItems] = useState<(WorkspaceUser & { workspace: Workspace; user: User })[]>([]);
+  const [items, setItems] = useState<(TenantUser & { tenant: Tenant; user: User })[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
 
   useImperativeHandle(ref, () => ({ show }));
-  function show(link: LinkWithWorkspacesAndMembers, selected: string[]) {
+  function show(link: TenantRelationshipWithDetailsAndMembers, selected: string[]) {
     setSelected(selected);
     setShowing(true);
 
-    const members: (WorkspaceUser & { workspace: Workspace; user: User })[] = [];
-    [...link.providerWorkspace.users, ...link.clientWorkspace.users].forEach((user) => {
+    const members: (TenantUser & { tenant: Tenant; user: User })[] = [];
+    [...link.providerTenant.users, ...link.clientTenant.users].forEach((user) => {
       if (!members.find((f) => f.userId === user.userId)) {
         members.push(user);
       }
     });
 
     setItems(members);
-    // reload(_linkId);
   }
-  // function reload(linkId) {
-  //   setLoading(true);
-  //   services.links
-  //     .getLinkUsers(linkId)
-  //     .then((response) => {
-  //       setItems(response);
-  //     })
-  //     .catch((error) => {
-  //       errorModal.current?.show(t("shared.error"), t(error));
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }
+
   function close() {
     if (onClosed) {
       onClosed();
     }
     setShowing(false);
   }
-  function toggle(item: WorkspaceUser) {
+  function toggle(item: TenantUser) {
     if (isSelected(item)) {
       setSelected(selected.filter((f) => f !== item.userId));
     } else {
       setSelected((selected) => [...selected, item.userId]);
     }
   }
-  function isSelected(item: WorkspaceUser) {
+  function isSelected(item: TenantUser) {
     return selected.find((f) => f === item.userId);
   }
   function accept() {
@@ -107,7 +93,7 @@ const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }
     return items.filter(
       (f) =>
         f.id?.toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.workspace?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.tenant?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.user?.firstName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.user?.lastName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.user?.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
@@ -228,7 +214,7 @@ const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }
                                             <p className="text-sm font-bold text-gray-900 truncate">
                                               {item.user.firstName} {item.user.lastName} <span className="text-xs font-normal">({item.user.email})</span>
                                             </p>
-                                            <p className="text-sm text-gray-500 truncate">{item.workspace && <span>{item.workspace.name}</span>}</p>
+                                            <p className="text-sm text-gray-500 truncate">{item.tenant && <span>{item.tenant.name}</span>}</p>
                                           </div>
                                         </div>
                                       )}

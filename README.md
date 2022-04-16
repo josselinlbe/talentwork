@@ -53,11 +53,11 @@ yarn dev
 
 10. Click on `Click here to subscribe` and subscribe any plan using **Stripe checkout** (use any [Stripe test card](https://stripe.com/docs/testing#cards)).
 
-11. Click on the sidebar item `Links` and `New link`. Invite your **admin** user (`ADMIN_EMAIL`) and its workspace **T1.Workspace 1** or **T1.Workspace 2**. You should get an `workspace link invitation` email, and be redirected to `/app/links/pending`.
+11. Click on the sidebar item `Links` and `New link`. Invite your **admin** user (`ADMIN_EMAIL`) and its tenant **Tenant 1**. You should get an `tenant link invitation` email, and be redirected to `/app/links/pending`.
 
 12. Sign out, and log in as your **admin** user.
 
-13. Select the invited workspace and click on `1 pending link`.
+13. Select the invited tenant and click on `1 pending link`.
 
 14. Reject the invitation. You should get a `invitation rejected` email.
 
@@ -71,6 +71,4 @@ yarn dev
 
 19. Go to `app/settings/members` and add a new user. You should get an `user invitation` email.
 
-20. Go to `app/settings/workspaces` and `Create`, `Edit` and `Delete` workspaces.
-
-21. That's it!
+20. That's it!

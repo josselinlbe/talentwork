@@ -7,7 +7,7 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import { TenantUser } from "@prisma/client";
-import UserUtils from "~/utils/app/UserUtils";
+import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
   items: TenantUserWithUser[];
@@ -19,22 +19,17 @@ export default function MembersListAndTable({ items }: Props) {
   const [sortDirection, setSortDirection] = useState(1);
   const headers = [
     {
+      title: t("models.user.object"),
+    },
+    {
       name: "role",
       title: t("settings.profile.role"),
     },
     {
-      name: "email",
-      title: t("account.shared.email"),
-    },
-    {
-      name: "firstName",
-      title: t("settings.profile.name"),
-    },
-    {
-      title: t("settings.profile.phone"),
-    },
-    {
       title: t("shared.status"),
+    },
+    {
+      title: t("shared.createdAt"),
     },
   ];
 
@@ -63,7 +58,7 @@ export default function MembersListAndTable({ items }: Props) {
                 to="new"
                 captions={{
                   new: t("shared.add"),
-                  thereAreNo: t("app.workspaces.errors.noUsers"),
+                  thereAreNo: t("app.tenants.members.noMembers"),
                 }}
                 icon="plus"
               />
@@ -126,27 +121,39 @@ export default function MembersListAndTable({ items }: Props) {
                         {items.map((item, idx) => {
                           return (
                             <tr key={idx}>
-                              <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">
-                                <span
-                                  className={clsx(
-                                    "text-xs w-28 justify-center inline-flex items-center px-1 py-1 rounded-sm font-medium",
-                                    UserUtils.getUserRoleClass(item)
+                              <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-600">
+                                <div className="flex items-center">
+                                  {item.user.avatar.length > 0 ? (
+                                    <div className="h-10 w-10 flex-shrink-0">
+                                      <img className="h-10 w-10 rounded-full" src={item.user.avatar} alt="" />
+                                    </div>
+                                  ) : (
+                                    <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
+                                      <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                      </svg>
+                                    </span>
                                   )}
-                                >
-                                  {getUserRole(item)}
-                                </span>
+                                  <div className="ml-4">
+                                    <div className="font-medium text-gray-900">
+                                      {item.user.firstName} {item.user.lastName}
+                                    </div>
+                                    <div className="text-gray-500">{item.user.email}</div>
+                                  </div>
+                                </div>
                               </td>
-                              <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">{item.user.email}</td>
                               <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">
-                                {item.user.firstName} {item.user.lastName}
+                                <span>{getUserRole(item)}</span>
                               </td>
-
-                              <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">{item.user.phone}</td>
 
                               <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">{getUserStatus(item)}</td>
-                              {/*<td
-                              className="px-2 py-1 whitespace-nowrap text-sm text-gray-600"
-                  >{ getUserJoined(item) }</td>*/}
+
+                              <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                <time dateTime={DateUtils.dateYMDHMS(item.user.createdAt)} title={DateUtils.dateYMDHMS(item.user.createdAt)}>
+                                  {DateUtils.dateAgo(item.user.createdAt)}
+                                </time>
+                              </td>
+
                               <td className="w-20 px-2 py-2 whitespace-nowrap text-sm text-gray-600">
                                 <div className="flex items-center space-x-2">
                                   <Link to={"edit/" + item.id} className="flex items-center space-x-2 text-theme-600 hover:text-theme-900">

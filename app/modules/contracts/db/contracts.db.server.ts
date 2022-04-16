@@ -1,4 +1,4 @@
-import { Contract, ContractActivity, ContractEmployee, ContractMember, Employee, Link, User, Workspace } from "@prisma/client";
+import { Contract, ContractActivity, ContractEmployee, ContractMember, Employee, Tenant, TenantRelationship, User } from "@prisma/client";
 import { ContractStatusFilter } from "~/modules/contracts/enums/ContractStatusFilter";
 import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
 import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
@@ -7,10 +7,10 @@ import { db } from "../../../utils/db.server";
 
 export type ContractWithDetails = Contract & {
   createdByUser: User;
-  link: Link & {
-    createdByWorkspace: Workspace;
-    providerWorkspace: Workspace;
-    clientWorkspace: Workspace;
+  tenantRelationship: TenantRelationship & {
+    createdByTenant: Tenant;
+    providerTenant: Tenant;
+    clientTenant: Tenant;
   };
   members: (ContractMember & { user: User })[];
   employees: (ContractEmployee & { employee: Employee })[];
@@ -27,17 +27,13 @@ export async function getMonthlyContractsCount(tenantId: string) {
         gte: firstDayCurrentMonth,
         lt: lastDayCurrentMonth,
       },
-      link: {
+      tenantRelationship: {
         OR: [
           {
-            providerWorkspace: {
-              tenantId,
-            },
+            providerTenantId: tenantId,
           },
           {
-            clientWorkspace: {
-              tenantId,
-            },
+            clientTenantId: tenantId,
           },
         ],
       },
@@ -55,11 +51,11 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
     },
     include: {
       createdByUser: true,
-      link: {
+      tenantRelationship: {
         include: {
-          createdByWorkspace: true,
-          providerWorkspace: true,
-          clientWorkspace: true,
+          createdByTenant: true,
+          providerTenant: true,
+          clientTenant: true,
         },
       },
       members: {
@@ -81,12 +77,12 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
   });
 }
 
-export async function getContracts(workspaceId: string, filter: ContractStatusFilter) {
+export async function getContracts(tenantId: string, filter: ContractStatusFilter) {
   const include = {
-    link: {
+    tenantRelationship: {
       include: {
-        providerWorkspace: true,
-        clientWorkspace: true,
+        providerTenant: true,
+        clientTenant: true,
       },
     },
     createdByUser: true,
@@ -94,13 +90,13 @@ export async function getContracts(workspaceId: string, filter: ContractStatusFi
   if (filter === ContractStatusFilter.ALL) {
     return await db.contract.findMany({
       where: {
-        link: {
+        tenantRelationship: {
           OR: [
             {
-              providerWorkspaceId: workspaceId,
+              providerTenantId: tenantId,
             },
             {
-              clientWorkspaceId: workspaceId,
+              clientTenantId: tenantId,
             },
           ],
         },
@@ -111,13 +107,13 @@ export async function getContracts(workspaceId: string, filter: ContractStatusFi
   return await db.contract.findMany({
     where: {
       status: filter,
-      link: {
+      tenantRelationship: {
         OR: [
           {
-            providerWorkspaceId: workspaceId,
+            providerTenantId: tenantId,
           },
           {
-            clientWorkspaceId: workspaceId,
+            clientTenantId: tenantId,
           },
         ],
       },
@@ -129,7 +125,7 @@ export async function getContracts(workspaceId: string, filter: ContractStatusFi
 export async function createContract(
   data: {
     createdByUserId: string;
-    linkId: string;
+    tenantRelationshipId: string;
     name: string;
     description: string;
     file: string;

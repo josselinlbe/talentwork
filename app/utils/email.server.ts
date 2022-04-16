@@ -1,4 +1,5 @@
 // eslint-disable import/first
+// import postmark from "postmark"
 var postmark = require("postmark");
 
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
@@ -77,4 +78,12 @@ export async function createPostmarkTemplate(template: EmailTemplate, layoutTemp
     Subject: template.subject,
     HtmlBody: template.htmlBody,
   });
+}
+
+export async function deletePostmarkTemplate(alias: string) {
+  const client = getClient();
+  if (!client) {
+    throw Error("Undefined Postmark client");
+  }
+  return client.deleteTemplate(alias);
 }

@@ -43,8 +43,8 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
       command: "Z",
       title: "Switch to Admin",
       description: "Go to the admin panel",
-      bgClassName: "bg-red-600",
-      textClassName: "text-red-200",
+      bgClassName: "bg-teal-600",
+      textClassName: "text-teal-200",
       toPath: "/admin/dashboard",
       adminOnly: true,
     },
@@ -69,9 +69,10 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
     } else {
       if (selectedCommand.toPath) {
         navigate(selectedCommand.toPath);
-        onClosed();
+        onClose();
       } else if (selectedCommand.onSelected) {
         selectedCommand.onSelected();
+        onClose();
       } else {
         setCommandSearchTitle(`${selectedCommand.title}`);
 
@@ -79,34 +80,32 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
         if (selectedCommand.command === "T") {
           let idx = 0;
           appData.myTenants.forEach((tenantUser) => {
-            tenantUser.tenant.workspaces.forEach((workspace) => {
-              items.push({
-                title: `${t("app.commands.tenants.switchTo")} ${workspace.name}`,
-                description: tenantUser.tenant.name,
-                command: (++idx).toString(),
-                bgClassName: "bg-indigo-600",
-                textClassName: "text-indigo-200",
-                toPath: `/app/${workspace.tenant.slug}/${workspace.id}/dashboard`,
-              });
+            items.push({
+              title: `${t("app.commands.tenants.switchTo")} ${tenantUser.tenant.name}`,
+              description: tenantUser.tenant.name,
+              command: (++idx).toString(),
+              bgClassName: "bg-indigo-600",
+              textClassName: "text-indigo-200",
+              toPath: `/app/${tenantUser.tenant.slug}/dashboard`,
             });
           });
 
-          items.push({
-            title: `${t("app.commands.tenants.viewAll")}`,
-            description: ``,
-            command: "V",
-            bgClassName: "bg-gray-600",
-            textClassName: "text-gray-200",
-            toPath: "/app",
-          });
-          items.push({
-            title: `${t("app.commands.tenants.edit")}`,
-            description: ``,
-            command: "V",
-            bgClassName: "bg-gray-600",
-            textClassName: "text-gray-200",
-            toPath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
-          });
+          // items.push({
+          //   title: `${t("app.commands.tenants.viewAll")}`,
+          //   description: ``,
+          //   command: "V",
+          //   bgClassName: "bg-gray-600",
+          //   textClassName: "text-gray-200",
+          //   toPath: "/app",
+          // });
+          // items.push({
+          //   title: `${t("app.commands.tenants.edit")}`,
+          //   description: ``,
+          //   command: "V",
+          //   bgClassName: "bg-gray-600",
+          //   textClassName: "text-gray-200",
+          //   toPath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
+          // });
           items.push({
             title: `${t("app.commands.tenants.create")}`,
             description: ``,
@@ -153,9 +152,9 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
         setFilteredItems(
           itemsByCommand.filter(
             (item) =>
+              item.command.trim().toLowerCase() === query.toLowerCase().trim() ||
               item.title.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
-              item.description.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
-              item.command.trim().toLowerCase() === query.toLowerCase().trim()
+              item.description.toLowerCase().trim().includes(query.toLowerCase().trim())
           )
         );
       }
@@ -172,6 +171,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
   function onClose() {
     setSelectedCommand(undefined);
+    setItems(defaultCommands);
     onClosed();
   }
 

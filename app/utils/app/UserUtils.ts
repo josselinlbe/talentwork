@@ -1,4 +1,4 @@
-import { TenantUser, Workspace } from "@prisma/client";
+import { Tenant, TenantUser } from "@prisma/client";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 
 const avatarText = (user: any): string => {
@@ -18,7 +18,7 @@ const avatarText = (user: any): string => {
   return "--";
 };
 
-function getWorkspacePrefix(item: Workspace) {
+function getTenantPrefix(item: Tenant) {
   const words = item.name.split(" ");
   if (words.length > 1) {
     return (words[0].substring(0, 1) + words[1].substring(0, 1)).toUpperCase();
@@ -82,6 +82,6 @@ export default {
   validateEmail,
   validatePassword,
   validatePasswords,
-  getWorkspacePrefix,
+  getTenantPrefix,
   getUserRoleClass,
 };

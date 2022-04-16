@@ -1,36 +1,32 @@
 import { useEffect } from "react";
-import { json, LoaderFunction, redirect, useLoaderData, useNavigate, useParams } from "remix";
-import { getWorkspaces, WorkspaceWithUsers } from "~/utils/db/workspaces.db.server";
-import { getTenantUrl } from "~/utils/services/urlService";
+import { json, LoaderFunction, Outlet, useNavigate } from "remix";
+import AppLayout from "~/components/app/AppLayout";
+import { loadAppData, useAppData } from "~/utils/data/useAppData";
+import { requireAuthorization } from "~/utils/loaders.middleware";
 
-type LoaderData = {
-  workspaces: WorkspaceWithUsers[];
-};
-
-export let loader: LoaderFunction = async ({ params }) => {
-  const { tenant } = params;
-  const tenantUrl = await getTenantUrl(params, false);
-  const workspaces = await getWorkspaces(tenantUrl.tenantId);
-  if (workspaces.length > 0) {
-    return redirect(`/app/${tenant}/${workspaces[0].id}`);
-  }
-  const data: LoaderData = {
-    workspaces,
-  };
+export let loader: LoaderFunction = async ({ request, params }) => {
+  const data = await loadAppData(request, params);
+  const currentPath = new URL(request.url).pathname;
+  await requireAuthorization(currentPath, data.currentRole, params);
   return json(data);
 };
 
 export default function AppRoute() {
-  const params = useParams();
+  const appData = useAppData();
   const navigate = useNavigate();
-  const data = useLoaderData<LoaderData>();
 
   useEffect(() => {
-    if (data.workspaces.length > 0) {
-      navigate(`/app/${params.tenant}/${data.workspaces[0].id}`);
+    if (!appData.currentTenant) {
+      navigate("/app");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appData.currentTenant]);
 
-  return <div>Workspaces: {JSON.stringify(data.workspaces)}</div>;
+  return (
+    <div className="bg-white min-h-screen">
+      <AppLayout layout="app">
+        <Outlet />
+      </AppLayout>
+    </div>
+  );
 }

@@ -788,17 +788,17 @@
     "date-fns" "^2.0.1"
     "react-popper" "^2.2.5"
 
-"@types/react-dom@^17.0.9":
-  "integrity" "sha512-H03xwEP1oXmSfl3iobtmQ/2dHF5aBHr8aUMwyGZya6OW45G+xtdzmq6HkncefiBt5JU8DVyaWl/nWZbjZCnzAQ=="
-  "resolved" "https://registry.npmjs.org/@types/react-dom/-/react-dom-17.0.14.tgz"
-  "version" "17.0.14"
+"@types/react-dom@^17.0.15":
+  "integrity" "sha512-Tr9VU9DvNoHDWlmecmcsE5ZZiUkYx+nKBzum4Oxe1K0yJVyBlfbq7H3eXjxXqJczBKqPGq3EgfTru4MgKb9+Yw=="
+  "resolved" "https://registry.npmjs.org/@types/react-dom/-/react-dom-17.0.15.tgz"
+  "version" "17.0.15"
   dependencies:
-    "@types/react" "*"
+    "@types/react" "^17"
 
-"@types/react@*", "@types/react@^17.0.24":
-  "integrity" "sha512-8Q+LNpdxf057brvPu1lMtC5Vn7J119xrP1aq4qiaefNioQUYANF/CYeK4NsKorSZyUGJ66g0IM+4bbjwx45o2A=="
-  "resolved" "https://registry.npmjs.org/@types/react/-/react-17.0.43.tgz"
-  "version" "17.0.43"
+"@types/react@*", "@types/react@^17", "@types/react@^17.0.44":
+  "integrity" "sha512-Ye0nlw09GeMp2Suh8qoOv0odfgCoowfM/9MG6WeRD60Gq9wS90bdkdRtYbRkNhXOpG4H+YXGvj4wOWhAC0LJ1g=="
+  "resolved" "https://registry.npmjs.org/@types/react/-/react-17.0.44.tgz"
+  "version" "17.0.44"
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"

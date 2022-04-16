@@ -17,10 +17,10 @@ export async function getEmployee(id?: string): Promise<EmployeeWithCreatedByUse
   });
 }
 
-export async function getEmployeeByEmail(workspaceId: string, email: string) {
+export async function getEmployeeByEmail(tenantId: string, email: string) {
   return await db.employee.findFirst({
     where: {
-      workspaceId,
+      tenantId,
       email,
     },
   });
@@ -34,22 +34,15 @@ export async function getEmployeesCount(tenantId: string) {
   });
 }
 
-export async function getEmployees(workspaceId: string) {
+export async function getEmployees(tenantId: string) {
   return await db.employee.findMany({
     where: {
-      workspaceId,
+      tenantId,
     },
   });
 }
 
-export async function createEmployee(data: {
-  createdByUserId: string;
-  tenantId: string;
-  workspaceId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}) {
+export async function createEmployee(data: { createdByUserId: string; tenantId: string; email: string; firstName: string; lastName: string }) {
   return await db.employee.create({
     data,
   });

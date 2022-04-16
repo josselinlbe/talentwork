@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
   var verifyToken = crypto.randomBytes(20).toString("hex");
   await updateUserVerifyToken({ verifyToken }, user.id);
   await sendEmail(email, "password-reset", {
-    action_url: process.env.SERVER_URL + `/reset?e=${email}&t=${verifyToken}`,
+    action_url: new URL(process.env.SERVER_URL + `/reset?e=${email}&t=${verifyToken}`),
     name: user.firstName,
   });
 
@@ -144,8 +144,8 @@ export default function ForgotPasswordRoute() {
               );
             } else {
               return (
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                  <div className="max-w-md w-full mx-auto rounded-sm px-8 pt-6 pb-8 mb-4 mt-8">
+                <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                  <div className="max-w-md w-full mx-auto rounded-sm px-8 pb-8 mb-4">
                     <div className="text-xl font-black">
                       <h1 className="mt-6 text-center text-lg font-extrabold text-gray-800 dark:text-slate-200">{t("account.reset.resetSuccess")}</h1>
                     </div>

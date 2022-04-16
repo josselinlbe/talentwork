@@ -42,9 +42,8 @@ export async function createTenantSubscription(tenantId: string, stripeCustomerI
     data: {
       tenantId,
       stripeCustomerId,
-      maxWorkspaces: 0,
       maxUsers: 0,
-      maxLinks: 0,
+      maxTenantRelationships: 0,
       maxStorage: 0,
       monthlyContracts: 0,
     },
@@ -78,9 +77,8 @@ export async function updateTenantStripeSubscriptionId(
 export async function updateTenantSubscriptionLimits(
   tenantId: string,
   data: {
-    maxWorkspaces: number;
     maxUsers: number;
-    maxLinks: number;
+    maxTenantRelationships: number;
     maxStorage: number;
     monthlyContracts: number;
   }

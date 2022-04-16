@@ -13,7 +13,6 @@ import { sendEmail } from "~/utils/email.server";
 import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/tenantUserInvitations.db.server";
 import { Language } from "remix-i18next";
 import { createTenantUser } from "~/utils/db/tenants.db.server";
-import { createWorkspaceUser } from "~/utils/db/workspaces.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 
 type LoaderData = {
@@ -73,13 +72,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       role: invitation.role,
     });
 
-    invitation.workspaces.forEach(async (workspaceInvitation) => {
-      await createWorkspaceUser({
-        workspaceId: workspaceInvitation.workspaceId,
-        userId: user.id ?? "",
-      });
-    });
-
     await sendEmail(invitation.email, "welcome", {
       action_url: process.env.SERVER_URL + `/login`,
       name: invitation.firstName,
@@ -92,7 +84,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         lightOrDarkMode: userInfo.lightOrDarkMode,
         lng: userInfo.lng,
       },
-      `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
+      `/app/${userSession.defaultTenantId}/dashboard`
     );
   } else {
     // Existing user
@@ -103,13 +95,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       role: invitation.role,
     });
 
-    invitation.workspaces.forEach(async (workspaceInvitation) => {
-      return await createWorkspaceUser({
-        workspaceId: workspaceInvitation.workspaceId,
-        userId: existingUser?.id ?? "",
-      });
-    });
-
     const userSession = await setLoggedUser(existingUser);
     return createUserSession(
       {
@@ -117,7 +102,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         lightOrDarkMode: userInfo.lightOrDarkMode,
         lng: userInfo.lng,
       },
-      `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
+      `/app/${userSession.defaultTenantId}/dashboard`
     );
   }
 };

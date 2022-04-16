@@ -8,7 +8,6 @@ export async function loadTenantsSubscriptionAndUsage(items: TenantWithDetails[]
   return Promise.all(
     items.map(async (item) => {
       item.usersCount = item.users.length;
-      item.workspacesCount = item.workspaces.length;
 
       item.contractsCount = await getMonthlyContractsCount(item.id);
       item.employeesCount = await getEmployeesCount(item.id);

@@ -186,11 +186,7 @@ export default function ResetRoute() {
 
                   <div className="mt-6">
                     <span className="block w-full rounded-sm shadow-sm">
-                      <LoadingButton
-                        ref={loadingButton}
-                        type="submit"
-                        className="relative block w-full py-2 px-3 border border-transparent rounded-sm text-white font-semibold bg-gray-800 hover:bg-gray-700 focus:bg-gray-900 focus:outline-shadow sm:text-sm sm:leading-5"
-                      >
+                      <LoadingButton ref={loadingButton} type="submit" className="w-full block">
                         {t("account.newPassword.button")}
                       </LoadingButton>
                     </span>

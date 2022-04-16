@@ -28,7 +28,7 @@ export default function InfoBanner({ title = "Note", text = "", redirect, childr
           <div className="ml-3 w-full">
             <h3 className="text-sm leading-5 font-medium text-pink-800">{title}</h3>
             <div className="mt-2 text-sm leading-5 text-pink-700">
-              <p>
+              <div>
                 {text}{" "}
                 {redirect && (
                   <Link className="mt-2 underline text-theme-800" to={redirect}>
@@ -36,7 +36,7 @@ export default function InfoBanner({ title = "Note", text = "", redirect, childr
                   </Link>
                 )}
                 {children}
-              </p>
+              </div>
             </div>
           </div>
         </div>

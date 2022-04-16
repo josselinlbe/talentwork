@@ -36,13 +36,8 @@ export default function Events() {
           </div>
         </div>
       </div>
-      {/* <div className="bg-white border-b border-gray-300 w-full py-2">
-        <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
-          <Tabs tabs={tabs} className="flex-grow" />
-        </div>
-      </div> */}
       <div className="pt-2 space-y-2 max-w-5xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {loading ? <Loading /> : <UserEventsTable withTenant={true} withWorkspace={true} items={data.items} />}
+        {loading ? <Loading /> : <UserEventsTable withTenant={true} items={data.items} />}
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export default function Header() {
                   <div className="-mr-1 flex items-center md:hidden">
                     <div className="flex">
                       <div className="inline-flex rounded-md space-x-2">
-                        <LocaleSelector className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300" />
+                        {/* <LocaleSelector className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300" /> */}
 
                         {!authenticated && (
                           <Link

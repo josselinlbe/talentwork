@@ -71,9 +71,7 @@ export const action: ActionFunction = async ({ request }) => {
           ...userInfo,
           ...userSession,
         },
-        userSession.defaultTenantId && userSession.defaultWorkspaceId
-          ? `/app/${userSession.defaultTenantId}/${userSession.defaultWorkspaceId}/dashboard`
-          : "/app"
+        userSession.defaultTenantId ? `/app/${userSession.defaultTenantId}/dashboard` : "/app"
       );
     }
     case UsersActionType.ChangePassword: {
@@ -90,7 +88,7 @@ export const action: ActionFunction = async ({ request }) => {
       return success({ success: t("shared.updated") });
     }
     case UsersActionType.DeleteUser: {
-      // TODO: CANCEL TENANTS SUBSCRIPTIONS, DELETE TENANTS, WORKSPACES AND SUBSCRIPTIONS
+      // TODO: CANCEL TENANTS SUBSCRIPTIONS, DELETE TENANTS AND SUBSCRIPTIONS
       await deleteUser(userId);
       return success({ success: t("shared.deleted") });
     }

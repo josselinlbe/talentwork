@@ -21,14 +21,13 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
   const loading = transition.state === "submitting";
   const actiondata = useActionData();
 
-  const inputMaxWorkspaces = useRef<HTMLInputElement>(null);
+  const inputMaxUsers = useRef<HTMLInputElement>(null);
   const confirmSave = useRef<RefConfirmModal>(null);
   const errorModal = useRef<RefErrorModal>(null);
   const successModal = useRef<RefSuccessModal>(null);
 
-  const [maxWorkspaces, setMaxWorkspaces] = useState(0);
   const [maxUsers, setMaxUsers] = useState(0);
-  const [maxLinks, setMaxLinks] = useState(0);
+  const [maxTenantRelationships, setMaxLinks] = useState(0);
   const [maxStorage, setMaxStorage] = useState(0);
   const [monthlyContracts, setMonthlyContracts] = useState(0);
 
@@ -44,9 +43,8 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
   }, []);
 
   function loadSubscription() {
-    setMaxWorkspaces(subscription?.maxWorkspaces ?? 0);
     setMaxUsers(subscription?.maxUsers ?? 0);
-    setMaxLinks(subscription?.maxLinks ?? 0);
+    setMaxLinks(subscription?.maxTenantRelationships ?? 0);
     setMaxStorage(subscription?.maxStorage ?? 0);
     setMonthlyContracts(subscription?.monthlyContracts ?? 0);
   }
@@ -54,8 +52,8 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
   function edit() {
     setEditing(true);
     setTimeout(() => {
-      inputMaxWorkspaces.current?.focus();
-      inputMaxWorkspaces.current?.select();
+      inputMaxUsers.current?.focus();
+      inputMaxUsers.current?.select();
     }, 0);
   }
 
@@ -69,18 +67,16 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
   }
   const thereAreNoChanges = () => {
     return (
-      maxWorkspaces === subscription?.maxWorkspaces &&
       maxUsers === subscription?.maxUsers &&
-      maxLinks === subscription?.maxLinks &&
+      maxTenantRelationships === subscription?.maxTenantRelationships &&
       maxStorage === subscription?.maxStorage &&
       monthlyContracts === subscription?.monthlyContracts
     );
   };
   function saveConfirm() {
     const form = new FormData();
-    form.set("max-workspaces", maxWorkspaces.toString());
     form.set("max-users", maxUsers.toString());
-    form.set("max-links", maxLinks.toString());
+    form.set("max-links", maxTenantRelationships.toString());
     form.set("max-storage", maxStorage.toString());
     form.set("monthly-contracts", monthlyContracts.toString());
     submit(form, {
@@ -179,32 +175,11 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
                               </div>
 
                               <div className="col-span-6 lg:col-span-3">
-                                <label htmlFor="max-workspaces" className="block text-sm font-medium text-gray-700">
-                                  Max workspaces
-                                </label>
-                                <input
-                                  ref={inputMaxWorkspaces}
-                                  type="number"
-                                  min={0}
-                                  name="max-workspaces"
-                                  id="max-workspaces"
-                                  autoComplete="max-workspaces"
-                                  value={maxWorkspaces}
-                                  onChange={(e) => setMaxWorkspaces(Number(e.target.value))}
-                                  required
-                                  disabled={!editing}
-                                  className={clsx(
-                                    "mt-1 focus:ring-theme-500 focus:border-theme-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md",
-                                    !editing && "bg-gray-100"
-                                  )}
-                                />
-                              </div>
-
-                              <div className="col-span-6 lg:col-span-3">
                                 <label htmlFor="max-users" className="block text-sm font-medium text-gray-700">
                                   Max users
                                 </label>
                                 <input
+                                  ref={inputMaxUsers}
                                   type="number"
                                   min={0}
                                   name="max-users"
@@ -230,7 +205,7 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
                                   name="max-links"
                                   id="max-links"
                                   autoComplete="max-links"
-                                  value={maxLinks}
+                                  value={maxTenantRelationships}
                                   onChange={(e) => setMaxLinks(Number(e.target.value))}
                                   required
                                   disabled={!editing}
@@ -241,7 +216,7 @@ export default function TenantSubscription({ tenant, subscription }: Props) {
                                 />
                               </div>
                               <div className="col-span-6 lg:col-span-3">
-                                <label htmlFor="max-workspaces" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="max-storage" className="block text-sm font-medium text-gray-700">
                                   Max storage
                                 </label>
                                 <input
