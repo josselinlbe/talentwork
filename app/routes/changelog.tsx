@@ -16,7 +16,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   const changelogItems: ChangelogItem[] = [
     {
       date: "April 19, 2022",
-      title: "Custom Pricing Plans",
+      title: "Custom Pricing Plans builder",
       added: [
         {
           title: "Epic Feature: Entity Builder #41",
