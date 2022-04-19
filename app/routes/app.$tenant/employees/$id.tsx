@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import EmployeeProfile from "~/modules/contracts/components/employees/EmployeeProfile";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { createUserEvent } from "~/utils/db/users.db.server";
+import { createUserEvent } from "~/utils/db/userEvents.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {

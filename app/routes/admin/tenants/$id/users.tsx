@@ -25,8 +25,8 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function AdminTenantUsersRoute() {
   const data = useLoaderData<LoaderData>();
   return (
-    <>
+    <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
       <UsersTable items={data.items} />
-    </>
+    </div>
   );
 }

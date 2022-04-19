@@ -3,7 +3,7 @@ import { createTenantRelationship, getTenantRelationshipByTenantIds, getTenantRe
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import NewTenantRelationship from "~/components/app/tenantRelationships/NewTenantRelationship";
-import { createUserEvent, getUserByEmail } from "~/utils/db/users.db.server";
+import { getUserByEmail } from "~/utils/db/users.db.server";
 import { TenantRelationshipStatus } from "~/application/enums/tenants/TenantRelationshipStatus";
 import { TenantRelationship } from "@prisma/client";
 import { getMyTenants } from "~/utils/db/tenants.db.server";
@@ -11,6 +11,7 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { sendEmail } from "~/utils/email.server";
 import { loadAppData } from "~/utils/data/useAppData";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { createUserEvent } from "~/utils/db/userEvents.db.server";
 
 type LoaderData = {
   title: string;
@@ -100,7 +101,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     invitation_role: inviteeIsProvider ? "as a provider" : "as a client",
   });
 
-  await createUserEvent(request, tenantUrl, "Created link", `${tenantName} ${inviteeIsProvider ? "as a provider" : "as a client"}`);
+  await createUserEvent(request, tenantUrl, "Created tenant relationship", `${tenantName} ${inviteeIsProvider ? "as a provider" : "as a client"}`);
 
   const data: NewTenantRelationshipActionData = {
     tenantRelationship,

@@ -3,7 +3,7 @@ import { json, LoaderFunction, useLoaderData, useTransition } from "remix";
 import UserEventsTable from "~/components/app/events/UserEventsTable";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import Loading from "~/components/ui/loaders/Loading";
-import { getAllUserEvents, UserEventWithDetails } from "~/utils/db/users.db.server";
+import { getAllUserEvents, UserEventWithDetails } from "~/utils/db/userEvents.db.server";
 
 type LoaderData = {
   items: UserEventWithDetails[];

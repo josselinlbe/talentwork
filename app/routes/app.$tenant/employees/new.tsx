@@ -9,7 +9,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmployees } from "~/modules/contracts/services/employeesService";
 import { getEmployeeByEmail } from "~/modules/contracts/db/employees.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { createUserEvent } from "~/utils/db/users.db.server";
+import { createUserEvent } from "~/utils/db/userEvents.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {

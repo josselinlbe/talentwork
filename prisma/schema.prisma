@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -71,16 +71,14 @@ model Tenant {
 }
 
 model TenantSubscription {
-  tenantId               String             @unique
-  tenant                 Tenant             @relation(fields: [tenantId], references: [id])
-  stripeCustomerId       String?
-  stripeSubscriptionId   String?
-  subscriptionPriceId    String?
-  subscriptionPrice      SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
-  maxUsers               Int
-  maxTenantRelationships Int
-  maxStorage             Int
-  monthlyContracts       Int
+  tenantId             String             @unique
+  tenant               Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  subscriptionPriceId  String?
+  subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
+  maxUsers             Int
+  monthlyContracts     Int
 }
 
 model TenantUser {
@@ -108,21 +106,27 @@ model TenantUserInvitation {
   user          User?   @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
 }
 
+// model ApiKey {
+//   id              String   @id @default(cuid())
+//   createdByUserId String
+//   createdByUser   User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+//   tenantId        String
+//   tenant          Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+// }
+
 model SubscriptionProduct {
-  id                     String                @id @default(cuid())
-  stripeId               String
-  tier                   Int
-  title                  String
-  description            String
-  badge                  String
-  active                 Boolean
-  contactUs              Boolean
-  maxUsers               Int
-  maxTenantRelationships Int
-  maxStorage             Int
-  monthlyContracts       Int
-  prices                 SubscriptionPrice[]
-  features               SubscriptionFeature[]
+  id               String                @id @default(cuid())
+  stripeId         String
+  tier             Int
+  title            String
+  description      String
+  badge            String
+  active           Boolean
+  public           Boolean
+  maxUsers         Int
+  monthlyContracts Int
+  prices           SubscriptionPrice[]
+  features         SubscriptionFeature[]
 }
 
 model SubscriptionPrice {
@@ -136,7 +140,7 @@ model SubscriptionPrice {
   currency              String
   trialDays             Int
   active                Boolean
-  TenantSubscription    TenantSubscription[]
+  tenantSubscriptions   TenantSubscription[]
 }
 
 model SubscriptionFeature {

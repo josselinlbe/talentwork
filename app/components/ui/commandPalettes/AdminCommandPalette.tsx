@@ -40,8 +40,8 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
       command: "Z",
       title: "Switch to App",
       description: "Go to the app",
-      bgClassName: "bg-teal-600",
-      textClassName: "text-teal-200",
+      bgClassName: "bg-indigo-600",
+      textClassName: "text-indigo-200",
       toPath: "/app",
     },
   ];
@@ -74,7 +74,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
             description: ``,
             command: "V",
             bgClassName: "bg-gray-600",
-            textClassName: "text-gray-200",
+            textClassName: "text-white",
             toPath: "/app",
           });
           items.push({
@@ -82,7 +82,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
             description: ``,
             command: "V",
             bgClassName: "bg-gray-600",
-            textClassName: "text-gray-200",
+            textClassName: "text-white",
             toPath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
           });
           items.push({
@@ -108,7 +108,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
             description: `${t("app.commands.profile.logoutDescription")}`,
             command: "L",
             bgClassName: "bg-gray-600",
-            textClassName: "text-gray-200",
+            textClassName: "text-white",
             toPath: "/logout",
           });
         }

@@ -9,11 +9,10 @@ export interface SubscriptionProductDto {
   description: string;
   badge: string;
   active: boolean;
-  contactUs: boolean;
+  public: boolean;
   maxUsers: number;
-  maxTenantRelationships: number;
-  maxStorage: number;
   monthlyContracts: number;
   prices: SubscriptionPriceDto[];
   features: SubscriptionFeatureDto[];
+  translatedTitle?: string;
 }

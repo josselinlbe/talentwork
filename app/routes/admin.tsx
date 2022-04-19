@@ -18,7 +18,7 @@ export default function AdminRoute() {
       navigate("/admin/dashboard");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.pathname]);
   return (
     <AppLayout layout="admin">
       <Outlet />

@@ -20,11 +20,17 @@ export async function getTenantUrl(params: Params, withRedirect: boolean = true)
   };
 
   // if :tenant param is shorter than 25, it's an id
+  current.tenantId = await getTenantFromParams(tenant);
+
+  return current;
+}
+
+export async function getTenantFromParams(tenant: string | undefined) {
   if ((tenant ?? "").length >= 25) {
-    current.tenantId = tenant ?? "";
+    return tenant ?? "";
   } else {
     // get tenant.id from slug
-    current.tenantId =
+    return (
       (
         await db.tenant.findFirst({
           where: {
@@ -41,8 +47,7 @@ export async function getTenantUrl(params: Params, withRedirect: boolean = true)
             id: true,
           },
         })
-      )?.id ?? "";
+      )?.id ?? ""
+    );
   }
-
-  return current;
 }

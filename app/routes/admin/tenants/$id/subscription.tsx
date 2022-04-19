@@ -1,7 +1,7 @@
 import { Tenant } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useActionData, useLoaderData } from "remix";
-import TenantSubscription from "~/components/core/tenants/TenantSubscription";
+import UpdateTenantSubscriptionForm from "~/components/core/tenants/UpdateTenantSubscriptionForm";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenant } from "~/utils/db/tenants.db.server";
@@ -39,14 +39,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
 
   const maxUsers = Number(form.get("max-users"));
-  const maxTenantRelationships = Number(form.get("max-links"));
-  const maxStorage = Number(form.get("max-storage"));
   const monthlyContracts = Number(form.get("monthly-contracts"));
 
   await updateTenantSubscriptionLimits(params.id, {
     maxUsers,
-    maxTenantRelationships,
-    maxStorage,
     monthlyContracts,
   });
 
@@ -78,7 +74,7 @@ export default function AdminTenantSubscriptionRoute() {
 
   return (
     <div>
-      {data.tenant && <TenantSubscription tenant={data.tenant} subscription={data.subscription} />}
+      {data.tenant && <UpdateTenantSubscriptionForm tenant={data.tenant} subscription={data.subscription} />}
 
       {/* <SuccessModal ref={successModal} /> */}
       <ErrorModal ref={errorModal} />

@@ -43,8 +43,6 @@ export async function createTenantSubscription(tenantId: string, stripeCustomerI
       tenantId,
       stripeCustomerId,
       maxUsers: 0,
-      maxTenantRelationships: 0,
-      maxStorage: 0,
       monthlyContracts: 0,
     },
   });
@@ -64,6 +62,8 @@ export async function updateTenantStripeSubscriptionId(
   data: {
     subscriptionPriceId: string;
     stripeSubscriptionId: string;
+    maxUsers: number;
+    monthlyContracts: number;
   }
 ) {
   return await db.tenantSubscription.update({
@@ -78,8 +78,6 @@ export async function updateTenantSubscriptionLimits(
   tenantId: string,
   data: {
     maxUsers: number;
-    maxTenantRelationships: number;
-    maxStorage: number;
     monthlyContracts: number;
   }
 ) {

@@ -7,6 +7,8 @@ import { useSubmit, useTransition } from "remix";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
+import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
+import { SubscriptionPriceDto } from "~/application/dtos/subscriptions/SubscriptionPriceDto";
 
 interface Props {
   current: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
@@ -24,22 +26,22 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
 
   const [products] = useState(items.filter((f) => !f.contactUs));
 
-  function getPrice(product: SubscriptionProduct & { prices: SubscriptionPrice[] }): SubscriptionPrice | undefined {
+  function getPrice(product: SubscriptionProductDto): SubscriptionPriceDto | undefined {
     const prices = product.prices.find(
       (f) => (f.billingPeriod === billingPeriod || f.billingPeriod === SubscriptionBillingPeriod.ONCE) && f.currency === currency && f.active
     );
     return prices;
   }
-  function getPriceAmount(product: SubscriptionProduct & { prices: SubscriptionPrice[] }): number {
+  function getPriceAmount(product: SubscriptionProductDto): number {
     return getPrice(product)?.price ?? 0;
   }
   function intFormat(value: number) {
     return NumberUtils.intFormat(value);
   }
 
-  function selectPrice(product: SubscriptionProduct & { prices: SubscriptionPrice[] }) {
+  function selectPrice(product: SubscriptionProductDto) {
     const price = getPrice(product);
-    if (!price) {
+    if (!price || !price.id) {
       return;
     }
     if (!isCurrent(product)) {
@@ -54,10 +56,10 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
     }
   }
 
-  function isCurrent(plan: SubscriptionProduct) {
+  function isCurrent(plan: SubscriptionProductDto) {
     return current?.subscriptionProduct?.id === plan.id;
   }
-  function getButtonTitle(plan: SubscriptionProduct) {
+  function getButtonTitle(plan: SubscriptionProductDto) {
     if (isCurrent(plan)) {
       return t("shared.subscribed");
     }
@@ -67,14 +69,14 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
     return t("pricing.subscribe");
   }
 
-  function isDowngrade(plan: SubscriptionProduct) {
+  function isDowngrade(plan: SubscriptionProductDto) {
     if (current) {
       return plan.tier < current?.subscriptionProduct.tier;
     }
     return false;
   }
 
-  function isUpgrade(plan: SubscriptionProduct) {
+  function isUpgrade(plan: SubscriptionProductDto) {
     if (!current) {
       return true;
     }

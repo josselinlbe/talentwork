@@ -1,6 +1,7 @@
 import { createCookieSessionStorage, redirect } from "remix";
 import { URLSearchParams } from "url";
 import { getMyTenants, getTenant } from "./db/tenants.db.server";
+// import { jitsu } from "./jitsu.server";
 
 export type UserSession = {
   userId: string;
@@ -59,6 +60,8 @@ function getUserSession(request: Request) {
 }
 
 export async function getUserInfo(request: Request): Promise<UserSession> {
+  // jitsu.track(request.url).catch(() => {});
+
   const session = await getUserSession(request);
   const userId = session.get("userId") ?? "";
   const lightOrDarkMode = session.get("lightOrDarkMode") ?? "dark";

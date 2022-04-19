@@ -1,6 +1,7 @@
 import { SubscriptionProductDto } from "./SubscriptionProductDto";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import { Tenant, TenantSubscription } from ".prisma/client";
 
 export interface SubscriptionPriceDto {
   id?: string;
@@ -14,4 +15,5 @@ export interface SubscriptionPriceDto {
   priceBefore?: number;
   subscriptionProductId: string;
   subscriptionProduct?: SubscriptionProductDto;
+  tenantSubscriptions?: (TenantSubscription & { tenant: Tenant })[];
 }

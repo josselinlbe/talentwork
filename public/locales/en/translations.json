@@ -105,7 +105,11 @@
     "goTo": "Go to",
     "slug": "Slug",
     "admin": "Admin",
-    "member": "Member"
+    "member": "Member",
+    "max": "Max",
+    "monthly": "Monthly",
+    "sync": "Sync",
+    "invalid": "Invalid"
   },
   "front": {
     "navbar": {
@@ -280,6 +284,8 @@
     "pay": "Pay",
     "payOnce": "Pay once",
     "signUpFree": "Sign up free",
+    "monthlyPrice": "Monthly price",
+    "yearlyPrice": "Yearly price",
     "MONTHLY": "Monthly",
     "YEARLY": "Yearly",
     "MONTHLYShort": "month",
@@ -289,7 +295,13 @@
     "contact": "Contact",
     "customPlanDescription": "We'll make a plan based on your needs",
     "whatsIncluded": "What's included",
+    "included": "Included",
+    "notIncluded": "Not included",
     "recommended": "Recommended",
+    "custom": {
+      "title": "Custom Plan",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+    },
     "products": {
       "plan1": {
         "title": "Free",
@@ -302,19 +314,12 @@
       "plan3": {
         "title": "Enterprise",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
-      },
-      "plan4": {
-        "title": "Corporate",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
       }
     },
     "features": {
       "oneUser": "1 user",
       "maxUsers": "{{0}} users",
-      "maxStorage": "{{0}} storage",
       "prioritySupport": "Priority support",
-      "oneTenantRelationship": "1 tenant relationship",
-      "maxTenantRelationships": "{{0}} tenant relationships",
       "oneContract": "1 contract",
       "maxContracts": "{{0}} contracts/month"
     }
@@ -425,11 +430,11 @@
         "description": "No commands found for this search term. Please try again."
       },
       "tenants": {
-        "title": "Organizations",
-        "description": "Switch between organizations, or create one",
+        "title": "Tenants",
+        "description": "Switch between tenants, or create one",
         "switchTo": "Switch to",
         "create": "Create organization",
-        "viewAll": "View all my organizations",
+        "viewAll": "View all my tenants",
         "edit": "Edit organization name, slug and icon"
       },
       "profile": {
@@ -673,8 +678,11 @@
     "switchToApp": "Switch to app",
     "switchToAdmin": "Switch to admin",
     "pricing": {
-      "title": "Pricing",
-      "thesePricesAreFromFiles": "These prices are not in the database, they're loaded from: src/application/pricing/plans.ts.",
+      "title": "Pricing Plans",
+      "new": "New pricing plan",
+      "edit": "Edit pricing plan",
+      "i18n": "i18n translation",
+      "thesePricesAreFromFiles": "These prices are not in the database, they're loaded from: src/application/pricing/plans.server.ts.",
       "noPricesInDatabase": "There are no prices. Log in as admin and configure plans and prices.",
       "noPricesConfigured": "There are no prices.",
       "generateFromFiles": "Click here to create them"
@@ -709,7 +717,7 @@
       "description": "Generate your pricing plans and create your email templates"
     },
     "emails": {
-      "title": "Emails",
+      "title": "Email Templates",
       "name": "Name",
       "alias": "Alias",
       "subject": "Subject",
@@ -837,18 +845,20 @@
       "object": "User Event",
       "plural": "User Events",
       "action": "Action",
-      "details": "Details"
+      "details": "Details",
+      "url": "URL"
     },
     "subscriptionProduct": {
+      "object": "Subscription",
+      "plural": "Subscriptions",
       "serviceId": "Stripe ID",
       "tier": "Tier",
       "title": "Title",
+      "description": "Description",
+      "public": "Public",
       "badge": "Badge",
-      "status": "Estatus",
-      "users": "Users",
-      "tenantRelationships": "Tenant relationships",
-      "storage": "Storage",
-      "monthlyContracts": "Contracts"
+      "status": "Status",
+      "custom": "Custom plan"
     },
     "contract": {
       "object": "Contract",
@@ -928,6 +938,7 @@
       "description": "Be careful",
       "deleteAccount": "Delete account",
       "confirmDelete": "We will delete your account and all your organizations",
+      "confirmDeleteTenant": "Tenant will be deleted with all its data",
       "deleteYourAccount": "Delete your account",
       "onceYouDelete": "Once you delete your account, you will lose all data associated with it"
     },

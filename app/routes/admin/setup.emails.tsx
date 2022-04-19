@@ -12,7 +12,7 @@ import { createEmailTemplates, deleteEmailTemplate, getEmailTemplates } from "~/
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { createAdminUserEvent } from "~/utils/db/users.db.server";
+import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 type LoaderData = {
@@ -49,7 +49,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const form = await request.formData();
   const type = form.get("type")?.toString();
-  if (type === "create-all-postmark-templates") {
+  if (type === "create-all-email-templates") {
     const items = await getPostmarkTemplates();
     if (items.length > 0) {
       return redirect("/admin/setup/emails");
@@ -66,7 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
-  } else if (type === "create-postmark-template") {
+  } else if (type === "create-email-template") {
     try {
       const alias = form.get("alias")?.toString();
       if (!alias) {
@@ -165,14 +165,6 @@ export default function EmailsRoute() {
   function templateUrl(item: EmailTemplate) {
     return `https://account.postmarkapp.com/servers/${item.associatedServerId}/templates/${item.templateId}/edit`;
   }
-
-  function createPostmarkEmails() {
-    const form = new FormData();
-    form.set("type", "create-all-postmark-templates");
-    submit(form, {
-      method: "post",
-    });
-  }
   // function performPrimaryAction(item: EmailTemplate) {
   //   if (item.associatedServerId > 0) {
   //     sendTest(item);
@@ -193,9 +185,16 @@ export default function EmailsRoute() {
       method: "post",
     });
   }
+  function createAllEmailTemplates() {
+    const form = new FormData();
+    form.set("type", "create-all-email-templates");
+    submit(form, {
+      method: "post",
+    });
+  }
   function createTemplate(item: EmailTemplate): void {
     const form = new FormData();
-    form.set("type", "create-postmark-template");
+    form.set("type", "create-email-template");
     form.set("alias", item.alias);
     submit(form, {
       method: "post",
@@ -216,7 +215,7 @@ export default function EmailsRoute() {
     <div>
       <Breadcrumb
         className="w-full"
-        home="/admin"
+        home="/admin/dashboard"
         menu={[
           { title: t("app.sidebar.setup"), routePath: "/admin/setup" },
           { title: t("admin.emails.title"), routePath: "/admin/setup/emails" },
@@ -226,7 +225,7 @@ export default function EmailsRoute() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("admin.emails.title")}</h1>
           <Form method="post" className="flex items-center space-x-2">
-            <ButtonPrimary type="button" onClick={createPostmarkEmails} disabled={loading || createdTemplates() > 0}>
+            <ButtonPrimary type="button" onClick={createAllEmailTemplates} disabled={loading || createdTemplates() > 0}>
               {t("admin.emails.createAll")}
             </ButtonPrimary>
           </Form>

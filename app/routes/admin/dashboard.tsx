@@ -53,13 +53,17 @@ export default function AdminNavigationRoute() {
       </div>
 
       <div className="px-4 sm:px-8 max-w-5xl mx-auto py-5 grid gap-5">
-        <div className="space-y-5">
+        <div className="space-y-5 overflow-hidden">
           <DashboardStats items={data.stats} />
 
-          {data.setupSteps.filter((f) => f.completed).length < data.setupSteps.length && <SetupSteps items={data.setupSteps} />}
+          <div className=" overflow-x-auto">
+            {data.setupSteps.filter((f) => f.completed).length < data.setupSteps.length && <SetupSteps items={data.setupSteps} />}
+          </div>
 
-          <h3 className="leading-4 font-medium text-gray-900">Tenants</h3>
-          <TenantsTable items={data.tenants} withSearch={false} />
+          <div className=" overflow-x-auto">
+            <h3 className="leading-4 font-medium text-gray-900">Tenants</h3>
+            <TenantsTable items={data.tenants} withSearch={false} />
+          </div>
         </div>
       </div>
     </main>

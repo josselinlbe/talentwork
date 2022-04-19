@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @layer utilities {
+  .tooltip {
+    @apply invisible absolute;
+  }
+
+  .has-tooltip:hover .tooltip {
+    @apply visible z-50;
+  }
+
   @keyframes spinner {
     to {
       transform: rotate(360deg);

@@ -105,7 +105,11 @@
     "goTo": "Ir a",
     "slug": "Slug",
     "admin": "Admin",
-    "member": "Miembro"
+    "member": "Miembro",
+    "max": "Máx.",
+    "monthly": "Mensual",
+    "sync": "Sincronizar",
+    "invalid": "Inválido"
   },
   "front": {
     "navbar": {
@@ -280,6 +284,8 @@
     "pay": "Comprar",
     "payOnce": "Pagar una vez",
     "signUpFree": "Regístrate gratis",
+    "monthlyPrice": "Precio mensual",
+    "yearlyPrice": "Precio anual",
     "MONTHLY": "Mensual",
     "YEARLY": "Anual",
     "MONTHLYShort": "mes",
@@ -289,7 +295,13 @@
     "contact": "Contactar",
     "customPlanDescription": "Armamos un plan de acuerdo a tus necesidades",
     "whatsIncluded": "Qué incluye",
+    "included": "Incluido",
+    "notIncluded": "No incluido",
     "recommended": "Recomendado",
+    "custom": {
+      "title": "Personalizado",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+    },
     "products": {
       "plan1": {
         "title": "Gratis",
@@ -302,19 +314,12 @@
       "plan3": {
         "title": "Empresarial",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
-      },
-      "plan4": {
-        "title": "Corporativo",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
       }
     },
     "features": {
       "oneUser": "1 usuario",
       "maxUsers": "{{0}} usuarios",
-      "maxStorage": "{{0}} de almacenamiento",
       "prioritySupport": "Soporte prioritario",
-      "oneTenantRelationship": "1 enlace con organización",
-      "maxTenantRelationships": "{{0}} enlaces con organizaciones",
       "oneContract": "1 contrato",
       "maxContracts": "{{0}} contratos/mes"
     }
@@ -672,8 +677,11 @@
     "switchToApp": "Ir a app",
     "switchToAdmin": "Ir a admin",
     "pricing": {
-      "title": "Planes",
-      "thesePricesAreFromFiles": "Estos precios no están en la base de datos, están cargados desde: src/application/pricing/plans.ts.",
+      "title": "Planes y Precios",
+      "new": "Nuevo plan",
+      "edit": "Editar plan",
+      "i18n": "Traducción i18n",
+      "thesePricesAreFromFiles": "Estos precios no están en la base de datos, están cargados desde: src/application/pricing/plans.server.ts.",
       "noPricesInDatabase": "No hay precios configurados. Inicia como admin para configurar los planes y precios.",
       "noPricesConfigured": "No hay precios configurados.",
       "generateFromFiles": "Clic aquí para generarlos"
@@ -708,7 +716,7 @@
       "description": "Genera tus planes de precios, y crea tus plantillas de correo"
     },
     "emails": {
-      "title": "Correos",
+      "title": "Plantillas de Correos",
       "name": "Nombre",
       "alias": "Alias",
       "subject": "Asunto",
@@ -836,18 +844,20 @@
       "object": "Evento de Usuario",
       "plural": "Eventos de Usuarios",
       "action": "Acción",
-      "details": "Detalles"
+      "details": "Detalles",
+      "url": "URL"
     },
     "subscriptionProduct": {
+      "object": "Suscripción",
+      "plural": "Suscripciones",
       "serviceId": "Stripe ID",
       "tier": "Nivel",
       "title": "Título",
+      "description": "Descripción",
+      "public": "Público",
       "badge": "Leyenda",
       "status": "Estatus",
-      "users": "Usuarios",
-      "tenantRelationships": "Enlaces con organizaciones",
-      "storage": "Almacenamiento",
-      "monthlyContracts": "Contratos"
+      "custom": "Personalizado"
     },
     "contract": {
       "object": "Contrato",
@@ -927,6 +937,7 @@
       "description": "Ten cuidado aquí",
       "deleteAccount": "Eliminar cuenta",
       "confirmDelete": "Eliminaremos tu cuenta y todas tus organizaciones",
+      "confirmDeleteTenant": "Se eliminará la organización con toda su información",
       "deleteYourAccount": "Elimina tu cuenta",
       "onceYouDelete": "Una vez eliminada tu cuenta, perderás toda la información y acceso asociada a ella"
     },

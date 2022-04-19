@@ -66,6 +66,10 @@ export default function UserEventsTable({ withTenant, items }: Props) {
         name: "details",
         title: t("models.userEvent.details"),
       },
+      {
+        name: "url",
+        title: t("models.userEvent.url"),
+      },
     ];
     setHeaders(headers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,6 +212,7 @@ export default function UserEventsTable({ withTenant, items }: Props) {
 
                                 <td className="px-2 py-2 whitespace-nowrap">{item.action}</td>
                                 <td className="px-2 py-2 whitespace-nowrap">{item.details}</td>
+                                <td className="px-2 py-2 whitespace-nowrap">{item.url}</td>
                               </tr>
                             </tbody>
                           );

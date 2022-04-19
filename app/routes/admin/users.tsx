@@ -107,7 +107,7 @@ export default function AdminUsersRoute() {
       {data.tenant && (
         <Breadcrumb
           className="w-full"
-          home="/admin"
+          home="/admin/dashboard"
           menu={[
             { title: t("models.tenant.plural"), routePath: "/admin/tenants" },
             { title: data.tenant.name, routePath: `/admin/tenant/${data.tenant.id}/profile` },
@@ -133,7 +133,9 @@ export default function AdminUsersRoute() {
         </div>
       </div>
 
-      <UsersTable items={data.items} />
+      <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
+        <UsersTable items={data.items} />
+      </div>
     </div>
   );
 }

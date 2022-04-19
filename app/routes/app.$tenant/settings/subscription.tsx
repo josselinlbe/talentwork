@@ -16,7 +16,7 @@ import {
 } from "~/utils/stripe.server";
 import { getUserInfo } from "~/utils/session.server";
 import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
-import { createUserEvent, getUser } from "~/utils/db/users.db.server";
+import { getUser } from "~/utils/db/users.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ChangeSubscription from "~/components/core/settings/subscription/ChangeSubscription";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -36,6 +36,7 @@ import {
   updateTenantStripeSubscriptionId,
 } from "~/utils/db/tenantSubscriptions.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
+import { createUserEvent } from "~/utils/db/userEvents.db.server";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -84,9 +85,13 @@ export let loader: LoaderFunction = async ({ request, params }) => {
         if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
           price = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
         }
+        // console.log({ session: JSON.stringify(session) });
+        // await updateStripeCustomerPaymentMethod(tenantSubscription.stripeCustomerId,)
         await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
           subscriptionPriceId: price?.id ?? "",
           stripeSubscriptionId: session.subscription.toString(),
+          maxUsers: price?.subscriptionProduct.maxUsers ?? 0,
+          monthlyContracts: price?.subscriptionProduct.monthlyContracts ?? 0,
         });
         await createUserEvent(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
@@ -102,6 +107,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
       subscriptionPriceId: "",
       stripeSubscriptionId: "",
+      maxUsers: 0,
+      monthlyContracts: 0,
     });
   }
 
@@ -162,6 +169,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
       subscriptionPriceId: "",
       stripeSubscriptionId: "",
+      maxUsers: 0,
+      monthlyContracts: 0,
     });
     const actionData: ActionData = {
       success: "Successfully cancelled",

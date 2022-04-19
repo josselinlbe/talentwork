@@ -15,6 +15,17 @@ export async function createStripeSession(tenant: string, customer: string, pric
   });
 }
 
+export async function createStripeSetupSession(tenant: string, customer: string, price: string) {
+  const site = process.env.SERVER_URL?.toString() ?? "";
+  return await stripe.checkout.sessions.create({
+    customer,
+    success_url: site + `/app/${tenant}/settings/subscription?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: site + `/app/${tenant}/settings/subscription`,
+    mode: "setup",
+    payment_method_types: ["card"],
+  });
+}
+
 export async function getStripeSession(id: string) {
   return await stripe.checkout.sessions.retrieve(id);
 }
@@ -29,6 +40,17 @@ export async function getStripeSubscription(id: string) {
   } catch (e) {
     return null;
   }
+}
+
+export async function createStripeSubscription(customer: string, price: string) {
+  return await stripe.subscriptions.create({
+    customer,
+    items: [
+      {
+        price,
+      },
+    ],
+  });
 }
 
 export async function getStripeInvoices(id: string) {
@@ -50,13 +72,37 @@ export async function createStripeCustomer(email: string, name: string) {
   });
 }
 
-export async function createStripeProduct(data: { title: string }) {
-  return await stripe.products.create({
-    name: data.title,
+export async function updateStripeCustomerPaymentMethod(id: string, default_payment_method: string) {
+  return await stripe.customers.update(id, {
+    invoice_settings: { default_payment_method },
   });
 }
 
+export async function createStripeProduct(data: { title: string }) {
+  return await stripe.products
+    .create({
+      name: data.title,
+    })
+    .catch(() => {
+      return undefined;
+    });
+}
+
+export async function updateStripeProduct(id: string, data: { title: string }) {
+  return await stripe.products
+    .update(id, {
+      name: data.title,
+    })
+    .catch((error) => {
+      // console.error(error);
+      // ignore
+    });
+}
+
 export async function createStripePrice(productId: string, data: { billingPeriod: SubscriptionBillingPeriod; price: number; currency: string }) {
+  if (!productId) {
+    return undefined;
+  }
   let interval: "day" | "week" | "month" | "year" = "month";
   switch (data.billingPeriod) {
     case SubscriptionBillingPeriod.MONTHLY:
@@ -79,4 +125,20 @@ export async function createStripePrice(productId: string, data: { billingPeriod
     product: productId,
     active: true,
   });
+}
+
+export async function deleteStripeProduct(productId: string) {
+  return await stripe.products.del(productId).catch(() => {
+    // ignore
+  });
+}
+
+export async function updateStripePrice(productId: string, data: { active: boolean }) {
+  return await stripe.prices
+    .update(productId, {
+      active: data.active,
+    })
+    .catch(() => {
+      // ignore
+    });
 }

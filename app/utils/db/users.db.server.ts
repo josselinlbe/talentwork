@@ -1,8 +1,6 @@
-import { AdminUser, Tenant, User, UserEvent } from ".prisma/client";
+import { AdminUser } from ".prisma/client";
 import bcrypt from "bcryptjs";
 import { db } from "~/utils/db.server";
-import { TenantUrl } from "../services/urlService";
-import { getUserInfo } from "../session.server";
 
 export type UserWithoutPassword = {
   id: string;
@@ -13,11 +11,6 @@ export type UserWithoutPassword = {
   phone: string;
   admin?: AdminUser | null;
   defaultTenantId: string | null;
-};
-
-export type UserEventWithDetails = UserEvent & {
-  user: User;
-  tenant?: Tenant | null;
 };
 
 export async function adminGetAllTenantUsers(tenantId: string) {
@@ -139,52 +132,5 @@ export async function updateUserDefaultTenantId(data: { defaultTenantId: string 
 export async function deleteUser(userId: string) {
   return await db.user.delete({
     where: { id: userId },
-  });
-}
-
-export async function getAllUserEvents(): Promise<UserEventWithDetails[]> {
-  return await db.userEvent.findMany({
-    include: {
-      user: true,
-      tenant: true,
-    },
-  });
-}
-
-export async function getUserEvents(tenantId: string): Promise<UserEventWithDetails[]> {
-  return await db.userEvent.findMany({
-    where: {
-      tenantId,
-    },
-    include: {
-      user: true,
-      tenant: true,
-    },
-  });
-}
-
-export async function createUserEvent(request: Request, tenantUrl: TenantUrl, action: string, details: string) {
-  const userInfo = await getUserInfo(request);
-
-  await db.userEvent.create({
-    data: {
-      tenantId: tenantUrl.tenantId,
-      userId: userInfo.userId,
-      url: request.url.toString(),
-      action,
-      details,
-    },
-  });
-}
-
-export async function createAdminUserEvent(request: Request, action: string, details: string) {
-  const userInfo = await getUserInfo(request);
-  await db.userEvent.create({
-    data: {
-      userId: userInfo.userId,
-      url: request.url.toString(),
-      action,
-      details,
-    },
   });
 }

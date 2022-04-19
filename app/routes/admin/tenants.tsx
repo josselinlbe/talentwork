@@ -1,14 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { json, Link, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenants, TenantWithDetails } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
-import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
-import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
-import DateUtils from "~/utils/shared/DateUtils";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
 
 type LoaderData = {
@@ -55,7 +50,7 @@ export default function AdminTenantsRoute() {
         </div>
       </div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
-        <TenantsTable items={data.items} />
+        <TenantsTable items={data.items} withSearch={true} />
       </div>
     </div>
   );

@@ -136,7 +136,7 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                               return (
                                 <tr key={idx}>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <Link to={`/admin/tenant/${item.id}/profile`} className="font-medium hover:underline text-gray-800">
+                                    <Link to={`/admin/tenants/${item.id}`} className="font-medium hover:underline text-gray-800">
                                       {item.name}
                                     </Link>
                                   </td>
@@ -182,7 +182,7 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <div className="flex items-center space-x-2">
-                                      <ButtonTertiary to={`/admin/tenant/${item.id}/profile`}>{t("admin.tenants.overview")}</ButtonTertiary>
+                                      <ButtonTertiary to={`/admin/tenants/${item.id}`}>{t("admin.tenants.overview")}</ButtonTertiary>
                                       {/* <ButtonTertiary to={`/admin/tenant/${item.id}/subscription`}>{t("admin.tenants.subscription.title")}</ButtonTertiary> */}
                                     </div>
                                   </td>

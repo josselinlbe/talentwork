@@ -199,3 +199,11 @@ export async function deleteTenantUser(id: string) {
     },
   });
 }
+
+export async function deleteTenant(id: string) {
+  return await db.tenant.delete({
+    where: {
+      id,
+    },
+  });
+}

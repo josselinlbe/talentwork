@@ -44,8 +44,6 @@ async function createTenant(name: string, users: { id: string; role: TenantUserR
       stripeCustomerId: "",
       stripeSubscriptionId: "",
       maxUsers: 5,
-      maxTenantRelationships: 45,
-      maxStorage: 100 * 1024,
       monthlyContracts: 45,
     },
   });
