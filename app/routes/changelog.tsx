@@ -25,12 +25,12 @@ export let loader: LoaderFunction = async ({ request }) => {
       ],
       closed: [
         {
-          title: "Delete a Tenant as Admin #37",
-          img: "",
+          title: "Create custom pricing plans #40",
+          img: "https://user-images.githubusercontent.com/8606530/164090549-df28b2a1-2fff-4e83-9f51-e6f0d05fed77.png",
         },
         {
-          title: "Create custom pricing plans #40",
-          img: "",
+          title: "Delete a Tenant as Admin #37",
+          img: "https://user-images.githubusercontent.com/8606530/164090789-800e1c40-a804-4b07-ab03-24107ace5e0b.png",
         },
       ],
     },
