@@ -65,13 +65,12 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
   if (!tenantSubscription.stripeCustomerId) {
     const customer = await createStripeCustomer(user.email, tenant.name);
-    if (!customer) {
-      return badRequest({ error: "Could not create stripe customer" });
+    if (customer) {
+      tenantSubscription.stripeCustomerId = customer.id;
+      await updateTenantSubscriptionCustomerId(tenantUrl.tenantId, {
+        stripeCustomerId: customer.id,
+      });
     }
-    tenantSubscription.stripeCustomerId = customer.id;
-    await updateTenantSubscriptionCustomerId(tenantUrl.tenantId, {
-      stripeCustomerId: customer.id,
-    });
   }
 
   const url = new URL(request.url);
@@ -116,7 +115,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
   const dashboardData = await loadDashboardData(params);
 
-  const items = await getAllSubscriptionProducts();
+  const items = await getAllSubscriptionProducts(true);
   const data: LoaderData = {
     myInvoices,
     title: `${t("app.navbar.subscription")} | ${process.env.APP_NAME}`,

@@ -43,8 +43,6 @@ async function createTenant(name: string, users: { id: string; role: TenantUserR
       tenantId: tenant.id,
       stripeCustomerId: "",
       stripeSubscriptionId: "",
-      maxUsers: 5,
-      monthlyContracts: 45,
     },
   });
 

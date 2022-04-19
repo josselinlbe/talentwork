@@ -77,8 +77,6 @@ model TenantSubscription {
   stripeSubscriptionId String?
   subscriptionPriceId  String?
   subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
-  maxUsers             Int
-  monthlyContracts     Int
 }
 
 model TenantUser {

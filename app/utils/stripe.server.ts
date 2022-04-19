@@ -61,15 +61,19 @@ export async function getStripeInvoices(id: string) {
       })
     ).data;
   } catch (e) {
-    return null;
+    return [];
   }
 }
 
 export async function createStripeCustomer(email: string, name: string) {
-  return await stripe.customers.create({
-    email,
-    name,
-  });
+  return await stripe.customers
+    .create({
+      email,
+      name,
+    })
+    .catch(() => {
+      return null;
+    });
 }
 
 export async function updateStripeCustomerPaymentMethod(id: string, default_payment_method: string) {

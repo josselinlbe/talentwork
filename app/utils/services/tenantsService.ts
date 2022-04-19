@@ -12,10 +12,10 @@ export async function loadTenantsSubscriptionAndUsage(items: TenantWithDetails[]
       item.contractsCount = await getMonthlyContractsCount(item.id);
       item.employeesCount = await getEmployeesCount(item.id);
 
-      const stripeSubscription = await getStripeSubscription(item.subscriptionId ?? "");
-      if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
-        item.subscriptionPrice = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
-      }
+      // const stripeSubscription = await getStripeSubscription(item.subscriptionId ?? "");
+      // if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
+      //   item.subscriptionPrice = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
+      // }
 
       return item;
     })

@@ -15,6 +15,26 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const changelogItems: ChangelogItem[] = [
     {
+      date: "April 19, 2022",
+      title: "Custom Pricing Plans",
+      added: [
+        {
+          title: "Epic Feature: Entity Builder #41",
+          img: "",
+        },
+      ],
+      closed: [
+        {
+          title: "Delete a Tenant as Admin #37",
+          img: "",
+        },
+        {
+          title: "Create custom pricing plans #40",
+          img: "",
+        },
+      ],
+    },
+    {
       date: "April 12, 2022",
       title: "Tenant on URL, Command palette, Dashboards, and User events",
       added: [
@@ -148,7 +168,7 @@ export const meta: MetaFunction = ({ data }) => ({
   title: data?.title,
 });
 
-export default function ContactRoute() {
+export default function ChangelogRoute() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
 
@@ -200,9 +220,9 @@ export default function ContactRoute() {
                           );
                         })}
                       </div> */}
-                    {data.items.map((item) => {
+                    {data.items.map((item, idx) => {
                       return (
-                        <>
+                        <div key={idx}>
                           <h2 id={UrlUtils.slugify(item.date, 0)} className="text-black dark:text-white -mb-1 w-full">
                             {item.date}
                             <span id={UrlUtils.slugify(item.title, 0)} className=" font-normal pl-2 text-gray-700 dark:text-gray-300 text-sm">
@@ -210,9 +230,9 @@ export default function ContactRoute() {
                             </span>
                           </h2>
 
-                          <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
                           <ChangelogIssues title="Closed issues" items={item.closed} icon="✅" />
-                        </>
+                          <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
+                        </div>
                       );
                     })}
                   </div>

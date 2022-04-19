@@ -80,7 +80,7 @@ export default function MembersRoute() {
     if (appData.user?.admin !== null) {
       return 0;
     }
-    return appData.mySubscription?.maxUsers ?? 0;
+    return appData.mySubscription?.subscriptionPrice?.subscriptionProduct.maxUsers ?? 0;
   };
   const maxUsersReached = () => {
     return maxUsers() > 0 && (data.users?.length ?? 0) >= maxUsers();

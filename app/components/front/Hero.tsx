@@ -84,7 +84,11 @@ export default function Hero() {
           </div>
         </div>
 
-        <p className="text-gray-500 flex justify-center">{t("front.hero.startHint")}</p>
+        <p className="text-gray-500 flex justify-center">
+          <span className=" select-none border-b border-dashed border-cyan-500 dark:border-cyan-300 text-cyan-800 dark:text-cyan-500">
+            {t("front.hero.startHint")}
+          </span>
+        </p>
       </div>
     </div>
   );

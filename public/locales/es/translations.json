@@ -131,7 +131,7 @@
       "start": "Comienza hoy",
       "buy": "Lo quiero!",
       "contact": "Contáctanos",
-      "startHint": "Plantilla full-stack para SaaS."
+      "startHint": "Este demo está alojado en Vercel + Supabase."
     },
     "pricing": {
       "title": "Precios",

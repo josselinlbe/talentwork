@@ -123,7 +123,7 @@
       "headline1": "Remix",
       "headline2": "codebase",
       "headline3": "to build your own SaaS",
-      "headline4": "React Components, SaaS pages, Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark, and more.",
+      "headline4": "Authentication, Subscriptions, Tenant Management, i18n, User Events,... built with Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark, and more.",
       "to": "to",
       "build": "build",
       "yourOwn": "your own",
@@ -131,7 +131,7 @@
       "start": "Start today",
       "buy": "I want this!",
       "contact": "Contact us",
-      "startHint": "Full-stack SaaS boilerplate."
+      "startHint": "This demo is hosted on Vercel + Supabase."
     },
     "pricing": {
       "title": "Pricing",

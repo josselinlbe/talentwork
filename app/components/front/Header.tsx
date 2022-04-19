@@ -20,7 +20,7 @@ export default function Header() {
   const links = [
     { path: "/", title: t("front.navbar.product") },
     { path: "/pricing", title: t("front.navbar.pricing") },
-    { path: "/contact", title: t("front.navbar.contact") },
+    // { path: "/contact", title: t("front.navbar.contact") },
     { path: "/changelog", title: "Changelog", className: "hidden xl:block" },
     // { path: "/components", title: t("admin.components.title"), className: "hidden xl:block" },
   ];

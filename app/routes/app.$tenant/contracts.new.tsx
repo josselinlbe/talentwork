@@ -226,7 +226,7 @@ export default function NewContractRoute() {
   const imProvider = () => {
     return appData.currentTenant?.id === link?.providerTenantId;
   };
-  const monthlyContracts = appData.mySubscription?.monthlyContracts ?? 0;
+  const monthlyContracts = appData.mySubscription?.subscriptionPrice?.subscriptionProduct.monthlyContracts ?? 0;
   const maxContractsReached = () => {
     if (!appData.mySubscription) {
       return true;

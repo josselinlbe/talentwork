@@ -75,10 +75,10 @@ export default function PricingPlanForm({ plans, item }: Props) {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));
   }
   function getNextTier() {
-    if (plans?.length === 0) {
+    if (!plans || plans?.length === 0) {
       return 1;
     }
-    return plans?.length ?? 0 + 1;
+    return Math.max(...plans.map((o) => o.tier)) + 1;
   }
   function getPrice() {
     if (billingPeriod === SubscriptionBillingPeriod.MONTHLY) {

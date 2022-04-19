@@ -47,8 +47,8 @@ export default function IndexRoute() {
       <TopBanner />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200">
         <Hero />
-        <Features className="relative z-10" />
-        <JoinNow />
+        {/* <Features className="relative z-10" /> */}
+        <JoinNow className="relative z-20" />
         <Footer />
       </div>
     </div>

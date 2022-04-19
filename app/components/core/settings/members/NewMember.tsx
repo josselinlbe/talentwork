@@ -81,7 +81,7 @@ export default function NewMember() {
     setRole(_role);
   }
   const maxUsers = (): number => {
-    return appData.mySubscription?.maxUsers ?? 0;
+    return appData.mySubscription?.subscriptionPrice?.subscriptionProduct.maxUsers ?? 0;
   };
   const maxUsersReached = () => {
     return maxUsers() > 0 && (membersData.users?.length ?? 0) >= maxUsers();
