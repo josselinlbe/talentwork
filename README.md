@@ -2,37 +2,39 @@
 
 ![Remix SaaS kit](https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png)
 
-### Edition
-
-| Edition   | Vue2 | Vue3 | React | Svelte | Remix |
-| --------- | ---- | ---- | ----- | ------ | ----- |
-| Starter   |      |      |       |        |       |
-| Sandbox   |      |      |       |        |       |
-| Essential |      |      |       |        | ✔️    |
-| Premium   |      |      |       |        |       |
-
-[View all editions](https://saasfrontends.com).
-
 ### Getting started
 
-1. Create the `.env` file and set the following values:
+1. Rename the `.env.example` file to &rarr; `.env` and set the following values (although you can come back to this step later):
 
-- **DATABASE_URL**
-- **SESSION_SECRET** - any string
-- **ADMIN_EMAIL** - this will be your admin user
+_Required_:
+
+- **DATABASE_URL** - any [Prisma supported database](https://www.prisma.io/docs/reference/database-reference/supported-databases) connection string
+- **SERVER_URL** - (http://localhost:3000 on dev, site's URL on prod)
+- **SESSION_SECRET** - any secure string
+- **ADMIN_EMAIL** - your admin user
 - **ADMIN_PASSWORD** - don't commit your .env file
-- **STRIPE_SK** - [click here to get the secret key](https://dashboard.stripe.com/test/developers)
-- **POSTMARK_SERVER_TOKEN** - [create a free email server here](https://account.postmarkapp.com/servers)
-- **INTEGRATIONS_CONTACT_FORMSPREE** - [create a free form here](https://formspree.io/forms)
-- **COMPANY_ADDRESS** - used on emails
 
-2. Generate and seed your database. If your using **sqlite** and your database gets messed up, you can always delete the `dev.db` file and run npx prisma db push again.
+_Optional_:
+
+- **APP_NAME** - eg: My SaaS app
+- **STRIPE_SK** - [click here to get the secret key](https://dashboard.stripe.com/test/developers)
+- **POSTMARK_SERVER_TOKEN** - [create a free Postmark email server here](https://account.postmarkapp.com/servers)
+- **POSTMARK_FROM_EMAIL** - [Postmark sender signature](https://account.postmarkapp.com/signature_domains)
+- **INTEGRATIONS_CONTACT_FORMSPREE** - used for /contact URL ([create a free form here](https://formspree.io/forms))
+- **SUPPORT_EMAIL** - used for emails
+- **COMPANY_ADDRESS** - used for emails
+
+2. Open the `schema.prisma` file and set the datasource provider: **sqlite**, **postgresql**... _(I recommend using sqlite for local dev)_.
+
+3. Generate and seed your database _(if you get an error, delete the `prisma/migrations` folder)_.
 
 ```
 npx prisma migrate dev --name init
 ```
 
-3. Run the app:
+If your using **sqlite** and your database gets messed up, you can always delete the `prisma/dev.db` file and run npx prisma db push again.
+
+4. Run the app:
 
 ```
 yarn
