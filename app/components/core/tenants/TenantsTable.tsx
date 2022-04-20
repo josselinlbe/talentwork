@@ -136,18 +136,15 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                               return (
                                 <tr key={idx}>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <Link to={`/admin/tenants/${item.id}`} className="font-medium hover:underline text-gray-800">
                                       {item.name}
-                                    </Link>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <Link to={`/app/${item.slug}`} className="hover:underline text-gray-800">
+                                    <Link to={`/app/${item.slug}`} className="underline text-gray-800">
                                       {item.slug}
                                     </Link>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <div className="flex space-x-1">
-                                      <Link to={`/admin/tenant/${item.id}/subscription`} className="hover:underline text-gray-800">
                                         <span>
                                           {item.subscription?.subscriptionPrice?.subscriptionProduct ? (
                                             <>
@@ -161,18 +158,15 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                                             <span className="italic text-gray-500">{t("settings.subscription.noSubscription")}</span>
                                           )}
                                         </span>
-                                      </Link>
                                     </div>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <Link to={`/admin/tenant/${item.id}/users`} className="hover:underline">
                                       {item.usersCount}
-                                      <span className=" text-gray-400">/{item.subscription?.maxUsers ?? "-"}</span>
-                                    </Link>
+                                      <span className=" text-gray-400">/{item.subscription?.subscriptionPrice?.subscriptionProduct?.maxUsers ?? "-"}</span>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     {item.contractsCount}
-                                    <span className=" text-gray-400">/{item.subscription?.monthlyContracts ?? "-"}</span>
+                                    <span className=" text-gray-400">/{item.subscription?.subscriptionPrice?.subscriptionProduct?.monthlyContracts ?? "-"}</span>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.employeesCount === 0 ? "-" : item.employeesCount}</td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">

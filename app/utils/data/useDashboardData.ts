@@ -4,7 +4,7 @@ import { getClientLinksCount, getTenantRelationshipsCount, getProviderLinksCount
 import { getTenantUsersCount } from "../db/tenants.db.server";
 import { getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
 import { getEmployeesCount } from "~/modules/contracts/db/employees.db.server";
-import { Params } from "react-router";
+import type { Params } from "react-router";
 import { getTenantUrl } from "../services/urlService";
 
 export type DashboardLoaderData = {

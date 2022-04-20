@@ -1,24 +1,30 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
+import type { ActionFunction, LoaderFunction, MetaFunction} from "remix";
+import { json, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { deleteTenant, getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import { Tenant } from "@prisma/client";
+import type { Tenant } from "@prisma/client";
 import UpdateTenantDetailsForm from "~/components/core/tenants/UpdateTenantDetailsForm";
 import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
 import UsersTable from "~/components/core/users/UsersTable";
 import { adminGetAllTenantUsers } from "~/utils/db/users.db.server";
 import UpdateTenantSubscriptionForm from "~/components/core/tenants/UpdateTenantSubscriptionForm";
-import { getTenantSubscription, TenantSubscriptionWithDetails, updateTenantStripeSubscriptionId } from "~/utils/db/tenantSubscriptions.db.server";
-import { getSubscriptionPrice, getSubscriptionPrices, SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
+import type { TenantSubscriptionWithDetails} from "~/utils/db/tenantSubscriptions.db.server";
+import { getTenantSubscription, updateTenantStripeSubscriptionId } from "~/utils/db/tenantSubscriptions.db.server";
+import type { SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
+import { getSubscriptionPrice, getSubscriptionPrices } from "~/utils/db/subscriptionProducts.db.server";
 import { cancelStripeSubscription, createStripeSubscription } from "~/utils/stripe.server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { useEffect, useRef } from "react";
-import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
+import type { RefErrorModal } from "~/components/ui/modals/ErrorModal";
+import ErrorModal from "~/components/ui/modals/ErrorModal";
+import type { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
+import SuccessModal from "~/components/ui/modals/SuccessModal";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
+import type { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
+import ConfirmModal from "~/components/ui/modals/ConfirmModal";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 
 type LoaderData = {

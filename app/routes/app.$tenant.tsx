@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { json, LoaderFunction, Outlet, useNavigate } from "remix";
+import type { LoaderFunction} from "remix";
+import { json, Outlet, useNavigate } from "remix";
 import AppLayout from "~/components/app/AppLayout";
 import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { requireAuthorization } from "~/utils/loaders.middleware";

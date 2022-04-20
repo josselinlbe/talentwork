@@ -147,7 +147,7 @@ export function CatchBoundary() {
 export function ErrorBoundary({ error }: { error: Error }) {
   const data = useRootData();
   return (
-    <Document title="Uh-oh!">
+    <Document title="Unexpected error">
       <div className="mx-auto p-12 text-center">
         <h1>
           Server error,{" "}

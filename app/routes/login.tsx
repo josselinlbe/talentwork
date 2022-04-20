@@ -34,16 +34,14 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
-
-  // await new Promise((r) => setTimeout(r, 5000));
-
+  
   const form = await request.formData();
   const email = form.get("email")?.toString().toLowerCase().trim();
   const password = form.get("password");
   const redirectTo = form.get("redirectTo");
   if (typeof email !== "string" || typeof password !== "string" || typeof redirectTo !== "string") {
     return badRequest({
-      error: `Form not submitted correctly.`,
+      error: t("shared.invalidForm"),
     });
   }
 
@@ -70,7 +68,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  await createUserEventLogin(user);
+  await createUserEventLogin(request, user);
   const userSession = await setLoggedUser(user);
   return createUserSession(
     {

@@ -6,7 +6,7 @@ import { getUserInfo, logout } from "~/utils/session.server";
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
   if (userInfo.userId) {
-    createUserEventLogout(userInfo.userId);
+    createUserEventLogout(request, userInfo.userId);
   }
   return logout(request);
 };

@@ -1,4 +1,5 @@
 import { Tenant, User, UserEvent } from "@prisma/client";
+import { getClientIPAddress } from "remix-utils";
 import { db } from "../db.server";
 // import { jitsu } from "../jitsu.server";
 import { TenantUrl } from "../services/urlService";
@@ -32,7 +33,6 @@ export async function getUserEvents(tenantId: string): Promise<UserEventWithDeta
 
 export async function createUserEvent(request: Request, tenantUrl: TenantUrl, action: string, details: string) {
   const userInfo = await getUserInfo(request);
-
   await db.userEvent.create({
     data: {
       tenantId: tenantUrl.tenantId,
@@ -44,7 +44,9 @@ export async function createUserEvent(request: Request, tenantUrl: TenantUrl, ac
   });
 }
 
-export async function createUserEventLogin(user: User) {
+export async function createUserEventLogin(request: Request, user: User) {
+  // eslint-disable-next-line no-console
+  console.log({clientIpAddress: getClientIPAddress(request.headers)})
   // jitsu
   //   .id({
   //     email: user.email,
@@ -64,7 +66,7 @@ export async function createUserEventLogin(user: User) {
   });
 }
 
-export async function createUserEventLogout(userId: string) {
+export async function createUserEventLogout(request: Request, userId: string) {
   // jitsu
   //   .id({
   //     email: "",

@@ -1,6 +1,6 @@
 import { redirect } from "remix";
 import { db } from "../db.server";
-import { Params } from "react-router";
+import type { Params } from "react-router";
 
 export type TenantUrl = {
   tenantId: string;
