@@ -722,7 +722,7 @@
       "alias": "Alias",
       "subject": "Subject",
       "created": "Created",
-      "createAll": "Create All",
+      "createAll": "Create all",
       "noEmails": "No email templates",
       "noEmailsDescription": "Set them up at app/application/emails folder and set the POSTMARK_SERVER_TOKEN value.",
       "sendTest": "Send test",

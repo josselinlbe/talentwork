@@ -58,10 +58,8 @@ export async function updateTenantSubscriptionCustomerId(tenantId: string, data:
 export async function updateTenantStripeSubscriptionId(
   tenantId: string,
   data: {
-    subscriptionPriceId: string;
-    stripeSubscriptionId: string;
-    maxUsers: number;
-    monthlyContracts: number;
+    subscriptionPriceId: string | null;
+    stripeSubscriptionId: string | null;
   }
 ) {
   return await db.tenantSubscription.update({

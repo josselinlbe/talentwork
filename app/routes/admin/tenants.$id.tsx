@@ -136,8 +136,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     await updateTenantStripeSubscriptionId(params.id ?? "", {
       subscriptionPriceId: priceId,
       stripeSubscriptionId: newSubscription.id,
-      maxUsers: subscriptionPrice?.subscriptionProduct.maxUsers ?? 0,
-      monthlyContracts: subscriptionPrice?.subscriptionProduct.monthlyContracts ?? 0,
     });
 
     return json({ updateSubscriptionSuccess: "Subscription updated" });

@@ -89,8 +89,6 @@ export let loader: LoaderFunction = async ({ request, params }) => {
         await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
           subscriptionPriceId: price?.id ?? "",
           stripeSubscriptionId: session.subscription.toString(),
-          maxUsers: price?.subscriptionProduct.maxUsers ?? 0,
-          monthlyContracts: price?.subscriptionProduct.monthlyContracts ?? 0,
         });
         await createUserEvent(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
@@ -104,10 +102,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
   } else if (tenantSubscription.stripeSubscriptionId) {
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
-      subscriptionPriceId: "",
-      stripeSubscriptionId: "",
-      maxUsers: 0,
-      monthlyContracts: 0,
+      subscriptionPriceId: null,
+      stripeSubscriptionId: null,
     });
   }
 
@@ -166,10 +162,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     await cancelStripeSubscription(tenantSubscription.stripeSubscriptionId);
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
-      subscriptionPriceId: "",
-      stripeSubscriptionId: "",
-      maxUsers: 0,
-      monthlyContracts: 0,
+      subscriptionPriceId: null,
+      stripeSubscriptionId: null,
     });
     const actionData: ActionData = {
       success: "Successfully cancelled",
