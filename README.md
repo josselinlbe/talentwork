@@ -69,7 +69,7 @@ The next steps require that you set the `SK_STRIPE` env variable.
 
 ![New pricing plan](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/admin-pricing-new.png)
 
-You should see the new plan on the /admin/setup/pricing page:
+You should see the new plan on the [/admin/setup/pricing](http://localhost:3000/admin/setup/pricing) page:
 
 ![Pricing plans](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/admin-pricing-with-custom.png)
 
@@ -93,20 +93,30 @@ The next steps require that you set the `POSTMARK_SERVER_TOKEN` and `POSTMARK_FR
 
 ## 4. Register as a SaaS user
 
-💿 4.1. Register with your email at `/register`. You will be redirected to the [/app/dashboard](http://localhost:3000/app/dashboard).
+💿 4.1. Register with your email at [/register](http://localhost:3000/register). You will be redirected to the [/app/dashboard](http://localhost:3000/app/dashboard).
 
 ![App Dashboard](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/app-dashboard.png)
 
 💿 4.2. Click on `Subscribe` and subscribe to any plan _(use any [Stripe test card](https://stripe.com/docs/testing#cards))_.
 
+***Stripe Checkout***:
+
 ![App Subscription Checkout](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/app-subscription-checkout.png)
+
+***Tenant Subscription Settings***:
 
 ![Subscribed](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/app-subscribed.png)
 
 💿 4.3. Cancel the subscription and subscribe to another pricing plan.
 
-## 5. Create Contracts (sample application)
+## 5. Link with another Tenant
 
-You can skip these steps since Contracts and Employees are for demonstration purposes only.
+On this sample application, Tenant A connects (links) with Tenant B to share a Contract.
+
+### IN CONSTRUCTION
+
+## 6. Create Employees and Contracts (sample application)
+
+You can skip these steps since Employees and Contracts are entities for demonstration purposes only.
 
 ### IN CONSTRUCTION
