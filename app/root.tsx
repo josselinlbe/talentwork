@@ -42,7 +42,7 @@ export const meta: MetaFunction = ({ data }) => {
     "og:creator": "@AlexandroMtzG",
     "og:site": "https://saasfrontends.com",
     "og:description": description,
-    "twitter:image": "https://yahooder.sirv.com/saasfrontends/remix/remix-thumbnail.png",
+    "twitter:image": "https://yahooder.sirv.com/saasfrontends/remix/thumbnail.png",
     "twitter:card": "summary_large_image",
     "twitter:creator": "@AlexandroMtzG",
     "twitter:site": "@SaasFrontends",
