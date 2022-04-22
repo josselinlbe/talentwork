@@ -85,7 +85,7 @@ The next steps require that you set the `POSTMARK_SERVER_TOKEN` and `POSTMARK_FR
 
 ![Email Templates](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/admin-emails.png)
 
-💿 3.3. Click on `Send test` on the *Welcome* email template.
+💿 3.3. Click on `Send test` on the _Welcome_ email template.
 
 ![Welcome Email](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/welcome-email.png)
 
@@ -99,11 +99,11 @@ The next steps require that you set the `POSTMARK_SERVER_TOKEN` and `POSTMARK_FR
 
 💿 4.2. Click on `Subscribe` and subscribe to any plan _(use any [Stripe test card](https://stripe.com/docs/testing#cards))_.
 
-***Stripe Checkout***:
+**_Stripe Checkout_**:
 
 ![App Subscription Checkout](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/app-subscription-checkout.png)
 
-***Tenant Subscription Settings***:
+**_Tenant Subscription Settings_**:
 
 ![Subscribed](https://yahooder.sirv.com/saasfrontends/remix/tutorials/readme/app-subscribed.png)
 
@@ -113,10 +113,10 @@ The next steps require that you set the `POSTMARK_SERVER_TOKEN` and `POSTMARK_FR
 
 On this sample application, Tenant A connects (links) with Tenant B to share a Contract.
 
-### IN CONSTRUCTION
+### IN CONSTRUCTION...
 
 ## 6. Create Employees and Contracts (sample application)
 
 You can skip these steps since Employees and Contracts are entities for demonstration purposes only.
 
-### IN CONSTRUCTION
+### IN CONSTRUCTION...
