@@ -99,8 +99,8 @@ export default function Hero() {
             <div className="lg:grid lg:grid-cols-12 lg:gap-8">
               <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
                 <h1>
-                  <span className="block font-semibold uppercase tracking-wide text-sm text-center lg:text-left">{t("front.hero.topHint")}</span>
-                  <span className="mt-1 block text-4xl tracking-tight font-extrabold sm:text-4xl xl:text-5xl">
+                  <span className="block font-semibold uppercase tracking-wide text-xs sm:text-sm text-center lg:text-left">{t("front.hero.topHint")}</span>
+                  <span className="mt-1 block truncate text-2xl tracking-tight font-extrabold sm:text-4xl xl:text-5xl">
                     <span className="flex space-x-2 justify-center lg:justify-start items-center">
                       <span className="dark:text-white border-b-4 border-transparent">{t("front.hero.headline1")}</span>{" "}
                       <span className="dark:text-white border-b-4 border-dashed border-b-theme-400 bg-theme-50 dark:bg-theme-900 ">
