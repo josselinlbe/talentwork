@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
@@ -135,9 +135,7 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                             {orderedItems().map((item, idx) => {
                               return (
                                 <tr key={idx}>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                      {item.name}
-                                  </td>
+                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.name}</td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <Link to={`/app/${item.slug}`} className="underline text-gray-800">
                                       {item.slug}
@@ -145,28 +143,30 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <div className="flex space-x-1">
-                                        <span>
-                                          {item.subscription?.subscriptionPrice?.subscriptionProduct ? (
-                                            <>
-                                              {t(item.subscription?.subscriptionPrice?.subscriptionProduct?.title)}
-                                              {" - "}
-                                              <span className=" ">
-                                                ({item.subscription?.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
-                                              </span>
-                                            </>
-                                          ) : (
-                                            <span className="italic text-gray-500">{t("settings.subscription.noSubscription")}</span>
-                                          )}
-                                        </span>
+                                      <span>
+                                        {item.subscription?.subscriptionPrice?.subscriptionProduct ? (
+                                          <>
+                                            {t(item.subscription?.subscriptionPrice?.subscriptionProduct?.title)}
+                                            {" - "}
+                                            <span className=" ">
+                                              ({item.subscription?.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
+                                            </span>
+                                          </>
+                                        ) : (
+                                          <span className="italic text-gray-500">{t("settings.subscription.noSubscription")}</span>
+                                        )}
+                                      </span>
                                     </div>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                      {item.usersCount}
-                                      <span className=" text-gray-400">/{item.subscription?.subscriptionPrice?.subscriptionProduct?.maxUsers ?? "-"}</span>
+                                    {item.usersCount}
+                                    <span className=" text-gray-400">/{item.subscription?.subscriptionPrice?.subscriptionProduct?.maxUsers ?? "-"}</span>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     {item.contractsCount}
-                                    <span className=" text-gray-400">/{item.subscription?.subscriptionPrice?.subscriptionProduct?.monthlyContracts ?? "-"}</span>
+                                    <span className=" text-gray-400">
+                                      /{item.subscription?.subscriptionPrice?.subscriptionProduct?.monthlyContracts ?? "-"}
+                                    </span>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.employeesCount === 0 ? "-" : item.employeesCount}</td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">

@@ -64,7 +64,7 @@ export async function getUserInfo(request: Request): Promise<UserSession> {
 
   const session = await getUserSession(request);
   const userId = session.get("userId") ?? "";
-  const lightOrDarkMode = session.get("lightOrDarkMode") ?? "dark";
+  const lightOrDarkMode = session.get("lightOrDarkMode") ?? "";
   const lng = session.get("lng") ?? "en";
   return {
     userId,

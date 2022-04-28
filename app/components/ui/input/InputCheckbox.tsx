@@ -9,8 +9,8 @@ export interface RefInputCheckbox {
 interface Props {
   name: string;
   title: string;
-  value: boolean;
-  setValue: React.Dispatch<React.SetStateAction<boolean>>;
+  value?: boolean;
+  setValue?: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
   help?: string;
   required?: boolean;
@@ -21,7 +21,7 @@ const InputCheckbox = ({ name, title, value, setValue, description, className, h
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
   return (
-    <>
+    <div>
       <div className="sm:col-span-6 relative flex items-start select-none cursor-pointer">
         <div className="flex items-center h-5 cursor-pointer">
           <input
@@ -30,10 +30,10 @@ const InputCheckbox = ({ name, title, value, setValue, description, className, h
             name={name}
             checked={value}
             onChange={(e) => {
-              setValue(e.target.checked);
+              setValue?.(e.target.checked);
             }}
             disabled={disabled}
-            className={clsx("cursor-pointer focus:ring-theme-500 h-4 w-4 text-theme-600 border-gray-300 rounded", className)}
+            className={clsx("cursor-pointer focus:ring-accent-500 h-4 w-4 text-accent-600 border-gray-300 rounded", className)}
           />
         </div>
         <div className="ml-3 text-sm">
@@ -50,7 +50,7 @@ const InputCheckbox = ({ name, title, value, setValue, description, className, h
           </label>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default forwardRef(InputCheckbox);

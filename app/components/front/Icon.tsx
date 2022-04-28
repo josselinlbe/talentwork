@@ -1,7 +1,7 @@
 import IconLight from "../../assets/img/icon-light.png";
 import IconDark from "../../assets/img/icon-dark.png";
 import clsx from "clsx";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 
 interface Props {
   className?: string;

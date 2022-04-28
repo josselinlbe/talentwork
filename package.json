@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.6",
     "@jitsu/sdk-js": "^2.5.5",
     "@prisma/client": "^3.11.0",
     "@remix-run/react": "^1.2.3",
@@ -34,6 +35,7 @@
     "clsx": "^1.1.1",
     "framer-motion": "^6.2.8",
     "i18next": "^21.6.14",
+    "marked": "^4.0.14",
     "metronome-sh": "^1.3.2",
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
@@ -57,6 +59,7 @@
     "@tailwindcss/line-clamp": "^0.3.1",
     "@tailwindcss/typography": "^0.5.0",
     "@types/bcryptjs": "^2.4.2",
+    "@types/marked": "^4.0.3",
     "@types/react": "^17.0.44",
     "@types/react-datepicker": "^4.3.4",
     "@types/react-dom": "^17.0.15",

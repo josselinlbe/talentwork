@@ -1,17 +1,17 @@
 import clsx from "clsx";
-import { forwardRef, Ref, RefObject, useImperativeHandle, useRef } from "react";
+import { forwardRef, ReactNode, Ref, RefObject, useImperativeHandle, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
 
 export interface RefInputText {
-  input: RefObject<HTMLInputElement>;
+  input: RefObject<HTMLInputElement> | RefObject<HTMLTextAreaElement>;
 }
 
 interface Props {
   name: string;
   title: string;
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  value?: string;
+  setValue?: React.Dispatch<React.SetStateAction<string>>;
   className?: string;
   help?: string;
   minLength?: number;
@@ -21,6 +21,9 @@ interface Props {
   autoComplete?: string;
   withTranslation?: boolean;
   translationParams?: string[];
+  hint?: ReactNode;
+  rows?: number;
+  button?: ReactNode;
 }
 const InputText = (
   {
@@ -37,6 +40,9 @@ const InputText = (
     autoComplete,
     withTranslation = false,
     translationParams = [],
+    hint,
+    rows,
+    button,
   }: Props,
   ref: Ref<RefInputText>
 ) => {
@@ -44,6 +50,7 @@ const InputText = (
 
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
+  const textArea = useRef<HTMLTextAreaElement>(null);
 
   function getTranslation(value: string) {
     if (!i18n.exists(value)) {
@@ -53,17 +60,17 @@ const InputText = (
   }
 
   return (
-    <>
+    <div className={className}>
       <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
         <div className=" flex space-x-1 items-center">
-          <div className={className}>
+          <div>
             {title}
             {required && <span className="ml-1 text-red-500">*</span>}
           </div>
 
           {help && <HintTooltip text={help} />}
         </div>
-        {withTranslation && value.includes(".") && (
+        {withTranslation && value?.includes(".") && (
           <div className="text-slate-600 font-light italic">
             {t("admin.pricing.i18n")}:{" "}
             {getTranslation(value) ? (
@@ -73,28 +80,53 @@ const InputText = (
             )}
           </div>
         )}
+        {hint}
       </label>
-      <div className="mt-1 flex rounded-md shadow-sm w-full">
-        <input
-          ref={input}
-          type="text"
-          id={name}
-          name={name}
-          autoComplete={autoComplete}
-          required={required}
-          minLength={minLength}
-          maxLength={maxLength}
-          value={value}
-          onChange={(e) => setValue(e.currentTarget.value)}
-          disabled={disabled}
-          className={clsx(
-            "w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
-            className,
-            disabled && "bg-gray-100 cursor-not-allowed"
-          )}
-        />
+      <div className="mt-1 flex rounded-md shadow-sm w-full relative">
+        {!rows ? (
+          <>
+            <input
+              ref={input}
+              type="text"
+              id={name}
+              name={name}
+              autoComplete={autoComplete}
+              required={required}
+              minLength={minLength}
+              maxLength={maxLength}
+              value={value}
+              onChange={(e) => (setValue ? setValue(e.currentTarget.value) : {})}
+              disabled={disabled}
+              className={clsx(
+                "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
+                className,
+                disabled && "bg-gray-100 cursor-not-allowed"
+              )}
+            />
+            {button}
+          </>
+        ) : (
+          <textarea
+            rows={rows}
+            ref={textArea}
+            id={name}
+            name={name}
+            autoComplete={autoComplete}
+            required={required}
+            minLength={minLength}
+            maxLength={maxLength}
+            value={value}
+            onChange={(e) => (setValue ? setValue(e.currentTarget.value) : {})}
+            disabled={disabled}
+            className={clsx(
+              "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
+              className,
+              disabled && "bg-gray-100 cursor-not-allowed"
+            )}
+          />
+        )}
       </div>
-    </>
+    </div>
   );
 };
 export default forwardRef(InputText);

@@ -13,6 +13,7 @@ export enum SvgIcon {
   SETTINGS,
   SETUP,
   EVENTS,
+  BLOG,
   LINKS,
   PROVIDERS,
   CLIENTS,

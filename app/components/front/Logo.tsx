@@ -1,7 +1,7 @@
 import LogoLight from "~/assets/img/logo-light.png";
 import LogoDark from "~/assets/img/logo-dark.png";
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 
 interface Props {
   className?: string;

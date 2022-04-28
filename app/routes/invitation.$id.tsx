@@ -4,7 +4,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import UserUtils from "~/utils/app/UserUtils";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { Tenant, TenantUserInvitation, User } from "@prisma/client";
 import { LoaderFunction, json, ActionFunction, useLoaderData, Form, useActionData, MetaFunction } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";

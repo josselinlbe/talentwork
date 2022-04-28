@@ -15,20 +15,25 @@ export default function PreviewButtons() {
     }
   }
   return (
-    <div className="space-y-2 w-full">
-      <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">
-        <ButtonPrimary onClick={() => alert("Clicked primary button")}>Primary</ButtonPrimary>
-        <ButtonSecondary onClick={() => alert("Clicked secondary button")}>Secondary</ButtonSecondary>
-        <ButtonTertiary onClick={() => alert("Clicked tertiary button")}>Tertiary</ButtonTertiary>
-        <LoadingButton ref={loadingButton} onClick={() => startLoading()}>
-          Loading
-        </LoadingButton>
-      </div>
-      <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">
-        <ButtonPrimary disabled={true}>Primary</ButtonPrimary>
-        <ButtonSecondary disabled={true}>Secondary</ButtonSecondary>
-        <ButtonTertiary disabled={true}>Tertiary</ButtonTertiary>
-        <LoadingButton disabled={true}>Loading</LoadingButton>
+    <div id="buttons">
+      <h3 className="font-medium text-sm">Buttons</h3>
+      <div className="bg-white p-6 border-dashed border-gray-300 border">
+        <div id="buttons" className="space-y-2 w-full">
+          <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">
+            <ButtonPrimary onClick={() => alert("Clicked primary button")}>Primary</ButtonPrimary>
+            <ButtonSecondary onClick={() => alert("Clicked secondary button")}>Secondary</ButtonSecondary>
+            <ButtonTertiary onClick={() => alert("Clicked tertiary button")}>Tertiary</ButtonTertiary>
+            <LoadingButton ref={loadingButton} onClick={() => startLoading()}>
+              Loading
+            </LoadingButton>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">
+            <ButtonPrimary disabled={true}>Primary</ButtonPrimary>
+            <ButtonSecondary disabled={true}>Secondary</ButtonSecondary>
+            <ButtonTertiary disabled={true}>Tertiary</ButtonTertiary>
+            <LoadingButton disabled={true}>Loading</LoadingButton>
+          </div>
+        </div>
       </div>
     </div>
   );

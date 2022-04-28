@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
 import { useLoaderData, useParams } from "remix";

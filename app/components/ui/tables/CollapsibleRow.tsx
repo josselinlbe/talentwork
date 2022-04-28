@@ -12,11 +12,12 @@ interface Props {
   title: string;
   children: ReactNode;
   onRemove: () => void;
+  initial?: boolean;
 }
 
-export default function CollapsibleRow({ value, title, children, onRemove }: Props) {
+export default function CollapsibleRow({ value, title, children, onRemove, initial = false }: Props) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initial);
 
   return (
     <div>

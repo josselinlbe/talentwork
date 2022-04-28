@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 
 export default function Footer() {
   return (
@@ -23,8 +23,13 @@ export default function Footer() {
                 Contact
               </Link>
             </div>
-
             <div className="px-5 py-2">
+              <Link to="/blog" className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                Blog
+              </Link>
+            </div>
+
+            {/* <div className="px-5 py-2">
               <Link to="/terms-and-conditions" className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
                 Terms and Conditions
               </Link>
@@ -33,7 +38,7 @@ export default function Footer() {
               <Link to="/privacy-policy" className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
                 Privacy Policy
               </Link>
-            </div>
+            </div> */}
             <div className="px-5 py-2">
               <Link to="/changelog" className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
                 Changelog

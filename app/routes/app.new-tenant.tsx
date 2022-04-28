@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { ActionFunction, json, LoaderFunction, redirect, useActionData, useNavigate } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";

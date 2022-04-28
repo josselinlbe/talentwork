@@ -9,8 +9,8 @@ export interface RefInputNumber {
 interface Props {
   name: string;
   title: string;
-  value: number;
-  setValue: React.Dispatch<React.SetStateAction<number>>;
+  value?: number;
+  setValue?: React.Dispatch<React.SetStateAction<number>>;
   className?: string;
   help?: string;
   min?: number;
@@ -20,16 +20,16 @@ interface Props {
   hint?: ReactNode;
 }
 const InputNumber = (
-  { name, title, value, setValue, className, hint, help, disabled = false, required = false, min, max }: Props,
+  { name, title, value, setValue, className, hint, help, disabled = false, required = false, min = 0, max }: Props,
   ref: Ref<RefInputNumber>
 ) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
   return (
-    <>
+    <div className={className}>
       <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
         <div className=" flex space-x-1 items-center">
-          <div className={className}>
+          <div>
             {title}
             {required && <span className="ml-1 text-red-500">*</span>}
           </div>
@@ -48,16 +48,16 @@ const InputNumber = (
           min={min}
           max={max}
           value={value}
-          onChange={(e) => setValue(Number(e.currentTarget.value))}
+          onChange={(e) => (setValue ? setValue(Number(e.currentTarget.value)) : {})}
           disabled={disabled}
           className={clsx(
-            "w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
+            "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
             className,
             disabled && "bg-gray-100 cursor-not-allowed"
           )}
         />
       </div>
-    </>
+    </div>
   );
 };
 export default forwardRef(InputNumber);

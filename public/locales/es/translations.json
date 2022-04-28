@@ -116,20 +116,27 @@
       "product": "Producto",
       "pricing": "Precios",
       "contact": "Contacto",
+      "blog": "Blog",
       "terms": "Términos y Condiciones",
       "privacy": "Política de Privacidad"
     },
     "hero": {
-      "headline1": "Remix",
-      "headline2": "codebase",
-      "headline3": "para desarrollar tu SaaS",
-      "headline4": "Componentes React, páginas para SaaS, Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark y más.",
+      "headline1": "La plantilla de",
+      "headline2": "Remix 💿",
+      "headline3": "para desarrollar tu",
+      "headline4": "SaaS",
+      "headline5": "Autenticación, Subscripciones, Administración de Tenants, Blogging, i18n, Events,... hecho con Tailwind CSS, Prisma (PostgreSQL, SQLite), Stripe, Postmark, y más.",
+      "headline6": "Este demo usa v0.2.5 (ver changelog)",
+      "topHint": "Desarrolla tu SaaS más rápido que nunca",
       "to": "para",
       "build": "desarrollar",
       "yourOwn": "tu propio",
       "saas": "SaaS",
       "start": "Comienza hoy",
       "buy": "Lo quiero!",
+      "try": "Probar demo",
+      "components": "Componentes",
+      "blog": "Blog",
       "contact": "Contáctanos",
       "startHint": "Este demo está alojado en Vercel + Supabase."
     },
@@ -819,11 +826,21 @@
     }
   },
   "models": {
-    "joke": {
-      "object": "Chiste",
-      "plural": "Chistes",
-      "name": "Nombre",
-      "content": "Contenido"
+    "post": {
+      "object": "Publicación",
+      "plural": "Publicaciones",
+      "slug": "Slug",
+      "title": "Título",
+      "description": "Descripción",
+      "date": "Fecha",
+      "image": "Imagen de portada",
+      "content": "Contenido",
+      "markdown": "Sintaxis Markdown",
+      "readingTime": "Tiempo de lectura",
+      "published": "Publicado",
+      "author": "Author",
+      "category": "Categoría",
+      "tags": "Tags"
     },
     "tenant": {
       "object": "Organización",
@@ -889,6 +906,23 @@
     "client": {
       "object": "Cliente",
       "plural": "Clientes"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "headline": "Lee las últimas noticias de Remix.",
+    "published": "Publicado",
+    "draft": "Borrador",
+    "thisIsADraft": "Este es un borrador",
+    "write": "Escribir",
+    "publish": "Publish",
+    "saveAndPreview": "Guardar y Previsualizar",
+    "new": "Nueva publicación",
+    "edit": "Editar publicación",
+    "previewMarkdown": "Previsualizar Markdown",
+    "errors": {
+      "authorRequired": "Autor requerido",
+      "categoryRequired": "Categoría requerida"
     }
   },
   "settings": {

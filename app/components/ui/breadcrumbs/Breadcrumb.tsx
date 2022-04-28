@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import UrlUtils from "~/utils/app/UrlUtils";

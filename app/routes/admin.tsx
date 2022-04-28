@@ -1,3 +1,4 @@
+import { useCatch } from "@remix-run/react";
 import { useEffect } from "react";
 import { json, LoaderFunction, Outlet, useLocation, useNavigate } from "remix";
 import AppLayout from "~/components/app/AppLayout";
@@ -24,4 +25,13 @@ export default function AdminRoute() {
       <Outlet />
     </AppLayout>
   );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return <div>/Admin Server Error: {error.message}</div>;
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return <div>/Admin Client Error: {caught.status}</div>;
 }

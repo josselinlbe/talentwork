@@ -9,7 +9,7 @@ export type ChangelogItem = {
 
 type Issue = {
   title: string;
-  img?: string;
+  img?: { title: string; img: string }[];
   video?: string;
 };
 
@@ -44,7 +44,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
           {items.length > 0 && (
             <>
               <div className=" flex space-x-1 items-baseline">
-                <h3 className="text-black dark:text-white font-semibold text-sm">{title}</h3>
+                <h2 className="text-black dark:text-white font-semibold text-sm">{title}</h2>
                 {imageCount() > 0 && (
                   <button className=" text-xs underline" type="button" onClick={() => setViewImages(!viewImages)}>
                     ({!viewImages ? "Click here to view images" : "Close images"})
@@ -62,7 +62,14 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                       : {issue.title.split("#")[0]}
                       {viewImages && (
                         <>
-                          {issue.img && <img alt={issue.title} src={issue.img} className="object-cover rounded-lg shadow-lg overflow-hidden" />}
+                          {issue.img?.map((image, idx) => {
+                            return (
+                              <div key={idx} className="">
+                                <img alt={image.title} src={image.img} className="object-cover rounded-lg shadow-lg overflow-hidden" />
+                                {image.title && <h4 className="text-sm font-normal text-center flex justify-center mx-auto text-gray-500">{image.title}</h4>}
+                              </div>
+                            );
+                          })}
                           {issue.video && (
                             <a href={issue.video} target="_blank" rel="noreferrer">
                               Watch demo video

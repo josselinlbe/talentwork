@@ -168,6 +168,59 @@ model TenantRelationship {
   contracts         Contract[]
 }
 
+model BlogAuthor {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  slug      String     @unique
+  firstName String
+  lastName  String
+  image     String
+  url       String
+  posts     BlogPost[]
+}
+
+model BlogCategory {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  name      String     @unique
+  color     Int
+  posts     BlogPost[]
+}
+
+model BlogTag {
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now())
+  name      String        @unique
+  color     Int
+  posts     BlogPostTag[]
+}
+
+model BlogPostTag {
+  id     String   @id @default(cuid())
+  postId String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+}
+
+model BlogPost {
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  slug        String        @unique
+  title       String
+  description String
+  date        DateTime
+  image       String
+  content     String
+  readingTime String
+  published   Boolean
+  authorId    String
+  author      BlogAuthor    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    BlogCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tags        BlogPostTag[]
+}
+
 model Employee {
   id               String             @id @default(cuid())
   createdAt        DateTime           @default(now())

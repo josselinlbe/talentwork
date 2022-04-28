@@ -28,6 +28,11 @@ export const AdminSidebar: SideBarItem[] = [
         path: "/admin/events",
         icon: SvgIcon.EVENTS,
       },
+      {
+        title: "blog.title",
+        path: "/admin/blog",
+        icon: SvgIcon.BLOG,
+      },
       // {
       //   title: "admin.navigation.title",
       //   path: "/admin/navigation",

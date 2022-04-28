@@ -3,7 +3,7 @@ import LoadingButton, { RefLoadingButton } from "~/components/ui/buttons/Loading
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData } from "remix";
 import crypto from "crypto";
 import { getUserByEmail, updateUserVerifyToken } from "~/utils/db/users.db.server";

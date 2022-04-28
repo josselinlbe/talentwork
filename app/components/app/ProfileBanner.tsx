@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import UserUtils from "~/utils/app/UserUtils";
 import { UserWithoutPassword } from "~/utils/db/users.db.server";
 

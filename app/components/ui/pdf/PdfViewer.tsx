@@ -76,7 +76,7 @@ export default function PdfViewer({ className, file, onRemoveFile, fileName = ""
   };
 
   return (
-    <div className={clsx(className, "text-gray-600 overflow-hidden border border-gray-300 rounded-md items-center")}>
+    <div id="pdf-viewer" className={clsx(className, "text-gray-600 overflow-hidden border border-gray-300 rounded-md items-center")}>
       <div className="p-4 flex justify-between items-center">
         <div className="origin-top-left left-0 top-0 mt-1 ml-1 flex items-center space-x-2">
           <span className="relative z-0 inline-flex shadow-sm rounded-md">

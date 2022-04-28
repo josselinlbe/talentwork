@@ -1,7 +1,7 @@
 import { Combobox } from "@headlessui/react";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { json, LoaderFunction, redirect, useLoaderData } from "remix";
 import { Language } from "remix-i18next";
 import Logo from "~/components/front/Logo";

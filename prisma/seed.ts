@@ -4,6 +4,7 @@ import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { seedBlog } from "./seedBlog";
 const db = new PrismaClient();
 
 async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserRole) {
@@ -62,6 +63,8 @@ async function createTenant(name: string, users: { id: string; role: TenantUserR
 }
 
 async function seed() {
+  await seedBlog();
+
   const adminEmail = process.env.ADMIN_EMAIL?.toString();
   const adminPassword = process.env.ADMIN_PASSWORD?.toString();
   if (!adminEmail || !adminPassword) {

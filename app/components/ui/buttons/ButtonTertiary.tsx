@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { MouseEventHandler, ReactNode } from "react";
 import clsx from "clsx";
 
@@ -25,12 +25,12 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
               disabled={disabled}
               className={clsx(
                 className,
-                "inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
-                disabled ? "cursor-not-allowed opacity-75" : "hover:underline",
-                !destructive && "text-theme-600",
+                "border-b border-transparent inline-flex space-x-2 items-center mx-1 my-2 text-sm font-medium focus:outline-none",
+                disabled ? "cursor-not-allowed opacity-75" : "hover:border-dotted",
+                !destructive && "text-theme-700 border-b border-dashed border-accent-300",
                 destructive && "text-red-600",
-                !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900",
-                !disabled && destructive && "hover:text-red-800 focus:text-red-900"
+                !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900 hover:border-accent-300",
+                !disabled && destructive && "hover:text-red-800 focus:text-red-900 hover:border-red-300"
               )}
             >
               {children}
@@ -43,12 +43,12 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
               target={target}
               className={clsx(
                 className,
-                "inline-flex space-x-2 items-center px-1 py-2 text-sm font-medium focus:outline-none",
-                disabled ? "cursor-not-allowed opacity-75" : "hover:underline",
-                !destructive && "text-theme-600",
+                "border-b border-transparent inline-flex space-x-2 items-center mx-1 my-2 text-sm font-medium focus:outline-none",
+                disabled ? "cursor-not-allowed opacity-75" : " hover:border-dotted",
+                !destructive && "text-theme-700 border-b border-dashed border-accent-300",
                 destructive && "text-red-600",
-                !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900",
-                !disabled && destructive && "hover:text-red-800 focus:text-red-900"
+                !disabled && !destructive && "hover:text-theme-800 focus:text-theme-900 hover:border-accent-300",
+                !disabled && destructive && "hover:text-red-800 focus:text-red-900 hover:border-red-300"
               )}
             >
               {children}

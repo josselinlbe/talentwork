@@ -3,7 +3,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { SubscriptionPriceDto } from "~/application/dtos/subscriptions/SubscriptionPriceDto";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";

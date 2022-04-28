@@ -116,20 +116,27 @@
       "product": "Product",
       "pricing": "Pricing",
       "contact": "Contact",
+      "blog": "Blog",
       "terms": "Terms and Conditions",
       "privacy": "Privacy Policy"
     },
     "hero": {
-      "headline1": "Remix",
-      "headline2": "codebase",
-      "headline3": "to build your own SaaS",
-      "headline4": "Authentication, Subscriptions, Tenant Management, i18n, User Events,... built with Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark, and more.",
+      "headline1": "The Remix 💿",
+      "headline2": "boilerplate",
+      "headline3": "to start your own",
+      "headline4": "SaaS",
+      "headline5": "Authentication, Subscriptions, Tenant Management, Blogging, i18n, User Events,... built with Tailwind CSS, Prisma (PostgreSQL, SQLite...), Stripe, Postmark, and more.",
+      "headline6": "This demo uses v0.2.5 (view changelog)",
+      "topHint": "Build your SaaS faster than ever",
       "to": "to",
       "build": "build",
       "yourOwn": "your own",
       "saas": "SaaS",
       "start": "Start today",
-      "buy": "I want this!",
+      "buy": "Get boilerplate",
+      "try": "Try demo",
+      "components": "Components",
+      "blog": "Blog",
       "contact": "Contact us",
       "startHint": "This demo is hosted on Vercel + Supabase."
     },
@@ -820,11 +827,21 @@
     }
   },
   "models": {
-    "joke": {
-      "object": "Joke",
-      "plural": "Jokes",
-      "name": "Name",
-      "content": "Content"
+    "post": {
+      "object": "Blog Post",
+      "plural": "Blog Posts",
+      "slug": "Slug",
+      "title": "Title",
+      "description": "Description",
+      "date": "Date",
+      "image": "Cover image",
+      "content": "Content",
+      "markdown": "Markdown Sintax",
+      "readingTime": "Reading time",
+      "published": "Published",
+      "author": "Author",
+      "category": "Category",
+      "tags": "Tags"
     },
     "tenant": {
       "object": "Tenant",
@@ -987,6 +1004,23 @@
         "new": "Add member",
         "edit": "Edit member"
       }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "headline": "Read the latest articles about Remix.",
+    "published": "Published",
+    "draft": "Draft",
+    "thisIsADraft": "This is a draft",
+    "write": "Write",
+    "publish": "Publish",
+    "saveAndPreview": "Save and Preview",
+    "new": "New blog post",
+    "edit": "Edit blog post",
+    "previewMarkdown": "Preview Markdown",
+    "errors": {
+      "authorRequired": "Author required",
+      "categoryRequired": "Category required"
     }
   },
   "api": {

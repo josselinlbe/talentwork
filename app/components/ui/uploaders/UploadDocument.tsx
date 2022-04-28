@@ -5,6 +5,7 @@ import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import { useTranslation } from "react-i18next";
 
 interface Props {
+  className?: string;
   title?: string;
   accept?: string;
   multiple?: boolean;
@@ -14,7 +15,7 @@ interface Props {
   onDroppedFiles?: (fileBase64: FileBase64[], files: any[]) => void;
 }
 
-export default function UploadDocuments({ title = "", accept, multiple, description, icon = "", onDropped, onDroppedFiles }: Props) {
+export default function UploadDocuments({ className, title = "", accept, multiple, description, icon = "", onDropped, onDroppedFiles }: Props) {
   const { t } = useTranslation();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -105,7 +106,11 @@ export default function UploadDocuments({ title = "", accept, multiple, descript
 
   return (
     <div
-      className={clsx("text-gray-600 overflow-hidden drop text-center flex border-2 border-dashed border-gray-300 rounded-md items-center", customClasses)}
+      className={clsx(
+        "text-gray-600 overflow-hidden drop text-center flex border-2 border-dashed border-gray-300 rounded-md items-center",
+        customClasses,
+        className
+      )}
       onDragOver={dragOver}
       onDragLeave={dragLeave}
       onDrop={drop}

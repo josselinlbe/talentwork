@@ -8,6 +8,7 @@ import { getUserInfo, UserSession } from "~/utils/session.server";
 import { MetaFunction, LoaderFunction, json } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
+import LogoClouds from "~/components/ui/images/LogoClouds";
 
 export type IndexLoaderData = {
   title: string;
@@ -47,8 +48,9 @@ export default function IndexRoute() {
       <TopBanner />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200">
         <Hero />
+        <LogoClouds />
         {/* <Features className="relative z-10" /> */}
-        <JoinNow className="relative z-20" />
+        {/* <JoinNow className="relative z-20" /> */}
         <Footer />
       </div>
     </div>

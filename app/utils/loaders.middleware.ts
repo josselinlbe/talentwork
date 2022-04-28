@@ -1,5 +1,3 @@
-import { Params } from "react-router";
-import { redirect } from "remix";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";

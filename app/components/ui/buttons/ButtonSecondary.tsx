@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@remix-run/react";
 import { MouseEventHandler, ReactNode } from "react";
 import clsx from "clsx";
 
@@ -25,11 +25,11 @@ export default function ButtonSecondary({ className = "", type = "button", onCli
               disabled={disabled}
               className={clsx(
                 className,
-                "inline-flex space-x-2 items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 border-gray-300",
+                "inline-flex space-x-2 items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md bg-white focus:outline-none focus:ring-2 focus:border-accent-300 border-gray-300",
                 disabled && "cursor-not-allowed opacity-75",
-                !destructive && "text-theme-800",
+                !destructive && "text-accent-700",
                 destructive && "text-red-700",
-                !disabled && !destructive && "hover:bg-theme-50 focus:ring-theme-500",
+                !disabled && !destructive && "hover:border-accent-300 hover:text-accent-900 focus:ring-accent-500",
                 !disabled && destructive && "hover:bg-red-50 focus:ring-red-500"
               )}
             >
@@ -43,11 +43,11 @@ export default function ButtonSecondary({ className = "", type = "button", onCli
               target={target}
               className={clsx(
                 className,
-                "inline-flex space-x-2 items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 border-gray-300",
+                "inline-flex space-x-2 items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md bg-white focus:outline-none focus:ring-2 focus:border-accent-300 border-gray-300",
                 disabled && "cursor-not-allowed opacity-75",
-                !destructive && "text-theme-800",
+                !destructive && "text-accent-700",
                 destructive && "text-red-700",
-                !disabled && !destructive && "hover:bg-theme-50 focus:ring-theme-500",
+                !disabled && !destructive && "hover:border-accent-300 hover:text-accent-900 focus:ring-accent-500",
                 !disabled && destructive && "hover:bg-red-50 focus:ring-red-500"
               )}
             >

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 
 export default function TopBanner() {
   const [open, setOpen] = useState(true);
@@ -11,11 +11,11 @@ export default function TopBanner() {
           <div className="max-w-7xl mx-auto py-1.5 sm:py-3 px-3 sm:px-6 lg:px-8">
             <div className="w-full lg:w-auto lg:justify-end flex items-center space-x-3">
               <div className="flex-grow">
-                <Link to="/changelog#april-19-2022" className="sm:hidden flex font-bold underline items-center space-x-1 text-white text-sm sm:text-base">
-                  Changelog #3
+                <Link to="/changelog#april-28-2022" className="sm:hidden flex font-bold underline items-center space-x-1 text-white text-sm sm:text-base">
+                  Changelog #4
                 </Link>
-                <Link to="/changelog#april-19-2022" className="hidden sm:flex font-bold underline items-center space-x-1 text-white text-sm sm:text-base">
-                  Changelog #3 - 🎉 Custom Pricing Plans
+                <Link to="/changelog#april-28-2022" className="hidden sm:flex font-bold underline items-center space-x-1 text-white text-sm sm:text-base">
+                  Changelog #4 - 🎉 Blog feature
                 </Link>
               </div>
               <div className="flex-shrink-0 order-2 mt-0 w-auto">

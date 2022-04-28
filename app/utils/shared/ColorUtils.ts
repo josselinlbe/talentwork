@@ -1,84 +1,57 @@
 import { Colors } from "~/application/enums/shared/Colors";
 
-export function getTailwindColor(itemColor: Colors, textWeight = 50, backgroundWeight = 300, borderWeight = 500): string {
-  let color = "gray";
+export function getTailwindColor(itemColor: Colors): string {
   switch (itemColor) {
-    case 0:
-      color = "gray";
-      break;
-    case 1:
-      color = "slate";
-      break;
-    case 2:
-      color = "gray";
-      break;
-    case 3:
-      color = "gray";
-      break;
-    case 4:
-      color = "neutral";
-      break;
-    case 5:
-      color = "stone";
-      break;
-    case 6:
-      color = "red";
-      break;
-    case 7:
-      color = "orange";
-      break;
-    case 8:
-      color = "amber";
-      break;
-    case 9:
-      color = "yellow";
-      break;
-    case 10:
-      color = "lime";
-      break;
-    case 11:
-      color = "green";
-      break;
-    case 12:
-      color = "emerald";
-      break;
-    case 13:
-      color = "teal";
-      break;
-    case 14:
-      color = "cyan";
-      break;
-    case 15:
-      color = "sky";
-      break;
-    case 16:
-      color = "blue";
-      break;
-    case 17:
-      color = "indigo";
-      break;
-    case 18:
-      color = "violet";
-      break;
-    case 19:
-      color = "purple";
-      break;
-    case 20:
-      color = "pink";
-      break;
-    case 21:
-      color = "rose";
-      break;
+    case Colors.UNDEFINED:
+      return "text-gray-500";
+    case Colors.BLUE_GRAY:
+      return "text-slate-500";
+    case Colors.COOL_GRAY:
+      return "text-gray-500";
+    case Colors.GRAY:
+      return "text-gray-500";
+    case Colors.TRUE_GRAY:
+      return "text-neutral-500";
+    case Colors.WARM_GRAY:
+      return "text-stone-500";
+    case Colors.RED:
+      return "text-red-500";
+    case Colors.ORANGE:
+      return "text-orange-500";
+    case Colors.ORANGE:
+      return "text-amber-500";
+    case Colors.YELLOW:
+      return "text-yellow-500";
+    case Colors.LIME:
+      return "text-lime-500";
+    case Colors.GREEN:
+      return "text-green-500";
+    case Colors.EMERALD:
+      return "text-emerald-500";
+    case Colors.TEAL:
+      return "text-teal-500";
+    case Colors.CYAN:
+      return "text-cyan-500";
+    case Colors.LIGHT_BLUE:
+      return "text-sky-500";
+    case Colors.BLUE:
+      return "text-blue-500";
+    case Colors.INDIGO:
+      return "text-indigo-500";
+    case Colors.VIOLET:
+      return "text-violet-500";
+    case Colors.PURPLE:
+      return "text-purple-500";
+    case Colors.PINK:
+      return "text-pink-500";
+    case Colors.ROSE:
+      return "text-rose-500";
+    default:
+      return "";
   }
-  const textColor = textWeight === 0 ? "text-white" : `text-${color}-${textWeight}`;
-  return `${textColor} bg-${color}-${backgroundWeight} border border-${color}-${borderWeight}`;
 }
 
 export const colors = [
-  // {
-  //   name: "Indefinido",
-  //   id: 0,
-  // },
   {
     name: "GRAY",
     id: 3,

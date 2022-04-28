@@ -16,6 +16,10 @@ import PreviewEmptyStates from "./emptyState/PreviewEmptyStates";
 import PreviewUploadersDocument from "./uploaders/PreviewUploadersDocument";
 import PreviewPdfViewers from "./pdf/PreviewPdfViewers";
 import PreviewLoaders from "./loaders/PreviewLoaders";
+import PreviewInputs from "./input/PreviewInputs";
+import PreviewDatepickers from "./datepickers/PreviewDatepickers";
+import PreviewDropdowns from "./dropdowns/PreviewDropdowns";
+import PreviewTabs from "./tabs/PreviewTabs";
 
 interface Props {
   className?: string;
@@ -26,34 +30,21 @@ export default function AllComponentsList({ className, withSlideOvers }: Props) 
   const [showRightSlideOver, setShowRightSlideOver] = useState(false);
   return (
     <div>
-      <div className={clsx(className, "space-y-6 pb-12 p-4 mx-auto max-w-2xl text-slate-900")}>
-        <div className="space-y-1">
+      <div className={clsx(className, "space-y-6 text-slate-900")}>
+        {/* <div className="space-y-1">
           <h3 className="font-medium text-sm">Breadcrumbs</h3>
           <div className="flex items-center space-x-2 p-2 border-dashed border-gray-300 border">
-            <PreviewBreadcrumbs />
+            <PreviewDatepickers />
           </div>
-        </div>
+        </div> */}
 
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">Tab - as Links</h3>
-          <div className="flex items-center space-x-2 p-2 border-dashed border-gray-300 border">
-            <PreviewTabsAsLinks />
-          </div>
-        </div>
+        <PreviewInputs />
 
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">Tab - as Buttons</h3>
-          <div className="p-2 border-dashed border-gray-300 border">
-            <PreviewTabsAsButtons />
-          </div>
-        </div>
+        <PreviewBreadcrumbs />
 
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">Buttons</h3>
-          <div className="bg-white p-6 border-dashed border-gray-300 border">
-            <PreviewButtons />
-          </div>
-        </div>
+        <PreviewTabs />
+
+        <PreviewButtons />
 
         <div className="space-y-1">
           <h3 className="font-medium text-sm">Buttons - as Links</h3>
@@ -69,19 +60,7 @@ export default function AllComponentsList({ className, withSlideOvers }: Props) 
           </div>
         </div>
 
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">Dropdowns - Simple</h3>
-          <div className="space-x-2 bg-white p-6 border-dashed border-gray-300 border">
-            <PreviewDropdownsSimple />
-          </div>
-        </div>
-
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">Dropdowns</h3>
-          <div className="space-x-2 bg-white p-6 border-dashed border-gray-300 border">
-            <PreviewDropdownsWithClick />
-          </div>
-        </div>
+        <PreviewDropdowns />
 
         <div className="space-y-1">
           <h3 className="font-medium text-sm">Modals</h3>
@@ -104,12 +83,7 @@ export default function AllComponentsList({ className, withSlideOvers }: Props) 
           </div>
         </div>
 
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">Uploaders</h3>
-          <div className="bg-white p-6 border-dashed border-gray-300 border">
-            <PreviewUploadersDocument />
-          </div>
-        </div>
+        <PreviewUploadersDocument />
 
         <div className="space-y-1">
           <h3 className="font-medium text-sm">Pdf Viewer</h3>
