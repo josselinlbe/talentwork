@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import { ReactNode, useEffect, useState } from "react";

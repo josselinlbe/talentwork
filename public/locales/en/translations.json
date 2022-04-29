@@ -451,6 +451,10 @@
         "updateDescription": "Update your name, avatar, password, and/or preferences",
         "logout": "Log out",
         "logoutDescription": "Log out and go back to /login"
+      },
+      "blog": {
+        "title": "Blog",
+        "description": "New blog post"
       }
     },
     "navbar": {

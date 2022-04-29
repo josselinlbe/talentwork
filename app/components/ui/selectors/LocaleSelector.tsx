@@ -9,7 +9,7 @@ import { useRootData } from "~/utils/data/useRootData";
 interface Props {
   className?: string;
   btnClassName?: string;
-  showFlags: boolean;
+  showFlags?: boolean;
 }
 
 export default function LocaleSelector({ className, btnClassName, showFlags }: Props) {

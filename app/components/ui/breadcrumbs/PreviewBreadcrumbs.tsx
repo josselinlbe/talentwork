@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@remix-run/react";
 import Breadcrumb from "./Breadcrumb";
 
 export default function PreviewBreadcrumbs() {

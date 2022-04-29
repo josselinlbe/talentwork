@@ -450,6 +450,10 @@
         "updateDescription": "Actualiza tu nombre, avatar, contraseña, y/o tus preferencias",
         "logout": "Cerrar sesión",
         "logoutDescription": "Cierra sesión y vuelve a /login"
+      },
+      "blog": {
+        "title": "Blog",
+        "description": "Nueva publicación"
       }
     },
     "navbar": {

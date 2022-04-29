@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
 import ConfirmModal from "~/components/ui/modals/ConfirmModal";

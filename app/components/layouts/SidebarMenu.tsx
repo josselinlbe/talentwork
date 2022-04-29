@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";

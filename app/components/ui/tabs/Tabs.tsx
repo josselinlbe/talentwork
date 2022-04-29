@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "@remix-run/react";
 
 import clsx from "clsx";
 import { useState } from "react";

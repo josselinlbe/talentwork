@@ -5,7 +5,7 @@ import classNames from "~/utils/shared/ClassesUtils";
 import UserUtils from "~/utils/app/UserUtils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "@remix-run/react";
 import { LoaderFunction, json, ActionFunction, Form, useActionData, MetaFunction } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserByEmail, updateUserPassword } from "~/utils/db/users.db.server";

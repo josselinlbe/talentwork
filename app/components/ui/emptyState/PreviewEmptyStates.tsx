@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@remix-run/react";
 import EmptyState from "./EmptyState";
 
 export default function PreviewEmptyStates() {
