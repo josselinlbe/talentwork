@@ -9,6 +9,7 @@ import { getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 import { createUserEventLogin } from "~/utils/db/userEvents.db.server";
+import { getTenant } from "~/utils/db/tenants.db.server";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
@@ -34,7 +35,7 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
-  
+
   const form = await request.formData();
   const email = form.get("email")?.toString().toLowerCase().trim();
   const password = form.get("password");
@@ -70,13 +71,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   await createUserEventLogin(request, user);
   const userSession = await setLoggedUser(user);
+  const tenant = await getTenant(userSession.defaultTenantId);
   return createUserSession(
     {
       ...userSession,
       lightOrDarkMode: userInfo.lightOrDarkMode,
       lng: userInfo.lng,
     },
-    redirectTo.length > 0 ? redirectTo : user.admin !== null ? "/admin/dashboard" : `/app/${userSession.defaultTenantId}/dashboard`
+    redirectTo.length > 0 ? redirectTo : user.admin !== null ? "/admin/dashboard" : `/app/${tenant?.slug}/dashboard`
   );
 };
 
