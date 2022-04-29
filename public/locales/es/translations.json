@@ -661,6 +661,10 @@
       "select": "Selecciona organización",
       "youBelongToOne": "Perteneces a una organización",
       "youBelongToMany": "Perteneces a {{0}} organizaciones",
+      "create": {
+        "title": "Crear organización",
+        "headline": "Tú serás el propietario"
+      },
       "members": {
         "noMembers": "No se encontraron miembros",
         "noMembersFoundIn": "No se encontraron miembros",

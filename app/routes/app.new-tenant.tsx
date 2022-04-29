@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import { ActionFunction, json, LoaderFunction, redirect, useActionData, useNavigate } from "remix";
 import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
@@ -61,6 +62,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function AppRoute() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const actionData = useActionData<ActionData>();
   return (
@@ -98,8 +100,8 @@ export default function AppRoute() {
                 <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
               </svg>
               <div className="text-center">
-                <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">Create organization</h1>
-                <p className="mt-4 text-lg leading-6 text-gray-500">You will be the owner</p>
+                <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("app.tenants.create.title")}</h1>
+                <p className="mt-4 text-lg leading-6 text-gray-500">{t("app.tenants.create.headline")}</p>
               </div>
               <div className="mt-12">
                 <TenantNew />

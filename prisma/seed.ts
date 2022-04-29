@@ -78,12 +78,12 @@ async function seed() {
   // User without tenants
   await createUser("Alex", "Martinez", "alex.martinez@company.com", "password");
 
-  await createTenant("Tenant 1", [
+  await createTenant("Acme Corp 1", [
     { ...admin, role: TenantUserRole.ADMIN },
     { ...user1, role: TenantUserRole.ADMIN },
     { ...user2, role: TenantUserRole.MEMBER },
   ]);
-  await createTenant("Tenant 2", [
+  await createTenant("Acme Corp 2", [
     { ...user1, role: TenantUserRole.OWNER },
     { ...user2, role: TenantUserRole.MEMBER },
   ]);

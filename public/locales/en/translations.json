@@ -59,7 +59,7 @@
     "updateSubscriptionTo": "Update subscription to {{0}}?",
     "notFound": "Not found",
     "invite": "Invite",
-    "invalidInvitation": "Invalid invitation tenant relationship",
+    "invalidInvitation": "Invalid invitation account relationship",
     "download": "Download",
     "loading": "Loading",
     "processing": "Processing",
@@ -437,12 +437,12 @@
         "description": "No commands found for this search term. Please try again."
       },
       "tenants": {
-        "title": "Tenants",
-        "description": "Switch between tenants, or create one",
+        "title": "Accounts",
+        "description": "Switch between accounts, or create one",
         "switchTo": "Switch to",
-        "create": "Create organization",
-        "viewAll": "View all my tenants",
-        "edit": "Edit organization name, slug and icon"
+        "create": "Create account",
+        "viewAll": "View all my accounts",
+        "edit": "Edit account name, slug and icon"
       },
       "profile": {
         "title": "Profile",
@@ -458,7 +458,7 @@
       }
     },
     "navbar": {
-      "tenant": "Organization",
+      "tenant": "Account",
       "subscription": "Subscription",
       "profile": "Profile",
       "settings": "Settings",
@@ -484,7 +484,7 @@
       },
       "errors": {
         "limitReached": "Limit reached",
-        "limitReachedTenantRelationships": "You have reached the tenant relationships limit ({{0}}), upgrade your subscription.",
+        "limitReachedTenantRelationships": "You have reached the account relationships limit ({{0}}), upgrade your subscription.",
         "limitReachedUsers": "You have reached the members limit, upgrade your subscription.",
         "limitReachedContracts": "You have reached the contracts limit ({{0}}), upgrade your subscription."
       }
@@ -557,7 +557,7 @@
         "nameRequired": "Name required.",
         "descriptionRequired": "Description required.",
         "fileRequired": "File required.",
-        "tenantRelationshipRequired": "Select a tenant relationship (client or provider).",
+        "tenantRelationshipRequired": "Select a account relationship (client or provider).",
         "atLeastNSignatories": "Add at least 2 signatories."
       }
     },
@@ -588,7 +588,7 @@
       }
     },
     "tenantRelationships": {
-      "my": "Tenant Relationships",
+      "my": "Account Relationships",
       "profile": {
         "title": "Profile",
         "company": "Company profile",
@@ -604,20 +604,20 @@
         "empty": "No pending invitations"
       },
       "rejected": {},
-      "empty": "You don't have any tenant relationships",
+      "empty": "You don't have any account relationships",
       "imTheProvider": "I'm the provider",
       "newProvider": "New provider",
       "newClient": "New client",
       "new": "New relationship",
       "newDescription": "Link with another organization to share contracts with them",
-      "link": "Link with another tenant",
+      "link": "Link with another account",
       "invited": "You have invited {{0}} to join as {{1}} on your company {{2}}.",
-      "thereAreNo": "No active tenant relationships",
+      "thereAreNo": "No active account relationships",
       "accountFound": "Account found",
       "accountNotFound": "Account not found",
       "invitation": {
         "toBe": "Invitation to be a",
-        "hasInvitedYou": "has invited you to create a tenant relationship between their organization",
+        "hasInvitedYou": "has invited you to create a account relationship between their organization",
         "andYourCompany": "and your organization",
         "reasonAsProvider": "to share contracts",
         "reasonAsClient": "to share contracts",
@@ -637,8 +637,8 @@
       },
       "actions": {
         "selectOne": "Select a client or provider",
-        "new": "New tenant relationship",
-        "edit": "Edit tenant relationship"
+        "new": "New account relationship",
+        "edit": "Edit account relationship"
       }
     },
     "providers": {
@@ -662,6 +662,10 @@
       "select": "Select organization",
       "youBelongToOne": "You belong to one organization",
       "youBelongToMany": "You belong to {{0}} organizations",
+      "create": {
+        "title": "Create account",
+        "headline": "You will be the owner"
+      },
       "members": {
         "noMembers": "No members found",
         "noMembersFoundIn": "No members found",
@@ -676,7 +680,7 @@
         "isTrial": "Is trial",
         "status": "Status",
         "members": "Members",
-        "tenantRelationships": "Tenant relationships",
+        "tenantRelationships": "Account relationships",
         "storage": "Storage"
       },
       "actions": {
@@ -900,8 +904,8 @@
       "fullName": "Full name"
     },
     "tenantRelationship": {
-      "object": "Tenant Relationship",
-      "plural": "Tenant Relationships",
+      "object": "Account Relationship",
+      "plural": "Account Relationships",
       "type": "Type"
     },
     "provider": {
@@ -964,9 +968,9 @@
       "onceYouDelete": "Once you delete your account, you will lose all data associated with it"
     },
     "tenant": {
-      "title": "Organization",
+      "title": "Account",
       "general": "General settings",
-      "generalDescription": "Update your organization settings",
+      "generalDescription": "Update your account settings",
       "updated": "Organization updated",
       "create": "Create new organization",
       "createDescription": "Create a new organization to separate data",
@@ -1062,8 +1066,8 @@
       "invalidEmail": "Invalid email",
       "invalidLinkInvitation": "Invalid invitation",
       "notPendingLinkInvitation": "Invalid invitation",
-      "emailInvalidLinkInvitation": "Invalid tenant relationship invitation email",
-      "tenantInvalidLinkInvitation": "Invalid organization in tenant relationship invitation",
+      "emailInvalidLinkInvitation": "Invalid account relationship invitation email",
+      "tenantInvalidLinkInvitation": "Invalid organization in account relationship invitation",
       "cannotDeleteAdmin": "You cannot delete a system admin",
       "alreadyAMember": "Already a member",
       "noChanges": "No changes",
