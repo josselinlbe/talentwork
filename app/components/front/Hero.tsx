@@ -2,73 +2,61 @@ import { useTranslation } from "react-i18next";
 import { Link } from "remix";
 import Carousel from "../ui/images/Carousel";
 import Header from "./Header";
-import ImgAdminDashboard from "~/assets/features/admin-dashboard.png";
-import ImgAdminUsers from "~/assets/features/admin-users.png";
-import ImgAdminBlog from "~/assets/features/admin-blog.png";
-import ImgAdminEvents from "~/assets/features/admin-events.png";
-import ImgAdminPricing from "~/assets/features/admin-pricing.png";
-import ImgAdminEmails from "~/assets/features/admin-emails.png";
-import ImgAppDashboard from "~/assets/features/app-dashboard.png";
-import ImgAppProfile from "~/assets/features/app-profile.png";
-import ImgAppMembers from "~/assets/features/app-members.png";
-import ImgAppSubscription from "~/assets/features/app-subscription.png";
-import ImgAppTenant from "~/assets/features/app-tenant.png";
-import ImgAppCommandPalette from "~/assets/features/app-command-palette.png";
 
 const featureImages = [
   {
     title: "/admin/dashboard",
     route: "/admin/dashboard",
-    src: ImgAdminDashboard,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/admin-dashboard.png",
   },
   {
     title: "/admin/users",
     route: "/admin/users",
-    src: ImgAdminUsers,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/admin-users.png",
   },
   {
     title: "/admin/blog",
     route: "/admin/blog",
-    src: ImgAdminBlog,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/admin-blog.png",
   },
   {
     title: "/admin/events",
     route: "/admin/events",
-    src: ImgAdminEvents,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/admin-events.png",
   },
   {
     title: "/admin/setup/pricing",
     route: "/admin/setup/pricing",
-    src: ImgAdminPricing,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/admin-pricing.png",
   },
   {
     title: "/admin/setup/emails",
     route: "/admin/setup/emails",
-    src: ImgAdminEmails,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/admin-emails.png",
   },
   {
     title: "/app/dashboard",
-    src: ImgAppDashboard,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/app-dashboard.png",
   },
   {
     title: "/app/profile",
-    src: ImgAppProfile,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/app-profile.png",
   },
   {
     title: "/app/members",
-    src: ImgAppMembers,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/app-members.png",
   },
   {
     title: "/app/subscription",
-    src: ImgAppSubscription,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/app-subscription.png",
   },
   {
     title: "/app/tenant",
-    src: ImgAppTenant,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/app-tenant.png",
   },
   {
     title: "Command Palette",
-    src: ImgAppCommandPalette,
+    src: "https://yahooder.sirv.com/saasfrontends/remix/ss/0.2.5/app-command-palette.png",
   },
 ];
 
