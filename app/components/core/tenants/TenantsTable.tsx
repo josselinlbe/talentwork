@@ -4,7 +4,7 @@ import { Link } from "@remix-run/react";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { TenantWithDetails } from "~/utils/db/tenants.db.server";
+import type { TenantWithDetails } from "~/utils/db/tenants.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
@@ -177,7 +177,6 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <div className="flex items-center space-x-2">
                                       <ButtonTertiary to={`/admin/tenants/${item.id}`}>{t("admin.tenants.overview")}</ButtonTertiary>
-                                      {/* <ButtonTertiary to={`/admin/tenant/${item.id}/subscription`}>{t("admin.tenants.subscription.title")}</ButtonTertiary> */}
                                     </div>
                                   </td>
                                 </tr>
