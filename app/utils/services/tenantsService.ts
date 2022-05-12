@@ -1,8 +1,6 @@
 import { getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
 import { getEmployeesCount } from "~/modules/contracts/db/employees.db.server";
-import { getSubscriptionPriceByStripeId } from "../db/subscriptionProducts.db.server";
 import { TenantWithDetails } from "../db/tenants.db.server";
-import { getStripeSubscription } from "../stripe.server";
 
 export async function loadTenantsSubscriptionAndUsage(items: TenantWithDetails[]) {
   return Promise.all(

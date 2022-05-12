@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { useTransition } from "remix";
 import { Stat } from "~/application/dtos/stats/Stat";
 import { StatChange } from "~/application/dtos/stats/StatChange";
@@ -8,18 +9,28 @@ interface Props {
 }
 
 export function DashboardStats({ items }: Props) {
+  const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "loading";
   return (
     <div>
-      <h3 className=" leading-4 font-medium text-gray-900">Last 30 days</h3>
-      <dl className="mt-3 grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+      <dl
+        className={clsx(
+          "grid grid-cols-1 rounded-lg bg-white overflow-hidden shadow divide-y divide-gray-200 md:divide-y-0 md:divide-x",
+          items.length === 1 && "md:grid-cols-1",
+          items.length === 2 && "md:grid-cols-2",
+          items.length === 3 && "md:grid-cols-3",
+          items.length === 4 && "md:grid-cols-4",
+          items.length === 5 && "md:grid-cols-5",
+          items.length === 6 && "md:grid-cols-6"
+        )}
+      >
         {items.map((item) => (
           // <Link to={UrlUtils.replaceVariables(params, item.path) ?? ""} key={item.name} className="px-4 py-5 sm:p-6"></Link>
           <span key={item.name} className="px-4 py-5 sm:p-6">
             <dt className="text-base font-normal text-gray-900 flex space-x-1 items-baseline">
-              <div>{item.name}</div>
-              <div className="text-xs hidden xl:block text-gray-400">({item.hint})</div>
+              <div>{t(item.name)}</div>
+              {item.hint && <div className="text-xs hidden xl:block text-gray-400">({t(item.hint)})</div>}
             </dt>
             <dd className="mt-1 flex justify-between items-baseline md:block lg:flex">
               <div className="flex items-baseline text-2xl font-semibold text-gray-800">

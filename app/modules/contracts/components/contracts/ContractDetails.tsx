@@ -73,7 +73,7 @@ export default function ContractDetails({ item }: Props) {
   }
   function yesDelete() {
     const form = new FormData();
-    form.set("type", "delete");
+    form.set("action", "delete");
     submit(form, { method: "post" });
   }
   function droppedContractFile(files: FileBase64[]) {
@@ -96,7 +96,7 @@ export default function ContractDetails({ item }: Props) {
       return;
     }
     const form = new FormData();
-    form.set("type", "send");
+    form.set("action", "send");
     submit(form, {
       method: "post",
     });
@@ -110,7 +110,7 @@ export default function ContractDetails({ item }: Props) {
       errorModal.current?.show(t("shared.error"), t("app.contracts.errors.fileRequired"));
     } else {
       const form = new FormData();
-      form.set("type", "edit");
+      form.set("action", "edit");
       form.set("name", name);
       form.set("description", description);
       form.set("file", contractPdf);
@@ -122,14 +122,14 @@ export default function ContractDetails({ item }: Props) {
     }
   }
   const clientFullName = () => {
-    if (item && item.tenantRelationship?.clientTenant) {
-      return `${item.tenantRelationship.clientTenant.name}`;
+    if (item && item.linkedAccount?.clientTenant) {
+      return `${item.linkedAccount.clientTenant.name}`;
     }
     return "";
   };
   const providerFullName = () => {
-    if (item && item.tenantRelationship?.providerTenant) {
-      return `${item.tenantRelationship.providerTenant.name}`;
+    if (item && item.linkedAccount?.providerTenant) {
+      return `${item.linkedAccount.providerTenant.name}`;
     }
     return "";
   };

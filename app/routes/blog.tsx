@@ -1,13 +1,11 @@
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
-import type { LoaderFunction, MetaFunction } from "remix";
-import { json, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import type { Language } from "remix-i18next";
 import PostsList from "~/components/blog/PostsList";
 import { useTranslation } from "react-i18next";
-import type { BlogPostWithDetails } from "~/utils/db/blog.db.server";
-import { getAllBlogPosts } from "~/utils/db/blog.db.server";
+import { BlogPostWithDetails, getAllBlogPosts } from "~/utils/db/blog.db.server";
+import { Language } from "remix-i18next";
 
 type LoaderData = {
   title: string;

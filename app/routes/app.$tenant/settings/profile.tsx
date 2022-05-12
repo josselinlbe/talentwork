@@ -191,7 +191,7 @@ export default function ProfileRoute() {
   function changedLocale(locale: string) {
     setSelectedLocale(locale);
     const form = new FormData();
-    form.set("type", "setLocale");
+    form.set("action", "setLocale");
     form.set("redirect", location.pathname);
     form.set("lng", locale);
     submit(form, { method: "post", action: "/" });
@@ -212,7 +212,7 @@ export default function ProfileRoute() {
   }
   function confirmDelete() {
     const form = new FormData();
-    form.set("type", "deleteAccount");
+    form.set("action", "deleteAccount");
     submit(form, { method: "post" });
   }
   function loadedImage(image: string | undefined) {
@@ -233,7 +233,7 @@ export default function ProfileRoute() {
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
             <Form method="post">
-              <input hidden type="text" name="type" value="profile" readOnly />
+              <input hidden type="text" name="action" value="profile" readOnly />
               <div className="shadow overflow-hidden sm:rounded-sm">
                 <div className="px-4 py-5 bg-white sm:p-6">
                   <div className="grid grid-cols-6 gap-2">
@@ -369,7 +369,7 @@ export default function ProfileRoute() {
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
             <Form method="post">
-              <input hidden type="text" name="type" value="password" readOnly />
+              <input hidden type="text" name="action" value="password" readOnly />
               <div className="shadow overflow-hidden sm:rounded-sm">
                 <div>
                   <div className="px-4 py-5 bg-white sm:p-6">
@@ -501,7 +501,7 @@ export default function ProfileRoute() {
           </div>
           <div className="mt-12 md:mt-0 md:col-span-2">
             <div>
-              <input hidden type="text" name="type" value="deleteAccount" readOnly />
+              <input hidden type="text" name="action" value="deleteAccount" readOnly />
               <div className="bg-white shadow sm:rounded-sm">
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">{t("settings.danger.deleteYourAccount")}</h3>

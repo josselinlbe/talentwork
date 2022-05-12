@@ -1,5 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { useEffect, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import clsx from "~/utils/shared/ClassesUtils";
 

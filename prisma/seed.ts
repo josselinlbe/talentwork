@@ -5,6 +5,9 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { seedBlog } from "./seedBlog";
+import { seedSampleEntities } from "./seedSampleEntities";
+import { createLinkedAccount } from "~/utils/db/linkedAccounts.db.server";
+import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 const db = new PrismaClient();
 
 async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserRole) {
@@ -78,15 +81,26 @@ async function seed() {
   // User without tenants
   await createUser("Alex", "Martinez", "alex.martinez@company.com", "password");
 
-  await createTenant("Acme Corp 1", [
+  const tenant1 = await createTenant("Acme Corp 1", [
     { ...admin, role: TenantUserRole.ADMIN },
     { ...user1, role: TenantUserRole.ADMIN },
     { ...user2, role: TenantUserRole.MEMBER },
   ]);
-  await createTenant("Acme Corp 2", [
+  const tenant2 = await createTenant("Acme Corp 2", [
     { ...user1, role: TenantUserRole.OWNER },
     { ...user2, role: TenantUserRole.MEMBER },
   ]);
+
+  const tenant1And2Relationship = await createLinkedAccount({
+    createdByUserId: user1.id,
+    createdByTenantId: tenant1.id,
+    providerTenantId: tenant1.id,
+    clientTenantId: tenant2.id,
+    status: LinkedAccountStatus.LINKED,
+  });
+
+  // Sample Entities
+  await seedSampleEntities(tenant1And2Relationship, user1);
 }
 
 seed();

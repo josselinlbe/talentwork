@@ -46,7 +46,7 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
     }
     if (!isCurrent(product)) {
       const form = new FormData();
-      form.set("type", "subscribe");
+      form.set("action", "subscribe");
       form.set("price-id", price.id);
       submit(form, {
         method: "post",
@@ -88,7 +88,7 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
   }
   function confirmCancel() {
     const form = new FormData();
-    form.set("type", "cancel");
+    form.set("action", "cancel");
     submit(form, {
       method: "post",
     });

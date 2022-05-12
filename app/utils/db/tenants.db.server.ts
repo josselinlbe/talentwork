@@ -3,7 +3,8 @@ import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
 import UrlUtils from "../app/UrlUtils";
-import { createTenantSubscription, TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
+import { TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
+import { createTenantSubscription } from "./tenantSubscriptions.db.server";
 
 export type MyTenant = TenantUser & {
   tenant: Tenant;

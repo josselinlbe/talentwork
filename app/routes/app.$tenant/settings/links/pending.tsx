@@ -4,32 +4,27 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useRef, useState, useEffect } from "react";
-import { LoaderFunction, json, useLoaderData, useTransition, ActionFunction, useSubmit, MetaFunction, useActionData } from "remix";
-import {
-  TenantRelationshipWithDetails,
-  getTenantRelationships,
-  updateTenantRelationship,
-  getTenantRelationship,
-} from "~/utils/db/tenantRelationships.db.server";
-import { TenantRelationshipStatus } from "~/application/enums/tenants/TenantRelationshipStatus";
+import { json, useLoaderData, useTransition, useSubmit, useActionData, ActionFunction, LoaderFunction, MetaFunction } from "remix";
+import { getLinkedAccounts, updateLinkedAccount, getLinkedAccount, LinkedAccountWithDetails } from "~/utils/db/linkedAccounts.db.server";
+import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { sendEmail } from "~/utils/email.server";
 import { getUser } from "~/utils/db/users.db.server";
-import { i18nHelper } from "~/locale/i18n.utils";
 import clsx from "clsx";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
   title: string;
-  items: TenantRelationshipWithDetails[];
+  items: LinkedAccountWithDetails[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
 
-  const items = await getTenantRelationships(tenantUrl.tenantId, TenantRelationshipStatus.PENDING);
+  const items = await getLinkedAccounts(tenantUrl.tenantId, LinkedAccountStatus.PENDING);
   const data: LoaderData = {
-    title: `${t("app.tenantRelationships.pending.multiple")} | ${process.env.APP_NAME}`,
+    title: `${t("app.linkedAccounts.pending.multiple")} | ${process.env.APP_NAME}`,
     items,
   };
   return json(data);
@@ -38,18 +33,18 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 type ActionData = {
   error?: string;
   success?: string;
-  items?: TenantRelationshipWithDetails[];
+  items?: LinkedAccountWithDetails[];
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const appData = await loadAppData(request, params);
 
   const form = await request.formData();
-  const linkId = form.get("tenant-relationship-id")?.toString();
+  const linkId = form.get("linked-account-id")?.toString();
   if (!linkId) {
     return badRequest({ error: "Invalid link" });
   }
-  const link = await getTenantRelationship(linkId);
+  const link = await getLinkedAccount(linkId);
   const accepted = form.get("accepted")?.toString() === "true";
 
   if (!link) {
@@ -65,8 +60,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  await updateTenantRelationship(linkId, {
-    status: accepted ? TenantRelationshipStatus.LINKED : TenantRelationshipStatus.REJECTED,
+  await updateLinkedAccount(linkId, {
+    status: accepted ? LinkedAccountStatus.LINKED : LinkedAccountStatus.REJECTED,
   });
 
   if (accepted) {
@@ -80,7 +75,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   } else {
     await sendEmail(user.email, "link-invitation-rejected", {
-      action_url: process.env.SERVER_URL + `/app/{:TODO_TENANT}/settings/tenant-relationships`,
+      action_url: process.env.SERVER_URL + `/app/{:TODO_TENANT}/settings/linked-accounts`,
       name: user.firstName,
       email: appData.user?.email,
       tenant: appData.currentTenant?.name,
@@ -90,7 +85,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const tenantUrl = await getTenantUrl(params);
   return json({
-    items: await getTenantRelationships(tenantUrl.tenantId, TenantRelationshipStatus.PENDING),
+    items: await getLinkedAccounts(tenantUrl.tenantId, LinkedAccountStatus.PENDING),
   });
 };
 
@@ -120,55 +115,55 @@ export default function PendingLinksRoute() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
-  function reject(item: TenantRelationshipWithDetails) {
+  function reject(item: LinkedAccountWithDetails) {
     const whoAmIName = whoAmI(item) === 0 ? t("models.provider.object") : t("models.client.object");
     if (modalReject.current) {
       modalReject.current.setValue(item);
       modalReject.current.show(
-        t("app.tenantRelationships.invitation.confirmReject"),
+        t("app.linkedAccounts.invitation.confirmReject"),
         t("shared.reject"),
         t("shared.back"),
-        t("app.tenantRelationships.invitation.rejectWarning", [whoAmIName, inviterTenant(item).name])
+        t("app.linkedAccounts.invitation.rejectWarning", [whoAmIName, inviterTenant(item).name])
       );
     }
   }
-  function accept(item: TenantRelationshipWithDetails) {
+  function accept(item: LinkedAccountWithDetails) {
     const whoAmIName = whoAmI(item) === 0 ? t("models.provider.object") : t("models.client.object");
     if (modalAccept.current) {
       modalAccept.current.setValue(item);
       modalAccept.current.show(
-        t("app.tenantRelationships.invitation.confirmAccept", [whoAmIName]),
+        t("app.linkedAccounts.invitation.confirmAccept", [whoAmIName]),
         t("shared.accept"),
         t("shared.back"),
-        t("app.tenantRelationships.invitation.acceptWarning", [inviterTenant(item).name])
+        t("app.linkedAccounts.invitation.acceptWarning", [inviterTenant(item).name])
       );
     }
   }
-  function accepted(item: TenantRelationshipWithDetails) {
+  function accepted(item: LinkedAccountWithDetails) {
     item.status = 1;
     const form = new FormData();
-    form.set("tenant-relationship-id", item.id);
+    form.set("linked-account-id", item.id);
     form.set("accepted", "true");
     submit(form, {
       method: "post",
     });
   }
-  function rejected(item: TenantRelationshipWithDetails) {
+  function rejected(item: LinkedAccountWithDetails) {
     item.status = 2;
     const form = new FormData();
-    form.set("tenant-relationship-id", item.id);
+    form.set("linked-account-id", item.id);
     form.set("accepted", "false");
     submit(form, {
       method: "post",
     });
   }
-  function whoAmI(item: TenantRelationshipWithDetails) {
+  function whoAmI(item: LinkedAccountWithDetails) {
     if (appData.currentTenant?.id ?? "" === item.providerTenantId) {
       return 0;
     }
     return 1;
   }
-  function inviterTenant(item: TenantRelationshipWithDetails) {
+  function inviterTenant(item: LinkedAccountWithDetails) {
     if (item.createdByTenantId === item.providerTenantId) {
       return item.providerTenant;
     }
@@ -188,7 +183,7 @@ export default function PendingLinksRoute() {
                 <EmptyState
                   className="bg-white"
                   captions={{
-                    thereAreNo: t("app.tenantRelationships.pending.empty"),
+                    thereAreNo: t("app.linkedAccounts.pending.empty"),
                   }}
                 />
               </div>
@@ -204,7 +199,7 @@ export default function PendingLinksRoute() {
                           {item.createdByTenantId !== appData.currentTenant?.id && item.createdByUser && (
                             <div className="flex items-center justify-between space-x-3">
                               <p className="text-sm font-normal text-gray-700 border-b pb-3 mb-2 w-full">
-                                {item.createdByUser.firstName} ({item.createdByUser.email}) {t("app.tenantRelationships.invitation.hasSentYou")}.
+                                {item.createdByUser.firstName} ({item.createdByUser.email}) {t("app.linkedAccounts.invitation.hasSentYou")}.
                               </p>
                             </div>
                           )}
@@ -307,7 +302,7 @@ export default function PendingLinksRoute() {
                                       >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                       </svg>
-                                      <span className="ml-3">{t("app.tenantRelationships.pending.invitationSent")}</span>
+                                      <span className="ml-3">{t("app.linkedAccounts.pending.invitationSent")}</span>
                                     </div>
                                   )}
                                   {(() => {

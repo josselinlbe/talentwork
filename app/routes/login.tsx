@@ -8,7 +8,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
-import { createUserEventLogin } from "~/utils/db/userEvents.db.server";
+import { createLogLogin } from "~/utils/db/logs.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  await createUserEventLogin(request, user);
+  await createLogLogin(request, user);
   const userSession = await setLoggedUser(user);
   const tenant = await getTenant(userSession.defaultTenantId);
   return createUserSession(

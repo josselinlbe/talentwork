@@ -189,6 +189,7 @@ async function seedBlogPost(post: {
     },
   });
   if (existingBlogPost) {
+    // eslint-disable-next-line no-console
     console.log("existing blog post with slug: " + post.slug);
     return;
   }

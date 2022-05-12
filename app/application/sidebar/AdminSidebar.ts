@@ -24,14 +24,24 @@ export const AdminSidebar: SideBarItem[] = [
         items: [],
       },
       {
-        title: "app.sidebar.events",
-        path: "/admin/events",
-        icon: SvgIcon.EVENTS,
+        title: "app.sidebar.logs",
+        path: "/admin/logs",
+        icon: SvgIcon.LOGS,
       },
       {
         title: "blog.title",
         path: "/admin/blog",
         icon: SvgIcon.BLOG,
+      },
+      {
+        title: "models.entity.plural",
+        path: "/admin/entities",
+        icon: SvgIcon.ENTITIES,
+      },
+      {
+        title: "API",
+        path: "/admin/api",
+        icon: SvgIcon.KEYS,
       },
       // {
       //   title: "admin.navigation.title",

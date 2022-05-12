@@ -1,4 +1,4 @@
-alias: `tenant-relationship-accepted`
+alias: `linked-account-accepted`
 
 subject: `{{ user_invitee_name }} accepted your invitation`
 

@@ -5,7 +5,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 import UpdateTenantDetailsForm from "~/components/core/tenants/UpdateTenantDetailsForm";
-import { createUserEvent } from "~/utils/db/userEvents.db.server";
+import { createLog } from "~/utils/db/logs.db.server";
 
 type LoaderData = {
   title: string;
@@ -30,9 +30,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const tenantUrl = await getTenantUrl(params);
 
   const form = await request.formData();
-  const type = form.get("type")?.toString() ?? "";
+  const action = form.get("action")?.toString() ?? "";
 
-  if (type === "update-tenant-details") {
+  if (action === "update-tenant-details") {
     const name = form.get("name")?.toString() ?? "";
     const slug = form.get("slug")?.toString().toLowerCase() ?? "";
     const icon = form.get("icon")?.toString() ?? "";
@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
 
     const existing = await getTenant(tenantUrl.tenantId);
-    await createUserEvent(request, tenantUrl, "Update tenant details", JSON.stringify({ name, slug }));
+    await createLog(request, tenantUrl, "Update tenant details", JSON.stringify({ name, slug }));
     if (existing?.slug !== slug) {
       const existingSlug = await getTenantBySlug(slug);
       if (existingSlug) {
@@ -82,7 +82,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       };
       return json(actionData);
     }
-  } else if (type === "update-tenant-subscription") {
+  } else if (action === "update-tenant-subscription") {
     return json({ success: "Updated" });
   } else {
     return badRequest({ error: t("shared.invalidForm") });

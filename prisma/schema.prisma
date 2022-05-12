@@ -6,32 +6,31 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                            String                @id @default(cuid())
-  createdAt                     DateTime              @default(now())
-  updatedAt                     DateTime              @updatedAt
-  email                         String                @unique
-  passwordHash                  String
-  firstName                     String
-  lastName                      String
-  phone                         String
-  avatar                        String
-  defaultTenantId               String?
-  verifyToken                   String?
-  admin                         AdminUser?
-  tenants                       TenantUser[]
-  invitation                    TenantUserInvitation?
-  contracts                     ContractMember[]
-  tenantRelationships           TenantRelationship[]
-  createdContracts              Contract[]
-  createdEmployees              Employee[]
-  contractActivities            ContractActivity[]
-  tenantRelationshipInvitations TenantRelationship[]  @relation("userInvited")
-  activity                      UserEvent[]
+  id                 String                @id @default(cuid())
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  email              String                @unique
+  passwordHash       String
+  firstName          String
+  lastName           String
+  phone              String
+  avatar             String
+  defaultTenantId    String?
+  verifyToken        String?
+  admin              AdminUser?
+  tenants            TenantUser[]
+  invitation         TenantUserInvitation?
+  contracts          ContractMember[]
+  linkedAccounts     LinkedAccount[]
+  createdEntities    EntityRow[]
+  contractActivities ContractActivity[]
+  activity           Log[]
+  apiKeys            ApiKey[]
 }
 
 model AdminUser {
@@ -40,34 +39,40 @@ model AdminUser {
   role   Int
 }
 
-model UserEvent {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  tenantId  String?
-  tenant    Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  url       String
-  action    String
-  details   String
+model Log {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  tenantId    String?
+  tenant      Tenant?    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKeyId    String?
+  apiKey      ApiKey?    @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  entityRowId String?
+  entityRow   EntityRow? @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
+  url         String
+  action      String
+  details     String?
+  // entityLogs  EntityLog[]
 }
 
 model Tenant {
-  id                            String                 @id @default(cuid())
-  createdAt                     DateTime               @default(now())
-  updatedAt                     DateTime               @updatedAt
-  slug                          String                 @unique
-  name                          String
-  icon                          String
-  subscriptionId                String?
-  subscription                  TenantSubscription?
-  users                         TenantUser[]
-  invitations                   TenantUserInvitation[]
-  employees                     Employee[]
-  activity                      UserEvent[]
-  createdTenantRelationships    TenantRelationship[]   @relation("createdByTenant")
-  asProviderTenantRelationships TenantRelationship[]   @relation("providerTenant")
-  asClientTenantRelationships   TenantRelationship[]   @relation("clientTenant")
+  id                       String                 @id @default(cuid())
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+  slug                     String                 @unique
+  name                     String
+  icon                     String
+  subscriptionId           String?
+  subscription             TenantSubscription?
+  users                    TenantUser[]
+  invitations              TenantUserInvitation[]
+  entities                 EntityRow[]
+  activity                 Log[]
+  createdLinkedAccounts    LinkedAccount[]        @relation("createdByTenant")
+  asProviderLinkedAccounts LinkedAccount[]        @relation("providerTenant")
+  asClientLinkedAccounts   LinkedAccount[]        @relation("clientTenant")
+  apiKeys                  ApiKey[]
 }
 
 model TenantSubscription {
@@ -80,15 +85,23 @@ model TenantSubscription {
 }
 
 model TenantUser {
-  id       String @id @default(cuid())
+  id       String     @id @default(cuid())
   tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant   Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   userId   String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   role     Int
   joined   Int
   status   Int
-  // current  Boolean
+  roles    UserRole[]
+}
+
+model UserRole {
+  id           String     @id @default(cuid())
+  tenantUserId String
+  tenantUser   TenantUser @relation(fields: [tenantUserId], references: [id], onDelete: Cascade)
+  order        Int
+  name         String
 }
 
 model TenantUserInvitation {
@@ -104,27 +117,66 @@ model TenantUserInvitation {
   user          User?   @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
 }
 
-// model ApiKey {
-//   id              String   @id @default(cuid())
-//   createdByUserId String
-//   createdByUser   User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-//   tenantId        String
-//   tenant          Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-// }
+model ApiKey {
+  id              String         @id @default(cuid())
+  createdAt       DateTime       @default(now())
+  createdByUserId String
+  createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  key             String         @default(uuid())
+  alias           String
+  max             Int
+  expires         DateTime
+  active          Boolean
+  entities        ApiKeyEntity[]
+  apiKeyLogs      ApiKeyLog[]
+  logs            Log[]
+  entityRows      EntityRow[]
+
+  @@unique([tenantId, alias])
+}
+
+model ApiKeyEntity {
+  id       String  @id @default(cuid())
+  apiKeyId String
+  apiKey   ApiKey  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  entityId String
+  entity   Entity  @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  create   Boolean
+  read     Boolean
+  update   Boolean
+  delete   Boolean
+}
+
+model ApiKeyLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  apiKeyId  String?
+  apiKey    ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  ip        String
+  method    String
+  params    String
+  // body      String
+  status    Int?
+  error     String?
+}
 
 model SubscriptionProduct {
-  id               String                @id @default(cuid())
-  stripeId         String
-  tier             Int
-  title            String
-  description      String
-  badge            String
-  active           Boolean
-  public           Boolean
-  maxUsers         Int
-  monthlyContracts Int
-  prices           SubscriptionPrice[]
-  features         SubscriptionFeature[]
+  id                 String                          @id @default(cuid())
+  stripeId           String
+  tier               Int
+  title              String
+  description        String
+  badge              String
+  active             Boolean
+  public             Boolean
+  maxUsers           Int
+  monthlyContracts   Int
+  prices             SubscriptionPrice[]
+  features           SubscriptionFeature[]
+  entityLimits       EntityLimit[]
+  entityFeatureFlags EntitySubscriptionFeatureFlag[]
 }
 
 model SubscriptionPrice {
@@ -151,21 +203,19 @@ model SubscriptionFeature {
   included              Boolean
 }
 
-model TenantRelationship {
-  id                String     @id @default(cuid())
-  createdAt         DateTime   @default(now())
+model LinkedAccount {
+  id                String      @id @default(cuid())
+  createdAt         DateTime    @default(now())
   createdByUserId   String
-  createdByUser     User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByUser     User        @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByTenantId String
-  createdByTenant   Tenant     @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
+  createdByTenant   Tenant      @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
   providerTenantId  String
-  providerTenant    Tenant     @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
+  providerTenant    Tenant      @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
   clientTenantId    String
-  clientTenant      Tenant     @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
+  clientTenant      Tenant      @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
   status            Int
-  userInvitedId     String
-  userInvited       User       @relation("userInvited", fields: [userInvitedId], references: [id], onDelete: Cascade)
-  contracts         Contract[]
+  entityRows        EntityRow[]
 }
 
 model BlogAuthor {
@@ -221,13 +271,142 @@ model BlogPost {
   tags        BlogPostTag[]
 }
 
+model Entity {
+  id                     String                          @id @default(cuid())
+  createdAt              DateTime                        @default(now())
+  updatedAt              DateTime                        @updatedAt
+  name                   String                          @unique
+  slug                   String                          @unique
+  order                  Int                             @unique
+  prefix                 String                          @unique
+  title                  String // i18n key, eg: models.contract.object
+  titlePlural            String //  i18n key, eg: models.contract.plural
+  isFeature              Boolean
+  isAutogenerated        Boolean
+  hasApi                 Boolean
+  requiresLinkedAccounts Boolean
+  icon                   String
+  active                 Boolean
+  properties             EntityProperty[]
+  rows                   EntityRow[]
+  limits                 EntityLimit[]
+  permissions            EntityTenantUserPermission[]
+  features               EntitySubscriptionFeatureFlag[]
+  apiKeys                ApiKeyEntity[]
+}
+
+model EntityProperty {
+  id         String                 @id @default(cuid())
+  entityId   String
+  entity     Entity                 @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  isDynamic  Boolean
+  order      Int
+  name       String
+  title      String
+  type       Int
+  formula    String?
+  parentId   String?
+  parent     EntityProperty?        @relation(name: "parentProperty", fields: [parentId], references: [id], onDelete: Cascade)
+  isDefault  Boolean
+  isRequired Boolean
+  isHidden   Boolean
+  isDetail   Boolean
+  pattern    String?
+  options    EntityPropertyOption[]
+  children   EntityProperty[]       @relation(name: "parentProperty")
+  values     EntityRowValue[]
+
+  @@unique([entityId, order])
+  @@unique([entityId, name])
+  @@unique([entityId, title])
+}
+
+model EntityPropertyOption {
+  id               String                 @id @default(cuid())
+  entityPropertyId String
+  entityProperty   EntityProperty         @relation(fields: [entityPropertyId], references: [id], onDelete: Cascade)
+  parentId         String?
+  parent           EntityPropertyOption?  @relation(name: "parentOption", fields: [parentId], references: [id], onDelete: Cascade)
+  order            Int
+  value            String
+  options          EntityPropertyOption[] @relation(name: "parentOption")
+}
+
+model EntityRow {
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  folio             Int
+  entityId          String
+  entity            Entity           @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  tenantId          String
+  tenant            Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdByUserId   String?
+  createdByUser     User?            @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByApiKeyId String?
+  createdByApiKey   ApiKey?          @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
+  linkedAccountId   String?
+  linkedAccount     LinkedAccount?   @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
+  contractId        String?
+  contract          Contract?
+  employeeId        String?
+  employee          Employee?
+  values            EntityRowValue[]
+  logs              Log[]
+}
+
+model EntityRowValue {
+  id               String         @id @default(cuid())
+  entityRowId      String
+  entityRow        EntityRow      @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
+  entityPropertyId String
+  entityProperty   EntityProperty @relation(fields: [entityPropertyId], references: [id], onDelete: Cascade)
+  idValue          String?
+  textValue        String?
+  numberValue      Decimal?
+  dateValue        DateTime?
+}
+
+model EntityLimit {
+  id                    String              @id @default(cuid())
+  entityId              String
+  entity                Entity              @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  subscriptionProductId String
+  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
+  type                  Int // 0 = Max, 1 = Monthly
+  max                   Int
+}
+
+model EntityTenantUserPermission {
+  id       String @id @default(cuid())
+  entityId String
+  entity   Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  level    Int // 0 = Read, 1 = +Create, 2 = +Update, 3 = Delete
+}
+
+model EntitySubscriptionFeatureFlag {
+  id                    String              @id @default(cuid())
+  entityId              String
+  entity                Entity              @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  subscriptionProductId String
+  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
+  level                 Int // 0 = Read, 1 = +Create, 2 = +Update, 3 = Delete
+}
+
+// model EntityLog {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   logId     String
+//   log       Log      @relation(fields: [logId], references: [id], onDelete: Cascade)
+//   url       String
+//   action    String
+//   details   String
+// }
+
 model Employee {
   id               String             @id @default(cuid())
-  createdAt        DateTime           @default(now())
-  createdByUserId  String
-  createdByUser    User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  tenantId         String
-  tenant           Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  entityRowId      String             @unique
+  entityRow        EntityRow          @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
   firstName        String
   lastName         String
   email            String
@@ -235,19 +414,16 @@ model Employee {
 }
 
 model Contract {
-  id                   String             @id @default(cuid())
-  createdAt            DateTime           @default(now())
-  createdByUserId      String
-  createdByUser        User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  tenantRelationshipId String
-  tenantRelationship   TenantRelationship @relation(fields: [tenantRelationshipId], references: [id], onDelete: Cascade)
-  name                 String
-  description          String
-  file                 String
-  status               Int
-  members              ContractMember[]
-  employees            ContractEmployee[]
-  activity             ContractActivity[]
+  id          String             @id @default(cuid())
+  entityRowId String             @unique
+  entityRow   EntityRow          @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  file        String
+  status      Int
+  members     ContractMember[]
+  employees   ContractEmployee[]
+  activity    ContractActivity[]
 }
 
 model ContractMember {

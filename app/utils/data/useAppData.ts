@@ -1,17 +1,18 @@
 import { redirect, useMatches } from "remix";
-import { Language } from "remix-i18next";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { getUserInfo } from "../session.server";
-import { Tenant } from "@prisma/client";
-import { getTenantRelationshipsCount } from "../db/tenantRelationships.db.server";
-import { TenantRelationshipStatus } from "~/application/enums/tenants/TenantRelationshipStatus";
+import { getLinkedAccountsCount } from "../db/linkedAccounts.db.server";
+import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { getMyTenants, getTenant, MyTenant } from "../db/tenants.db.server";
 import { getUser, UserWithoutPassword } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { Params } from "react-router";
 import UrlUtils from "../app/UrlUtils";
 import { getTenantUrl } from "../services/urlService";
 import { getTenantSubscription, TenantSubscriptionWithDetails } from "../db/tenantSubscriptions.db.server";
+import { getAllEntities } from "../db/entities.db.server";
+import { Tenant, Entity } from "@prisma/client";
+import { Language } from "remix-i18next";
+import { Params } from "react-router";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -22,6 +23,7 @@ export type AppLoaderData = {
   currentRole: TenantUserRole;
   isOwnerOrAdmin: boolean;
   pendingInvitations: number;
+  entities: Entity[];
 };
 
 export function useAppData(): AppLoaderData {
@@ -61,7 +63,7 @@ export async function loadAppData(request: Request, params: Params) {
   }
   const isOwnerOrAdmin = currentRole == TenantUserRole.OWNER || currentRole == TenantUserRole.ADMIN;
 
-  const pendingInvitations = await getTenantRelationshipsCount(tenantUrl.tenantId, [TenantRelationshipStatus.PENDING]);
+  const pendingInvitations = await getLinkedAccountsCount(tenantUrl.tenantId, [LinkedAccountStatus.PENDING]);
   const data: AppLoaderData = {
     i18n: translations,
     user,
@@ -71,6 +73,7 @@ export async function loadAppData(request: Request, params: Params) {
     mySubscription,
     isOwnerOrAdmin,
     pendingInvitations,
+    entities: await getAllEntities(true),
   };
   return data;
 }

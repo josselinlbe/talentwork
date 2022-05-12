@@ -21,39 +21,47 @@ import IconProfile from "./IconProfile";
 import IconHistory from "./IconHistory";
 import IconCode from "./IconCode";
 import IconBlog from "./IconBlog";
+import IconEntities from "./IconEntities";
+import { SideBarItem } from "~/application/sidebar/SidebarItem";
+import EntityIcon from "./EntityIcon";
+import IconKeys from "./IconKeys";
+// import IconEntities from "./IconEntities";
 
 interface Props {
   className: string;
-  icon: SvgIcon;
+  item: SideBarItem;
 }
 
-export default function SidebarIcon(props: Props) {
-  const icon = props.icon;
+export default function SidebarIcon({ className, item }: Props) {
   return (
     <span>
       {/* Core */}
-      {icon === SvgIcon.ADMIN && <IconAdmin className={props.className} />}
-      {icon === SvgIcon.TENANTS && <IconTenants className={props.className} />}
-      {icon === SvgIcon.USERS && <IconUsers className={props.className} />}
-      {icon === SvgIcon.PRICING && <IconPricing className={props.className} />}
-      {icon === SvgIcon.EMAILS && <IconEmails className={props.className} />}
-      {icon === SvgIcon.NAVIGATION && <IconNavigation className={props.className} />}
-      {icon === SvgIcon.COMPONENTS && <IconComponents className={props.className} />}
-      {icon === SvgIcon.MEMBERS && <IconMembers className={props.className} />}
-      {icon === SvgIcon.PROFILE && <IconProfile className={props.className} />}
-      {icon === SvgIcon.APP && <IconApp className={props.className} />}
-      {icon === SvgIcon.DASHBOARD && <IconDashboard className={props.className} />}
-      {icon === SvgIcon.SETTINGS && <IconSettings className={props.className} />}
-      {icon === SvgIcon.SETUP && <IconCode className={props.className} />}
-      {icon === SvgIcon.EVENTS && <IconHistory className={props.className} />}
-      {icon === SvgIcon.BLOG && <IconBlog className={props.className} />}
+      {item.icon === SvgIcon.ADMIN && <IconAdmin className={className} />}
+      {item.icon === SvgIcon.TENANTS && <IconTenants className={className} />}
+      {item.icon === SvgIcon.USERS && <IconUsers className={className} />}
+      {item.icon === SvgIcon.PRICING && <IconPricing className={className} />}
+      {item.icon === SvgIcon.EMAILS && <IconEmails className={className} />}
+      {item.icon === SvgIcon.NAVIGATION && <IconNavigation className={className} />}
+      {item.icon === SvgIcon.COMPONENTS && <IconComponents className={className} />}
+      {item.icon === SvgIcon.MEMBERS && <IconMembers className={className} />}
+      {item.icon === SvgIcon.PROFILE && <IconProfile className={className} />}
+      {item.icon === SvgIcon.APP && <IconApp className={className} />}
+      {item.icon === SvgIcon.DASHBOARD && <IconDashboard className={className} />}
+      {item.icon === SvgIcon.SETTINGS && <IconSettings className={className} />}
+      {item.icon === SvgIcon.SETUP && <IconCode className={className} />}
+      {item.icon === SvgIcon.LOGS && <IconHistory className={className} />}
+      {item.icon === SvgIcon.BLOG && <IconBlog className={className} />}
+      {item.icon === SvgIcon.ENTITIES && <IconEntities className={className} />}
+      {item.icon === SvgIcon.KEYS && <IconKeys className={className} />}
 
       {/* App */}
-      {icon === SvgIcon.LINKS && <IconLinks className={props.className} />}
-      {icon === SvgIcon.PROVIDERS && <IconProviders className={props.className} />}
-      {icon === SvgIcon.CLIENTS && <IconClients className={props.className} />}
-      {icon === SvgIcon.CONTRACTS && <IconContracts className={props.className} />}
-      {icon === SvgIcon.EMPLOYEES && <IconEmployees className={props.className} />}
+      {item.icon === SvgIcon.LINKS && <IconLinks className={className} />}
+      {item.icon === SvgIcon.PROVIDERS && <IconProviders className={className} />}
+      {item.icon === SvgIcon.CLIENTS && <IconClients className={className} />}
+      {item.icon === SvgIcon.CONTRACTS && <IconContracts className={className} />}
+      {item.icon === SvgIcon.EMPLOYEES && <IconEmployees className={className} />}
+
+      {item.entityIcon && <EntityIcon className={className} icon={item.entityIcon} title={item.title} />}
     </span>
   );
 }

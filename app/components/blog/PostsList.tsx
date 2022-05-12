@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
 import { Link } from "@remix-run/react";
 import { BlogPostWithDetails } from "~/utils/db/blog.db.server";
 import DateUtils from "~/utils/shared/DateUtils";

@@ -15,7 +15,6 @@ export default function CurrentSubscriptionButton() {
         <div className="text-xs sm:text-sm relative z-0 inline-flex shadow-none rounded-full">
           <Link
             to={UrlUtils.currentTenantUrl(params, `settings/subscription`)}
-            type="button"
             className={clsx(
               "text-gray-800 bg-gray-50 border-gray-100 shadow-inner border relative inline-flex items-center p-2 rounded-md font-medium hover:bg-teal-50 hover:text-teal-800 focus:bg-teal-100 focus:text-teal-900 focus:outline-none focus:z-10 space-x-1",
               appData.mySubscription?.subscriptionPrice &&

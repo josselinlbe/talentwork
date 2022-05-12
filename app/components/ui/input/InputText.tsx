@@ -16,14 +16,20 @@ interface Props {
   help?: string;
   minLength?: number;
   maxLength?: number;
+  readOnly?: boolean;
   disabled?: boolean;
   required?: boolean;
   autoComplete?: string;
   withTranslation?: boolean;
   translationParams?: string[];
+  placeholder?: string;
+  pattern?: string;
   hint?: ReactNode;
   rows?: number;
   button?: ReactNode;
+  lowercase?: boolean;
+  uppercase?: boolean;
+  type?: string;
 }
 const InputText = (
   {
@@ -34,15 +40,21 @@ const InputText = (
     className,
     help,
     disabled = false,
+    readOnly = false,
     required = false,
     minLength,
     maxLength,
     autoComplete,
     withTranslation = false,
     translationParams = [],
+    placeholder,
+    pattern,
     hint,
     rows,
     button,
+    lowercase,
+    uppercase,
+    type = "text",
   }: Props,
   ref: Ref<RefInputText>
 ) => {
@@ -59,6 +71,18 @@ const InputText = (
     return t(value);
   }
 
+  function onChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    if (setValue) {
+      if (lowercase) {
+        setValue(e.currentTarget.value.toLowerCase());
+      } else if (uppercase) {
+        setValue(e.currentTarget.value.toUpperCase());
+      } else {
+        setValue(e.currentTarget.value);
+      }
+    }
+  }
+
   return (
     <div className={className}>
       <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
@@ -68,7 +92,7 @@ const InputText = (
             {required && <span className="ml-1 text-red-500">*</span>}
           </div>
 
-          {help && <HintTooltip text={help} />}
+          <span className=" overflow-hidden">{help && <HintTooltip text={help} />}</span>
         </div>
         {withTranslation && value?.includes(".") && (
           <div className="text-slate-600 font-light italic">
@@ -87,7 +111,7 @@ const InputText = (
           <>
             <input
               ref={input}
-              type="text"
+              type={type}
               id={name}
               name={name}
               autoComplete={autoComplete}
@@ -95,12 +119,15 @@ const InputText = (
               minLength={minLength}
               maxLength={maxLength}
               value={value}
-              onChange={(e) => (setValue ? setValue(e.currentTarget.value) : {})}
+              onChange={onChange}
               disabled={disabled}
+              readOnly={readOnly}
+              placeholder={placeholder}
+              pattern={pattern}
               className={clsx(
                 "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
                 className,
-                disabled && "bg-gray-100 cursor-not-allowed"
+                (disabled || readOnly) && "bg-gray-100 cursor-not-allowed"
               )}
             />
             {button}
@@ -116,12 +143,15 @@ const InputText = (
             minLength={minLength}
             maxLength={maxLength}
             value={value}
-            onChange={(e) => (setValue ? setValue(e.currentTarget.value) : {})}
+            onChange={onChange}
             disabled={disabled}
+            readOnly={readOnly}
+            placeholder={placeholder}
             className={clsx(
               "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
               className,
-              disabled && "bg-gray-100 cursor-not-allowed"
+              (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
+              lowercase && "lowercase"
             )}
           />
         )}

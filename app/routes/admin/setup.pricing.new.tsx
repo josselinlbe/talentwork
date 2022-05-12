@@ -6,7 +6,7 @@ import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useAction
 import { i18nHelper } from "~/locale/i18n.utils";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 import { createPlan } from "~/utils/services/pricingService";
-import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
+import { createAdminLog } from "~/utils/db/logs.db.server";
 import PricingPlanForm from "~/components/core/pricing/PricingPlanForm";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
@@ -35,9 +35,9 @@ export const action: ActionFunction = async ({ request }) => {
   const { t } = await i18nHelper(request);
   const form = await request.formData();
 
-  const type = form.get("type")?.toString();
+  const action = form.get("action")?.toString();
 
-  if (type !== "create-plan") {
+  if (action !== "create-plan") {
     return badRequest({ error: t("shared.invalidForm") });
   }
   const tier = Number(form.get("tier"));
@@ -89,7 +89,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   try {
     await createPlan(plan, prices, features);
-    await createAdminUserEvent(request, "Created pricing plan", plan.title);
+    await createAdminLog(request, "Created pricing plan", plan.title);
 
     return redirect("/admin/setup/pricing");
   } catch (e: any) {

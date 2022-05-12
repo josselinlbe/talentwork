@@ -1,12 +1,13 @@
-import type { ReactNode } from "react";
-import { Fragment } from "react";
+import { ReactNode, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import clsx from "clsx";
 
 interface Props {
   children: ReactNode;
   onClose: () => void;
+  className?: string;
 }
-export default function OpenModal({ children, onClose }: Props) {
+export default function OpenModal({ children, onClose, className = "sm:max-w-3xl" }: Props) {
   return (
     <Transition.Root show={true} as={Fragment}>
       <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={onClose}>
@@ -36,7 +37,12 @@ export default function OpenModal({ children, onClose }: Props) {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
+            <div
+              className={clsx(
+                className,
+                "relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full sm:p-6"
+              )}
+            >
               {children}
             </div>
           </Transition.Child>

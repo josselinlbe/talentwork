@@ -51,7 +51,7 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
 
   function deleteUserInvitation(invitation: TenantUserInvitation) {
     const form = new FormData();
-    form.set("type", "delete-invitation");
+    form.set("action", "delete-invitation");
     form.set("invitation-id", invitation.id);
     submit(form, {
       method: "post",

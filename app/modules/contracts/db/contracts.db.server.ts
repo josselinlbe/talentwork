@@ -1,17 +1,13 @@
-import { Contract, ContractActivity, ContractEmployee, ContractMember, Employee, Tenant, TenantRelationship, User } from "@prisma/client";
 import { ContractStatusFilter } from "~/modules/contracts/enums/ContractStatusFilter";
 import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
-import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
-import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
 import { db } from "../../../utils/db.server";
+import { Contract, ContractMember, User, ContractEmployee, Employee, ContractActivity } from "@prisma/client";
+import { ContractMemberRole } from "../enums/ContractMemberRole";
+import { ContractStatus } from "../enums/ContractStatus";
+import { includeEntityRowDetails } from "~/utils/db/entityRows.db.server";
 
 export type ContractWithDetails = Contract & {
-  createdByUser: User;
-  tenantRelationship: TenantRelationship & {
-    createdByTenant: Tenant;
-    providerTenant: Tenant;
-    clientTenant: Tenant;
-  };
+  entityRow: EntityRowWithDetails;
   members: (ContractMember & { user: User })[];
   employees: (ContractEmployee & { employee: Employee })[];
   activity: (ContractActivity & { createdByUser: User })[];
@@ -23,19 +19,21 @@ export async function getMonthlyContractsCount(tenantId: string) {
   var lastDayCurrentMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   return await db.contract.count({
     where: {
-      createdAt: {
-        gte: firstDayCurrentMonth,
-        lt: lastDayCurrentMonth,
-      },
-      tenantRelationship: {
-        OR: [
-          {
-            providerTenantId: tenantId,
-          },
-          {
-            clientTenantId: tenantId,
-          },
-        ],
+      entityRow: {
+        createdAt: {
+          gte: firstDayCurrentMonth,
+          lt: lastDayCurrentMonth,
+        },
+        linkedAccount: {
+          OR: [
+            {
+              providerTenantId: tenantId,
+            },
+            {
+              clientTenantId: tenantId,
+            },
+          ],
+        },
       },
     },
   });
@@ -50,12 +48,9 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
       id,
     },
     include: {
-      createdByUser: true,
-      tenantRelationship: {
+      entityRow: {
         include: {
-          createdByTenant: true,
-          providerTenant: true,
-          clientTenant: true,
+          ...includeEntityRowDetails,
         },
       },
       members: {
@@ -79,18 +74,42 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
 
 export async function getContracts(tenantId: string, filter: ContractStatusFilter) {
   const include = {
-    tenantRelationship: {
+    entityRow: {
       include: {
-        providerTenant: true,
-        clientTenant: true,
+        linkedAccount: {
+          include: {
+            providerTenant: true,
+            clientTenant: true,
+          },
+        },
+        createdByUser: true,
       },
     },
-    createdByUser: true,
   };
   if (filter === ContractStatusFilter.ALL) {
     return await db.contract.findMany({
       where: {
-        tenantRelationship: {
+        entityRow: {
+          linkedAccount: {
+            OR: [
+              {
+                providerTenantId: tenantId,
+              },
+              {
+                clientTenantId: tenantId,
+              },
+            ],
+          },
+        },
+      },
+      include,
+    });
+  }
+  return await db.contract.findMany({
+    where: {
+      status: filter,
+      entityRow: {
+        linkedAccount: {
           OR: [
             {
               providerTenantId: tenantId,
@@ -101,31 +120,17 @@ export async function getContracts(tenantId: string, filter: ContractStatusFilte
           ],
         },
       },
-      include,
-    });
-  }
-  return await db.contract.findMany({
-    where: {
-      status: filter,
-      tenantRelationship: {
-        OR: [
-          {
-            providerTenantId: tenantId,
-          },
-          {
-            clientTenantId: tenantId,
-          },
-        ],
-      },
     },
     include,
   });
 }
 
 export async function createContract(
+  entityId: string,
+  createdByUserId: string,
+  tenantId: string,
+  linkedAccountId: string,
   data: {
-    createdByUserId: string;
-    tenantRelationshipId: string;
     name: string;
     description: string;
     file: string;
@@ -135,7 +140,17 @@ export async function createContract(
   employees: Employee[]
 ) {
   const item = await db.contract.create({
-    data,
+    data: {
+      entityRow: {
+        create: {
+          entityId,
+          createdByUserId,
+          tenantId,
+          linkedAccountId,
+        },
+      },
+      ...data,
+    },
   });
 
   if (item) {
@@ -160,7 +175,7 @@ export async function createContract(
 
     await db.contractActivity.create({
       data: {
-        createdByUserId: data.createdByUserId,
+        createdByUserId,
         contractId: item.id,
         type: ContractActivityType.CREATED,
       },

@@ -1,4 +1,4 @@
-import type { Backend } from "remix-i18next";
+import { Backend } from "remix-i18next";
 
 export class FetchBackend implements Backend {
   private url: URL;

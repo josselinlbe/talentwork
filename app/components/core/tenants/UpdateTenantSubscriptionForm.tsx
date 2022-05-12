@@ -86,7 +86,7 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
   };
   function saveConfirm() {
     const form = new FormData();
-    form.set("type", "update-tenant-subscription");
+    form.set("action", "update-tenant-subscription");
     form.set("subscription-price-id", subscriptionPriceId?.toString() ?? "");
     submit(form, {
       method: "post",

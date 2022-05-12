@@ -26,7 +26,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   const [expanded, setExpanded] = useState<number[]>([]);
 
   useEffect(() => {
-    setMenu(layout === "admin" ? AdminSidebar : AppSidebar(params));
+    setMenu(layout === "admin" ? AdminSidebar : AppSidebar(params, appData.entities));
     menu.forEach((group) => {
       group.items?.forEach((element, index) => {
         if (element.open) {
@@ -38,7 +38,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appData.currentTenant?.id]);
 
   function menuItemIsExpanded(index: number) {
     return expanded.includes(index);
@@ -103,7 +103,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               )}
                               onClick={onSelected}
                             >
-                              {menuItem.icon !== undefined && <SidebarIcon className="h-5 w-5 text-white" icon={menuItem.icon} />}
+                              {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
                               <div>{t(menuItem.title)}</div>
                             </Link>
                           </div>
@@ -117,7 +117,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                             >
                               <div className="flex items-center space-x-4">
                                 <span className="text-slate-200 h-5 w-5 transition ease-in-out">
-                                  {menuItem.icon !== undefined && <SidebarIcon className="h-5 w-5 text-white" icon={menuItem.icon} />}
+                                  {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
                                 </span>
                                 <div>{t(menuItem.title)}</div>
                               </div>
@@ -151,7 +151,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                     >
                                       {subItem.icon !== undefined && (
                                         <span className="mr-1 h-5 w-5 transition ease-in-out">
-                                          <SidebarIcon className="h-5 w-5 text-white" icon={subItem.icon} />
+                                          <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
                                         </span>
                                       )}
                                       {t(subItem.title)}
@@ -197,7 +197,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               )}
                             >
                               <div className="flex items-center space-x-5">
-                                {menuItem.icon !== undefined && <SidebarIcon className="h-5 w-5 text-white" icon={menuItem.icon} />}
+                                {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
                                 <div>{t(menuItem.title)}</div>
                               </div>
                               {menuItem.isDemo && (
@@ -224,7 +224,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               onClick={() => toggleMenuItem(index)}
                             >
                               <div className="flex items-center space-x-5">
-                                {menuItem.icon !== undefined && <SidebarIcon className="h-5 w-5 text-white" icon={menuItem.icon} />}
+                                {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
                                 <div>{t(menuItem.title)}</div>
                               </div>
                               {/*Expanded: "text-gray-400 rotate-90", Collapsed: "text-slate-200" */}
@@ -275,7 +275,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                         !isCurrent(subItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
                                       )}
                                     >
-                                      {subItem.icon !== undefined && <SidebarIcon className="h-5 w-5 text-white" icon={subItem.icon} />}
+                                      {<SidebarIcon className="h-5 w-5 text-white" item={subItem} />}
                                       <div>{t(subItem.title)}</div>
                                     </Link>
                                   );

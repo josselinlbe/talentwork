@@ -1,6 +1,5 @@
 import { BlogPostTag, BlogTag } from "@prisma/client";
 import { getTailwindColor } from "~/utils/shared/ColorUtils";
-import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
   items: (BlogPostTag & { tag: BlogTag })[];

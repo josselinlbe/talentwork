@@ -16,11 +16,13 @@ interface Props {
   min?: number;
   max?: number;
   disabled?: boolean;
+  readOnly?: boolean;
   required?: boolean;
   hint?: ReactNode;
+  step?: string;
 }
 const InputNumber = (
-  { name, title, value, setValue, className, hint, help, disabled = false, required = false, min = 0, max }: Props,
+  { name, title, value, setValue, className, hint, help, disabled = false, readOnly = false, required = false, min = 0, max, step }: Props,
   ref: Ref<RefInputNumber>
 ) => {
   useImperativeHandle(ref, () => ({ input }));
@@ -48,12 +50,14 @@ const InputNumber = (
           min={min}
           max={max}
           value={value}
+          step={step}
           onChange={(e) => (setValue ? setValue(Number(e.currentTarget.value)) : {})}
           disabled={disabled}
+          readOnly={readOnly}
           className={clsx(
             "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
             className,
-            disabled && "bg-gray-100 cursor-not-allowed"
+            (disabled || readOnly) && "bg-gray-100 cursor-not-allowed"
           )}
         />
       </div>

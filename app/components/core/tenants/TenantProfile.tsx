@@ -110,9 +110,9 @@ export default function TenantProfile({ tenant }: Props) {
                     <div className="bg-white shadow sm:rounded-lg">
                       <div className="px-4 py-5 sm:px-6">
                         <h2 id="applicant-information-title" className="text-lg leading-6 font-medium text-gray-900">
-                          {t("app.tenantRelationships.profile.company")}
+                          {t("app.linkedAccounts.profile.company")}
                         </h2>
-                        <p className="mt-1 max-w-2xl text-sm text-gray-500">{t("app.tenantRelationships.profile.general")}</p>
+                        <p className="mt-1 max-w-2xl text-sm text-gray-500">{t("app.linkedAccounts.profile.general")}</p>
                       </div>
                       <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                         <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3">

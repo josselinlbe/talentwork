@@ -1,14 +1,12 @@
-import Features from "~/components/front/Features";
 import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
-import JoinNow from "~/components/front/JoinNow";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { Language } from "remix-i18next";
 import { getUserInfo, UserSession } from "~/utils/session.server";
-import { MetaFunction, LoaderFunction, json } from "remix";
+import { json, LoaderFunction, MetaFunction } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";
+import { Language } from "remix-i18next";
 
 export type IndexLoaderData = {
   title: string;

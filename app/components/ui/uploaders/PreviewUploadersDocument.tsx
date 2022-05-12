@@ -1,4 +1,4 @@
-import type { FileBase64 } from "~/application/dtos/shared/FileBase64";
+import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import UploadDocuments from "./UploadDocument";
 
 export default function PreviewUploadersDocument() {

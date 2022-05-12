@@ -1,6 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "remix";
-import { json } from "remix";
-import { useTranslation } from "react-i18next";
+import { json, LoaderFunction, MetaFunction } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import AllComponentsList from "~/components/ui/AllComponentsList";
 import SidebarNavigation from "~/components/layouts/sidebar/SidebarNavigation";

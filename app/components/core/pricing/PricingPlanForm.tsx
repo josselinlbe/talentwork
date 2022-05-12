@@ -6,7 +6,7 @@ import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/Subscri
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
-import InputCheckbox from "~/components/ui/input/InputCheckbox";
+import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 import InputNumber from "~/components/ui/input/InputNumber";
 import InputText, { RefInputText } from "~/components/ui/input/InputText";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
@@ -106,7 +106,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
 
   function yesRemove() {
     const form = new FormData();
-    form.set("type", "delete-plan");
+    form.set("action", "delete-plan");
     submit(form, {
       method: "post",
     });
@@ -115,7 +115,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
   return (
     <>
       <Form method="post" className="lg:py-2 grid grid-cols-2 gap-4 sm:px-4">
-        <input hidden readOnly name="type" value={item ? "update-plan" : "create-plan"} />
+        <input hidden readOnly name="action" value={item ? "update-plan" : "create-plan"} />
         <div className="col-span-2 max-w-2xl mx-auto">
           <div className="sm:space-y-4 divide-y divide-gray-200">
             <div className="bg-white py-6 px-8 shadow-lg border border-gray-200 space-y-6">
@@ -173,7 +173,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
                   />
                 </div>
                 <div className="sm:col-span-6">
-                  <InputCheckbox
+                  <InputCheckboxInline
                     name="is-public"
                     title={t("models.subscriptionProduct.public")}
                     value={isPublic}

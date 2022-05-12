@@ -39,7 +39,7 @@ async function getMMRStat(lastDays: number) {
 }
 
 async function getActiveUsersStat(lastDays: number) {
-  const { added, total } = await getUserEventsCreatedSince(lastDays);
+  const { added, total } = await getLogsCreatedSince(lastDays);
   const activeUsersStat: Stat = {
     name: "MAU",
     hint: "Monthly active users",
@@ -51,9 +51,9 @@ async function getActiveUsersStat(lastDays: number) {
   return activeUsersStat;
 }
 
-async function getUserEventsCreatedSince(lastDays: number) {
-  const from = DateUtils.daysFromDate(new Date(), lastDays);
-  const added = await db.userEvent.groupBy({
+async function getLogsCreatedSince(lastDays: number) {
+  const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
+  const added = await db.log.groupBy({
     by: ["userId"],
     where: {
       createdAt: {
@@ -61,7 +61,7 @@ async function getUserEventsCreatedSince(lastDays: number) {
       },
     },
   });
-  const total = await db.userEvent.groupBy({
+  const total = await db.log.groupBy({
     by: ["userId"],
   });
 
@@ -72,7 +72,7 @@ async function getUserEventsCreatedSince(lastDays: number) {
 }
 
 async function getTenantsCreatedSince(lastDays: number) {
-  const from = DateUtils.daysFromDate(new Date(), lastDays);
+  const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
   const added = await db.tenant.count({
     where: {
       createdAt: {

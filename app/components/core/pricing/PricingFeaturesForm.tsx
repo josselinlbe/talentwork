@@ -1,7 +1,7 @@
 import { t } from "i18next";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import InputCheck from "~/components/ui/input/InputCheck";
+import InputCheckbox from "~/components/ui/input/InputCheckbox";
 import InputText from "~/components/ui/input/InputText";
 import CollapsibleRow from "~/components/ui/tables/CollapsibleRow";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
@@ -105,7 +105,7 @@ export default function PricingFeaturesForm({ features, setFeatures }: Props) {
                       </div>
 
                       <div className="col-span-3 sm:col-span-1">
-                        <InputCheck
+                        <InputCheckbox
                           name="feature-included"
                           title="Included"
                           value={item.included}

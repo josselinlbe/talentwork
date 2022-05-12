@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
-import type { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import ErrorModal from "~/components/ui/modals/ErrorModal";
-import type { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import SuccessModal from "~/components/ui/modals/SuccessModal";
-import type { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
-import ConfirmModal from "~/components/ui/modals/ConfirmModal";
+import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
+import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
+import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
-import type { ActionFunction, LoaderFunction, MetaFunction} from "remix";
-import { Form, json, redirect, useActionData, useSubmit, useTransition } from "remix";
+import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
 import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
@@ -199,7 +195,7 @@ export default function ProfileRoute() {
   function changedLocale(locale: string) {
     setSelectedLocale(locale);
     const form = new FormData();
-    form.set("type", "setLocale");
+    form.set("action", "setLocale");
     form.set("redirect", location.pathname);
     form.set("lng", locale);
     submit(form, { method: "post", action: "/" });
@@ -214,7 +210,7 @@ export default function ProfileRoute() {
   }
   function confirmDelete() {
     const form = new FormData();
-    form.set("type", "deleteAccount");
+    form.set("action", "deleteAccount");
     submit(form, { method: "post" });
   }
   function loadedImage(image: string | undefined) {
@@ -235,7 +231,7 @@ export default function ProfileRoute() {
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
             <Form method="post">
-              <input hidden type="text" name="type" value="profile" readOnly />
+              <input hidden type="text" name="action" value="profile" readOnly />
               <div className="shadow overflow-hidden sm:rounded-sm">
                 <div className="px-4 py-5 bg-white sm:p-6">
                   <div className="grid grid-cols-6 gap-2">
@@ -375,7 +371,7 @@ export default function ProfileRoute() {
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
             <Form method="post">
-              <input hidden type="text" name="type" value="password" readOnly />
+              <input hidden type="text" name="action" value="password" readOnly />
               <div className="shadow overflow-hidden sm:rounded-sm">
                 <div>
                   <div className="px-4 py-5 bg-white sm:p-6">
@@ -507,7 +503,7 @@ export default function ProfileRoute() {
           </div>
           <div className="mt-12 md:mt-0 md:col-span-2">
             <div>
-              <input hidden type="text" name="type" value="deleteAccount" readOnly />
+              <input hidden type="text" name="action" value="deleteAccount" readOnly />
               <div className="bg-white shadow sm:rounded-sm">
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">{t("settings.danger.deleteYourAccount")}</h3>

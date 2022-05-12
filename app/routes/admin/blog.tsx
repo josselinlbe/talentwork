@@ -1,12 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, Outlet, useLoaderData, useTransition } from "remix";
-import UserEventsTable from "~/components/app/events/UserEventsTable";
+import { json, LoaderFunction, useLoaderData, useTransition } from "remix";
 import PostsTable from "~/components/blog/PostsTable";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import Loading from "~/components/ui/loaders/Loading";
 import { BlogPostWithDetails, getAllBlogPosts } from "~/utils/db/blog.db.server";
-import getMdxPosts from "~/utils/services/blogService";
 
 type LoaderData = {
   items: BlogPostWithDetails[];

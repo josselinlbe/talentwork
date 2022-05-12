@@ -1,13 +1,11 @@
-import type { BlogAuthor, BlogCategory, BlogTag } from "@prisma/client";
+import { BlogAuthor, BlogCategory, BlogTag } from "@prisma/client";
 import { marked } from "marked";
 import { useTranslation } from "react-i18next";
-import type { ActionFunction, LoaderFunction } from "remix";
-import { json, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import PostForm from "~/components/blog/PostForm";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { i18nHelper } from "~/locale/i18n.utils";
-import type { BlogPostWithDetails } from "~/utils/db/blog.db.server";
-import { createBlogPost, getAllAuthors, getAllCategories, getAllTags } from "~/utils/db/blog.db.server";
+import { BlogPostWithDetails, createBlogPost, getAllAuthors, getAllCategories, getAllTags } from "~/utils/db/blog.db.server";
 
 type LoaderData = {
   authors: BlogAuthor[];
@@ -35,9 +33,9 @@ const badRequest = (data: BlogPostActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
   const { t } = await i18nHelper(request);
   const form = await request.formData();
-  const type = form.get("type")?.toString() ?? "";
+  const action = form.get("action")?.toString() ?? "";
   const content = form.get("content")?.toString() ?? "";
-  if (type === "preview") {
+  if (action === "preview") {
     const data: BlogPostActionData = {
       preview: {
         content,
@@ -45,7 +43,7 @@ export const action: ActionFunction = async ({ request }) => {
       },
     };
     return json(data);
-  } else if (type === "create") {
+  } else if (action === "create") {
     const title = form.get("title")?.toString() ?? "";
     const slug = form.get("slug")?.toString() ?? "";
     const description = form.get("description")?.toString() ?? "";
@@ -104,7 +102,7 @@ export default function NewBlog() {
           <h1 className="flex-1 font-bold flex items-center truncate">{t("blog.new")}</h1>
         </div>
       </div>
-      <div className="pt-6 space-y-2 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-6 space-y-2 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <PostForm authors={data.authors} categories={data.categories} tags={data.tags} />
       </div>
     </div>

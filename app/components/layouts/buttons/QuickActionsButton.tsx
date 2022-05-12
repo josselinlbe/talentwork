@@ -69,14 +69,14 @@ export default function QuickActionsButton({ className }: Props) {
                 <>
                   <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2">
                     <Link
-                      to={UrlUtils.currentTenantUrl(params, "settings/tenant-relationships/new")}
+                      to={UrlUtils.currentTenantUrl(params, "settings/linked-accounts/new")}
                       onClick={() => setOpened(false)}
                       className="w-full text-left flex flex-col p-4 hover:bg-gray-50 focus:outline-none"
                     >
                       <div className="flex justify-between">
-                        <p className="font-semibold">{t("app.tenantRelationships.new")}</p>
+                        <p className="font-semibold">{t("app.linkedAccounts.new")}</p>
                       </div>
-                      <p className="text-gray-500 mt-2">{t("app.tenantRelationships.newDescription")}</p>
+                      <p className="text-gray-500 mt-2">{t("app.linkedAccounts.newDescription")}</p>
                     </Link>
                   </li>
                 </>

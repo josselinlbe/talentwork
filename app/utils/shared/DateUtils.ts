@@ -46,7 +46,7 @@ const dateHMS = (value: Date | string | null | undefined): string => {
 };
 
 const daysFromDate = (value: Date, days: number) => {
-  return new Date(new Date().setDate(value.getDate() - days));
+  return new Date(new Date().setDate(value.getDate() + days));
 };
 
 export default {

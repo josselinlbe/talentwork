@@ -1,3 +1,5 @@
+import { Entity } from "@prisma/client";
+import { redirect } from "remix";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
@@ -5,6 +7,7 @@ import { getTenantMember } from "./db/tenants.db.server";
 import { getUser } from "./db/users.db.server";
 import { getTenantUrl } from "./services/urlService";
 import { getUserInfo } from "./session.server";
+import { Params } from "react-router";
 
 export async function requireAdminUser(request: Request) {
   const userInfo = await getUserInfo(request);
@@ -26,9 +29,9 @@ export async function requireOwnerOrAdminRole(request: Request, params: Params) 
   }
 }
 
-export async function requireAuthorization(currentPath: string, currentRole: TenantUserRole, params: Params) {
+export async function requireAuthorization(currentPath: string, currentRole: TenantUserRole, params: Params, entities: Entity[]) {
   let foundItem: SideBarItem | undefined;
-  AppSidebar(params).forEach((f) => {
+  AppSidebar(params, entities).forEach((f) => {
     f.items?.forEach((item) => {
       if (currentPath.includes(item.path)) {
         foundItem = item;

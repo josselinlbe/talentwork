@@ -5,8 +5,10 @@ import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import SidebarIcon from "~/components/layouts/icons/SidebarIcon";
-import { json, LoaderFunction, MetaFunction } from "remix";
+import { json, LoaderFunction, MetaFunction, useParams } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { useAdminData } from "~/utils/data/useAdminData";
+import InputSearch from "~/components/ui/input/InputSearch";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
@@ -21,6 +23,8 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function AdminNavigationRoute() {
   const { t } = useTranslation();
+  const params = useParams();
+  const adminData = useAdminData();
 
   const [items, setItems] = useState<SideBarItem[]>([]);
   const [roles, setRoles] = useState<TenantUserRole[]>([]);
@@ -33,13 +37,14 @@ export default function AdminNavigationRoute() {
         setItems((items) => [...items, item]);
       });
     });
-    AppSidebar.forEach((app) => {
+    AppSidebar(params, adminData.entities).forEach((app) => {
       app.items?.forEach((item) => {
         setItems((items) => [...items, item]);
       });
     });
     const roleKeys = Object.keys(TenantUserRole).filter((key) => !isNaN(Number(key)));
     setRoles(roleKeys.map((f) => Number(f)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function roleName(role: TenantUserRole) {
@@ -61,30 +66,7 @@ export default function AdminNavigationRoute() {
       </div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
         <div className="space-y-2">
-          <div className="flex justify-between">
-            <div className="flex items-center justify-start w-full">
-              <div className="relative flex items-center w-full">
-                <div className="focus-within:z-10 absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  name="buscador"
-                  id="buscador"
-                  className="w-full focus:ring-theme-500 focus:border-theme-500 block rounded-md pl-10 sm:text-sm border-gray-300"
-                  placeholder={t("shared.searchDot")}
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
+          <InputSearch value={searchInput} setValue={setSearchInput} />
           <div>
             <div>
               <div className="flex flex-col">
@@ -133,7 +115,7 @@ export default function AdminNavigationRoute() {
                             return (
                               <tr key={idx}>
                                 <td className="w-10 px-4 py-2 whitespace-nowrap border-l border-t border-b border-gray-200 text-sm">
-                                  {item.icon && <SidebarIcon className="mx-auto h-5 w-5 text-slate-700" icon={item.icon} />}
+                                  {item.icon && <SidebarIcon className="mx-auto h-5 w-5 text-slate-700" item={item} />}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap border-l border-t border-b border-gray-200 text-sm">{t(item.title)}</td>
                                 <td className="px-4 py-2 whitespace-nowrap border-l border-t border-b border-gray-200 text-sm">

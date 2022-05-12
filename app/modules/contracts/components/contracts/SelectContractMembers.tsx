@@ -8,13 +8,13 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { Tenant, TenantUser, User } from "@prisma/client";
-import { TenantRelationshipWithDetailsAndMembers } from "~/utils/db/tenantRelationships.db.server";
+import { LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 import IconSign from "../../icons/IconSign";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useParams } from "react-router";
 
 export interface RefSelectContractMembers {
-  show: (link: TenantRelationshipWithDetailsAndMembers, selected: string[]) => void;
+  show: (link: LinkedAccountWithDetailsAndMembers, selected: string[]) => void;
 }
 
 interface Props {
@@ -35,7 +35,7 @@ const SelectContractMembers = ({ onSelected, onClosed, maxSize = "sm:max-w-lg" }
   const [selected, setSelected] = useState<string[]>([]);
 
   useImperativeHandle(ref, () => ({ show }));
-  function show(link: TenantRelationshipWithDetailsAndMembers, selected: string[]) {
+  function show(link: LinkedAccountWithDetailsAndMembers, selected: string[]) {
     setSelected(selected);
     setShowing(true);
 

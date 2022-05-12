@@ -8,7 +8,7 @@ import { SubscriptionProductDto } from "~/application/dtos/subscriptions/Subscri
 import { deletePlan, updatePlan } from "~/utils/services/pricingService";
 import PricingPlanForm from "~/components/core/pricing/PricingPlanForm";
 import { getAllSubscriptionProducts, getSubscriptionProduct } from "~/utils/db/subscriptionProducts.db.server";
-import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
+import { createAdminLog } from "~/utils/db/logs.db.server";
 
 type LoaderData = {
   title: string;
@@ -41,8 +41,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
 
   const form = await request.formData();
-  const type = form.get("type")?.toString();
-  if (type === "delete-plan") {
+  const action = form.get("action")?.toString();
+  if (action === "delete-plan") {
     const item = await getSubscriptionProduct(params.id ?? "");
     if (!item) {
       return badRequest({ error: "Pricing plan not found" });
@@ -53,7 +53,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     } catch (error: any) {
       return badRequest({ error: error.message });
     }
-  } else if (type === "update-plan") {
+  } else if (action === "update-plan") {
     const tier = Number(form.get("tier"));
     const title = form.get("title")?.toString();
     const description = form.get("description")?.toString() ?? "";
@@ -88,7 +88,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     try {
       await updatePlan(plan, features);
-      await createAdminUserEvent(request, "Updated pricing plan", plan.translatedTitle ?? plan.title);
+      await createAdminLog(request, "Updated pricing plan", plan.translatedTitle ?? plan.title);
 
       return redirect("/admin/setup/pricing");
     } catch (e: any) {

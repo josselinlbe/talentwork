@@ -9,7 +9,7 @@ export default function DarkModeToggle({ className }: { className: string }) {
 
   const toggle = () => {
     const form = new FormData();
-    form.set("type", "toggleLightOrDarkMode");
+    form.set("action", "toggleLightOrDarkMode");
     form.set("redirect", location.pathname);
     submit(form, { method: "post", action: "/" });
   };

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SelectContractMembers, { RefSelectContractMembers } from "~/modules/contracts/components/contracts/SelectContractMembers";
-import TenantRelationshipSelector, { RefTenantRelationshipSelector } from "~/components/app/tenantRelationships/TenantRelationshipSelector";
+import LinkedAccountSelector, { RefLinkedAccountSelector } from "~/components/app/linkedAccounts/LinkedAccountSelector";
 import { AddContractMemberDto } from "~/modules/contracts/dtos/AddContractMemberDto";
 import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
@@ -15,7 +15,7 @@ import { updateItem } from "~/utils/shared/ObjectUtils";
 import PdfPreview from "~/components/ui/pdf/PdfViewer";
 import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit, useTransition } from "remix";
-import { getTenantRelationship, getLinksWithMembers, TenantRelationshipWithDetailsAndMembers } from "~/utils/db/tenantRelationships.db.server";
+import { getLinkedAccount, getLinksWithMembers, LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import { Employee } from "@prisma/client";
@@ -32,8 +32,8 @@ import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
-  links: TenantRelationshipWithDetailsAndMembers[];
-  preselectLink: TenantRelationshipWithDetailsAndMembers | undefined;
+  links: LinkedAccountWithDetailsAndMembers[];
+  preselectLink: LinkedAccountWithDetailsAndMembers | undefined;
   employees: Employee[];
   monthlyContractsCount: number;
 };
@@ -43,7 +43,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
   const url = new URL(request.url);
   const preselectLinkIdQueryParam = url.searchParams.get("l");
-  let preselectLink: TenantRelationshipWithDetailsAndMembers | undefined;
+  let preselectLink: LinkedAccountWithDetailsAndMembers | undefined;
   const links = await getLinksWithMembers(tenantUrl.tenantId);
   if (preselectLinkIdQueryParam) {
     preselectLink = links.find((f) => f.id === preselectLinkIdQueryParam);
@@ -68,7 +68,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
 
   const form = await request.formData();
-  const tenantRelationshipId = form.get("tenant-relationship-id")?.toString();
+  const linkedAccountId = form.get("linked-account-id")?.toString();
   const name = form.get("name")?.toString();
   const description = form.get("description")?.toString();
   const file = form.get("contract-file")?.toString();
@@ -85,21 +85,21 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: t("app.contracts.errors.descriptionRequired") });
   } else if (!file) {
     return badRequest({ error: t("app.contracts.errors.fileRequired") });
-  } else if (!tenantRelationshipId) {
-    return badRequest({ error: t("app.contracts.errors.tenantRelationshipRequired") });
+  } else if (!linkedAccountId) {
+    return badRequest({ error: t("app.contracts.errors.linkedAccountRequired") });
   } else if (!members || members.filter((f) => f.role === ContractMemberRole.SIGNATORY).length < 2) {
     return badRequest({ error: t("app.contracts.errors.atLeastNSignatories") });
   }
 
-  const tenantRelationship = await getTenantRelationship(tenantRelationshipId);
-  if (!tenantRelationship) {
+  const linkedAccount = await getLinkedAccount(linkedAccountId);
+  if (!linkedAccount) {
     return badRequest({ error: "Invalid link" });
   }
 
   const createdContract = await createContract(
     {
       createdByUserId: userInfo.userId,
-      tenantRelationshipId,
+      linkedAccountId,
       name,
       description,
       file,
@@ -139,18 +139,18 @@ export default function NewContractRoute() {
   const errorModal = useRef<RefErrorModal>(null);
   const selectEmployees = useRef<RefSelectEmployees>(null);
   const selectContractMembers = useRef<RefSelectContractMembers>(null);
-  const tenantRelationshipSelector = useRef<RefTenantRelationshipSelector>(null);
+  const linkedAccountSelector = useRef<RefLinkedAccountSelector>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [link, setLink] = useState<TenantRelationshipWithDetailsAndMembers | null>(null);
+  const [link, setLink] = useState<LinkedAccountWithDetailsAndMembers | null>(null);
   const [contractFile, setContractFile] = useState("");
   const [members, setMembers] = useState<AddContractMemberDto[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
 
   useEffect(() => {
     if (data.preselectLink) {
-      tenantRelationshipSelector.current?.select(data.preselectLink);
+      linkedAccountSelector.current?.select(data.preselectLink);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -186,7 +186,7 @@ export default function NewContractRoute() {
   }
   function save() {
     const form = new FormData();
-    form.set("tenant-relationship-id", link?.id ?? "");
+    form.set("linked-account-id", link?.id ?? "");
     form.set("name", name);
     form.set("description", description);
     form.set("contract-file", contractFile);
@@ -210,7 +210,7 @@ export default function NewContractRoute() {
       }
     }
   }
-  function selectedLink(id: string, _link: TenantRelationshipWithDetailsAndMembers) {
+  function selectedLink(id: string, _link: LinkedAccountWithDetailsAndMembers) {
     setLink(_link);
     // nextTick(() => {
     inputName.current?.focus();
@@ -280,9 +280,9 @@ export default function NewContractRoute() {
                       <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                         <div className="sm:col-span-6">
                           <label htmlFor="link" className="block text-xs font-medium text-gray-700 truncate">
-                            {t("models.tenantRelationship.object")}
+                            {t("models.linkedAccount.object")}
                           </label>
-                          <TenantRelationshipSelector ref={tenantRelationshipSelector} className="mt-1 w-full" onSelected={selectedLink} items={data.links} />
+                          <LinkedAccountSelector ref={linkedAccountSelector} className="mt-1 w-full" onSelected={selectedLink} items={data.links} />
                         </div>
 
                         <div className="sm:col-span-6">

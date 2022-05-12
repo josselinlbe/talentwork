@@ -22,7 +22,7 @@ export default function LocaleSelector({ className, btnClassName, showFlags }: P
 
   function select(value: string) {
     const form = new FormData();
-    form.set("type", "setLocale");
+    form.set("action", "setLocale");
     form.set("redirect", location.pathname);
     form.set("lng", value);
     submit(form, { method: "post", action: "/" });

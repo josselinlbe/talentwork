@@ -1,8 +1,7 @@
-import { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form, useActionData, useNavigate, useSubmit, useTransition } from "remix";
 import InputText, { RefInputText } from "../ui/input/InputText";
 import { useTranslation } from "react-i18next";
-import type { BlogPostWithDetails } from "~/utils/db/blog.db.server";
 import InputDate from "../ui/input/InputDate";
 import InputSelector from "../ui/input/InputSelector";
 import { BlogAuthor, BlogCategory, BlogTag } from "@prisma/client";
@@ -15,12 +14,12 @@ import ButtonSecondary from "../ui/buttons/ButtonSecondary";
 import ButtonTertiary from "../ui/buttons/ButtonTertiary";
 import Modal from "../ui/modals/Modal";
 import { BlogPostActionData } from "~/routes/admin/blog.new";
-import UploadImage from "../ui/uploaders/UploadImage";
 import UploadDocument from "../ui/uploaders/UploadDocument";
 import ErrorModal, { RefErrorModal } from "../ui/modals/ErrorModal";
-import InputCheck from "../ui/input/InputCheck";
+import InputCheckbox from "../ui/input/InputCheckbox";
 import InputGroup from "../ui/forms/InputGroup";
 import { marked } from "marked";
+import { BlogPostWithDetails } from "~/utils/db/blog.db.server";
 
 interface Props {
   item?: BlogPostWithDetails | null;
@@ -98,7 +97,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
 
   function yesRemove() {
     const form = new FormData();
-    form.set("type", "delete");
+    form.set("action", "delete");
     submit(form, {
       method: "post",
     });
@@ -115,7 +114,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
   //     return;
   //   }
   //   const form = new FormData();
-  //   form.set("type", !item ? "create" : "edit");
+  //   form.set("action", !item ? "create" : "edit");
   //   form.set("title", title);
   //   form.set("slug", slug);
   //   form.set("author", author ?? "");
@@ -133,7 +132,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
 
   return (
     <Form method="post" className="space-y-6">
-      <input type="hidden" readOnly name="type" value={item ? "edit" : "create"} />
+      <input type="hidden" readOnly name="action" value={item ? "edit" : "create"} />
       <InputGroup title="SEO">
         <div className="grid grid-cols-12 gap-3">
           <InputText ref={inputTitle} className="col-span-12" name="title" title={t("models.post.title")} value={title} setValue={setTitle} required />
@@ -236,7 +235,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
             setValue={setReadingTime}
             maxLength={10}
           />
-          <InputCheck className="col-span-6 md:col-span-4" name="published" title={t("models.post.published")} value={published} setValue={setPublished} />
+          <InputCheckbox className="col-span-6 md:col-span-4" name="published" title={t("models.post.published")} value={published} setValue={setPublished} />
         </div>
       </InputGroup>
 
@@ -258,7 +257,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
           />
         </div>
       </InputGroup>
-      <div className="py-5 flex justify-between space-x-2">
+      <div className="flex justify-between space-x-2">
         <div>
           {item && (
             <button

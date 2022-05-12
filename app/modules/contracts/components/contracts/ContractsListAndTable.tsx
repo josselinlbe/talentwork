@@ -1,17 +1,16 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { Link, useNavigate, useParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
-import { getContracts } from "~/modules/contracts/db/contracts.db.server";
 import { useAppData } from "~/utils/data/useAppData";
-import { Contract } from "@prisma/client";
 import IconContractClock from "../../icons/IconContractClock";
 import IconContractArchived from "../../icons/IconContractArchived";
 import IconContractCheck from "../../icons/IconContractCheck";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useParams } from "remix";
+import { Contract } from "@prisma/client";
+import { getContracts } from "../../db/contracts.db.server";
 
 interface Props {
   items: Awaited<ReturnType<typeof getContracts>>;
@@ -53,7 +52,7 @@ export default function ContractsListAndTable({ items }: Props) {
       setSortByColumn(column);
     }
   }
-  function isCurrentTenant(id: string) {
+  function isCurrentTenant(id: string | undefined) {
     return appData.currentTenant?.id === id;
   }
   function dateMonthName(value: Date | undefined) {
@@ -123,12 +122,16 @@ export default function ContractsListAndTable({ items }: Props) {
                                   <div>
                                     <div className="flex items-end justify-between">
                                       <div className="text-sm truncate font-bold text-gray-900 flex-grow">{contract.name}</div>
-                                      <div>{contract.createdAt && <span className="text-xs text-gray-600 truncate">{dateDM(contract.createdAt)}</span>}</div>
+                                      <div>
+                                        {contract.entityRow.createdAt && (
+                                          <span className="text-xs text-gray-600 truncate">{dateDM(contract.entityRow.createdAt)}</span>
+                                        )}
+                                      </div>
                                     </div>
                                     <div className="mt-2 flex items-center text-sm text-gray-500 space-x-1">
                                       <div className="truncate">
-                                        {contract.tenantRelationship.providerTenant.name}{" "}
-                                        {isCurrentTenant(contract.tenantRelationship.providerTenantId) && (
+                                        {contract.entityRow.linkedAccount?.providerTenant.name}{" "}
+                                        {isCurrentTenant(contract.entityRow.linkedAccount?.providerTenantId) && (
                                           <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                         )}
                                       </div>
@@ -140,8 +143,8 @@ export default function ContractsListAndTable({ items }: Props) {
                                         />
                                       </svg>
                                       <div className="truncate">
-                                        {contract.tenantRelationship.clientTenant.name}{" "}
-                                        {isCurrentTenant(contract.tenantRelationship.clientTenant.name) && (
+                                        {contract.entityRow.linkedAccount?.clientTenant.name}{" "}
+                                        {isCurrentTenant(contract.entityRow.linkedAccount?.clientTenant.name) && (
                                           <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                         )}
                                       </div>
@@ -149,7 +152,9 @@ export default function ContractsListAndTable({ items }: Props) {
                                   </div>
                                   <div className="hidden md:block">
                                     <div>
-                                      <p className="text-sm text-gray-900">{contract.createdAt && <time>{dateMonthName(contract.createdAt)}</time>}</p>
+                                      <p className="text-sm text-gray-900">
+                                        {contract.entityRow.createdAt && <time>{dateMonthName(contract.entityRow.createdAt)}</time>}
+                                      </p>
                                       <p className="mt-2 flex items-center text-sm text-gray-500">
                                         {/*Heroicon name: solid/check-circle */}
                                         <svg
@@ -265,16 +270,16 @@ export default function ContractsListAndTable({ items }: Props) {
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-700">
-                                      {contract.tenantRelationship.providerTenant.name}{" "}
-                                      {isCurrentTenant(contract.tenantRelationship.providerTenant.name) && (
+                                      {contract.entityRow.linkedAccount?.providerTenant.name}{" "}
+                                      {isCurrentTenant(contract.entityRow.linkedAccount?.providerTenant.name) && (
                                         <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                       )}
                                     </div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-700">
-                                      {contract.tenantRelationship.clientTenant.name}{" "}
-                                      {isCurrentTenant(contract.tenantRelationship.clientTenant.name) && (
+                                      {contract.entityRow.linkedAccount?.clientTenant.name}{" "}
+                                      {isCurrentTenant(contract.entityRow.linkedAccount?.clientTenant.name) && (
                                         <span className="text-theme-600 font-normal lowercase">({t("shared.you")})</span>
                                       )}
                                     </div>
@@ -314,8 +319,12 @@ export default function ContractsListAndTable({ items }: Props) {
                                     )}
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-xs text-gray-600">{contract.createdAt && <span>{dateDM(contract.createdAt)}</span>}</div>
-                                    <div className="text-xs text-gray-700">{contract.createdByUser && <span>{contract.createdByUser.email}</span>}</div>
+                                    <div className="text-xs text-gray-600">
+                                      {contract.entityRow.createdAt && <span>{dateDM(contract.entityRow.createdAt)}</span>}
+                                    </div>
+                                    <div className="text-xs text-gray-700">
+                                      {contract.entityRow.createdByUser && <span>{contract.entityRow.createdByUser.email}</span>}
+                                    </div>
                                   </td>
                                 </tr>
                               </tbody>

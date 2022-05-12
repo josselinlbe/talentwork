@@ -32,8 +32,8 @@ export async function getLinksStat(tenantId: string, lastDays: number) {
 }
 
 async function getLinksCreatedSince(tenantId: string, lastDays: number) {
-  const from = DateUtils.daysFromDate(new Date(), lastDays);
-  const added = await db.tenantRelationship.count({
+  const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
+  const added = await db.linkedAccount.count({
     where: {
       ...linkCondition(tenantId),
       createdAt: {
@@ -41,7 +41,7 @@ async function getLinksCreatedSince(tenantId: string, lastDays: number) {
       },
     },
   });
-  const total = await db.tenantRelationship.count({
+  const total = await db.linkedAccount.count({
     where: {
       ...linkCondition(tenantId),
     },
@@ -69,21 +69,25 @@ export async function getContractsStat(tenantId: string, lastDays: number) {
 }
 
 async function getContractsCreatedSince(tenantId: string, lastDays: number) {
-  const from = DateUtils.daysFromDate(new Date(), lastDays);
+  const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
   const added = await db.contract.count({
     where: {
-      tenantRelationship: {
-        ...linkCondition(tenantId),
-      },
-      createdAt: {
-        gte: from,
+      entityRow: {
+        createdAt: {
+          gte: from,
+        },
+        linkedAccount: {
+          ...linkCondition(tenantId),
+        },
       },
     },
   });
   const total = await db.contract.count({
     where: {
-      tenantRelationship: {
-        ...linkCondition(tenantId),
+      entityRow: {
+        linkedAccount: {
+          ...linkCondition(tenantId),
+        },
       },
     },
   });
@@ -110,18 +114,22 @@ export async function getEmployeesStat(tenantId: string, lastDays: number) {
 }
 
 async function getEmployeesCreatedSince(tenantId: string, lastDays: number) {
-  const from = DateUtils.daysFromDate(new Date(), lastDays);
+  const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
   const added = await db.employee.count({
     where: {
-      tenantId,
-      createdAt: {
-        gte: from,
+      entityRow: {
+        tenantId,
+        createdAt: {
+          gte: from,
+        },
       },
     },
   });
   const total = await db.employee.count({
     where: {
-      tenantId,
+      entityRow: {
+        tenantId,
+      },
     },
   });
 

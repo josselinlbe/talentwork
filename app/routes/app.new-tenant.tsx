@@ -16,7 +16,7 @@ type LoaderData = {
   i18n: Record<string, Language>;
 };
 
-export let loader: LoaderFunction = async ({ request, params }) => {
+export let loader: LoaderFunction = async ({ request }) => {
   let { translations } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
   const myTenants = await getMyTenants(userInfo.userId);

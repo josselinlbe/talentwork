@@ -1,12 +1,12 @@
-import type { ActionFunction, LoaderFunction } from "remix";
-import { createUserEventLogout } from "~/utils/db/userEvents.db.server";
+import { ActionFunction, LoaderFunction } from "remix";
+import { createLogLogout } from "~/utils/db/logs.db.server";
 
 import { getUserInfo, logout } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
   if (userInfo.userId) {
-    createUserEventLogout(request, userInfo.userId);
+    createLogLogout(request, userInfo.userId);
   }
   return logout(request);
 };

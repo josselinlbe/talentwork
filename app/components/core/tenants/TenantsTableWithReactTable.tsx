@@ -1,14 +1,12 @@
-import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@remix-run/react";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
-import type { TenantWithDetails } from "~/utils/db/tenants.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
-import type { CellValue, Column } from "react-table";
-import { useSortBy, useTable } from "react-table";
-import React from "react";
+import { CellValue, useSortBy, useTable } from "react-table";
+import React, { ReactNode } from "react";
 import DownArrow from "~/components/icons/DownArrow";
 import UpArrow from "~/components/icons/UpArrow";
+import { TenantWithDetails } from "~/utils/db/tenants.db.server";
 
 interface Props {
   items: TenantWithDetails[];

@@ -36,7 +36,7 @@ import {
   updateTenantStripeSubscriptionId,
 } from "~/utils/db/tenantSubscriptions.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
-import { createUserEvent } from "~/utils/db/userEvents.db.server";
+import { createLog } from "~/utils/db/logs.db.server";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -90,7 +90,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
           subscriptionPriceId: price?.id ?? "",
           stripeSubscriptionId: session.subscription.toString(),
         });
-        await createUserEvent(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
+        await createLog(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
       }
     } catch (e) {}
@@ -132,7 +132,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const tenantSubscription = await getTenantSubscription(tenantUrl.tenantId);
   const form = await request.formData();
 
-  const type = form.get("type")?.toString();
+  const action = form.get("action")?.toString();
   const priceId = form.get("price-id")?.toString();
   const price = await getSubscriptionPrice(priceId ?? "");
 
@@ -141,7 +141,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       error: "Invalid stripe customer",
     });
   }
-  if (type === "subscribe") {
+  if (action === "subscribe") {
     if (!priceId || !price) {
       return badRequest({
         error: "Invalid price: " + priceId,
@@ -154,7 +154,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       });
     }
     return redirect(session.url);
-  } else if (type === "cancel") {
+  } else if (action === "cancel") {
     if (!tenantSubscription.stripeSubscriptionId) {
       return badRequest({
         error: "Not subscribed",
@@ -207,7 +207,7 @@ export default function SubscriptionRoute() {
   }
   function confirmCancel() {
     const form = new FormData();
-    form.set("type", "cancel");
+    form.set("action", "cancel");
     submit(form, {
       method: "post",
     });

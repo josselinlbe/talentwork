@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { Link } from "@remix-run/react";
 import { json, LoaderFunction, redirect, useLoaderData } from "remix";
-import { Language } from "remix-i18next";
 import Logo from "~/components/front/Logo";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import { i18nHelper } from "~/locale/i18n.utils";
@@ -11,6 +10,7 @@ import UserUtils from "~/utils/app/UserUtils";
 import { getMyTenants, MyTenant } from "~/utils/db/tenants.db.server";
 import { getUser } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
+import { Language } from "remix-i18next";
 
 type LoaderData = {
   myTenants: MyTenant[];

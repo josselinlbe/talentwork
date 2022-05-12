@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
-import { Fragment, useState } from "react";
+import { ReactNode, Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import Logo from "~/components/front/Logo";
 import clsx from "clsx";
 import LogoLight from "~/assets/img/logo-light.png";
 import { Link } from "@remix-run/react";

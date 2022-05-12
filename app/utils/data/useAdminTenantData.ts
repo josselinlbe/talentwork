@@ -1,6 +1,6 @@
+import { Tenant, TenantUser } from "@prisma/client";
 import { json, useMatches } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { Tenant, TenantUser } from "@prisma/client";
 import { getTenantWithUsers } from "../db/tenants.db.server";
 
 export type AdminTenantLoaderData = {

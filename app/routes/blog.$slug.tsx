@@ -2,8 +2,6 @@ import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
-import { Link } from "@remix-run/react";
-import { Language } from "remix-i18next";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useLoaderData, useSubmit } from "remix";
 import { marked } from "marked";
 import DateUtils from "~/utils/shared/DateUtils";
@@ -12,10 +10,10 @@ import { getUserInfo } from "~/utils/session.server";
 import { getUser } from "~/utils/db/users.db.server";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-import type { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
-import ConfirmModal from "~/components/ui/modals/ConfirmModal";
+import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { useRef } from "react";
 import PostTags from "~/components/blog/PostTags";
+import { Language } from "remix-i18next";
 
 type LoaderData = {
   title: string;
@@ -58,8 +56,8 @@ const badRequest = (data: BlogPostActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
   const form = await request.formData();
-  const type = form.get("type")?.toString() ?? "";
-  if (type === "publish") {
+  const action = form.get("action")?.toString() ?? "";
+  if (action === "publish") {
     const post = await getBlogPost(params.slug ?? "");
     if (post) {
       await updateBlogPostPublished(post.id ?? "", true);
@@ -93,7 +91,7 @@ export default function BlogPostRoute() {
 
   function confirmedPublish() {
     const form = new FormData();
-    form.set("type", "publish");
+    form.set("action", "publish");
     submit(form, {
       method: "post",
     });

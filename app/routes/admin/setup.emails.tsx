@@ -12,7 +12,7 @@ import { createEmailTemplates, deleteEmailTemplate, getEmailTemplates } from "~/
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
+import { createAdminLog } from "~/utils/db/logs.db.server";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 type LoaderData = {
@@ -48,8 +48,8 @@ export const action: ActionFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
 
   const form = await request.formData();
-  const type = form.get("type")?.toString();
-  if (type === "create-all-email-templates") {
+  const action = form.get("action")?.toString();
+  if (action === "create-all-email-templates") {
     const items = await getPostmarkTemplates();
     if (items.length > 0) {
       return redirect("/admin/setup/emails");
@@ -57,7 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
     try {
       const templates = await emailTemplates();
       await createEmailTemplates(templates);
-      await createAdminUserEvent(request, "Created email templates", templates.map((f) => f.alias).join(", "));
+      await createAdminLog(request, "Created email templates", templates.map((f) => f.alias).join(", "));
 
       return success({
         success: "All templates created",
@@ -66,7 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
-  } else if (type === "create-email-template") {
+  } else if (action === "create-email-template") {
     try {
       const alias = form.get("alias")?.toString();
       if (!alias) {
@@ -75,7 +75,7 @@ export const action: ActionFunction = async ({ request }) => {
 
       const templates = await getEmailTemplates();
       await createEmailTemplates(templates, alias);
-      await createAdminUserEvent(request, "Created email template", alias);
+      await createAdminLog(request, "Created email template", alias);
 
       return success({
         success: "Template created",
@@ -84,14 +84,14 @@ export const action: ActionFunction = async ({ request }) => {
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
-  } else if (type === "delete-postmark-email") {
+  } else if (action === "delete-postmark-email") {
     try {
       const alias = form.get("alias")?.toString();
       if (!alias) {
         return badRequest({ error: `Alias ${alias} not found` });
       }
       await deleteEmailTemplate(alias);
-      await createAdminUserEvent(request, "Deleted email template", alias);
+      await createAdminLog(request, "Deleted email template", alias);
 
       return success({
         success: "Template deleted",
@@ -100,7 +100,7 @@ export const action: ActionFunction = async ({ request }) => {
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
-  } else if (type === "send-test") {
+  } else if (action === "send-test") {
     const email = form.get("email")?.toString();
     const alias = form.get("alias")?.toString();
     if (!email) {
@@ -178,7 +178,7 @@ export default function EmailsRoute() {
       return;
     }
     const form = new FormData();
-    form.set("type", "send-test");
+    form.set("action", "send-test");
     form.set("alias", item.alias);
     form.set("email", email);
     submit(form, {
@@ -187,14 +187,14 @@ export default function EmailsRoute() {
   }
   function createAllEmailTemplates() {
     const form = new FormData();
-    form.set("type", "create-all-email-templates");
+    form.set("action", "create-all-email-templates");
     submit(form, {
       method: "post",
     });
   }
   function createTemplate(item: EmailTemplate): void {
     const form = new FormData();
-    form.set("type", "create-email-template");
+    form.set("action", "create-email-template");
     form.set("alias", item.alias);
     submit(form, {
       method: "post",
@@ -202,7 +202,7 @@ export default function EmailsRoute() {
   }
   function deleteTemplate(item: EmailTemplate): void {
     const form = new FormData();
-    form.set("type", "delete-postmark-email");
+    form.set("action", "delete-postmark-email");
     form.set("alias", item.alias);
     submit(form, {
       method: "post",

@@ -3,6 +3,6 @@ module.exports = {
   rules: {
     "no-console": "warn",
     "import/first": "off",
-    "no-useless-escape": "off",
+    "@typescript-eslint/consistent-type-imports": "off",
   },
 };

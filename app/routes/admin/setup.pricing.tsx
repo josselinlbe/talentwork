@@ -12,7 +12,7 @@ import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
+import { createAdminLog } from "~/utils/db/logs.db.server";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import clsx from "clsx";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
@@ -49,8 +49,8 @@ export const action: ActionFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
 
   const form = await request.formData();
-  const type = form.get("type")?.toString();
-  if (type === "create-all-plans") {
+  const action = form.get("action")?.toString();
+  if (action === "create-all-plans") {
     const items = await getAllSubscriptionProducts();
     if (items.length > 0) {
       return json({
@@ -64,7 +64,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     try {
       await createPlans(plans);
-      await createAdminUserEvent(request, "Created pricing plans", plans.map((f) => t(f.title)).join(", "));
+      await createAdminLog(request, "Created pricing plans", plans.map((f) => t(f.title)).join(", "));
 
       await new Promise((r) => setTimeout(r, 3000));
 
@@ -74,7 +74,7 @@ export const action: ActionFunction = async ({ request }) => {
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
-  } else if (type === "sync-plan-with-payment-provider") {
+  } else if (action === "sync-plan-with-payment-provider") {
     const id = form.get("id")?.toString() ?? "";
     const item = await getSubscriptionProduct(id);
     if (!item) {
@@ -132,14 +132,14 @@ export default function AdminPricingRoute() {
 
   function createAllPlans() {
     const form = new FormData();
-    form.set("type", "create-all-plans");
+    form.set("action", "create-all-plans");
     submit(form, {
       method: "post",
     });
   }
   function syncPlanWithPaymentProvider(item: SubscriptionProductDto) {
     const form = new FormData();
-    form.set("type", "sync-plan-with-payment-provider");
+    form.set("action", "sync-plan-with-payment-provider");
     form.set("id", item.id?.toString() ?? "");
     submit(form, {
       method: "post",
@@ -147,7 +147,7 @@ export default function AdminPricingRoute() {
   }
   // function createPlan(item: SubscriptionProductDto) {
   //   const form = new FormData();
-  //   form.set("type", "create-plan");
+  //   form.set("action", "create-plan");
   //   form.set("tier", item.tier);
   //   form.set("tier", item.description);
   //   employees.forEach((item) => {

@@ -1,11 +1,9 @@
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
-import type { LoaderFunction, MetaFunction } from "remix";
-import { json, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
-import type { ChangelogItem } from "~/components/front/ChangelogIssues";
-import ChangelogIssues from "~/components/front/ChangelogIssues";
+import ChangelogIssues, { ChangelogItem } from "~/components/front/ChangelogIssues";
 import UrlUtils from "~/utils/app/UrlUtils";
 
 type LoaderData = {

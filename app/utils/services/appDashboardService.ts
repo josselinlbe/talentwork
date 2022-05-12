@@ -1,4 +1,4 @@
-import type { Stat } from "~/application/dtos/stats/Stat";
+import { Stat } from "~/application/dtos/stats/Stat";
 import { getContractsStat, getEmployeesStat, getLinksStat } from "~/modules/contracts/dashboard/contractsDashboardService";
 
 export async function getAppDashboardStats(tenantId: string, lastDays: number): Promise<Stat[]> {

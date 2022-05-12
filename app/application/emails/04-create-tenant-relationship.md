@@ -1,4 +1,4 @@
-alias: `create-tenant-relationship`
+alias: `create-linked-account`
 
 subject: `{{ invite_sender_name }} has invited you to link {{ tenant_creator }}`
 

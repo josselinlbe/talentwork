@@ -1,4 +1,4 @@
-alias: `tenant-relationship-rejected`
+alias: `linked-account-rejected`
 
 subject: `{{ email }} has rejected your invitation`
 

@@ -36,6 +36,7 @@
     "reload": "Reload",
     "remove": "Remove",
     "edit": "Edit",
+    "overview": "Overview",
     "upload": "Upload",
     "avatar": "Avatar",
     "icon": "Icon",
@@ -50,6 +51,9 @@
     "creating": "Creating",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "confirmSubmit": "Submit?",
+    "confirmCreate": "Create {{0}}?",
+    "confirmUpdate": "Update {{0}}?",
     "yes": "Yes",
     "no": "No",
     "in": "in",
@@ -59,7 +63,7 @@
     "updateSubscriptionTo": "Update subscription to {{0}}?",
     "notFound": "Not found",
     "invite": "Invite",
-    "invalidInvitation": "Invalid invitation account relationship",
+    "invalidInvitation": "Invalid invitation account link",
     "download": "Download",
     "loading": "Loading",
     "processing": "Processing",
@@ -109,7 +113,10 @@
     "max": "Max",
     "monthly": "Monthly",
     "sync": "Sync",
-    "invalid": "Invalid"
+    "invalid": "Invalid",
+    "noRecords": "There are no records",
+    "select": "Select",
+    "undefined": "Undefined"
   },
   "front": {
     "navbar": {
@@ -470,7 +477,7 @@
       "admin": "Admin",
       "dashboard": "Dashboard",
       "settings": "Settings",
-      "events": "Events",
+      "logs": "Logs",
       "setup": "Set up"
     },
     "subscription": {
@@ -484,7 +491,7 @@
       },
       "errors": {
         "limitReached": "Limit reached",
-        "limitReachedTenantRelationships": "You have reached the account relationships limit ({{0}}), upgrade your subscription.",
+        "limitReachedLinkedAccounts": "You have reached the linked accounts limit ({{0}}), upgrade your subscription.",
         "limitReachedUsers": "You have reached the members limit, upgrade your subscription.",
         "limitReachedContracts": "You have reached the contracts limit ({{0}}), upgrade your subscription."
       }
@@ -493,7 +500,7 @@
       "selectAtLeastOne": "Select at least one user",
       "select": "Select users",
       "empty": "There are no users",
-      "events": {
+      "logs": {
         "empty": "There are no user events"
       }
     },
@@ -557,7 +564,7 @@
         "nameRequired": "Name required.",
         "descriptionRequired": "Description required.",
         "fileRequired": "File required.",
-        "tenantRelationshipRequired": "Select a account relationship (client or provider).",
+        "linkedAccountRequired": "Select a linked account (client or provider).",
         "atLeastNSignatories": "Add at least 2 signatories."
       }
     },
@@ -587,8 +594,8 @@
         "notDefined": "There are no employees"
       }
     },
-    "tenantRelationships": {
-      "my": "Account Relationships",
+    "linkedAccounts": {
+      "my": "Linked Accounts",
       "profile": {
         "title": "Profile",
         "company": "Company profile",
@@ -604,20 +611,20 @@
         "empty": "No pending invitations"
       },
       "rejected": {},
-      "empty": "You don't have any account relationships",
+      "empty": "You don't have any linked accounts",
       "imTheProvider": "I'm the provider",
       "newProvider": "New provider",
       "newClient": "New client",
-      "new": "New relationship",
+      "new": "New account link",
       "newDescription": "Link with another organization to share contracts with them",
       "link": "Link with another account",
       "invited": "You have invited {{0}} to join as {{1}} on your company {{2}}.",
-      "thereAreNo": "No active account relationships",
+      "thereAreNo": "No active linked accounts",
       "accountFound": "Account found",
       "accountNotFound": "Account not found",
       "invitation": {
         "toBe": "Invitation to be a",
-        "hasInvitedYou": "has invited you to create a account relationship between their organization",
+        "hasInvitedYou": "has invited you to create a account link between their organization",
         "andYourCompany": "and your organization",
         "reasonAsProvider": "to share contracts",
         "reasonAsClient": "to share contracts",
@@ -633,12 +640,12 @@
         "cannotInviteSelf": "You cannot invite yourself",
         "cannotInviteCurrentTenant": "You cannot invite the current organization",
         "inviteOwnersOrAdmins": "You can only invite owners or admins",
-        "existing": "There's an existing relationship with this organization"
+        "existing": "There's an existing link with this organization"
       },
       "actions": {
         "selectOne": "Select a client or provider",
-        "new": "New account relationship",
-        "edit": "Edit account relationship"
+        "new": "New account link",
+        "edit": "Edit account link"
       }
     },
     "providers": {
@@ -680,7 +687,7 @@
         "isTrial": "Is trial",
         "status": "Status",
         "members": "Members",
-        "tenantRelationships": "Account relationships",
+        "linkedAccounts": "Linked accounts",
         "storage": "Storage"
       },
       "actions": {
@@ -835,6 +842,49 @@
     }
   },
   "models": {
+    "entity": {
+      "object": "Entity",
+      "plural": "Entities",
+      "name": "Name",
+      "slug": "Slug",
+      "order": "Order",
+      "prefix": "Prefix",
+      "title": "Title",
+      "titlePlural": "Plural",
+      "properties": "Properties",
+      "isFeature": "Plan Feature",
+      "isAutogenerated": "Autogenerated",
+      "hasApi": "API",
+      "requiresLinkedAccounts": "Requires linked accounts",
+      "icon": "Icon",
+      "active": "Active",
+      "rows": "Rows",
+      "limits": "Limits",
+      "permissions": "Permissions",
+      "features": "Features"
+    },
+    "entityProperty": {
+      "object": "Property",
+      "plural": "Properties",
+      "isDynamic": "Is dynamic field",
+      "order": "Order",
+      "name": "Name",
+      "title": "Title",
+      "type": "Type",
+      "formula": "Formula",
+      "parent": "Parent property",
+      "isDefault": "Is default",
+      "isRequired": "Is required",
+      "isHidden": "Is hidden",
+      "isDetail": "Is detail",
+      "pattern": "Pattern",
+      "options": "Options",
+      "children": "Children",
+      "values": "Values"
+    },
+    "entityRow": {
+      "folio": "Folio"
+    },
     "post": {
       "object": "Blog Post",
       "plural": "Blog Posts",
@@ -856,6 +906,31 @@
       "plural": "Tenants",
       "subscription": "Subscription"
     },
+    "apiKey": {
+      "object": "API Key",
+      "plural": "API Keys",
+      "key": "Key",
+      "alias": "Alias",
+      "usage": "Usage",
+      "max": "Max",
+      "create": "Create",
+      "read": "Read",
+      "update": "Update",
+      "delete": "Delete",
+      "active": "Active",
+      "expires": "Expiration date",
+      "logs": "Logs"
+    },
+    "apiKeyLog": {
+      "object": "API Key Log",
+      "plural": "API Key Logs",
+      "method": "Method",
+      "params": "Params",
+      "body": "Body",
+      "ip": "IP",
+      "status": "Status",
+      "error": "Error"
+    },
     "user": {
       "object": "User",
       "plural": "Users",
@@ -866,12 +941,13 @@
       "tenants": "Tenants",
       "impersonate": "Impersonate"
     },
-    "userEvent": {
-      "object": "User Event",
-      "plural": "User Events",
+    "log": {
+      "object": "Audit Trail",
+      "plural": "Audit Trails",
       "action": "Action",
       "details": "Details",
-      "url": "URL"
+      "url": "URL",
+      "method": "Method"
     },
     "subscriptionProduct": {
       "object": "Subscription",
@@ -898,14 +974,14 @@
     "employee": {
       "object": "Employee",
       "plural": "Employees",
-      "firstName": "Name",
+      "firstName": "First name",
       "lastName": "Last name",
       "email": "Email",
       "fullName": "Full name"
     },
-    "tenantRelationship": {
-      "object": "Account Relationship",
-      "plural": "Account Relationships",
+    "linkedAccount": {
+      "object": "Linked Account",
+      "plural": "Linked Accounts",
       "type": "Type"
     },
     "provider": {
@@ -1031,6 +1107,36 @@
       "categoryRequired": "Category required"
     }
   },
+  "entities": {
+    "fields": {
+      "NUMBER": "Number",
+      "TEXT": "Text",
+      "DATE": "Date",
+      "USER": "User",
+      "ROLE": "Role",
+      "ENTITY": "Entity",
+      "ID": "ID",
+      "SELECT": "Select",
+      "FORMULA": "Formula"
+    },
+    "defaultFields": {
+      "USER": "Created by user",
+      "ROLE": "Created by role",
+      "ID": "ID"
+    },
+    "conditions": {
+      "EQUAL": "Equals",
+      "GREATER_THAN": "Greater than",
+      "EQUAL_OR_GREATER_THAN": "Equal or greater than",
+      "LESS_THAN": "Less than",
+      "EQUAL_OR_LESS_THAN": "Equal or less than",
+      "CONTAINS": "Contains"
+    },
+    "errors": {
+      "selectNeedsAtLeastOneOption": "Add at least one option for Select fields",
+      "selectOptionCannotBeEmpty": "Select options cannot be empty"
+    }
+  },
   "api": {
     "errors": {
       "youDontBelong": "You don't belong to this organization",
@@ -1066,8 +1172,8 @@
       "invalidEmail": "Invalid email",
       "invalidLinkInvitation": "Invalid invitation",
       "notPendingLinkInvitation": "Invalid invitation",
-      "emailInvalidLinkInvitation": "Invalid account relationship invitation email",
-      "tenantInvalidLinkInvitation": "Invalid organization in account relationship invitation",
+      "emailInvalidLinkInvitation": "Invalid account link invitation email",
+      "tenantInvalidLinkInvitation": "Invalid organization in account link invitation",
       "cannotDeleteAdmin": "You cannot delete a system admin",
       "alreadyAMember": "Already a member",
       "noChanges": "No changes",

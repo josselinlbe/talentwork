@@ -1,31 +1,25 @@
 import { useTranslation } from "react-i18next";
-import type { ActionFunction, LoaderFunction, MetaFunction} from "remix";
-import { json, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { deleteTenant, getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
-import type { Tenant } from "@prisma/client";
 import UpdateTenantDetailsForm from "~/components/core/tenants/UpdateTenantDetailsForm";
-import { createAdminUserEvent } from "~/utils/db/userEvents.db.server";
+import { createAdminLog } from "~/utils/db/logs.db.server";
 import UsersTable from "~/components/core/users/UsersTable";
 import { adminGetAllTenantUsers } from "~/utils/db/users.db.server";
 import UpdateTenantSubscriptionForm from "~/components/core/tenants/UpdateTenantSubscriptionForm";
-import type { TenantSubscriptionWithDetails} from "~/utils/db/tenantSubscriptions.db.server";
-import { getTenantSubscription, updateTenantStripeSubscriptionId } from "~/utils/db/tenantSubscriptions.db.server";
-import type { SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
-import { getSubscriptionPrice, getSubscriptionPrices } from "~/utils/db/subscriptionProducts.db.server";
+import { getTenantSubscription, TenantSubscriptionWithDetails, updateTenantStripeSubscriptionId } from "~/utils/db/tenantSubscriptions.db.server";
+import { getSubscriptionPrice, getSubscriptionPrices, SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { cancelStripeSubscription, createStripeSubscription } from "~/utils/stripe.server";
-import type Stripe from "stripe";
 import { useEffect, useRef } from "react";
-import type { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import ErrorModal from "~/components/ui/modals/ErrorModal";
-import type { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import SuccessModal from "~/components/ui/modals/SuccessModal";
+import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
+import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
-import type { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
-import ConfirmModal from "~/components/ui/modals/ConfirmModal";
+import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
+import { Tenant } from "@prisma/client";
+import Stripe from "stripe";
 
 type LoaderData = {
   title: string;
@@ -67,9 +61,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
 
   const form = await request.formData();
-  const type = form.get("type")?.toString() ?? "";
+  const action = form.get("action")?.toString() ?? "";
 
-  if (type === "update-tenant-details") {
+  if (action === "update-tenant-details") {
     const name = form.get("name")?.toString() ?? "";
     const slug = form.get("slug")?.toString().toLowerCase() ?? "";
     const icon = form.get("icon")?.toString() ?? "";
@@ -110,12 +104,12 @@ export const action: ActionFunction = async ({ request, params }) => {
         });
       }
     }
-    await createAdminUserEvent(request, "Update tenant details", JSON.stringify({ name, slug }));
+    await createAdminLog(request, "Update tenant details", JSON.stringify({ name, slug }));
     await updateTenant({ name, icon, slug }, params.id);
     return json({
       success: t("settings.tenant.updated"),
     });
-  } else if (type === "update-tenant-subscription") {
+  } else if (action === "update-tenant-subscription") {
     const tenantSubscription = await getTenantSubscription(params.id ?? "");
     const priceId = form.get("subscription-price-id")?.toString();
     if (!priceId) {
@@ -145,7 +139,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
 
     return json({ updateSubscriptionSuccess: "Subscription updated" });
-  } else if (type === "delete-tenant") {
+  } else if (action === "delete-tenant") {
     const tenantSubscription = await getTenantSubscription(params.id ?? "");
     if (tenantSubscription?.stripeSubscriptionId) {
       await cancelStripeSubscription(tenantSubscription?.stripeSubscriptionId);
@@ -195,7 +189,7 @@ export default function TenantRoute() {
   }
   function confirmDeleteTenant() {
     const form = new FormData();
-    form.set("type", "delete-tenant");
+    form.set("action", "delete-tenant");
     submit(form, { method: "post" });
   }
 
@@ -278,7 +272,7 @@ export default function TenantRoute() {
           </div>
           <div className="mt-12 md:mt-0 md:col-span-2">
             <div>
-              <input hidden type="text" name="type" value="deleteAccount" readOnly />
+              <input hidden type="text" name="action" value="deleteAccount" readOnly />
               <div className="bg-white shadow sm:rounded-sm">
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">Delete tenant</h3>

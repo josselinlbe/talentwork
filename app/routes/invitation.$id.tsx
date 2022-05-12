@@ -5,15 +5,15 @@ import UserUtils from "~/utils/app/UserUtils";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@remix-run/react";
-import { Tenant, TenantUserInvitation, User } from "@prisma/client";
-import { LoaderFunction, json, ActionFunction, useLoaderData, Form, useActionData, MetaFunction } from "remix";
+import { json, useLoaderData, Form, useActionData, ActionFunction, LoaderFunction, MetaFunction } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserByEmail, register } from "~/utils/db/users.db.server";
 import { sendEmail } from "~/utils/email.server";
 import { getUserInvitation, updateUserInvitationPending } from "~/utils/db/tenantUserInvitations.db.server";
-import { Language } from "remix-i18next";
 import { createTenantUser } from "~/utils/db/tenants.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
+import { TenantUserInvitation, Tenant, User } from "@prisma/client";
+import { Language } from "remix-i18next";
 
 type LoaderData = {
   title: string;

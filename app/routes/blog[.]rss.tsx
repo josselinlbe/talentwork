@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import { LoaderFunction } from "remix";
 import { getAllBlogPosts } from "~/utils/db/blog.db.server";
 
 function escapeCdata(s: string) {

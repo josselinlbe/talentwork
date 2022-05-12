@@ -49,12 +49,20 @@ export default function SettingsRoute() {
       routePath: UrlUtils.currentTenantUrl(params, `settings/subscription`),
     },
     {
-      name: t("models.tenantRelationship.plural"),
-      routePath: UrlUtils.currentTenantUrl(params, "settings/tenant-relationships"),
+      name: t("models.linkedAccount.plural"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/linked-accounts"),
     },
     {
       name: t("settings.tenant.title"),
       routePath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
+    },
+    {
+      name: "API",
+      routePath: UrlUtils.currentTenantUrl(params, "settings/api"),
+    },
+    {
+      name: t("models.log.plural"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/logs"),
     },
   ];
   return (

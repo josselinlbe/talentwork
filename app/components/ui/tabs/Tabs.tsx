@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@remix-run/react";
 
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface TabItem {
@@ -26,12 +26,12 @@ export default function Tabs({ className = "", tabs = [], asLinks = true, onSele
 
   function selectTab(idx: number) {
     const tab = tabs[idx];
+    setSelected(idx);
     if (asLinks) {
       if (tab?.routePath) {
         navigate(tab.routePath);
       }
     } else {
-      setSelected(idx);
       if (onSelected) {
         onSelected(idx);
       }
@@ -49,14 +49,14 @@ export default function Tabs({ className = "", tabs = [], asLinks = true, onSele
   };
   return (
     <div className={className}>
-      <div className="sm:hidden">
+      <div className="lg:hidden">
         <label htmlFor="tabs" className="sr-only">
           {t("app.shared.tabs.select")}
         </label>
         <select
           id="tabs"
           name="tabs"
-          className="block w-full focus:ring-theme-500 focus:border-theme-500 border-gray-300 rounded-sm"
+          className="block w-full focus:ring-theme-500 focus:border-theme-500 border-gray-300 rounded-md"
           onChange={(e) => selectTab(Number(e.target.value))}
           value={selected}
         >
@@ -69,7 +69,7 @@ export default function Tabs({ className = "", tabs = [], asLinks = true, onSele
           })}
         </select>
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         {(() => {
           if (asLinks) {
             return (

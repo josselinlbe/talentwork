@@ -1,6 +1,7 @@
 import { forwardRef, Fragment, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 
 export interface RefConfirmModal {
   setValue: (value: any) => void;
@@ -8,6 +9,7 @@ export interface RefConfirmModal {
 }
 
 interface Props {
+  destructive?: boolean;
   inputType?: string;
   onYes?: (value: any) => void;
   onNo?: () => void;
@@ -159,7 +161,10 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
               <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:col-start-2 sm:text-sm"
+                  className={clsx(
+                    "w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2  text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm",
+                    !props.destructive ? "focus:ring-theme-500 bg-theme-600 hover:bg-theme-700" : "focus:ring-red-500 bg-red-600 hover:bg-red-700"
+                  )}
                   onClick={yes}
                 >
                   {yesTitle}

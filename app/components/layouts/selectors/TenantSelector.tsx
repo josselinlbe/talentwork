@@ -54,7 +54,7 @@ export default function TenantSelector({ className }: Props) {
     setLoading(true);
 
     const form = new FormData();
-    form.set("type", "set-tenant");
+    form.set("action", "set-tenant");
     form.set("tenantId", tenantUser.tenant.id);
     form.set("redirectTo", location.pathname + location.search);
     submit(form, {

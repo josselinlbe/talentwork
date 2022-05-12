@@ -3,7 +3,7 @@ import ContractsList from "~/modules/contracts/components/contracts/ContractsLis
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import Tabs from "~/components/ui/tabs/Tabs";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, redirect, useLoaderData, useParams } from "remix";
+import { json, LoaderFunction, redirect, useLoaderData, useParams } from "remix";
 import { getContracts } from "~/modules/contracts/db/contracts.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";

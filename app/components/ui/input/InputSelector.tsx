@@ -1,5 +1,4 @@
-import type { KeyboardEvent, Ref } from "react";
-import { forwardRef, RefObject, useImperativeHandle, useRef } from "react";
+import { KeyboardEvent, Ref, forwardRef, useImperativeHandle, useRef } from "react";
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -89,7 +88,9 @@ const InputSelector = (
             >
               <input type="hidden" readOnly name={name} value={value} />
               <span className="w-full inline-flex truncate">
-                <span className="truncate">{selected ? <span>{selected?.name}</span> : <span className="text-xs">{t("shared.select")}...</span>}</span>
+                <span className="truncate">
+                  {selected ? <span>{selected?.name}</span> : <span className="text-sm text-gray-500">{t("shared.select")}...</span>}
+                </span>
               </span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">

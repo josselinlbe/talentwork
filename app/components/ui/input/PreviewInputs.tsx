@@ -1,5 +1,5 @@
 import { useState } from "react";
-import InputCheck from "./InputCheck";
+import InputCheckbox from "./InputCheckbox";
 import InputDate from "./InputDate";
 import InputNumber from "./InputNumber";
 import InputRadioGroup from "./InputRadioGroup";
@@ -112,8 +112,8 @@ export default function PreviewInputs() {
       <div className="space-y-1">
         <h3 className="font-medium text-sm">Input - Date</h3>
         <div id="checkbox" className=" px-10 lg:px-64 py-12 border-dashed border-gray-300 border space-y-3">
-          <InputCheck name="input-check" title="InputCheck - Simple" />
-          <InputCheck name="input-check-as-toggle" title="InputCheck - as Toggle" asToggle={true} />
+          <InputCheckbox name="input-check" title="InputCheckbox - Simple" />
+          <InputCheckbox name="input-check-as-toggle" title="InputCheckbox - as Toggle" asToggle={true} />
         </div>
       </div>
 

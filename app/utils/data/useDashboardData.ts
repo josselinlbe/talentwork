@@ -1,10 +1,10 @@
 import { useMatches } from "remix";
-import { TenantRelationshipStatus } from "~/application/enums/tenants/TenantRelationshipStatus";
-import { getClientLinksCount, getTenantRelationshipsCount, getProviderLinksCount } from "../db/tenantRelationships.db.server";
+import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
+import { getClientLinksCount, getLinkedAccountsCount, getProviderLinksCount } from "../db/linkedAccounts.db.server";
 import { getTenantUsersCount } from "../db/tenants.db.server";
 import { getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
 import { getEmployeesCount } from "~/modules/contracts/db/employees.db.server";
-import type { Params } from "react-router";
+import { Params } from "react-router";
 import { getTenantUrl } from "../services/urlService";
 
 export type DashboardLoaderData = {
@@ -30,7 +30,7 @@ export async function loadDashboardData(params: Params) {
     employees: await getEmployeesCount(tenantUrl.tenantId),
     contracts: await getMonthlyContractsCount(tenantUrl.tenantId),
     storage: 10, // TODO: Implement your own storage limit
-    pendingInvitations: await getTenantRelationshipsCount(tenantUrl.tenantId, [TenantRelationshipStatus.PENDING]),
+    pendingInvitations: await getLinkedAccountsCount(tenantUrl.tenantId, [LinkedAccountStatus.PENDING]),
   };
   return data;
 }

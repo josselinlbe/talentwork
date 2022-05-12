@@ -69,7 +69,7 @@ export default function EmployeeProfile({ item }: Props) {
   }
   function confirmedDeleteEmployee() {
     const form = new FormData();
-    form.set("type", "delete");
+    form.set("action", "delete");
     submit(form, {
       method: "post",
     });
@@ -77,7 +77,7 @@ export default function EmployeeProfile({ item }: Props) {
   }
   function saveConfirm() {
     const form = new FormData();
-    form.set("type", "edit");
+    form.set("action", "edit");
     form.set("employee-id", item.id);
     form.set("email", email);
     form.set("first-name", firstName);

@@ -1,4 +1,4 @@
-import type { BlogAuthor, BlogCategory, BlogPost, BlogPostTag, BlogTag } from "@prisma/client";
+import { BlogPost, BlogAuthor, BlogCategory, BlogPostTag, BlogTag } from "@prisma/client";
 import { Colors } from "~/application/enums/shared/Colors";
 import { db } from "../db.server";
 
@@ -102,8 +102,6 @@ export async function createBlogPost(data: {
   tagNames: string[];
 }): Promise<BlogPost> {
   const tags: BlogTag[] = [];
-
-  console.log({ post: data });
 
   Promise.all(
     data.tagNames.map(async (tagName) => {

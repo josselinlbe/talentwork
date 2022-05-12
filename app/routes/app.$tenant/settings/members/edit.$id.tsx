@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
   const form = await request.formData();
-  const type = form.get("type")?.toString();
+  const action = form.get("action")?.toString();
   const email = form.get("email")?.toString().toLowerCase().trim();
   // const firstName = form.get("firstName")?.toString() ?? "";
   // const lastName = Number(form.get("lastName")) ?? "";
@@ -70,7 +70,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  if (type === "edit") {
+  if (action === "edit") {
     const tenantUser = await getTenantUser(id);
     if (!tenantUser) {
       return badRequest({
@@ -80,7 +80,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await updateTenantUser(id, { role });
 
     return redirect(UrlUtils.currentTenantUrl(params, "settings/members"));
-  } else if (type === "delete") {
+  } else if (action === "delete") {
     await requireOwnerOrAdminRole(request, params);
     try {
       await deleteTenantUser(id);
@@ -167,7 +167,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
       errorModal.current?.show(t("account.tenant.onlyAdmin"));
     } else {
       const form = new FormData();
-      form.set("type", "delete");
+      form.set("action", "delete");
       submit(form, {
         method: "post",
       });
@@ -248,7 +248,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                     } else if (data.member) {
                       return (
                         <Form method="post" className="space-y-4">
-                          <input hidden type="text" name="type" value="edit" readOnly />
+                          <input hidden type="text" name="action" value="edit" readOnly />
                           <div className="grid grid-cols-2 gap-2">
                             {/*Email */}
                             <div className="col-span-2">

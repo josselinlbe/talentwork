@@ -3,11 +3,11 @@ import Plans from "~/components/core/settings/subscription/Plans";
 import Footer from "~/components/front/Footer";
 import { useTranslation } from "react-i18next";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
-import { Language } from "remix-i18next";
 import plans from "~/application/pricing/plans.server";
-import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { LoaderFunction, json, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { Language } from "remix-i18next";
+import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
 
 type LoaderData = {
   title: string;

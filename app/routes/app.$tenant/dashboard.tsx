@@ -1,14 +1,12 @@
-import type { LoaderFunction, MetaFunction} from "remix";
-import { json, useCatch, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useCatch, useLoaderData } from "remix";
 import { useAppData } from "~/utils/data/useAppData";
-import type { DashboardLoaderData} from "~/utils/data/useDashboardData";
-import { loadDashboardData } from "~/utils/data/useDashboardData";
+import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getAppDashboardStats } from "~/utils/services/appDashboardService";
-import type { Stat } from "~/application/dtos/stats/Stat";
 import ProfileBanner from "~/components/app/ProfileBanner";
 import { DashboardStats } from "~/components/ui/stats/DashboardStats";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { Stat } from "~/application/dtos/stats/Stat";
 
 type LoaderData = DashboardLoaderData & {
   title: string;

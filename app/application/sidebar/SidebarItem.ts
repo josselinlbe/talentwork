@@ -5,6 +5,7 @@ export interface SideBarItem {
   title: string;
   path: string;
   icon?: SvgIcon;
+  entityIcon?: string;
   open?: boolean;
   adminOnly?: boolean;
   userRoles?: TenantUserRole[];

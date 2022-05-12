@@ -37,13 +37,13 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
   const form = await request.formData();
 
-  const type = form.get("type")?.toString();
+  const action = form.get("action")?.toString();
   const name = form.get("name")?.toString();
   const description = form.get("description")?.toString();
   const file = form.get("file")?.toString();
   const status = Number(form.get("status"));
 
-  if (type === "edit") {
+  if (action === "edit") {
     if (!name) {
       return badRequest({ error: "Name required" });
     } else if (!description) {
@@ -59,7 +59,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
 
     return json({ success: t("shared.updated") });
-  } else if (type === "delete") {
+  } else if (action === "delete") {
     const existing = await getContract(params.id);
     if (!existing) {
       return badRequest({ error: t("shared.notFound") });
@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await deleteContract(params.id);
 
     return redirect(UrlUtils.currentTenantUrl(params, "contracts?status=all"));
-  } else if (type === "send") {
+  } else if (action === "send") {
     const contract = await getContract(params.id);
     if (!contract) {
       return badRequest({ error: t("shared.notFound") });

@@ -25,7 +25,7 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
               disabled={disabled}
               className={clsx(
                 className,
-                "border-b border-transparent inline-flex space-x-2 items-center mx-1 my-2 text-sm font-medium focus:outline-none",
+                "border-b border-transparent inline-flex space-x-2 items-center mx-1 my-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-300 focus:rounded-md",
                 disabled ? "cursor-not-allowed opacity-75" : "hover:border-dotted",
                 !destructive && "text-theme-700 border-b border-dashed border-accent-300",
                 destructive && "text-red-600",
@@ -43,7 +43,7 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
               target={target}
               className={clsx(
                 className,
-                "border-b border-transparent inline-flex space-x-2 items-center mx-1 my-2 text-sm font-medium focus:outline-none",
+                "border-b border-transparent inline-flex space-x-2 items-center mx-1 my-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-300 focus:rounded-md",
                 disabled ? "cursor-not-allowed opacity-75" : " hover:border-dotted",
                 !destructive && "text-theme-700 border-b border-dashed border-accent-300",
                 destructive && "text-red-600",

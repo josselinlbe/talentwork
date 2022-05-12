@@ -33,7 +33,7 @@ export default function StackedLayout({ layout, children }: Props) {
     if (layout === "admin") {
       setMenu(AdminSidebar);
     } else {
-      setMenu(AppSidebar(params));
+      setMenu(AppSidebar(params, appData.entities));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

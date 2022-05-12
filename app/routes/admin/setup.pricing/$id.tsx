@@ -37,8 +37,8 @@ export type EditPricingPlanActionData = {
 const badRequest = (data: EditPricingPlanActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
-  const type = form.get("type")?.toString();
-  if (type === "delete-plan") {
+  const action = form.get("action")?.toString();
+  if (action === "delete-plan") {
     const item = await getSubscriptionProduct(params.id ?? "");
     if (!item) {
       return badRequest({ error: "Pricing plan not found" });

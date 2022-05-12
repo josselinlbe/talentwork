@@ -33,7 +33,7 @@ export default function TenantNew() {
   function createdTenant() {
     if (actionData?.tenantId) {
       const form = new FormData();
-      form.set("type", "set-tenant");
+      form.set("action", "set-tenant");
       form.set("tenantId", actionData.tenantId);
       form.set("redirectTo", location.pathname + location.search);
       submit(form, {

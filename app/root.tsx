@@ -87,9 +87,9 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
 export const action: ActionFunction = async ({ request }) => {
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
-  const type = form.get("type");
+  const action = form.get("action");
   const redirect = form.get("redirect")?.toString();
-  if (type === "toggleLightOrDarkMode") {
+  if (action === "toggleLightOrDarkMode") {
     const current = userInfo.lightOrDarkMode ?? "dark";
     const lightOrDarkMode = current === "dark" ? "light" : "dark";
     return createUserSession(
@@ -101,7 +101,7 @@ export const action: ActionFunction = async ({ request }) => {
       redirect
     );
   }
-  if (type === "setLocale") {
+  if (action === "setLocale") {
     const lng = form.get("lng")?.toString() ?? "";
     return createUserSession(
       {
