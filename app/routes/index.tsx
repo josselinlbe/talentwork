@@ -7,6 +7,9 @@ import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";
 import { Language } from "remix-i18next";
+import FeatureImages from "~/components/front/FeatureImages";
+import Features from "~/components/front/Features";
+import Pricing from "~/components/front/Pricing";
 
 export type IndexLoaderData = {
   title: string;
@@ -44,10 +47,12 @@ export default function IndexRoute() {
   return (
     <div>
       <TopBanner />
-      <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200">
+      <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-12">
         <Hero />
         <LogoClouds />
-        {/* <Features className="relative z-10" /> */}
+        <Features />
+        <FeatureImages />
+        <Pricing />
         {/* <JoinNow className="relative z-20" /> */}
         <Footer />
       </div>

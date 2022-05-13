@@ -32,7 +32,7 @@ export default function Carousel({ images }: Props) {
   }
 
   return (
-    <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-2xl">
+    <div className="relative mx-auto w-full rounded-lg shadow-lg">
       <div className=" text-left flex mb-2">
         <div className=" dark:bg-gray-900 italic text-sm font-medium flex space-x-1">
           <span className=" ">
@@ -48,7 +48,7 @@ export default function Carousel({ images }: Props) {
           )}
         </div>
       </div>
-      <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 h-80 rounded-lg border border-gray-700">
+      <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 h-96 border border-gray-700">
         <div className="absolute bottom-0 mb-14 ml-2">
           <button
             onClick={previousImage}
