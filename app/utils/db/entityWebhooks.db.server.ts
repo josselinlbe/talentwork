@@ -73,6 +73,7 @@ export async function callEntityWebhooks(logId: string, entityId: string, action
           method: webhook.method,
           body,
         });
+        // eslint-disable-next-line no-console
         console.log({ response });
         return db.entityWebhookLog.create({
           data: {

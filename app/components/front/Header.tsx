@@ -6,12 +6,11 @@ import DarkModeToggle from "~/components/ui/toggles/DarkModeToggle";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import Icon from "./Icon";
-import { useLoaderData } from "remix";
 import LocaleSelector from "../ui/selectors/LocaleSelector";
-import { IndexLoaderData } from "~/routes";
+import { useRootData } from "~/utils/data/useRootData";
 
 export default function Header() {
-  const { authenticated, isAdmin } = useLoaderData<IndexLoaderData>();
+  const { authenticated, isAdmin } = useRootData();
   const { t } = useTranslation();
 
   const location = useLocation();
