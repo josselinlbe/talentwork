@@ -12,6 +12,7 @@ async function setApiError(request: Request, params: Params, error: string, stat
   } else {
     await createApiKeyLog(request, params, {
       apiKeyId: null,
+      endpoint: new URL(request.url).pathname,
       error,
       status,
     });
@@ -19,13 +20,14 @@ async function setApiError(request: Request, params: Params, error: string, stat
   return json({ error }, { status });
 }
 
-export async function getApiKeyFromRequest(request: Request, params: Params) {
+export async function validateApiKey(request: Request, params: Params) {
   const apiKeyFromHeaders = request.headers.get("X-Api-Key") ?? "";
   const apiKey = await getApiKeyByKey(apiKeyFromHeaders);
   if (!apiKey) {
     throw await setApiError(request, params, "Invalid API Key: " + apiKeyFromHeaders, 401);
   }
   const apiKeyLog = await createApiKeyLog(request, params, {
+    endpoint: new URL(request.url).pathname,
     apiKeyId: apiKey.id,
   });
   if (!apiKey.active) {
@@ -37,6 +39,23 @@ export async function getApiKeyFromRequest(request: Request, params: Params) {
   if (apiKey._count.apiKeyLogs >= apiKey.max) {
     throw await setApiError(request, params, "API Key limit quota reached: " + apiKey.max, 429, apiKeyLog.id);
   }
+  // eslint-disable-next-line no-console
+  console.log({
+    method: request.method,
+    pathname: new URL(request.url).pathname,
+    params,
+    tenant: apiKey.tenant.name,
+    apiKeyRemainingQuota: apiKey.max - apiKey._count.apiKeyLogs,
+  });
+  return {
+    apiKey,
+    apiKeyLog,
+    tenant: apiKey.tenant,
+  };
+}
+
+export async function getEntityApiKeyFromRequest(request: Request, params: Params) {
+  const { apiKey, apiKeyLog } = await validateApiKey(request, params);
   const entity = await getEntityBySlug(params.entity ?? "");
   if (!entity) {
     throw await setApiError(request, params, "Invalid entity", 400, apiKeyLog.id);
@@ -54,14 +73,6 @@ export async function getApiKeyFromRequest(request: Request, params: Params) {
   } else if (request.method === "DELETE" && !permission.delete) {
     throw new Error(`API Key does not have permission to delete ${permission.entity.slug}`);
   }
-  // eslint-disable-next-line no-console
-  console.log({
-    method: request.method,
-    params,
-    entity: entity.slug,
-    tenant: apiKey.tenant.name,
-    apiKeyRemainingQuota: apiKey.max - apiKey._count.apiKeyLogs,
-  });
   return {
     entity,
     tenant: apiKey.tenant,

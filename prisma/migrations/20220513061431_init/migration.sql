@@ -54,6 +54,7 @@ CREATE TABLE "TenantSubscription" (
     "stripeCustomerId" TEXT,
     "stripeSubscriptionId" TEXT,
     "subscriptionPriceId" TEXT,
+    "quantity" INTEGER NOT NULL,
     CONSTRAINT "TenantSubscription_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "TenantSubscription_subscriptionPriceId_fkey" FOREIGN KEY ("subscriptionPriceId") REFERENCES "SubscriptionPrice" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -127,6 +128,7 @@ CREATE TABLE "ApiKeyLog" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "apiKeyId" TEXT,
     "ip" TEXT NOT NULL,
+    "endpoint" TEXT NOT NULL,
     "method" TEXT NOT NULL,
     "params" TEXT NOT NULL,
     "status" INTEGER,
@@ -138,14 +140,13 @@ CREATE TABLE "ApiKeyLog" (
 CREATE TABLE "SubscriptionProduct" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "stripeId" TEXT NOT NULL,
-    "tier" INTEGER NOT NULL,
+    "order" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "badge" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL,
-    "public" BOOLEAN NOT NULL,
-    "maxUsers" INTEGER NOT NULL,
-    "monthlyContracts" INTEGER NOT NULL
+    "model" INTEGER NOT NULL,
+    "public" BOOLEAN NOT NULL
 );
 
 -- CreateTable
@@ -167,9 +168,10 @@ CREATE TABLE "SubscriptionFeature" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "subscriptionProductId" TEXT NOT NULL,
     "order" INTEGER NOT NULL,
-    "key" TEXT NOT NULL,
-    "value" TEXT NOT NULL,
-    "included" BOOLEAN NOT NULL,
+    "title" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "type" INTEGER NOT NULL,
+    "value" INTEGER NOT NULL,
     CONSTRAINT "SubscriptionFeature_subscriptionProductId_fkey" FOREIGN KEY ("subscriptionProductId") REFERENCES "SubscriptionProduct" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -326,17 +328,6 @@ CREATE TABLE "EntityRowValue" (
 );
 
 -- CreateTable
-CREATE TABLE "EntityLimit" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "entityId" TEXT NOT NULL,
-    "subscriptionProductId" TEXT NOT NULL,
-    "type" INTEGER NOT NULL,
-    "max" INTEGER NOT NULL,
-    CONSTRAINT "EntityLimit_subscriptionProductId_fkey" FOREIGN KEY ("subscriptionProductId") REFERENCES "SubscriptionProduct" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "EntityLimit_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "Entity" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
 CREATE TABLE "EntityTenantUserPermission" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "entityId" TEXT NOT NULL,
@@ -345,13 +336,24 @@ CREATE TABLE "EntityTenantUserPermission" (
 );
 
 -- CreateTable
-CREATE TABLE "EntitySubscriptionFeatureFlag" (
+CREATE TABLE "EntityWebhook" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "entityId" TEXT NOT NULL,
-    "subscriptionProductId" TEXT NOT NULL,
-    "level" INTEGER NOT NULL,
-    CONSTRAINT "EntitySubscriptionFeatureFlag_subscriptionProductId_fkey" FOREIGN KEY ("subscriptionProductId") REFERENCES "SubscriptionProduct" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "EntitySubscriptionFeatureFlag_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "Entity" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "action" TEXT NOT NULL,
+    "method" TEXT NOT NULL,
+    "endpoint" TEXT NOT NULL,
+    CONSTRAINT "EntityWebhook_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "Entity" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "EntityWebhookLog" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "webhookId" TEXT NOT NULL,
+    "logId" TEXT NOT NULL,
+    "status" INTEGER NOT NULL,
+    "error" TEXT,
+    CONSTRAINT "EntityWebhookLog_logId_fkey" FOREIGN KEY ("logId") REFERENCES "Log" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "EntityWebhookLog_webhookId_fkey" FOREIGN KEY ("webhookId") REFERENCES "EntityWebhook" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable

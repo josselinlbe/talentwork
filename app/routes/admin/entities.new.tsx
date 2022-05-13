@@ -1,4 +1,3 @@
-import { EntityPropertyOption } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import { ActionFunction, json, redirect } from "remix";
 import EntityForm from "~/components/entities/EntityForm";

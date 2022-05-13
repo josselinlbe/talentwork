@@ -1,17 +1,17 @@
 import { SubscriptionPriceDto } from "./SubscriptionPriceDto";
 import { SubscriptionFeatureDto } from "./SubscriptionFeatureDto";
+import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 
 export interface SubscriptionProductDto {
   id?: string;
   stripeId: string;
-  tier: number;
+  order: number;
   title: string;
   description: string;
   badge: string;
   active: boolean;
+  model: PricingModel;
   public: boolean;
-  maxUsers: number;
-  monthlyContracts: number;
   prices: SubscriptionPriceDto[];
   features: SubscriptionFeatureDto[];
   translatedTitle?: string;

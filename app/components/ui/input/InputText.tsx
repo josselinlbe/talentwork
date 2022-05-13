@@ -10,6 +10,7 @@ export interface RefInputText {
 interface Props {
   name: string;
   title: string;
+  withLabel?: boolean;
   value?: string;
   setValue?: React.Dispatch<React.SetStateAction<string>>;
   className?: string;
@@ -35,6 +36,7 @@ const InputText = (
   {
     name,
     title,
+    withLabel = true,
     value,
     setValue,
     className,
@@ -85,28 +87,30 @@ const InputText = (
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
-        <div className=" flex space-x-1 items-center">
-          <div>
-            {title}
-            {required && <span className="ml-1 text-red-500">*</span>}
-          </div>
+      {withLabel && (
+        <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
+          <div className=" flex space-x-1 items-center">
+            <div>
+              {title}
+              {required && <span className="ml-1 text-red-500">*</span>}
+            </div>
 
-          <span className=" overflow-hidden">{help && <HintTooltip text={help} />}</span>
-        </div>
-        {withTranslation && value?.includes(".") && (
-          <div className="text-slate-600 font-light italic">
-            {t("admin.pricing.i18n")}:{" "}
-            {getTranslation(value) ? (
-              <span className="text-slate-600">{t(value, translationParams ?? [])}</span>
-            ) : (
-              <span className="text-red-600">{t("shared.invalid")}</span>
-            )}
+            <span className=" overflow-hidden">{help && <HintTooltip text={help} />}</span>
           </div>
-        )}
-        {hint}
-      </label>
-      <div className="mt-1 flex rounded-md shadow-sm w-full relative">
+          {withTranslation && value?.includes(".") && (
+            <div className="text-slate-600 font-light italic">
+              {t("admin.pricing.i18n")}:{" "}
+              {getTranslation(value) ? (
+                <span className="text-slate-600">{t(value, translationParams ?? [])}</span>
+              ) : (
+                <span className="text-red-600">{t("shared.invalid")}</span>
+              )}
+            </div>
+          )}
+          {hint}
+        </label>
+      )}
+      <div className={clsx("flex rounded-md shadow-sm w-full relative", withLabel && "mt-1")}>
         {!rows ? (
           <>
             <input

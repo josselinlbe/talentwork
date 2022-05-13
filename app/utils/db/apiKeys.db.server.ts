@@ -157,6 +157,7 @@ export async function createApiKeyLog(
   params: any,
   data: {
     apiKeyId: string | null;
+    endpoint: string;
     error?: string;
     status?: number;
   }

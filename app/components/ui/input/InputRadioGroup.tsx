@@ -4,15 +4,15 @@ import clsx from "~/utils/shared/ClassesUtils";
 interface Props {
   name: string;
   title: string;
-  options: { name: string; disabled?: boolean; value: string }[];
-  value?: string;
-  setValue?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  options: { name: string; value: string | number | readonly string[] | undefined; disabled?: boolean }[];
+  value?: string | number | readonly string[] | undefined;
+  setValue?: React.Dispatch<React.SetStateAction<string | number | readonly string[] | undefined>>;
   className?: string;
   required?: boolean;
 }
 export default function InputRadioGroup({ name, title, value, options, setValue, className, required }: Props) {
   return (
-    <div>
+    <div className={clsx(className, "flex-grow w-full")}>
       <div className="flex items-center justify-between">
         <label className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
           {title}
@@ -20,9 +20,11 @@ export default function InputRadioGroup({ name, title, value, options, setValue,
         </label>
       </div>
 
+      <input type="hidden" name={name} value={value} />
+
       <RadioGroup value={value} onChange={(e) => (setValue ? setValue(e) : {})} className="mt-1">
         <RadioGroup.Label className="sr-only">{title}</RadioGroup.Label>
-        <div className={clsx("flex space-x-2", className)}>
+        <div className={clsx("flex space-x-2")}>
           {options.map((option, idx) => (
             <RadioGroup.Option
               key={idx}

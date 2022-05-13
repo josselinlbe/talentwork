@@ -2,11 +2,11 @@ import { ActionFunction, json, LoaderFunction } from "remix";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { deleteEntityRow, getEntityRow, updateEntityRow } from "~/utils/db/entityRows.db.server";
 import EntityRowHelper from "~/utils/helpers/EntityRowHelper";
-import { getApiKeyFromRequest } from "~/utils/services/apiService";
+import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { entity, tenant, apiKeyLog } = await getApiKeyFromRequest(request, params);
+  const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     const item = await getEntityRow(entity.id, params.id ?? "", tenant.id);
     if (!item) {
@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 // PUT or DELETE
 export const action: ActionFunction = async ({ request, params }) => {
-  const { entity, tenant, apiKeyLog } = await getApiKeyFromRequest(request, params);
+  const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     let item = await getEntityRow(entity.id, params.id ?? "", tenant.id);
     if (!item) {

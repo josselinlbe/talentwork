@@ -1,7 +1,9 @@
 import clsx from "clsx";
 import { t } from "i18next";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
+import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 
 interface Props {
   title: string;
@@ -11,9 +13,10 @@ interface Props {
   billingPeriod: SubscriptionBillingPeriod;
   price: string;
   currency: string;
+  model: PricingModel;
 }
 
-export default function Plan({ title, description, badge, features, billingPeriod, price }: Props) {
+export default function Plan({ title, description, badge, features, billingPeriod, price, model }: Props) {
   return (
     <div>
       <section
@@ -31,12 +34,13 @@ export default function Plan({ title, description, badge, features, billingPerio
         <div className="flex-1 space-y-6">
           {/* Price */}
           <div className="flex-shrink-0">
-            <span className="text-4xl font-medium tracking-tight">{price}</span>
+            <span className="text-4xl font-medium tracking-tight pr-1">{price}</span>
+            {model === PricingModel.PER_SEAT && <span className="text-gray-500">/{t("pricing.seat").toLowerCase()}</span>}
             {(() => {
               if (billingPeriod === 3) {
-                return <span className="text-gray-500">/ {t("pricing.MONTHLYShort")}</span>;
+                return <span className="text-gray-500">/{t("pricing.MONTHLYShort")}</span>;
               } else {
-                return <span className="text-gray-500">/ {t("pricing.YEARLYShort")}</span>;
+                return <span className="text-gray-500">/{t("pricing.YEARLYShort")}</span>;
               }
             })()}
           </div>
@@ -55,7 +59,7 @@ export default function Plan({ title, description, badge, features, billingPerio
                 return (
                   <li key={idxFeature}>
                     <div className="flex items-center">
-                      {feature.included ? (
+                      {feature.type !== SubscriptionFeatureLimitType.NOT_INCLUDED ? (
                         <svg className="w-5 h-5 text-theme-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                           <path
                             fillRule="evenodd"
@@ -73,7 +77,7 @@ export default function Plan({ title, description, badge, features, billingPerio
                         </svg>
                       )}
                       <span className="ml-3 text-base font-medium truncate">
-                        <span>{t(feature.key, [feature.value])}</span>
+                        <span>{t(feature.title, [feature.value])}</span>
                       </span>
                     </div>
                   </li>

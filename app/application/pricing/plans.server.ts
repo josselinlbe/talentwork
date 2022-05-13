@@ -1,14 +1,17 @@
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
 import { SubscriptionProductDto } from "../dtos/subscriptions/SubscriptionProductDto";
+import { PricingModel } from "../enums/subscriptions/PricingModel";
+import { SubscriptionFeatureLimitType } from "../enums/subscriptions/SubscriptionFeatureLimitType";
 
 const currency = "usd";
 const plans: SubscriptionProductDto[] = [
   {
     stripeId: "",
-    tier: 1,
+    order: 1,
     title: "pricing.products.plan1.title",
     description: "pricing.products.plan1.description",
+    model: PricingModel.FLAT_RATE,
     public: true,
     prices: [
       {
@@ -34,38 +37,37 @@ const plans: SubscriptionProductDto[] = [
     ],
     features: [
       {
-        subscriptionProductId: "",
         order: 1,
-        key: "pricing.features.maxUsers",
-        value: "2",
-        included: true,
+        title: "2 users",
+        name: "users",
+        value: 2,
+        type: SubscriptionFeatureLimitType.MAX,
       },
       {
-        subscriptionProductId: "",
         order: 2,
-        key: "pricing.features.oneContract",
-        value: "1",
-        included: true,
+        title: "1 contract",
+        name: "contracts",
+        value: 1,
+        type: SubscriptionFeatureLimitType.MAX,
       },
       {
-        subscriptionProductId: "",
         order: 3,
-        key: "pricing.features.prioritySupport",
-        value: "",
-        included: false,
+        title: "Priority support",
+        name: "priority-support",
+        value: 0,
+        type: SubscriptionFeatureLimitType.NOT_INCLUDED,
       },
     ],
     badge: "",
     active: true,
-    maxUsers: 2,
-    monthlyContracts: 1,
   },
   {
     stripeId: "",
-    tier: 2,
+    order: 2,
     title: "pricing.products.plan2.title",
     description: "pricing.products.plan2.description",
     public: true,
+    model: PricingModel.FLAT_RATE,
     prices: [
       {
         stripeId: "",
@@ -90,38 +92,37 @@ const plans: SubscriptionProductDto[] = [
     ],
     features: [
       {
-        subscriptionProductId: "",
         order: 1,
-        key: "pricing.features.maxUsers",
-        value: "5",
-        included: true,
+        title: "5 users",
+        name: "users",
+        value: 5,
+        type: SubscriptionFeatureLimitType.MAX,
       },
       {
-        subscriptionProductId: "",
         order: 2,
-        key: "pricing.features.maxContracts",
-        value: "45",
-        included: true,
+        title: "45 contracts/month",
+        name: "contracts",
+        value: 45,
+        type: SubscriptionFeatureLimitType.MONTHLY,
       },
       {
-        subscriptionProductId: "",
         order: 3,
-        key: "pricing.features.prioritySupport",
-        value: "",
-        included: false,
+        title: "Priority support",
+        name: "priority-support",
+        value: 0,
+        type: SubscriptionFeatureLimitType.NOT_INCLUDED,
       },
     ],
     badge: "pricing.recommended",
     active: true,
-    maxUsers: 5,
-    monthlyContracts: 45,
   },
   {
     stripeId: "",
-    tier: 3,
+    order: 3,
     title: "pricing.products.plan3.title",
     description: "pricing.products.plan3.description",
     public: true,
+    model: PricingModel.FLAT_RATE,
     prices: [
       {
         stripeId: "",
@@ -146,31 +147,29 @@ const plans: SubscriptionProductDto[] = [
     ],
     features: [
       {
-        subscriptionProductId: "",
         order: 1,
-        key: "pricing.features.maxUsers",
-        value: "12",
-        included: true,
+        title: "12 users",
+        name: "users",
+        value: 12,
+        type: SubscriptionFeatureLimitType.MAX,
       },
       {
-        subscriptionProductId: "",
         order: 2,
-        key: "pricing.features.maxContracts",
-        value: "90",
-        included: true,
+        title: "90 contracts/month",
+        name: "contracts",
+        value: 90,
+        type: SubscriptionFeatureLimitType.MONTHLY,
       },
       {
-        subscriptionProductId: "",
         order: 3,
-        key: "pricing.features.prioritySupport",
-        value: "",
-        included: true,
+        title: "Priority support",
+        name: "priority-support",
+        value: 0,
+        type: SubscriptionFeatureLimitType.INCLUDED,
       },
     ],
     badge: "",
     active: true,
-    maxUsers: 12,
-    monthlyContracts: 90,
   },
 ];
 

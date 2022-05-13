@@ -3,11 +3,11 @@ import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { createEntityRow, getEntityRow, getEntityRows } from "~/utils/db/entityRows.db.server";
 import { createEntityRowLog } from "~/utils/db/logs.db.server";
 import EntityRowHelper from "~/utils/helpers/EntityRowHelper";
-import { getApiKeyFromRequest } from "~/utils/services/apiService";
+import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { entity, tenant, apiKeyLog } = await getApiKeyFromRequest(request, params);
+  const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     const items = await getEntityRows(entity.id, tenant.id);
     await setApiKeyLogStatus(apiKeyLog.id, {
@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 // POST
 export const action: ActionFunction = async ({ request, params }) => {
-  const { entity, tenant, apiKeyLog } = await getApiKeyFromRequest(request, params);
+  const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     const form = await request.formData();
     const rowValues = EntityRowHelper.getRowPropertiesFromForm(entity, form);

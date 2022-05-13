@@ -37,11 +37,11 @@ import {
 } from "~/utils/db/tenantSubscriptions.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
 import { createLog } from "~/utils/db/logs.db.server";
+import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
   items: Awaited<ReturnType<typeof getAllSubscriptionProducts>>;
-  mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null;
   myInvoices: Stripe.Invoice[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
@@ -81,14 +81,20 @@ export let loader: LoaderFunction = async ({ request, params }) => {
       if (session.subscription) {
         const stripeSubscription = await getStripeSubscription(session.subscription.toString());
         let price: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
+        let quantity: number = 0;
         if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
-          price = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
+          const data = stripeSubscription?.items.data[0];
+          price = await getSubscriptionPriceByStripeId(data.plan.id);
+          if (data.quantity) {
+            quantity = data.quantity;
+          }
         }
         // console.log({ session: JSON.stringify(session) });
         // await updateStripeCustomerPaymentMethod(tenantSubscription.stripeCustomerId,)
         await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
           subscriptionPriceId: price?.id ?? "",
           stripeSubscriptionId: session.subscription.toString(),
+          quantity,
         });
         await createLog(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
@@ -104,6 +110,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
       subscriptionPriceId: null,
       stripeSubscriptionId: null,
+      quantity: 0,
     });
   }
 
@@ -116,7 +123,6 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     myInvoices,
     title: `${t("app.navbar.subscription")} | ${process.env.APP_NAME}`,
     items,
-    mySubscription,
     ...dashboardData,
   };
   return json(data);
@@ -133,8 +139,16 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
 
   const action = form.get("action")?.toString();
+  let quantity: number = 1;
   const priceId = form.get("price-id")?.toString();
   const price = await getSubscriptionPrice(priceId ?? "");
+
+  if (price?.subscriptionProduct.model === PricingModel.PER_SEAT) {
+    quantity = Number(form.get("quantity") ?? 0);
+    if (quantity <= 0) {
+      return badRequest({ error: "Quantity must be set" });
+    }
+  }
 
   if (!tenantSubscription || !tenantSubscription?.stripeCustomerId) {
     return badRequest({
@@ -147,7 +161,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: "Invalid price: " + priceId,
       });
     }
-    const session = await createStripeSession(tenantUrl.tenantId, tenantSubscription.stripeCustomerId, price.stripeId);
+    const session = await createStripeSession(tenantUrl.tenantId, tenantSubscription.stripeCustomerId, price.stripeId, quantity);
     if (!session || !session.url) {
       return badRequest({
         error: "Could not update subscription",
@@ -164,6 +178,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
       subscriptionPriceId: null,
       stripeSubscriptionId: null,
+      quantity: 0,
     });
     const actionData: ActionData = {
       success: "Successfully cancelled",
@@ -257,7 +272,7 @@ export default function SubscriptionRoute() {
 
             <div className="mt-1 text-sm leading-5 text-gray-600">
               {(() => {
-                if (data.mySubscription) {
+                if (appData.mySubscription) {
                   return (
                     <span>
                       <p className="text-xs text-gray-900 font-bold"></p>
@@ -308,7 +323,7 @@ export default function SubscriptionRoute() {
           )}
         </>
       ) : (
-        <ChangeSubscription items={data.items} current={data.mySubscription} billingPeriod={billingPeriod} currency={currency} />
+        <ChangeSubscription items={data.items} current={appData.mySubscription} billingPeriod={billingPeriod} currency={currency} />
       )}
 
       <div className="grid lg:grid-cols-2 gap-6 md:gap-2 mb-4">

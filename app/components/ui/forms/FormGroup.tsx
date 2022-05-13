@@ -10,7 +10,7 @@ import ErrorModal, { RefErrorModal } from "../modals/ErrorModal";
 export interface RefFormGroup {}
 
 interface Props {
-  id: string | undefined;
+  id?: string | undefined;
   onCancel?: () => void;
   children: ReactNode;
   className?: string;

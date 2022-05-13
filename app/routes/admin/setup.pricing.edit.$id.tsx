@@ -9,6 +9,7 @@ import { deletePlan, updatePlan } from "~/utils/services/pricingService";
 import PricingPlanForm from "~/components/core/pricing/PricingPlanForm";
 import { getAllSubscriptionProducts, getSubscriptionProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { createAdminLog } from "~/utils/db/logs.db.server";
+import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 
 type LoaderData = {
   title: string;
@@ -54,16 +55,15 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: error.message });
     }
   } else if (action === "update-plan") {
-    const tier = Number(form.get("tier"));
+    const order = Number(form.get("order"));
     const title = form.get("title")?.toString();
     const description = form.get("description")?.toString() ?? "";
+    const model = Number(form.get("model"));
     const badge = form.get("badge")?.toString() ?? "";
     const isPublic = Boolean(form.get("is-public"));
-    const limitUsers = Number(form.get("limit-users"));
-    const limitContracts = Number(form.get("limit-contracts"));
 
     const featuresArr = form.getAll("features[]");
-    const features: { id: string; order: number; key: string; value: string; included: boolean }[] = featuresArr.map((f: FormDataEntryValue) => {
+    const features: SubscriptionFeatureDto[] = featuresArr.map((f: FormDataEntryValue) => {
       return JSON.parse(f.toString());
     });
 
@@ -74,14 +74,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     const plan: SubscriptionProductDto = {
       id: params.id,
       stripeId: "",
-      tier,
+      order,
       title,
       description,
       badge,
       active: true,
+      model,
       public: isPublic,
-      maxUsers: limitUsers,
-      monthlyContracts: limitContracts,
       prices: [],
       features: [],
     };

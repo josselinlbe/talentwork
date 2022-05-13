@@ -297,6 +297,8 @@
     "subscribe": "Subscribe",
     "pay": "Pay",
     "payOnce": "Pay once",
+    "seat": "Seat",
+    "seats": "Seats",
     "signUpFree": "Sign up free",
     "monthlyPrice": "Monthly price",
     "yearlyPrice": "Yearly price",
@@ -312,6 +314,9 @@
     "included": "Included",
     "notIncluded": "Not included",
     "recommended": "Recommended",
+    "FLAT_RATE": "Flat rate",
+    "PER_SEAT": "Per seat",
+    "USAGE_BASED": "Usage-based",
     "custom": {
       "title": "Custom Plan",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
@@ -331,10 +336,8 @@
       }
     },
     "features": {
-      "oneUser": "1 user",
-      "maxUsers": "{{0}} users",
+      "maxUsers": "{{0}} user(s)",
       "prioritySupport": "Priority support",
-      "oneContract": "1 contract",
       "maxContracts": "{{0}} contracts/month"
     }
   },
@@ -928,6 +931,7 @@
       "params": "Params",
       "body": "Body",
       "ip": "IP",
+      "endpoint": "Endpoint",
       "status": "Status",
       "error": "Error"
     },
@@ -953,9 +957,10 @@
       "object": "Subscription",
       "plural": "Subscriptions",
       "serviceId": "Stripe ID",
-      "tier": "Tier",
+      "order": "Order",
       "title": "Title",
       "description": "Description",
+      "model": "Pricing model",
       "public": "Public",
       "badge": "Badge",
       "status": "Status",
@@ -1184,5 +1189,6 @@
   "demo": {
     "cannotDelete": "Cannot delete on demo environment",
     "cannotUpdate": "Cannot update on demo environment"
-  }
+  },
+  "t-id": "Invalid tenant ID"
 }

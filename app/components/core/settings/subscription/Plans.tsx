@@ -89,6 +89,7 @@ export default function Plans({ items }: Props) {
                     billingPeriod={billingPeriod}
                     currency={currency}
                     price={intFormat(getPriceAmount(plan))}
+                    model={plan.model}
                   />
                 );
               })}

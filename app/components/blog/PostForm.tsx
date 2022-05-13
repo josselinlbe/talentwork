@@ -48,7 +48,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
   const [author, setAuthor] = useState<string | undefined>("");
   const [category, setCategory] = useState<string | undefined>("");
   const [postTags, setPostTags] = useState("");
-  const [date, setDate] = useState(DateUtils.dateYMD(item?.date) ?? DateUtils.dateYMD(new Date()));
+  const [date, setDate] = useState<Date | undefined>(item?.date ?? new Date());
   const [description, setDescription] = useState(item?.description ?? "");
   const [readingTime, setReadingTime] = useState(item?.readingTime ?? "");
   const [published, setPublished] = useState(item?.published ?? false);
@@ -225,7 +225,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
             setValue={(e) => changedTags(e.toString())}
             hint={<div className="text-xs italic text-gray-400 font-light">Separated by comma</div>}
           />
-          <InputDate className="col-span-6 md:col-span-4" name="date" title={t("models.post.date")} value={date} setValue={setDate} required />
+          <InputDate className="col-span-6 md:col-span-4" name="date" title={t("models.post.date")} value={date} onChange={setDate} required />
 
           <InputText
             className="col-span-6 md:col-span-4"

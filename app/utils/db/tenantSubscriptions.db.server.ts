@@ -17,7 +17,7 @@ export async function getOrPersistTenantSubscription(tenantId: string) {
   });
 
   if (!subscription) {
-    return await createTenantSubscription(tenantId, "");
+    return await createTenantSubscription(tenantId, "", 0);
   }
   return subscription;
 }
@@ -37,11 +37,12 @@ export async function getTenantSubscription(tenantId: string): Promise<TenantSub
   });
 }
 
-export async function createTenantSubscription(tenantId: string, stripeCustomerId: string) {
+export async function createTenantSubscription(tenantId: string, stripeCustomerId: string, quantity: number) {
   return await db.tenantSubscription.create({
     data: {
       tenantId,
       stripeCustomerId,
+      quantity,
     },
   });
 }
@@ -60,6 +61,7 @@ export async function updateTenantStripeSubscriptionId(
   data: {
     subscriptionPriceId: string | null;
     stripeSubscriptionId: string | null;
+    quantity: number;
   }
 ) {
   return await db.tenantSubscription.update({

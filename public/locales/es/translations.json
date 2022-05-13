@@ -297,6 +297,8 @@
     "subscribe": "Suscribirme",
     "pay": "Comprar",
     "payOnce": "Pagar una vez",
+    "seat": "Usuario",
+    "seats": "Usuarios",
     "signUpFree": "Regístrate gratis",
     "monthlyPrice": "Precio mensual",
     "yearlyPrice": "Precio anual",
@@ -312,6 +314,9 @@
     "included": "Incluido",
     "notIncluded": "No incluido",
     "recommended": "Recomendado",
+    "FLAT_RATE": "Precio fijo",
+    "PER_SEAT": "Por usuario",
+    "USAGE_BASED": "Por uso",
     "custom": {
       "title": "Personalizado",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
@@ -331,10 +336,8 @@
       }
     },
     "features": {
-      "oneUser": "1 usuario",
-      "maxUsers": "{{0}} usuarios",
+      "maxUsers": "{{0}} usuario(s)",
       "prioritySupport": "Soporte prioritario",
-      "oneContract": "1 contrato",
       "maxContracts": "{{0}} contratos/mes"
     }
   },
@@ -927,6 +930,7 @@
       "params": "Parámetros",
       "body": "Cuerpo",
       "ip": "IP",
+      "endpoint": "URL",
       "status": "Estatus",
       "error": "Error"
     },
@@ -952,9 +956,10 @@
       "object": "Suscripción",
       "plural": "Suscripciones",
       "serviceId": "Stripe ID",
-      "tier": "Nivel",
+      "order": "Orden",
       "title": "Título",
       "description": "Descripción",
+      "model": "Modelo de precios",
       "public": "Público",
       "badge": "Leyenda",
       "status": "Estatus",

@@ -8,7 +8,7 @@ interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function OpenModal({ className, children, open, setOpen }: Props) {
+export default function Modal({ className, children, open, setOpen }: Props) {
   function onClose() {
     setOpen(false);
   }

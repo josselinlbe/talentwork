@@ -1,3 +1,4 @@
+import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
 import { SubscriptionProductDto } from "../../application/dtos/subscriptions/SubscriptionProductDto";
@@ -11,6 +12,7 @@ import {
   deleteSubscriptionProduct,
   updateSubscriptionProduct,
   updateSubscriptionFeature,
+  deleteSubscriptionFeatures,
 } from "../db/subscriptionProducts.db.server";
 import { createStripeProduct, createStripePrice, updateStripePrice, deleteStripeProduct, updateStripeProduct } from "../stripe.server";
 
@@ -23,21 +25,20 @@ export async function createPlans(plans: SubscriptionProductDto[]): Promise<void
 export async function createPlan(
   plan: SubscriptionProductDto,
   prices: { billingPeriod: SubscriptionBillingPeriod; price: number; currency: string }[],
-  features: { order: number; key: string; value: string; included: boolean }[]
+  features: SubscriptionFeatureDto[]
 ) {
   // Create stripe product
   const stripeProduct = await createStripeProduct({ title: plan.translatedTitle ?? plan.title });
   // Save to db
   const product = await createSubscriptionProduct({
     stripeId: stripeProduct?.id ?? "",
-    tier: plan.tier,
+    order: plan.order,
     title: plan.title,
+    model: plan.model,
     description: plan.description,
     badge: plan.badge,
     active: plan.active,
     public: plan.public,
-    maxUsers: plan.maxUsers,
-    monthlyContracts: plan.monthlyContracts,
   });
 
   if (!product) {
@@ -61,13 +62,12 @@ export async function createPlan(
     });
   });
 
-  features.map(async (feature) => {
-    // Save to db
-    await createSubscriptionFeature({
-      ...feature,
-      subscriptionProductId: product.id,
+  features
+    .sort((a, b) => a.order - b.order)
+    .map(async (feature) => {
+      // Save to db
+      await createSubscriptionFeature(product.id, feature);
     });
-  });
 }
 
 export async function syncPlan(
@@ -98,7 +98,7 @@ export async function syncPlan(
   });
 }
 
-export async function updatePlan(plan: SubscriptionProductDto, features: { id: string; order: number; key: string; value: string; included: boolean }[]) {
+export async function updatePlan(plan: SubscriptionProductDto, features: SubscriptionFeatureDto[]) {
   if (!plan.id) {
     throw new Error(`Plan ${plan.title} not found on database`);
   }
@@ -106,29 +106,23 @@ export async function updatePlan(plan: SubscriptionProductDto, features: { id: s
   await updateStripeProduct(plan.stripeId, { title: plan.translatedTitle ?? plan.title });
 
   await updateSubscriptionProduct(plan.id, {
-    tier: plan.tier,
+    order: plan.order,
     title: plan.title,
+    model: plan.model,
     description: plan.description,
     badge: plan.badge,
     public: plan.public,
-    maxUsers: plan.maxUsers,
-    monthlyContracts: plan.monthlyContracts,
   });
 
-  const updateFeatures = features.map(async (feature) => {
-    if (feature.id) {
-      return await updateSubscriptionFeature(feature.id, {
-        ...feature,
-      });
-    } else {
-      return await createSubscriptionFeature({
-        ...feature,
-        subscriptionProductId: plan.id ?? "",
-      });
-    }
-  });
+  await deleteSubscriptionFeatures(plan.id ?? "");
 
-  return await Promise.all(updateFeatures);
+  return await Promise.all(
+    features
+      .sort((a, b) => a.order - b.order)
+      .map(async (feature) => {
+        return await createSubscriptionFeature(plan.id ?? "", feature);
+      })
+  );
 }
 
 export async function deletePlan(plan: SubscriptionProductDto) {

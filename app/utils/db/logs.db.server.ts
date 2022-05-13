@@ -6,6 +6,7 @@ import { TenantUrl } from "../services/urlService";
 import { getUserInfo } from "../session.server";
 import { EntityWithDetails } from "./entities.db.server";
 import { EntityRowWithDetails } from "./entityRows.db.server";
+import { callEntityWebhooks, getEntityWebhook, getEntityWebhooksByAction } from "./entityWebhooks.db.server";
 
 export type LogWithDetails = Log & {
   user: User | null;
@@ -82,7 +83,7 @@ export async function createEntityRowLog(
     item: EntityRowWithDetails | null;
   }
 ) {
-  await db.log.create({
+  const log = await db.log.create({
     data: {
       tenantId: data.tenantId,
       userId: data.createdByUserId ?? null,
@@ -93,6 +94,8 @@ export async function createEntityRowLog(
       details: data.item !== null ? JSON.stringify(EntityRowHelper.getProperties(data.entity, data.item)) : null,
     },
   });
+  await callEntityWebhooks(log.id, data.entity.id, data.action, EntityRowHelper.getApiFormat(data.entity, data.item));
+  return log;
 }
 
 export async function createLogLogin(request: Request, user: User) {

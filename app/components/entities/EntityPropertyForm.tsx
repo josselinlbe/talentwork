@@ -23,7 +23,7 @@ interface Props {
   properties: EntityPropertyWithDetails[];
 }
 
-export default function FormFieldForm({ item, properties }: Props) {
+export default function EntityPropertyForm({ item, properties }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const params = useParams();

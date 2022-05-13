@@ -1,10 +1,9 @@
-import { SubscriptionProductDto } from "./SubscriptionProductDto";
+import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 
 export interface SubscriptionFeatureDto {
   order: number;
-  subscriptionProductId: string;
-  subscriptionProduct?: SubscriptionProductDto;
-  key: string;
-  value: string;
-  included: boolean;
+  title: string;
+  name: string;
+  type: SubscriptionFeatureLimitType;
+  value: number;
 }

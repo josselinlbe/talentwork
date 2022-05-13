@@ -1,12 +1,8 @@
-// import { Entity } from "@prisma/client";
-// import { SubscriptionProductDto } from "./SubscriptionProductDto";
+// import { SubscriptionLimitType } from "~/application/enums/subscriptions/SubscriptionLimitType";
 
 // export interface SubscriptionLimitDto {
-//   order: number;
-//   subscriptionProductId: string;
-//   subscriptionProduct?: SubscriptionProductDto;
-//   entityId: string;
-//   entity?: Entity;
-//   max: number;
-//   included: boolean;
+//   title: string;
+//   name: string;
+//   type: SubscriptionLimitType;
+//   value: number;
 // }

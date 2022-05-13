@@ -1,5 +1,7 @@
 import { SubscriptionFeature, SubscriptionPrice, SubscriptionProduct } from ".prisma/client";
+import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
+import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
 import { db } from "~/utils/db.server";
@@ -24,7 +26,7 @@ export async function getAllSubscriptionProductsWithTenants(): Promise<Subscript
         features: true,
       },
       orderBy: {
-        tier: "asc",
+        order: "asc",
       },
     })
     .catch(() => {
@@ -45,7 +47,7 @@ export async function getAllSubscriptionProducts(isPublic?: boolean): Promise<Su
           features: true,
         },
         orderBy: {
-          tier: "asc",
+          order: "asc",
         },
       })
       .catch(() => {
@@ -62,7 +64,7 @@ export async function getAllSubscriptionProducts(isPublic?: boolean): Promise<Su
         features: true,
       },
       orderBy: {
-        tier: "asc",
+        order: "asc",
       },
     })
     .catch(() => {
@@ -91,7 +93,7 @@ export async function getSubscriptionPrices(): Promise<SubscriptionPriceWithProd
       orderBy: [
         {
           subscriptionProduct: {
-            tier: "asc",
+            order: "asc",
           },
         },
         {
@@ -132,14 +134,13 @@ export async function getSubscriptionPriceByStripeId(stripeId: string): Promise<
 
 export async function createSubscriptionProduct(data: {
   stripeId: string;
-  tier: number;
+  order: number;
   title: string;
+  model: PricingModel;
   description: string;
   badge: string;
   active: boolean;
   public: boolean;
-  maxUsers: number;
-  monthlyContracts: number;
 }): Promise<SubscriptionProduct> {
   return await db.subscriptionProduct.create({
     data,
@@ -150,13 +151,12 @@ export async function updateSubscriptionProduct(
   id: string,
   data: {
     stripeId?: string;
-    tier: number;
+    order: number;
     title: string;
+    model: PricingModel;
     description: string;
     badge: string;
     public: boolean;
-    maxUsers: number;
-    monthlyContracts: number;
   }
 ): Promise<SubscriptionProduct> {
   return await db.subscriptionProduct.update({
@@ -198,25 +198,16 @@ export async function createSubscriptionPrice(data: {
   return await db.subscriptionPrice.create({ data });
 }
 
-export async function createSubscriptionFeature(data: {
-  subscriptionProductId: string;
-  order: number;
-  key: string;
-  value: string;
-  included: boolean;
-}): Promise<SubscriptionFeature> {
-  return await db.subscriptionFeature.create({ data });
+export async function createSubscriptionFeature(subscriptionProductId: string, data: SubscriptionFeatureDto): Promise<SubscriptionFeature> {
+  return await db.subscriptionFeature.create({
+    data: {
+      subscriptionProductId,
+      ...data,
+    },
+  });
 }
 
-export async function updateSubscriptionFeature(
-  id: string,
-  data: {
-    order: number;
-    key: string;
-    value: string;
-    included: boolean;
-  }
-): Promise<SubscriptionFeature> {
+export async function updateSubscriptionFeature(id: string, data: SubscriptionFeatureDto): Promise<SubscriptionFeature> {
   return await db.subscriptionFeature.update({
     where: { id },
     data,
@@ -235,6 +226,14 @@ export async function deleteSubscriptionPrice(id: string) {
   return await db.subscriptionPrice.delete({
     where: {
       id,
+    },
+  });
+}
+
+export async function deleteSubscriptionFeatures(subscriptionProductId: string) {
+  return await db.subscriptionFeature.deleteMany({
+    where: {
+      subscriptionProductId,
     },
   });
 }

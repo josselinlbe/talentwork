@@ -10,6 +10,7 @@ import { createAdminLog } from "~/utils/db/logs.db.server";
 import PricingPlanForm from "~/components/core/pricing/PricingPlanForm";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 
 export type LoaderData = {
   title: string;
@@ -40,19 +41,18 @@ export const action: ActionFunction = async ({ request }) => {
   if (action !== "create-plan") {
     return badRequest({ error: t("shared.invalidForm") });
   }
-  const tier = Number(form.get("tier"));
+  const order = Number(form.get("order"));
   const title = form.get("title")?.toString();
   const description = form.get("description")?.toString() ?? "";
+  const model = Number(form.get("model"));
   const badge = form.get("badge")?.toString() ?? "";
   const isPublic = Boolean(form.get("is-public"));
-  const limitUsers = Number(form.get("limit-users"));
-  const limitContracts = Number(form.get("limit-contracts"));
   const currency = form.get("price-currency")?.toString() ?? "usd";
   const monthlyPrice = Number(form.get("price-monthly"));
   const yearlyPrice = Number(form.get("price-yearly"));
 
   const featuresArr = form.getAll("features[]");
-  const features: { order: number; key: string; value: string; included: boolean }[] = featuresArr.map((f: FormDataEntryValue) => {
+  const features: SubscriptionFeatureDto[] = featuresArr.map((f: FormDataEntryValue) => {
     return JSON.parse(f.toString());
   });
 
@@ -62,14 +62,13 @@ export const action: ActionFunction = async ({ request }) => {
 
   const plan: SubscriptionProductDto = {
     stripeId: "",
-    tier,
+    order,
     title,
+    model,
     description,
     badge,
     active: true,
     public: isPublic,
-    maxUsers: limitUsers,
-    monthlyContracts: limitContracts,
     prices: [],
     features: [],
   };

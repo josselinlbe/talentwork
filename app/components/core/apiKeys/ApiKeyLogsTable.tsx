@@ -64,6 +64,10 @@ export default function ApiKeyLogsTable({ withTenant, items }: Props) {
       name: "ip",
       title: t("models.apiKeyLog.ip"),
     });
+    headers.push({
+      name: "endpoint",
+      title: t("models.apiKeyLog.endpoint"),
+    });
     headers = [
       ...headers,
       {
@@ -211,6 +215,7 @@ export default function ApiKeyLogsTable({ withTenant, items }: Props) {
                                 )}
                                 <td className="px-2 py-2 whitespace-nowrap">{item.apiKey ? item.apiKey?.alias : <span className="text-gray-300">?</span>}</td>
                                 <td className="px-2 py-2 whitespace-nowrap">{item.ip.length > 0 ? item.ip : <span className="text-gray-300">?</span>}</td>
+                                <td className="px-2 py-2 whitespace-nowrap">{item.endpoint}</td>
                                 <td className="px-2 py-2 whitespace-nowrap">
                                   <SimpleBadge title={item.method} color={getMethodColor(item)} />
                                 </td>

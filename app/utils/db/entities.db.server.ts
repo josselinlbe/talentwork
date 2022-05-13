@@ -1,11 +1,10 @@
-import { Entity, EntityLimit, EntityProperty, EntityPropertyOption } from "@prisma/client";
+import { Entity, EntityProperty, EntityPropertyOption } from "@prisma/client";
 import { EntityLimitType } from "~/application/enums/entities/EntityLimitType";
 import { db } from "../db.server";
 import { defaultEntityProperties } from "../helpers/EntityPropertyHelper";
 
 export type EntityRowsUsage = { entityId: string; _count: number };
 export type EntityWithDetails = Entity & { properties: EntityPropertyWithDetails[] };
-export type EntityWithLimits = EntityWithDetails & { limits: EntityLimit[] };
 export type EntityWithCount = EntityWithDetails & { _count: { rows: number } };
 
 export type EntityPropertyWithDetails = EntityProperty & {
@@ -89,7 +88,7 @@ export async function getAllEntityRowsUsage(tenantId: string): Promise<EntityRow
   return countEntities;
 }
 
-export async function getEntityRowsCount(tenantId: string, entityId: string, entityLimit?: EntityLimit): Promise<number> {
+export async function getEntityRowsCount(tenantId: string, entityId: string): Promise<number> {
   const whereTenant = {
     OR: [
       {
@@ -144,7 +143,6 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
           options: true,
         },
       },
-      limits: true,
     },
   });
 }
@@ -166,7 +164,6 @@ export async function getEntityBySlug(slug: string): Promise<EntityWithDetails |
           options: true,
         },
       },
-      limits: true,
     },
   });
 }
@@ -204,6 +201,37 @@ export async function createEntity(data: {
   const entity = await db.entity.create({
     data,
   });
+
+  const webhooks = [
+    {
+      action: "Created",
+      method: "POST",
+      endpoint: "",
+    },
+    {
+      action: "Updated",
+      method: "POST",
+      endpoint: "",
+    },
+    {
+      action: "Deleted",
+      method: "POST",
+      endpoint: "",
+    },
+  ];
+
+  await Promise.all(
+    webhooks.map(async (webhook) => {
+      return await db.entityWebhook.create({
+        data: {
+          entityId: entity.id,
+          action: webhook.action,
+          method: webhook.method,
+          endpoint: webhook.endpoint,
+        },
+      });
+    })
+  );
 
   await Promise.all(
     defaultEntityProperties.map(async (property) => {

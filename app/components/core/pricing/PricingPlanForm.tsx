@@ -10,10 +10,16 @@ import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 import InputNumber from "~/components/ui/input/InputNumber";
 import InputText, { RefInputText } from "~/components/ui/input/InputText";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
+import { useAdminData } from "~/utils/data/useAdminData";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import Plan from "../settings/subscription/Plan";
 import ToggleBillingPeriod from "../settings/subscription/ToggleBillingPeriod";
 import PricingFeaturesForm from "./PricingFeaturesForm";
+import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
+import PricingFeaturesTable from "./PricingFeaturesTable";
+import InputSelect from "~/components/ui/input/InputSelect";
+import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
+import InputRadioGroup from "~/components/ui/input/InputRadioGroup";
 
 interface Props {
   plans?: SubscriptionProductDto[];
@@ -26,30 +32,20 @@ export default function PricingPlanForm({ plans, item }: Props) {
   const loading = transition.state === "submitting";
   const navigate = useNavigate();
   const submit = useSubmit();
+  const adminData = useAdminData();
 
   const inputTitle = useRef<RefInputText>(null);
   const confirmRemove = useRef<RefConfirmModal>(null);
 
-  const [tier, setTier] = useState(item?.tier ?? getNextTier());
+  const [order, setOrder] = useState(item?.order ?? getNextOrder());
   const [title, setTitle] = useState(item?.title ?? "");
   const [description, setDescription] = useState(item?.description ?? "");
+  const [model, setModel] = useState(item?.model ?? PricingModel.FLAT_RATE);
   const [badge, setBadge] = useState(item?.badge ?? "");
   const [isPublic, setIsPublic] = useState(item?.public ?? false);
-  const [limitUsers, setLimitUsers] = useState(item?.maxUsers ?? 1);
-  const [limitContracts, setLimitContracts] = useState(item?.monthlyContracts ?? 1);
   const [monthlyPrice, setMonthlyPrice] = useState(getDefaultPrice(SubscriptionBillingPeriod.MONTHLY));
   const [yearlyPrice, setYearlyPrice] = useState(getDefaultPrice(SubscriptionBillingPeriod.YEARLY));
-  const [features, setFeatures] = useState<SubscriptionFeatureDto[]>(
-    item?.features ?? [
-      {
-        order: 1,
-        key: "Feature 1",
-        value: "",
-        included: true,
-        subscriptionProductId: "",
-      },
-    ]
-  );
+  const [features, setFeatures] = useState<SubscriptionFeatureDto[]>([]);
 
   const [billingPeriod, setBillingPeriod] = useState<SubscriptionBillingPeriod>(SubscriptionBillingPeriod.MONTHLY);
   const [currency] = useState("usd");
@@ -57,6 +53,40 @@ export default function PricingPlanForm({ plans, item }: Props) {
   useEffect(() => {
     inputTitle.current?.input.current?.focus();
     inputTitle.current?.input.current?.select();
+
+    if (item) {
+      setFeatures(item.features);
+    } else {
+      const features: SubscriptionFeatureDto[] = [
+        {
+          order: 1,
+          title: "1 user",
+          name: "users",
+          type: SubscriptionFeatureLimitType.MAX,
+          value: 1,
+        },
+      ];
+      adminData.entities
+        .filter((f) => f.active)
+        .forEach((entity) => {
+          features.push({
+            order: features.length + 1,
+            title: "100 " + t(entity.titlePlural).toLowerCase() + "/month",
+            name: entity.slug,
+            type: SubscriptionFeatureLimitType.MONTHLY,
+            value: 100,
+          });
+        });
+      features.push({
+        order: features.length + 1,
+        title: "Priority support",
+        name: "priority-support",
+        type: SubscriptionFeatureLimitType.NOT_INCLUDED,
+        value: 0,
+      });
+      setFeatures(features);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function toggleBillingPeriod() {
@@ -74,11 +104,11 @@ export default function PricingPlanForm({ plans, item }: Props) {
   function remove() {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));
   }
-  function getNextTier() {
+  function getNextOrder() {
     if (!plans || plans?.length === 0) {
       return 1;
     }
-    return Math.max(...plans.map((o) => o.tier)) + 1;
+    return Math.max(...plans.map((o) => o.order)) + 1;
   }
   function getPrice() {
     if (billingPeriod === SubscriptionBillingPeriod.MONTHLY) {
@@ -112,6 +142,22 @@ export default function PricingPlanForm({ plans, item }: Props) {
     });
   }
 
+  function getModelDescription() {
+    switch (model) {
+      case PricingModel.FLAT_RATE:
+        return "eg: Basic $10, Pro $20, Enterprise $30";
+
+      case PricingModel.PER_SEAT:
+        return "Customers can select quantity, eg: $5 per seat.";
+
+      case PricingModel.USAGE_BASED:
+        return "eg: 1$ per contract";
+
+      default:
+        return t("shared.undefined");
+    }
+  }
+
   return (
     <>
       <Form method="post" className="lg:py-2 grid grid-cols-2 gap-4 sm:px-4">
@@ -128,11 +174,18 @@ export default function PricingPlanForm({ plans, item }: Props) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                <div className="sm:col-span-1">
-                  <InputNumber name="tier" title={t("models.subscriptionProduct.tier")} value={tier} setValue={setTier} disabled={loading} required={true} />
-                </div>
+              <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12">
                 <div className="sm:col-span-3">
+                  <InputNumber
+                    name="order"
+                    title={t("models.subscriptionProduct.order")}
+                    value={order}
+                    setValue={setOrder}
+                    disabled={loading}
+                    required={true}
+                  />
+                </div>
+                <div className="sm:col-span-6">
                   <InputText
                     ref={inputTitle}
                     name="title"
@@ -148,7 +201,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
                     help="You can use i18n keys to translate the Plan title to the current user's language"
                   />
                 </div>
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-3">
                   <InputText
                     name="badge"
                     title={t("models.subscriptionProduct.badge")}
@@ -159,7 +212,10 @@ export default function PricingPlanForm({ plans, item }: Props) {
                     withTranslation={true}
                   />
                 </div>
-                <div className="sm:col-span-6">
+                {/* <div className="sm:col-span-9">
+                  <InputText name="model-description" title={"Model description"} value={getModelDescription()} disabled={true} />
+                </div> */}
+                <div className="sm:col-span-12">
                   <InputText
                     name="description"
                     title={t("models.subscriptionProduct.description")}
@@ -172,7 +228,56 @@ export default function PricingPlanForm({ plans, item }: Props) {
                     withTranslation={true}
                   />
                 </div>
-                <div className="sm:col-span-6">
+
+                <div className="sm:col-span-12">
+                  <InputRadioGroup
+                    name="model"
+                    title={t("models.subscriptionProduct.model")}
+                    value={model}
+                    setValue={(e) => {
+                      setModel(Number(e));
+                    }}
+                    options={[
+                      {
+                        name: t("pricing." + PricingModel[PricingModel.FLAT_RATE]),
+                        value: PricingModel.FLAT_RATE,
+                      },
+                      {
+                        name: t("pricing." + PricingModel[PricingModel.PER_SEAT]),
+                        value: PricingModel.PER_SEAT,
+                      },
+                      {
+                        name: t("pricing." + PricingModel[PricingModel.USAGE_BASED]),
+                        value: PricingModel.USAGE_BASED,
+                        disabled: true,
+                      },
+                    ]}
+                  />
+                  {/* <InputSelect
+                    name="model"
+                    title={t("models.subscriptionProduct.model")}
+                    value={model}
+                    setValue={(e) => {
+                      setModel(Number(e));
+                    }}
+                    options={[
+                      {
+                        name: t("pricing." + PricingModel[PricingModel.FLAT_RATE]),
+                        value: PricingModel.FLAT_RATE,
+                      },
+                      {
+                        name: t("pricing." + PricingModel[PricingModel.PER_SEAT]),
+                        value: PricingModel.PER_SEAT,
+                      },
+                      {
+                        name: t("pricing." + PricingModel[PricingModel.USAGE_BASED]),
+                        value: PricingModel.USAGE_BASED,
+                        disabled: true,
+                      },
+                    ]}
+                  /> */}
+                </div>
+                <div className="sm:col-span-12">
                   <InputCheckboxInline
                     name="is-public"
                     title={t("models.subscriptionProduct.public")}
@@ -229,26 +334,8 @@ export default function PricingPlanForm({ plans, item }: Props) {
                 </div>
               </div>
             </div>
-            <div className="bg-white py-6 px-8 shadow-lg border border-gray-200 space-y-6">
-              <div className="flex items-center space-x-3 justify-between">
-                <div>
-                  <div>
-                    <h3 className="text-lg leading-6 font-bold text-gray-900">Limits</h3>
-                  </div>
-                  <p className="mt-1 text-sm text-gray-500">Set the limits</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-1">
-                <div className="col-span-1">
-                  <InputNumber name="limit-users" title={"Max users"} value={limitUsers} setValue={setLimitUsers} />
-                </div>
-                <div className="col-span-1">
-                  <InputNumber name="limit-contracts" title={"Monthly contracts"} value={limitContracts} setValue={setLimitContracts} />
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-white py-6 px-8 shadow-lg border border-gray-200 space-y-6">
+            <div className="bg-white py-6 px-8 shadow-lg border border-gray-200 space-y-2">
               <div className="flex items-center space-x-3 justify-between">
                 <div>
                   <div>
@@ -257,7 +344,8 @@ export default function PricingPlanForm({ plans, item }: Props) {
                   <p className="mt-1 text-sm text-gray-500">Set the features</p>
                 </div>
               </div>
-              <PricingFeaturesForm features={features.sort((a, b) => a.order - b.order)} setFeatures={setFeatures} />
+              {/* <PricingFeaturesForm items={features} setItems={setFeatures} entities={adminData.entities} /> */}
+              <PricingFeaturesTable items={features} setItems={setFeatures} />
             </div>
 
             <div className="bg-white py-6 px-8 shadow-lg border border-gray-200 space-y-6">
@@ -282,6 +370,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
                   billingPeriod={billingPeriod}
                   currency={currency}
                   price={getPrice()}
+                  model={model}
                 />
               </div>
             </div>

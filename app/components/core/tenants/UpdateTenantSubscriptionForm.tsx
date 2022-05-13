@@ -107,7 +107,7 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
                       title="Subscription"
                       value={subscriptionPriceId}
                       options={subscriptionPricesOptions}
-                      onChange={(e) => setSubscriptionPriceId(e.target.value)}
+                      setValue={(e) => setSubscriptionPriceId(e?.toString())}
                     />
                   </div>
 

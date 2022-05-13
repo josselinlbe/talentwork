@@ -40,20 +40,20 @@ model AdminUser {
 }
 
 model Log {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
+  id          String             @id @default(cuid())
+  createdAt   DateTime           @default(now())
   tenantId    String?
-  tenant      Tenant?    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant      Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   userId      String?
-  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   apiKeyId    String?
-  apiKey      ApiKey?    @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  apiKey      ApiKey?            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
   entityRowId String?
-  entityRow   EntityRow? @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
+  entityRow   EntityRow?         @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
   url         String
   action      String
   details     String?
-  // entityLogs  EntityLog[]
+  webhookLogs EntityWebhookLog[]
 }
 
 model Tenant {
@@ -82,6 +82,7 @@ model TenantSubscription {
   stripeSubscriptionId String?
   subscriptionPriceId  String?
   subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
+  quantity             Int
 }
 
 model TenantUser {
@@ -155,6 +156,7 @@ model ApiKeyLog {
   apiKeyId  String?
   apiKey    ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
   ip        String
+  endpoint  String
   method    String
   params    String
   // body      String
@@ -163,20 +165,17 @@ model ApiKeyLog {
 }
 
 model SubscriptionProduct {
-  id                 String                          @id @default(cuid())
-  stripeId           String
-  tier               Int
-  title              String
-  description        String
-  badge              String
-  active             Boolean
-  public             Boolean
-  maxUsers           Int
-  monthlyContracts   Int
-  prices             SubscriptionPrice[]
-  features           SubscriptionFeature[]
-  entityLimits       EntityLimit[]
-  entityFeatureFlags EntitySubscriptionFeatureFlag[]
+  id          String                @id @default(cuid())
+  stripeId    String
+  order       Int
+  title       String
+  description String
+  badge       String
+  active      Boolean
+  model       Int // 0 = FLAT_RATE, 1 = PER_SEAT, 2 = USAGE_BASED
+  public      Boolean
+  prices      SubscriptionPrice[]
+  features    SubscriptionFeature[]
 }
 
 model SubscriptionPrice {
@@ -198,9 +197,10 @@ model SubscriptionFeature {
   subscriptionProductId String
   subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   order                 Int
-  key                   String
-  value                 String
-  included              Boolean
+  title                 String
+  name                  String
+  type                  Int // 0 = Max, 1 = Monthly
+  value                 Int
 }
 
 model LinkedAccount {
@@ -272,13 +272,13 @@ model BlogPost {
 }
 
 model Entity {
-  id                     String                          @id @default(cuid())
-  createdAt              DateTime                        @default(now())
-  updatedAt              DateTime                        @updatedAt
-  name                   String                          @unique
-  slug                   String                          @unique
-  order                  Int                             @unique
-  prefix                 String                          @unique
+  id                     String                       @id @default(cuid())
+  createdAt              DateTime                     @default(now())
+  updatedAt              DateTime                     @updatedAt
+  name                   String                       @unique
+  slug                   String                       @unique
+  order                  Int                          @unique
+  prefix                 String                       @unique
   title                  String // i18n key, eg: models.contract.object
   titlePlural            String //  i18n key, eg: models.contract.plural
   isFeature              Boolean
@@ -289,10 +289,9 @@ model Entity {
   active                 Boolean
   properties             EntityProperty[]
   rows                   EntityRow[]
-  limits                 EntityLimit[]
   permissions            EntityTenantUserPermission[]
-  features               EntitySubscriptionFeatureFlag[]
   apiKeys                ApiKeyEntity[]
+  webhooks               EntityWebhook[]
 }
 
 model EntityProperty {
@@ -367,16 +366,6 @@ model EntityRowValue {
   dateValue        DateTime?
 }
 
-model EntityLimit {
-  id                    String              @id @default(cuid())
-  entityId              String
-  entity                Entity              @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  subscriptionProductId String
-  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
-  type                  Int // 0 = Max, 1 = Monthly
-  max                   Int
-}
-
 model EntityTenantUserPermission {
   id       String @id @default(cuid())
   entityId String
@@ -384,13 +373,24 @@ model EntityTenantUserPermission {
   level    Int // 0 = Read, 1 = +Create, 2 = +Update, 3 = Delete
 }
 
-model EntitySubscriptionFeatureFlag {
-  id                    String              @id @default(cuid())
-  entityId              String
-  entity                Entity              @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  subscriptionProductId String
-  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
-  level                 Int // 0 = Read, 1 = +Create, 2 = +Update, 3 = Delete
+model EntityWebhook {
+  id       String             @id @default(cuid())
+  entityId String
+  entity   Entity             @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  action   String
+  method   String
+  endpoint String
+  logs     EntityWebhookLog[]
+}
+
+model EntityWebhookLog {
+  id        String        @id @default(cuid())
+  webhookId String
+  webhook   EntityWebhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  logId     String
+  log       Log           @relation(fields: [logId], references: [id], onDelete: Cascade)
+  status    Int
+  error     String?
 }
 
 // model EntityLog {

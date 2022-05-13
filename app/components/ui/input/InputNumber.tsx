@@ -9,6 +9,7 @@ export interface RefInputNumber {
 interface Props {
   name: string;
   title: string;
+  withLabel?: boolean;
   value?: number;
   setValue?: React.Dispatch<React.SetStateAction<number>>;
   className?: string;
@@ -22,25 +23,27 @@ interface Props {
   step?: string;
 }
 const InputNumber = (
-  { name, title, value, setValue, className, hint, help, disabled = false, readOnly = false, required = false, min = 0, max, step }: Props,
+  { name, title, withLabel = true, value, setValue, className, hint, help, disabled = false, readOnly = false, required = false, min = 0, max, step }: Props,
   ref: Ref<RefInputNumber>
 ) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
   return (
     <div className={className}>
-      <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
-        <div className=" flex space-x-1 items-center">
-          <div>
-            {title}
-            {required && <span className="ml-1 text-red-500">*</span>}
-          </div>
+      {withLabel && (
+        <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
+          <div className=" flex space-x-1 items-center">
+            <div>
+              {title}
+              {required && <span className="ml-1 text-red-500">*</span>}
+            </div>
 
-          {help && <HintTooltip text={help} />}
-        </div>
-        {hint}
-      </label>
-      <div className="mt-1 flex rounded-md shadow-sm w-full">
+            {help && <HintTooltip text={help} />}
+          </div>
+          {hint}
+        </label>
+      )}
+      <div className={clsx("flex rounded-md shadow-sm w-full", withLabel && "mt-1")}>
         <input
           ref={input}
           type="number"

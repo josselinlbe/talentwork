@@ -17,6 +17,9 @@ import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import clsx from "clsx";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { Tenant } from ".prisma/client";
+import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
+import PlanFeatureValue from "~/components/core/settings/subscription/PlanFeatureValue";
+import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 
 type LoaderData = {
   title: string;
@@ -108,6 +111,7 @@ export default function AdminPricingRoute() {
   const successModal = useRef<RefSuccessModal>(null);
 
   const [items, setItems] = useState<SubscriptionProductDto[]>(data.items);
+  const [allFeatures, setAllFeatures] = useState<{ order: number; name: string; title: string }[]>([]);
 
   useEffect(() => {
     if (actionData?.error) {
@@ -124,9 +128,26 @@ export default function AdminPricingRoute() {
     setItems(data.items);
   }, [data]);
 
+  useEffect(() => {
+    const allFeatures: { order: number; name: string; title: string }[] = [];
+    items.forEach((item) => {
+      item.features.forEach((feature) => {
+        const existing = allFeatures.find((f) => f.name === feature.name);
+        if (!existing) {
+          allFeatures.push({
+            order: feature.order,
+            name: feature.name,
+            title: feature.title,
+          });
+        }
+      });
+    });
+    setAllFeatures(allFeatures.sort((a, b) => a.order - b.order));
+  }, [items]);
+
   const sortedItems = () => {
     return items.sort((x, y) => {
-      return x?.tier > y?.tier ? 1 : -1;
+      return x?.order > y?.order ? 1 : -1;
     });
   };
 
@@ -148,8 +169,8 @@ export default function AdminPricingRoute() {
   // function createPlan(item: SubscriptionProductDto) {
   //   const form = new FormData();
   //   form.set("action", "create-plan");
-  //   form.set("tier", item.tier);
-  //   form.set("tier", item.description);
+  //   form.set("order", item.order);
+  //   form.set("order", item.description);
   //   employees.forEach((item) => {
   //     form.append("employees[]", JSON.stringify(item));
   //   });
@@ -170,6 +191,10 @@ export default function AdminPricingRoute() {
       });
     });
     return tenants;
+  }
+
+  function getFeatureValue(item: SubscriptionProductDto, name: string) {
+    return item.features.find((f) => f.name === name);
   }
 
   return (
@@ -247,20 +272,27 @@ export default function AdminPricingRoute() {
                         <thead>
                           <tr>
                             <th className="px-1 py-2 bg-gray-50 text-center text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
-                              {t("models.subscriptionProduct.tier")}
+                              {t("models.subscriptionProduct.order")}
                             </th>
                             <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.title")}
                             </th>
+                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                              {t("models.subscriptionProduct.model")}
+                            </th>
+                            {allFeatures.map((feature) => {
+                              return (
+                                <td
+                                  key={feature.name}
+                                  className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate"
+                                >
+                                  <div className="flex justify-center capitalize">{feature.name}</div>
+                                </td>
+                              );
+                            })}
                             {/* <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.badge")}
                             </th> */}
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
-                              {t("models.user.plural")} <span className=" text-xs italic text-gray-400 font-light">({t("shared.max")})</span>
-                            </th>
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
-                              {t("models.contract.plural")} <span className=" text-xs italic text-gray-400 font-light">({t("shared.monthly")})</span>
-                            </th>
                             <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.plural")}
                             </th>
@@ -279,7 +311,7 @@ export default function AdminPricingRoute() {
                           {sortedItems().map((item, index) => {
                             return (
                               <tr key={index} className="text-gray-600">
-                                <td className="truncate px-1 py-2 text-sm leading-3 text-center">{item.tier}</td>
+                                <td className="truncate px-1 py-2 text-sm leading-3 text-center">{item.order}</td>
                                 <td className="truncate px-1 py-2 text-sm leading-3">
                                   {t(item.title)}{" "}
                                   {item.badge && (
@@ -288,13 +320,18 @@ export default function AdminPricingRoute() {
                                     </span>
                                   )}
                                 </td>
+                                <td className="truncate px-1 py-2 text-sm leading-3">{t("pricing." + PricingModel[item.model])}</td>
                                 {/* <td className="truncate px-1 py-2 text-sm leading-3">{item.badge && <div>{t(item.badge)}</div>}</td> */}
-                                <td className="truncate px-1 py-2 text-sm leading-3">
-                                  {!item.maxUsers || item.maxUsers === 0 ? t("shared.unlimited") : item.maxUsers}
-                                </td>
-                                <td className="truncate px-1 py-2 text-sm leading-3">
-                                  {!item.monthlyContracts || item.monthlyContracts === 0 ? t("shared.unlimited") : item.monthlyContracts}
-                                </td>
+                                {allFeatures.map((feature) => {
+                                  return (
+                                    <td key={feature.name} className="truncate px-1 py-2 text-sm leading-3">
+                                      <div className="flex justify-center">
+                                        <PlanFeatureValue item={getFeatureValue(item, feature.name)} />
+                                      </div>
+                                    </td>
+                                  );
+                                })}
+
                                 <td className="truncate px-1 py-2 text-sm leading-3">
                                   <div
                                     title={getTenantsSubscribed(item)
