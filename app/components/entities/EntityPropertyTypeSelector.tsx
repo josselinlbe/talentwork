@@ -9,12 +9,22 @@ import CheckIcon from "../ui/icons/CheckIcon";
 
 interface Props {
   className?: string;
-  items: EntityPropertyType[];
   selected: EntityPropertyType;
   onSelected: (item: EntityPropertyType) => void;
 }
 
-export default function EntityPropertyTypeSelector({ className, items, selected, onSelected }: Props) {
+export default function EntityPropertyTypeSelector({ className, selected, onSelected }: Props) {
+  const items: EntityPropertyType[] = [
+    EntityPropertyType.TEXT,
+    EntityPropertyType.NUMBER,
+    EntityPropertyType.DATE,
+    // EntityPropertyType.USER,
+    // EntityPropertyType.ROLE,
+    EntityPropertyType.SELECT,
+    EntityPropertyType.MEDIA,
+    EntityPropertyType.ENTITY,
+    // EntityPropertyType.FORMULA,
+  ];
   const { t } = useTranslation();
   return (
     <Listbox value={selected} onChange={onSelected}>

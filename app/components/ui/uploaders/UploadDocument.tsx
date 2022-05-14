@@ -5,17 +5,18 @@ import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  className?: string;
   title?: string;
   accept?: string;
   multiple?: boolean;
   description?: string;
   icon?: ReactNode;
+  disabled?: boolean;
+  className?: string;
   onDropped?: (base64: string, file: File) => void;
   onDroppedFiles?: (fileBase64: FileBase64[], files: any[]) => void;
 }
 
-export default function UploadDocuments({ className, title = "", accept, multiple, description, icon = "", onDropped, onDroppedFiles }: Props) {
+export default function UploadDocuments({ className, title = "", accept, multiple, description, icon = "", disabled, onDropped, onDroppedFiles }: Props) {
   const { t } = useTranslation();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -31,20 +32,19 @@ export default function UploadDocuments({ className, title = "", accept, multipl
   function dragLeave() {
     setIsDragging(false);
   }
-  async function compressFile(imageFile: File): Promise<any> {
+  async function compressFile(imageFile: File): Promise<File> {
     const options = {
       maxSizeMB: 0.5,
       maxWidthOrHeight: 1920 / 2,
       useWebWorker: true,
     };
     try {
-      const file = await imageCompression(imageFile, options);
-      return Promise.resolve(file);
+      return await imageCompression(imageFile, options);
     } catch (error) {
-      return Promise.reject(error);
+      return await Promise.reject(error);
     }
   }
-  async function compressFileNotImage(imageFile: File): Promise<any> {
+  async function compressFileNotImage(imageFile: File): Promise<File> {
     return Promise.resolve(imageFile);
   }
   async function drop(e: any) {
@@ -53,37 +53,32 @@ export default function UploadDocuments({ className, title = "", accept, multipl
     } catch {
       // ignore
     }
-    let files: File[] = [...e.dataTransfer.files];
-    const newImagesPromises: any[] = [];
-    await files.forEach((element: File) => {
-      if (element.type.includes("image")) {
-        newImagesPromises.push(compressFile(element));
-      } else {
-        newImagesPromises.push(compressFileNotImage(element));
-      }
-    });
-    files = await Promise.all(newImagesPromises);
+    const files: File[] = await Promise.all(
+      [...e.dataTransfer.files].map(async (element: File) => {
+        if (element.type.includes("image")) {
+          return await compressFile(element);
+        } else {
+          return await compressFileNotImage(element);
+        }
+      })
+    );
     const filesArray: FileBase64[] = [];
-    const promises: any[] = [];
 
-    files.forEach((file) => {
-      const promise = getBase64(file);
-      promises.push(promise);
-      promise.then((response: string) => {
+    await Promise.all(
+      files.map(async (file) => {
+        const base64 = await getBase64(file);
         filesArray.push({
+          base64,
           file,
-          base64: response,
         });
         if (onDropped) {
-          onDropped(response, file);
+          onDropped(base64, file);
         }
-      });
-    });
-    await Promise.all(promises).then(() => {
-      if (onDroppedFiles) {
-        onDroppedFiles(filesArray, files);
-      }
-    });
+      })
+    );
+    if (onDroppedFiles) {
+      onDroppedFiles(filesArray, files);
+    }
     setIsDragging(false);
   }
   function requestUploadFile() {
@@ -107,7 +102,7 @@ export default function UploadDocuments({ className, title = "", accept, multipl
   return (
     <div
       className={clsx(
-        "text-gray-600 overflow-hidden drop text-center flex border-2 border-dashed border-gray-300 rounded-md items-center",
+        "text-gray-600 overflow-hidden drop text-center flex border-2 border-dashed border-gray-300 rounded-t-md items-center",
         customClasses,
         className
       )}
@@ -134,7 +129,7 @@ export default function UploadDocuments({ className, title = "", accept, multipl
                       <label htmlFor="uploadmyfile">
                         <p className="font-semibold text-sm underline cursor-pointer hover:text-theme-500">{t("app.shared.buttons.uploadDocument")}</p>
                       </label>
-                      <input type="file" id="uploadmyfile" accept={accept} multiple={multiple} onChange={requestUploadFile} />
+                      <input disabled={disabled} type="file" id="uploadmyfile" accept={accept} multiple={multiple} onChange={requestUploadFile} />
                     </label>
                     <p className="pl-1 lowercase">
                       {t("shared.or")} {t("shared.dragAndDrop")}

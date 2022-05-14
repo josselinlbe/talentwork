@@ -53,7 +53,7 @@ export default function EntityRowsListAndTable({ entity, items, withTenant = fal
     headers.push({ name: "createdByUser", title: t("shared.createdBy") });
     setHeaders(headers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [withTenant]);
+  }, [entity, withTenant]);
 
   function sortBy(column?: string) {
     if (column) {

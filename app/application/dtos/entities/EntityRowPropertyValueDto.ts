@@ -1,6 +1,7 @@
-import { EntityPropertyOption } from "@prisma/client";
+import { EntityPropertyOption, Media } from "@prisma/client";
 import { EntityPropertyWithDetails } from "~/utils/db/entities.db.server";
 import { EntityRowWithDetails } from "~/utils/db/entityRows.db.server";
+import { MediaDto } from "./MediaDto";
 
 export type EntityRowPropertyValueDto = {
   id?: string | null;
@@ -13,4 +14,5 @@ export type EntityRowPropertyValueDto = {
   dateValue?: Date | undefined;
   selectedOption?: EntityPropertyOption | undefined;
   relatedRow?: EntityRowWithDetails | undefined;
+  media?: Media[];
 };

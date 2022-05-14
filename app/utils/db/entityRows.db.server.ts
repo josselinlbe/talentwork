@@ -1,4 +1,5 @@
-import { EntityRow, User, Tenant, LinkedAccount, Contract, Employee, EntityRowValue, ApiKey } from "@prisma/client";
+import { EntityRow, User, Tenant, LinkedAccount, Contract, Employee, EntityRowValue, ApiKey, Media } from "@prisma/client";
+import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { db } from "../db.server";
 
 export type EntityRowWithDetails = EntityRow & {
@@ -15,7 +16,7 @@ export type EntityRowWithDetails = EntityRow & {
     | null;
   contract: Contract | null;
   employee: Employee | null;
-  values: EntityRowValue[];
+  values: (EntityRowValue & { media: Media[] })[];
 };
 
 export const includeEntityRowDetails = {
@@ -35,6 +36,7 @@ export const includeEntityRowDetails = {
   values: {
     include: {
       relatedRow: true,
+      media: true,
     },
   },
 };
@@ -100,6 +102,7 @@ export async function createEntityRow(data: {
     textValue?: string | null;
     numberValue?: number | string | null;
     dateValue?: Date | string | null;
+    media?: MediaDto[];
   }[];
 }) {
   let folio = 1;
@@ -127,6 +130,16 @@ export async function createEntityRow(data: {
               textValue: value.textValue,
               numberValue: value.numberValue,
               dateValue: value.dateValue,
+              media: {
+                create: value.media?.map((m) => {
+                  return {
+                    name: m.name,
+                    title: m.title,
+                    type: m.type,
+                    file: m.file,
+                  };
+                }),
+              },
             };
           }),
       },
@@ -146,6 +159,7 @@ export async function updateEntityRow(
       textValue?: string | null;
       numberValue?: number | string | null;
       dateValue?: Date | string | null;
+      media?: MediaDto[];
     }[];
   }
 ) {
@@ -162,6 +176,16 @@ export async function updateEntityRow(
             textValue: value.textValue,
             numberValue: value.numberValue,
             dateValue: value.dateValue,
+            media: {
+              create: value.media?.map((m) => {
+                return {
+                  name: m.name,
+                  title: m.title,
+                  type: m.type,
+                  file: m.file,
+                };
+              }),
+            },
           };
         }),
       update: data.dynamicProperties
@@ -175,12 +199,21 @@ export async function updateEntityRow(
               textValue: value.textValue,
               numberValue: value.numberValue,
               dateValue: value.dateValue,
+              media: {
+                create: value.media?.map((m) => {
+                  return {
+                    name: m.name,
+                    title: m.title,
+                    type: m.type,
+                    file: m.file,
+                  };
+                }),
+              },
             },
           };
         }),
     },
   };
-  console.log({ update });
   return await db.entityRow.update({
     where: {
       id,

@@ -12,8 +12,6 @@ interface Props {
   withTenant?: boolean;
 }
 export default function EntityRowsList({ entity, items, withTenant = false }: Props) {
-  const { t } = useTranslation();
-
   const [searchInput, setSearchInput] = useState("");
 
   const filteredItems = () => {

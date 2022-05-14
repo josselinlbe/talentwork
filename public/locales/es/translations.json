@@ -1112,7 +1112,8 @@
       "ENTITY": "Entity",
       "ID": "ID",
       "SELECT": "Selección",
-      "FORMULA": "Fórmula"
+      "FORMULA": "Fórmula",
+      "MEDIA": "Adjuntos"
     },
     "defaultFields": {
       "USER": "Creado por usuario",

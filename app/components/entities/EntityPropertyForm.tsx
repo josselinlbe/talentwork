@@ -33,16 +33,6 @@ export default function EntityPropertyForm({ item, properties, entities, parentE
   const selectOptionsForm = useRef<RefSelectEntityOptionsForm>(null);
 
   // TODO: Implement User, Role, Entity and Formula types
-  const types: EntityPropertyType[] = [
-    EntityPropertyType.TEXT,
-    EntityPropertyType.NUMBER,
-    EntityPropertyType.DATE,
-    // EntityPropertyType.USER,
-    // EntityPropertyType.ROLE,
-    EntityPropertyType.SELECT,
-    EntityPropertyType.ENTITY,
-    // EntityPropertyType.FORMULA,
-  ];
 
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
 
@@ -247,7 +237,7 @@ export default function EntityPropertyForm({ item, properties, entities, parentE
                         Type
                       </label>
                       <div className="mt-1">
-                        <EntityPropertyTypeSelector items={types} selected={type} onSelected={(e) => setType(e)} />
+                        <EntityPropertyTypeSelector selected={type} onSelected={(e) => setType(e)} />
                       </div>
                     </div>
 

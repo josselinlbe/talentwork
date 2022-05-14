@@ -56,6 +56,7 @@ const getFieldTitle = (field: EntityProperty, isDefault = false): string => {
     case EntityPropertyType.DATE:
     case EntityPropertyType.SELECT:
     case EntityPropertyType.FORMULA:
+    case EntityPropertyType.MEDIA:
       return field.title;
     case EntityPropertyType.ENTITY:
       return field.title;

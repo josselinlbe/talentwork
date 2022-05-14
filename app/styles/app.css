@@ -5508,6 +5508,11 @@ select {
   color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
+.group:hover .group-hover\:text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
 .group:focus .group-focus\:text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));

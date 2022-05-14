@@ -1,5 +1,6 @@
-import { Entity, EntityProperty, EntityRow, EntityRowValue } from "@prisma/client";
+import { Entity, EntityProperty, EntityRow, EntityRowValue, Media } from "@prisma/client";
 import { EntityRowPropertyValueDto } from "~/application/dtos/entities/EntityRowPropertyValueDto";
+import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
 import { EntityWithDetails } from "../db/entities.db.server";
 import { EntityRowWithDetails } from "../db/entityRows.db.server";
@@ -39,7 +40,7 @@ const getProperties = (entity: EntityWithDetails, item: EntityRowWithDetails) =>
   return customProperties;
 };
 
-function getDynamicPropertyValue(item: EntityRowValue, type: EntityPropertyType) {
+function getDynamicPropertyValue(item: EntityRowValue & { media: Media[] }, type: EntityPropertyType) {
   switch (type) {
     case EntityPropertyType.NUMBER:
       return Number(item.numberValue);
@@ -55,6 +56,8 @@ function getDynamicPropertyValue(item: EntityRowValue, type: EntityPropertyType)
       return item.idValue;
     case EntityPropertyType.ENTITY:
       return item.relatedRowId;
+    case EntityPropertyType.MEDIA:
+      return item.media;
     // case EntityPropertyType.SELECT:
     //   return item.selectedOption?.value ?? item.textValue;
     // case EntityPropertyType.ENTITY:
@@ -86,6 +89,9 @@ function getFormattedValue(value: any, type: EntityPropertyType): string {
       return value;
     case EntityPropertyType.ENTITY:
       return value;
+    case EntityPropertyType.MEDIA:
+      // return (value as MediaDto[]).map((f) => f.name).join(", ");
+      return value.length;
     // case EntityPropertyType.SELECT:
     //   return item.selectedOption?.value ?? item.textValue;
     // case EntityPropertyType.ENTITY:
@@ -157,6 +163,8 @@ const getValueFromType = (type: EntityPropertyType, value: any) => {
       return { dateValue: new Date(value) };
     case EntityPropertyType.ENTITY:
       return { relatedRowId: value };
+    case EntityPropertyType.MEDIA:
+      return { media: value };
     case EntityPropertyType.USER:
     case EntityPropertyType.ROLE:
     case EntityPropertyType.ID:
@@ -199,11 +207,23 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
   entity.properties
     .filter((f) => !f.isHidden)
     .forEach((property) => {
-      const formValue = form.get(property.name);
-      if (property.isRequired && (!formValue || formValue === null || formValue === undefined)) {
-        throw Error(`${property.name} is required`);
+      let formValue: FormDataEntryValue | null = null;
+      let media: MediaDto[] = [];
+      if (property.type === EntityPropertyType.MEDIA) {
+        media = form.getAll(property.name + "[]").map((f: FormDataEntryValue) => {
+          return JSON.parse(f.toString());
+        });
+        if (property.isRequired && media.length === 0) {
+          throw Error(`${property.title} is required`);
+        }
+      } else {
+        formValue = form.get(property.name);
+        if (property.isRequired && (!formValue || formValue === null || formValue === undefined)) {
+          throw Error(`${property.title} is required`);
+        }
       }
       const value = getValueFromType(property.type, formValue);
+      value.media = media;
       const existingValue = existing?.values.find((f) => f.entityPropertyId === property.id);
       if (property.isDynamic) {
         dynamicProperties.push({

@@ -5,6 +5,7 @@ export enum EntityPropertyType {
   USER,
   ROLE,
   ENTITY,
+  MEDIA,
   ID,
   SELECT,
   FORMULA,

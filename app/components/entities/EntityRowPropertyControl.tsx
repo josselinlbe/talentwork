@@ -1,8 +1,9 @@
-import { EntityProperty, EntityPropertyOption, EntityRow, EntityRowValue, TenantUser, UserRole } from "@prisma/client";
+import { EntityProperty, EntityPropertyOption, EntityRow, EntityRowValue, Media, TenantUser, UserRole } from "@prisma/client";
 import clsx from "clsx";
 import { Ref, useImperativeHandle, useRef, useState, useEffect, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { EntityRowPropertyValueDto } from "~/application/dtos/entities/EntityRowPropertyValueDto";
+import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
 import { useAppData } from "~/utils/data/useAppData";
 import { EntityPropertyWithDetails, EntityWithDetails } from "~/utils/db/entities.db.server";
@@ -14,6 +15,8 @@ import UserSelector, { RefUserSelector } from "../core/users/UserSelector";
 import InputDate, { RefInputDate } from "../ui/input/InputDate";
 import InputNumber, { RefInputNumber } from "../ui/input/InputNumber";
 import InputText, { RefInputText } from "../ui/input/InputText";
+import UploadDocuments from "../ui/uploaders/UploadDocument";
+import EntityPropertyMediaSelector from "./EntityPropertyMediaSelector";
 import EntityPropertyValueSelector from "./EntityPropertyValueSelector";
 import { RefEntitySelector } from "./EntitySelector";
 import RelatedEntityRowSelector from "./RelatedEntityRowSelector";
@@ -30,11 +33,13 @@ interface Props {
   dateValue: Date | undefined;
   selected: EntityPropertyWithDetails | undefined;
   relatedEntityRow?: EntityRow | undefined;
+  initialMedia?: Media[] | undefined;
   initialOption?: EntityPropertyOption | undefined;
   parentSelectedValue: EntityRowPropertyValueDto | undefined;
   onChange: (value: string | number | Date | undefined | null) => void;
   onChangeRelatedRequest?: (related: EntityRow | undefined) => void;
   onChangeOption?: (option: EntityPropertyOption | undefined) => void;
+  onChangeMedia?: (option: MediaDto[]) => void;
   readOnly: boolean;
   className?: string;
   relatedEntity: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] } | undefined;
@@ -49,11 +54,13 @@ const EntityRowPropertyControl = (
     numberValue,
     dateValue,
     relatedEntityRow,
+    initialMedia,
     initialOption,
     parentSelectedValue,
     onChange,
     onChangeRelatedRequest,
     onChangeOption,
+    onChangeMedia,
     className,
     readOnly,
     relatedEntity,
@@ -79,6 +86,7 @@ const EntityRowPropertyControl = (
   const [formFieldOption, setEntityPropertyOption] = useState<EntityPropertyOption>();
   const [formField, setEntityProperty] = useState<EntityProperty>();
   const [related, setRelated] = useState<EntityRow>();
+  const [media, setMedia] = useState<MediaDto[]>([]);
   const [formula, setFormula] = useState<string>("");
 
   const appData = useAppData();
@@ -140,6 +148,14 @@ const EntityRowPropertyControl = (
       }
     }
   }, [formFieldOption]);
+
+  useEffect(() => {
+    if (selected?.type === EntityPropertyType.MEDIA) {
+      if (onChangeMedia) {
+        onChangeMedia(media);
+      }
+    }
+  }, [media]);
 
   useEffect(() => {
     if (selected?.type === EntityPropertyType.FORMULA) {
@@ -246,7 +262,6 @@ const EntityRowPropertyControl = (
         </div>
       ) : selected?.type === EntityPropertyType.SELECT ? (
         <EntityPropertyValueSelector
-          disabled={readOnly}
           field={selected}
           initial={initialOption}
           parentSelectedValue={parentSelectedValue}
@@ -254,6 +269,16 @@ const EntityRowPropertyControl = (
             setEntityPropertyOption(e);
           }}
           className={className}
+          disabled={readOnly}
+        />
+      ) : selected?.type === EntityPropertyType.MEDIA ? (
+        <EntityPropertyMediaSelector
+          initialMedia={initialMedia}
+          className={className}
+          property={selected}
+          disabled={readOnly}
+          onSelected={(e) => setMedia(e)}
+          readOnly={readOnly}
         />
       ) : (
         // ) : selected?.type === EntityPropertyType.FORMULA ? (

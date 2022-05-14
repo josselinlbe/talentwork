@@ -35,7 +35,7 @@ export default function EntityRowForm({ entity, item, editing, relatedEntities }
       .forEach((property) => {
         const existing = item?.values.find((f) => f.entityPropertyId === property.id);
         const selectedOption = property.options.find((f) => f.value === existing?.textValue);
-        console.log({ existing });
+        // console.log({ existing });
         initial.push({
           entityPropertyId: property.id,
           entityProperty: property,
@@ -45,6 +45,7 @@ export default function EntityRowForm({ entity, item, editing, relatedEntities }
           dateValue: existing?.dateValue ?? undefined,
           relatedRow: existing?.relatedRow ?? undefined,
           selectedOption,
+          media: existing?.media ?? [],
         });
       });
     setHeaders(initial);
@@ -61,6 +62,7 @@ export default function EntityRowForm({ entity, item, editing, relatedEntities }
           {headers.map((detailValue, idxDetailValue) => {
             return (
               <div key={idxDetailValue} className={clsx("w-full col-span-12", detailValue.entityProperty.type === EntityPropertyType.ENTITY && "")}>
+                {/* media: {JSON.stringify(headers[idxDetailValue].media)} */}
                 {detailValue.entityProperty.type === EntityPropertyType.FORMULA ? (
                   // TODO
                   <div>TODO: FORMULA CONTROLA</div>
@@ -83,6 +85,7 @@ export default function EntityRowForm({ entity, item, editing, relatedEntities }
                     relatedEntityRow={detailValue.relatedRow}
                     initialOption={detailValue.selectedOption}
                     selected={detailValue.entityProperty}
+                    initialMedia={detailValue.media}
                     parentSelectedValue={headers.find((f) => f.entityPropertyId == detailValue.entityProperty.parentId)}
                     relatedEntity={relatedEntities.find((f) => f.propertyId === headers[idxDetailValue].entityPropertyId)}
                     onChange={(e) => {
@@ -99,6 +102,11 @@ export default function EntityRowForm({ entity, item, editing, relatedEntities }
                         idValue: e?.id,
                         textValue: e?.value,
                         selectedOption: e,
+                      });
+                    }}
+                    onChangeMedia={(media) => {
+                      updateItemByIdx(headers, setHeaders, idxDetailValue, {
+                        media,
                       });
                     }}
                     readOnly={item?.id !== undefined && !editing}

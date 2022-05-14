@@ -330,6 +330,17 @@ CREATE TABLE "EntityRowValue" (
 );
 
 -- CreateTable
+CREATE TABLE "Media" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "entityRowValueId" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "file" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    CONSTRAINT "Media_entityRowValueId_fkey" FOREIGN KEY ("entityRowValueId") REFERENCES "EntityRowValue" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "EntityTenantUserPermission" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "entityId" TEXT NOT NULL,

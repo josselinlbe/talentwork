@@ -367,6 +367,17 @@ model EntityRowValue {
   textValue        String?
   numberValue      Decimal?
   dateValue        DateTime?
+  media            Media[]
+}
+
+model Media {
+  id               String         @id @default(cuid())
+  entityRowValueId String
+  entityRowValue   EntityRowValue @relation(fields: [entityRowValueId], references: [id], onDelete: Cascade)
+  title            String
+  name             String
+  file             String
+  type             String
 }
 
 model EntityTenantUserPermission {

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import SimpleBadge from "../ui/badges/SimpleBadge";
+import PaperClipIcon from "../ui/icons/PaperClipIcon";
 import VariableIcon from "../ui/icons/VariableIcon";
 
 interface Props {
@@ -182,6 +183,8 @@ export default function EntityPropertyBadge({ title, type, className }: Props) {
         </svg>
       ) : type === EntityPropertyType.FORMULA ? (
         <VariableIcon className={clsx(className, "flex-shrink-0 h-5 w-5")} />
+      ) : type === EntityPropertyType.MEDIA ? (
+        <PaperClipIcon className={clsx(className, "flex-shrink-0 h-5 w-5")} />
       ) : (
         <div></div>
       )}
