@@ -3,17 +3,21 @@ import { ActionFunction, LoaderFunction, MetaFunction, redirect, useParams } fro
 import { json, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
+import { EntityWithDetails, getEntityById, getEntityBySlug } from "~/utils/db/entities.db.server";
 import NewPageLayout from "~/components/ui/layouts/NewPageLayout";
 import EntityRowForm from "~/components/entities/EntityRowForm";
 import { getUserInfo } from "~/utils/session.server";
-import { createEntityRow, getEntityRow } from "~/utils/db/entityRows.db.server";
+import { createEntityRow, EntityRowWithDetails, getEntityRow, getEntityRows } from "~/utils/db/entityRows.db.server";
 import EntityRowHelper from "~/utils/helpers/EntityRowHelper";
 import { createEntityRowLog } from "~/utils/db/logs.db.server";
+import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
+import { getEntityProperty } from "~/utils/db/entityProperties.db.server";
+import { getRelatedEntityRows } from "~/utils/services/entitiesService";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
+  relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] }[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -23,9 +27,11 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!entity) {
     return redirect("/app/" + tenantUrl.tenantId);
   }
+  const relatedEntities = await getRelatedEntityRows(entity.properties, tenantUrl.tenantId);
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,
     entity,
+    relatedEntities,
   };
   return json(data);
 };
@@ -47,17 +53,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
 
   try {
-    // const values = entity.properties
-    //   .filter((f) => !f.isHidden && f.isDynamic)
-    //   .sort((a, b) => a.order - b.order)
-    //   .map((property) => {
-    //     const formValue = form.get(property.name);
-    //     if (property.isRequired && (!formValue || formValue === null || formValue === undefined)) {
-    //       throw Error(`${t(property.title)} is required`);
-    //     }
-    //     const value = EntityRowHelper.getValueFromType(property.type, formValue);
-    //     return { entityPropertyId: property.id, ...value };
-    //   });
     const rowValues = EntityRowHelper.getRowPropertiesFromForm(entity, form);
     const created = await createEntityRow({
       entityId: entity.id,
@@ -93,7 +88,7 @@ export default function EntityRowsListRoute() {
         { title: t("shared.new"), routePath: `/app/${params.tenant}/${params.entity}/new` },
       ]}
     >
-      <EntityRowForm entity={data.entity} />
+      <EntityRowForm entity={data.entity} relatedEntities={data.relatedEntities} />
     </NewPageLayout>
   );
 }

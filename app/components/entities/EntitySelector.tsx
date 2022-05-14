@@ -2,6 +2,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { Entity } from "@prisma/client";
 import clsx from "clsx";
 import { forwardRef, Fragment, Ref, useImperativeHandle, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Colors } from "~/application/enums/shared/Colors";
 import { EntityWithDetails } from "~/utils/db/entities.db.server";
 import SimpleBadge from "../ui/badges/SimpleBadge";
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const EntitySelector = ({ items, className, selected, onSelected }: Props, ref: Ref<RefEntitySelector>) => {
+  const { t } = useTranslation();
   const button = useRef<HTMLButtonElement>(null);
 
   useImperativeHandle(ref, () => ({ focus }));
@@ -36,11 +38,12 @@ const EntitySelector = ({ items, className, selected, onSelected }: Props, ref: 
               ref={button}
               className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500 sm:text-sm"
             >
+              <input type="hidden" readOnly name={"entity-id"} value={selected?.id} />
               <div className="flex items-center space-x-2">
                 {selected ? (
                   <>
                     <SimpleBadge title={selected.prefix} color={Colors.BLUE} />
-                    <div className="text-gray-600 truncate">{selected.title}</div>
+                    <div className="text-gray-600 truncate">{t(selected.title)}</div>
                   </>
                 ) : (
                   <div className="text-gray-500 truncate"> Select field...</div>
@@ -69,7 +72,7 @@ const EntitySelector = ({ items, className, selected, onSelected }: Props, ref: 
                           <>
                             <div className="flex items-center space-x-2">
                               <SimpleBadge title={item.prefix} color={Colors.BLUE} />
-                              <div className={clsx("truncate", active ? "text-white" : "text-gray-500", "")}>{item.title}</div>
+                              <div className={clsx("truncate", active ? "text-white" : "text-gray-500", "")}>{t(item.title)}</div>
                             </div>
                             {selected ? (
                               <span className={clsx(active ? "text-white" : "text-theme-600", "absolute inset-y-0 right-0 flex items-center pr-4")}>

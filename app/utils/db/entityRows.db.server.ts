@@ -32,7 +32,11 @@ export const includeEntityRowDetails = {
   },
   contract: true,
   employee: true,
-  values: true,
+  values: {
+    include: {
+      relatedRow: true,
+    },
+  },
 };
 
 export async function getAllEntityRows(entityId: string): Promise<EntityRowWithDetails[]> {
@@ -91,6 +95,7 @@ export async function createEntityRow(data: {
   dynamicProperties: {
     entityPropertyId: string;
     id?: string | null;
+    relatedRowId?: string | null;
     idValue?: string | null;
     textValue?: string | null;
     numberValue?: number | string | null;
@@ -117,6 +122,7 @@ export async function createEntityRow(data: {
           .map((value) => {
             return {
               entityPropertyId: value.entityPropertyId,
+              relatedRowId: value.relatedRowId,
               idValue: value.idValue,
               textValue: value.textValue,
               numberValue: value.numberValue,
@@ -135,6 +141,7 @@ export async function updateEntityRow(
     dynamicProperties: {
       entityPropertyId: string;
       id?: string | null;
+      relatedRowId?: string | null;
       idValue?: string | null;
       textValue?: string | null;
       numberValue?: number | string | null;
@@ -150,6 +157,7 @@ export async function updateEntityRow(
         .map((value) => {
           return {
             entityPropertyId: value.entityPropertyId,
+            relatedRowId: value.relatedRowId,
             idValue: value.idValue,
             textValue: value.textValue,
             numberValue: value.numberValue,
@@ -162,6 +170,7 @@ export async function updateEntityRow(
           return {
             where: { id: value.id },
             data: {
+              relatedRowId: value.relatedRowId,
               idValue: value.idValue,
               textValue: value.textValue,
               numberValue: value.numberValue,

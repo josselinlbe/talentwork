@@ -2,7 +2,7 @@ export default function BrandLogo({ className }: { className: string }) {
   return (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 187.5" version="1.0">
       <path
-        className="text-theme-500"
+        className="text-gray-900"
         fill="currentColor"
         d="M698.832 160.914H53.809c-3.645 0-6.61-2.973-6.61-6.617V27.657c0-3.65 2.965-6.622 6.61-6.622h645.023c3.645 0 6.61 2.973 6.61 6.621v126.64c0 3.645-2.965 6.618-6.61 6.618"
       />

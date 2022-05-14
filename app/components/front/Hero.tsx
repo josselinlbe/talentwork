@@ -29,10 +29,10 @@ export default function Hero() {
             <div>
               <div className="sm:text-center md:max-w-5xl md:mx-auto lg:col-span-6 space-y-3">
                 <h1 className="font-extrabold text-7xl flex flex-col">
-                  <span>Easily Build Your Own SaaS</span>
+                  <span>{t("front.hero.headline1")}</span>
                 </h1>
                 <div className="relative z-10 pb-10 text-gray-500 text-lg md:text-2xl text-center leading-normal md:leading-9">
-                  <p className="sm:text-2xl mx-auto">{t("front.hero.headline5")}</p>
+                  <p className="sm:text-2xl mx-auto max-w-4xl">{t("front.hero.headline2")}</p>
                 </div>
 
                 <div className="mt-2 mx-auto lg:mx-0 sm:flex justify-center md:mt-2">
@@ -47,12 +47,12 @@ export default function Hero() {
                     </a>
                   </div>
                   <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-                    <Link
-                      to="/login"
+                    <a
+                      href="#features"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-theme-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
                     >
                       {t("front.hero.features")}
-                    </Link>
+                    </a>
                   </div>
                 </div>
 
@@ -61,7 +61,7 @@ export default function Hero() {
                     to="/changelog"
                     className="text-sm border-b border-dashed border-accent-500 dark:border-cyan-300 text-gray-800 dark:text-white hover:border-dotted"
                   >
-                    {t("front.hero.headline6")}
+                    {t("front.hero.hint")}
                   </Link>
                 </div>
               </div>

@@ -4,7 +4,9 @@ import { Ref, useImperativeHandle, useRef, useState, useEffect, forwardRef } fro
 import { useTranslation } from "react-i18next";
 import { EntityRowPropertyValueDto } from "~/application/dtos/entities/EntityRowPropertyValueDto";
 import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
+import { useAppData } from "~/utils/data/useAppData";
 import { EntityPropertyWithDetails, EntityWithDetails } from "~/utils/db/entities.db.server";
+import { EntityRowWithDetails } from "~/utils/db/entityRows.db.server";
 import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 import { RefRoleSelector } from "../core/roles/RoleSelector";
@@ -14,8 +16,9 @@ import InputNumber, { RefInputNumber } from "../ui/input/InputNumber";
 import InputText, { RefInputText } from "../ui/input/InputText";
 import EntityPropertyValueSelector from "./EntityPropertyValueSelector";
 import { RefEntitySelector } from "./EntitySelector";
+import RelatedEntityRowSelector from "./RelatedEntityRowSelector";
 
-export interface RefEntityPropertyControl {
+export interface RefEntityRowPropertyControl {
   focus: () => void;
 }
 
@@ -26,7 +29,7 @@ interface Props {
   numberValue: number | undefined;
   dateValue: Date | undefined;
   selected: EntityPropertyWithDetails | undefined;
-  relatedRequest?: EntityRow | undefined;
+  relatedEntityRow?: EntityRow | undefined;
   initialOption?: EntityPropertyOption | undefined;
   parentSelectedValue: EntityRowPropertyValueDto | undefined;
   onChange: (value: string | number | Date | undefined | null) => void;
@@ -34,9 +37,10 @@ interface Props {
   onChangeOption?: (option: EntityPropertyOption | undefined) => void;
   readOnly: boolean;
   className?: string;
+  relatedEntity: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] } | undefined;
 }
 
-const EntityPropertyControl = (
+const EntityRowPropertyControl = (
   {
     entity,
     selected,
@@ -44,7 +48,7 @@ const EntityPropertyControl = (
     textValue,
     numberValue,
     dateValue,
-    relatedRequest,
+    relatedEntityRow,
     initialOption,
     parentSelectedValue,
     onChange,
@@ -52,8 +56,9 @@ const EntityPropertyControl = (
     onChangeOption,
     className,
     readOnly,
+    relatedEntity,
   }: Props,
-  ref: Ref<RefEntityPropertyControl>
+  ref: Ref<RefEntityRowPropertyControl>
 ) => {
   useImperativeHandle(ref, () => ({ focus }));
 
@@ -76,15 +81,21 @@ const EntityPropertyControl = (
   const [related, setRelated] = useState<EntityRow>();
   const [formula, setFormula] = useState<string>("");
 
+  const appData = useAppData();
   useEffect(() => {
     if (selected?.type === EntityPropertyType.ENTITY && selected.parentId) {
       // TODO
+      // const item = appData.entities.find((f) => f.id === selected.parentId);
+      // console.log({ selected, item })
+      // if (item) {
+      //   setEntityProperty(item);
+      // }
       // services.forms.getField(selected.parentId).then((response) => {
       //   setEntityProperty(response);
       // });
     }
     if (selected?.type === EntityPropertyType.ENTITY) {
-      setRelated(relatedRequest);
+      setRelated(relatedEntityRow);
     }
     if (selected?.type === EntityPropertyType.SELECT) {
       // services.forms.getField(selected.id).then((response) => {
@@ -222,13 +233,20 @@ const EntityPropertyControl = (
             {selected.title} {selected.isRequired && <span className="text-red-500">*</span>}
           </label>
           <div className="mt-1">
-            TODO
-            {/* {formField && <RelatedRequestSelector formId={formField?.formId ?? ""} selected={related} onSelected={(e) => setRelated(e)} />} */}
+            {relatedEntity && (
+              <RelatedEntityRowSelector
+                name={selected.name}
+                entity={relatedEntity.entity}
+                items={relatedEntity.rows}
+                selected={related}
+                onSelected={(e) => setRelated(e)}
+              />
+            )}
           </div>
         </div>
       ) : selected?.type === EntityPropertyType.SELECT ? (
         <EntityPropertyValueSelector
-          disabled={false}
+          disabled={readOnly}
           field={selected}
           initial={initialOption}
           parentSelectedValue={parentSelectedValue}
@@ -253,4 +271,4 @@ const EntityPropertyControl = (
   );
 };
 
-export default forwardRef(EntityPropertyControl);
+export default forwardRef(EntityRowPropertyControl);

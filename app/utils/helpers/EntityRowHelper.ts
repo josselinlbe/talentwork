@@ -53,6 +53,8 @@ function getDynamicPropertyValue(item: EntityRowValue, type: EntityPropertyType)
     case EntityPropertyType.USER:
     case EntityPropertyType.ID:
       return item.idValue;
+    case EntityPropertyType.ENTITY:
+      return item.relatedRowId;
     // case EntityPropertyType.SELECT:
     //   return item.selectedOption?.value ?? item.textValue;
     // case EntityPropertyType.ENTITY:
@@ -82,6 +84,8 @@ function getFormattedValue(value: any, type: EntityPropertyType): string {
     case EntityPropertyType.USER:
     case EntityPropertyType.ID:
       return value;
+    case EntityPropertyType.ENTITY:
+      return value;
     // case EntityPropertyType.SELECT:
     //   return item.selectedOption?.value ?? item.textValue;
     // case EntityPropertyType.ENTITY:
@@ -109,6 +113,14 @@ function getFormattedValue(value: any, type: EntityPropertyType): string {
 
 const getRowFolio = (entity: Entity, item: EntityRow) => {
   return `${entity.prefix}-${NumberUtils.pad(item?.folio ?? 0, 4)}`.toUpperCase();
+};
+
+const getRowDescription = (entity: Entity, item: EntityRow) => {
+  return `TODO: getRowDescription`;
+};
+
+const getRowDescription2 = (entity: Entity, item: EntityRow) => {
+  return `TODO: getRowDescription2`;
 };
 
 const search = (entity: EntityWithDetails, item: EntityRowWithDetails, searchInput: string) => {
@@ -143,9 +155,10 @@ const getValueFromType = (type: EntityPropertyType, value: any) => {
       return { textValue: value };
     case EntityPropertyType.DATE:
       return { dateValue: new Date(value) };
+    case EntityPropertyType.ENTITY:
+      return { relatedRowId: value };
     case EntityPropertyType.USER:
     case EntityPropertyType.ROLE:
-    case EntityPropertyType.ENTITY:
     case EntityPropertyType.ID:
       return { idValue: value };
     default:
@@ -168,18 +181,20 @@ const setObjectProperties = (entity: EntityWithDetails, item: EntityRowWithDetai
 const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, existing?: EntityRowWithDetails) => {
   const dynamicProperties: EntityRowPropertyValueDto[] = [];
   const properties: any = {};
-  if (existing) {
-    Object.assign(properties, {
-      employee: {
-        update: {},
-      },
-    });
-  } else {
-    Object.assign(properties, {
-      employee: {
-        create: {},
-      },
-    });
+  if (entity.properties.filter((f) => !f.isDynamic).length > 0) {
+    if (existing) {
+      Object.assign(properties, {
+        [entity.name]: {
+          update: {},
+        },
+      });
+    } else {
+      Object.assign(properties, {
+        [entity.name]: {
+          create: {},
+        },
+      });
+    }
   }
   entity.properties
     .filter((f) => !f.isHidden)
@@ -198,7 +213,7 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
           ...value,
         });
       } else {
-        properties["employee"][existing ? "update" : "create"][property.name] = formValue;
+        properties[entity.name][existing ? "update" : "create"][property.name] = formValue;
       }
     });
 
@@ -206,6 +221,8 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
   if (entity.requiresLinkedAccounts) {
     linkedAccountId = form.get("linked-account-id")?.toString() ?? null;
   }
+
+  console.log({ dynamicProperties, properties });
 
   return {
     dynamicProperties,
@@ -239,6 +256,8 @@ export default {
   getPropertyValue,
   getFormattedValue,
   getRowFolio,
+  getRowDescription,
+  getRowDescription2,
   search,
   updateFieldValueTypeArray,
   getValueFromType,

@@ -282,7 +282,9 @@ const PropertyTitle = ({ item }: { item: EntityPropertyWithDetails }) => {
         <div className="text-gray-400 text-xs">({item.name})</div>
       </div>
       {item.type === EntityPropertyType.FORMULA && <div className="text-gray-400 italic truncate">({item.formula})</div>}
-      {item.type === EntityPropertyType.SELECT && <div className="text-gray-400 italic">({item.options?.map((f) => f.value).join(", ")} options)</div>}
+      {item.type === EntityPropertyType.SELECT && (
+        <div className="text-gray-400 text-xs">[{item.options.length === 0 ? "No options" : item.options?.map((f) => f.value).join(", ")}]</div>
+      )}
     </>
   );
 };

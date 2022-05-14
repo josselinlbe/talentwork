@@ -47,7 +47,7 @@ export default function IndexRoute() {
   return (
     <div>
       <TopBanner />
-      <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-12">
+      <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
         <Hero />
         <LogoClouds />
         <Features />

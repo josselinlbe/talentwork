@@ -59,7 +59,7 @@ const groups = [
 
 export default function Features() {
   return (
-    <div className="bg-white">
+    <div id="features" className="bg-white">
       {groups.map((group) => {
         return (
           <div key={group.headline} className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-3 lg:gap-x-8">

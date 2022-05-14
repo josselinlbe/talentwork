@@ -15,9 +15,10 @@ interface Props {
   entity: EntityWithDetails;
   item?: EntityRowWithDetails | null;
   editing?: boolean;
+  relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] }[];
 }
 
-export default function EntityRowForm({ entity, item, editing }: Props) {
+export default function EntityRowForm({ entity, item, editing, relatedEntities }: Props) {
   const { t } = useTranslation();
 
   const [headers, setHeaders] = useState<EntityRowPropertyValueDto[]>([]);
@@ -34,6 +35,7 @@ export default function EntityRowForm({ entity, item, editing }: Props) {
       .forEach((property) => {
         const existing = item?.values.find((f) => f.entityPropertyId === property.id);
         const selectedOption = property.options.find((f) => f.value === existing?.textValue);
+        console.log({ existing });
         initial.push({
           entityPropertyId: property.id,
           entityProperty: property,
@@ -41,7 +43,7 @@ export default function EntityRowForm({ entity, item, editing }: Props) {
           textValue: existing?.textValue ?? undefined,
           numberValue: existing?.numberValue ? Number(existing?.numberValue) : undefined,
           dateValue: existing?.dateValue ?? undefined,
-          // relatedRequest: existing?.relatedRequest ?? undefined,
+          relatedRow: existing?.relatedRow ?? undefined,
           selectedOption,
         });
       });
@@ -52,9 +54,7 @@ export default function EntityRowForm({ entity, item, editing }: Props) {
     <FormGroup
       id={item?.id}
       editing={editing}
-      confirmationPrompt={
-        item ? t("shared.confirmUpdate", [EntityRowHelper.getRowFolio(entity, item)]) : t("shared.confirmCreate", [t(entity.title).toLowerCase()])
-      }
+      // confirmationPrompt={item ? t("shared.confirmUpdate", [EntityRowHelper.getRowFolio(entity, item)]) : t("shared.confirmCreate", [t(entity.title)])}
     >
       <InputGroup title="Details">
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
@@ -80,16 +80,17 @@ export default function EntityRowForm({ entity, item, editing }: Props) {
                     textValue={headers[idxDetailValue].textValue}
                     numberValue={headers[idxDetailValue].numberValue}
                     dateValue={headers[idxDetailValue].dateValue}
-                    // relatedRequest={detailValue.relatedRequest}
+                    relatedEntityRow={detailValue.relatedRow}
                     initialOption={detailValue.selectedOption}
                     selected={detailValue.entityProperty}
                     parentSelectedValue={headers.find((f) => f.entityPropertyId == detailValue.entityProperty.parentId)}
+                    relatedEntity={relatedEntities.find((f) => f.propertyId === headers[idxDetailValue].entityPropertyId)}
                     onChange={(e) => {
                       updateItemByIdx(headers, setHeaders, idxDetailValue, EntityRowHelper.updateFieldValueTypeArray(headers[idxDetailValue], e));
                     }}
                     onChangeRelatedRequest={(e) => {
                       updateItemByIdx(headers, setHeaders, idxDetailValue, {
-                        idValue: e?.id,
+                        relatedRowId: e?.id,
                         relatedRequest: e,
                       });
                     }}

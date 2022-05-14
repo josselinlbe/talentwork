@@ -21,7 +21,7 @@ const includePropertiesWithDetails = {
   },
 };
 
-export async function getAllEntities(active?: boolean): Promise<Entity[]> {
+export async function getAllEntities(active?: boolean): Promise<EntityWithDetails[]> {
   let where = {};
   if (active) {
     where = {
@@ -35,6 +35,19 @@ export async function getAllEntities(active?: boolean): Promise<Entity[]> {
         order: "asc",
       },
     ],
+    include: {
+      properties: {
+        orderBy: { order: "asc" },
+        include: {
+          // entity: {
+          //   include: {
+          //     ...includePropertiesWithDetails,
+          //   },
+          // },
+          options: true,
+        },
+      },
+    },
   });
 }
 

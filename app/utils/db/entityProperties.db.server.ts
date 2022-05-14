@@ -37,10 +37,12 @@ export async function createEntityProperty(data: {
   isHidden: boolean;
   isDetail: boolean;
   pattern: string;
+  parentId: string | null;
 }) {
   if (data.name.includes(" ")) {
     throw Error("Property names cannot contain spaces");
   }
+  console.log({ name: data.name });
   if (data.name.includes("-")) {
     throw Error("Property names cannot contain: -");
   }
@@ -62,6 +64,7 @@ export async function updateEntityProperty(
     isHidden: boolean;
     isDetail: boolean;
     pattern: string;
+    parentId: string | null;
   }
 ) {
   if (data.name.includes(" ")) {

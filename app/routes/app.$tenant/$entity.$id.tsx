@@ -21,12 +21,14 @@ import { Menu } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { EntityRowPropertyValueDto } from "~/application/dtos/entities/EntityRowPropertyValueDto";
 import { EntityRowValue } from "@prisma/client";
+import { getRelatedEntityRows } from "~/utils/services/entitiesService";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
   item: EntityRowWithDetails;
   logs: LogWithDetails[];
+  relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] }[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -40,6 +42,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!item) {
     return redirect(`/app/${params.tenant}/${entity.slug}`);
   }
+  const relatedEntities = await getRelatedEntityRows(entity.properties, tenantUrl.tenantId);
+
   const logs = await getEntityRowLogs(tenantUrl.tenantId, item.id);
   EntityRowHelper.setObjectProperties(entity, item);
   const data: LoaderData = {
@@ -47,6 +51,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     entity,
     item,
     logs,
+    relatedEntities,
   };
   return json(data);
 };
@@ -156,7 +161,7 @@ export default function EntityRowsListRoute() {
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <EntityRowForm entity={data.entity} item={data.item} editing={editing} />
+          <EntityRowForm entity={data.entity} item={data.item} editing={editing} relatedEntities={data.relatedEntities} />
         </div>
         <div className="">
           <EntityRowLogs items={data.logs} />

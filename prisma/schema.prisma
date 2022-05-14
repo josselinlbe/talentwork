@@ -350,16 +350,19 @@ model EntityRow {
   contract          Contract?
   employeeId        String?
   employee          Employee?
-  values            EntityRowValue[]
   logs              Log[]
+  values            EntityRowValue[] @relation(name: "parentRow")
+  relatedRows       EntityRowValue[] @relation(name: "relatedRow")
 }
 
 model EntityRowValue {
   id               String         @id @default(cuid())
   entityRowId      String
-  entityRow        EntityRow      @relation(fields: [entityRowId], references: [id], onDelete: Cascade)
+  entityRow        EntityRow      @relation(name: "parentRow", fields: [entityRowId], references: [id], onDelete: Cascade)
   entityPropertyId String
   entityProperty   EntityProperty @relation(fields: [entityPropertyId], references: [id], onDelete: Cascade)
+  relatedRowId     String?
+  relatedRow       EntityRow?     @relation(name: "relatedRow", fields: [relatedRowId], references: [id], onDelete: Cascade)
   idValue          String?
   textValue        String?
   numberValue      Decimal?

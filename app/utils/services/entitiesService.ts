@@ -1,6 +1,8 @@
 import { EntityLimitType } from "~/application/enums/entities/EntityLimitType";
-import { getEntityBySlug, getEntityRowsCount } from "../db/entities.db.server";
-import { getMaxEntityRowFolio } from "../db/entityRows.db.server";
+import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
+import { EntityPropertyWithDetails, EntityWithDetails, getEntityById, getEntityBySlug, getEntityRowsCount } from "../db/entities.db.server";
+import { getEntityProperty } from "../db/entityProperties.db.server";
+import { EntityRowWithDetails, getEntityRows, getMaxEntityRowFolio } from "../db/entityRows.db.server";
 import { getTenantSubscription } from "../db/tenantSubscriptions.db.server";
 
 export type EntityUsageAndLimit = {
@@ -26,3 +28,32 @@ export async function getEntityUsageAndLimit(slug: string, tenantId: string): Pr
 //   }
 //   return maxFolio._max.folio + 1;
 // }
+
+export async function getRelatedEntityRows(
+  properties: EntityPropertyWithDetails[],
+  tenantId: string
+): Promise<{ propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] }[]> {
+  const relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] }[] = [];
+  await Promise.all(
+    properties
+      .filter((f) => f.type === EntityPropertyType.ENTITY)
+      .map(async (property) => {
+        if (property.parentId !== null) {
+          const parentProperty = await getEntityProperty(property.parentId);
+          if (parentProperty) {
+            const parentEntity = await getEntityById(parentProperty.entityId);
+            if (parentEntity) {
+              const rows = await getEntityRows(parentProperty.entityId, tenantId);
+              relatedEntities.push({
+                propertyId: property.id,
+                entity: parentEntity,
+                rows,
+              });
+              return rows;
+            }
+          }
+        }
+      })
+  );
+  return relatedEntities;
+}

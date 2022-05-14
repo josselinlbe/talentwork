@@ -21,9 +21,11 @@ import SelectEntityOptionsForm, { RefSelectEntityOptionsForm } from "./SelectEnt
 interface Props {
   item?: EntityPropertyWithDetails;
   properties: EntityPropertyWithDetails[];
+  entities: EntityWithDetails[];
+  parentEntity?: EntityWithDetails | undefined;
 }
 
-export default function EntityPropertyForm({ item, properties }: Props) {
+export default function EntityPropertyForm({ item, properties, entities, parentEntity }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const params = useParams();
@@ -37,8 +39,8 @@ export default function EntityPropertyForm({ item, properties }: Props) {
     EntityPropertyType.DATE,
     // EntityPropertyType.USER,
     // EntityPropertyType.ROLE,
-    // EntityPropertyType.ENTITY,
     EntityPropertyType.SELECT,
+    EntityPropertyType.ENTITY,
     // EntityPropertyType.FORMULA,
   ];
 
@@ -65,6 +67,10 @@ export default function EntityPropertyForm({ item, properties }: Props) {
   const [titleEnabled, setTitleEnabled] = useState(false);
 
   useEffect(() => {
+    setEntity(parentEntity);
+  }, []);
+
+  useEffect(() => {
     if (!item) {
       setName(StringUtils.toCamelCase(title));
     }
@@ -76,6 +82,10 @@ export default function EntityPropertyForm({ item, properties }: Props) {
       formField = { ...formField, ...entity };
       setParentId(formField?.id);
       setParent(formField);
+    }
+    if (entity) {
+      setTitle(entity.title);
+      setName(entity.name);
     }
   }, [entity]);
   // useEffect(() => {
@@ -241,6 +251,17 @@ export default function EntityPropertyForm({ item, properties }: Props) {
                       </div>
                     </div>
 
+                    {type === EntityPropertyType.ENTITY && (
+                      <div className="w-full">
+                        <label htmlFor="entity" className="block text-xs font-medium text-gray-700">
+                          Entity
+                        </label>
+                        <div className="mt-1">
+                          <EntitySelector items={entities} selected={entity} onSelected={(e) => setEntity(e)} />
+                        </div>
+                      </div>
+                    )}
+
                     {titleEnabled && (
                       <InputText
                         name="title"
@@ -269,17 +290,6 @@ export default function EntityPropertyForm({ item, properties }: Props) {
                       pattern="[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?"
                       hint={<span className="text-gray-400 font-normal italic">Camel case</span>}
                     />
-
-                    {type === EntityPropertyType.ENTITY && (
-                      <div className="w-full">
-                        <label htmlFor="entity" className="block text-xs font-medium text-gray-700">
-                          Entity
-                        </label>
-                        <div className="mt-1">
-                          <EntitySelector items={[]} selected={entity} onSelected={(e) => setEntity(e)} />
-                        </div>
-                      </div>
-                    )}
 
                     {type === EntityPropertyType.FORMULA && (
                       <div className="w-full">
