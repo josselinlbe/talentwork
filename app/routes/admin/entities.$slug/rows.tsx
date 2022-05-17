@@ -1,20 +1,20 @@
-import { EntityRow } from "@prisma/client";
+import { Row } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
-import EntityRowsList from "~/components/entities/EntityRowsList";
+import RowsList from "~/components/entities/rows/RowsList";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
-import { EntityRowWithDetails, getAllEntityRows } from "~/utils/db/entityRows.db.server";
+import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { RowWithDetails, getAllRows } from "~/utils/db/entities/rows.db.server";
 
 type LoaderData = {
   entity: EntityWithDetails;
-  items: EntityRowWithDetails[];
+  items: RowWithDetails[];
 };
 export let loader: LoaderFunction = async ({ params }) => {
   const entity = await getEntityBySlug(params.slug ?? "");
   if (!entity) {
     return redirect("/admin/entities");
   }
-  const items = await getAllEntityRows(entity.id);
+  const items = await getAllRows(entity.id);
   const data: LoaderData = {
     entity,
     items,
@@ -35,5 +35,5 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
-  return <EntityRowsList entity={data.entity} items={data.items} withTenant />;
+  return <RowsList entity={data.entity} items={data.items} withTenant />;
 }

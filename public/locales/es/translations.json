@@ -856,7 +856,7 @@
       "permissions": "Permisos",
       "features": "Caracterísiticas"
     },
-    "entityProperty": {
+    "property": {
       "object": "Propiedad",
       "plural": "Propiedades",
       "isDynamic": "Es campo dinámico",
@@ -875,7 +875,7 @@
       "children": "Children",
       "values": "Valores"
     },
-    "entityRow": {
+    "row": {
       "folio": "Folio"
     },
     "post": {
@@ -1180,5 +1180,8 @@
   "demo": {
     "cannotDelete": "No se puede eliminar en ambiente demo",
     "cannotUpdate": "No se puede actualizar en ambiente demo"
+  },
+  "docs": {
+    "title": "Docs"
   }
 }

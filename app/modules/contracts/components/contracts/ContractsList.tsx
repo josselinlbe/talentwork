@@ -21,9 +21,9 @@ export default function ContractsList({ items }: Props) {
       (f) =>
         f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.description?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.entityRow?.linkedAccount?.providerTenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.entityRow?.linkedAccount?.clientTenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.entityRow?.createdByUser?.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
+        f.row?.linkedAccount?.providerTenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.row?.linkedAccount?.clientTenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.row?.createdByUser?.email?.toString().toUpperCase().includes(searchInput.toUpperCase())
     );
   };
 

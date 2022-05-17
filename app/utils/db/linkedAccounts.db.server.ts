@@ -1,4 +1,4 @@
-import { LinkedAccount, User, Tenant, TenantUser, EntityRow } from "@prisma/client";
+import { LinkedAccount, User, Tenant, TenantUser, Row } from "@prisma/client";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { db } from "../db.server";
 
@@ -10,7 +10,7 @@ export type LinkedAccountWithDetails = LinkedAccount & {
 };
 
 export type LinkedAccountWithDetailsAndContracts = LinkedAccountWithDetails & {
-  entityRows: EntityRow[];
+  rows: Row[];
 };
 
 export type LinkedAccountWithDetailsAndMembers = LinkedAccount & {
@@ -30,7 +30,7 @@ export async function getLinkedAccount(id?: string): Promise<LinkedAccountWithDe
       createdByTenant: true,
       providerTenant: true,
       clientTenant: true,
-      entityRows: true,
+      rows: true,
       createdByUser: true,
     },
   });
@@ -105,7 +105,7 @@ export async function getClientLinks(tenantId: string): Promise<LinkedAccountWit
       providerTenant: true,
       clientTenant: true,
       createdByUser: true,
-      entityRows: true,
+      rows: true,
     },
   });
 }
@@ -130,7 +130,7 @@ export async function getProviderLinks(tenantId: string): Promise<LinkedAccountW
       providerTenant: true,
       clientTenant: true,
       createdByUser: true,
-      entityRows: true,
+      rows: true,
     },
   });
 }

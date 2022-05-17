@@ -1,23 +1,14 @@
-import { EntityPropertyOption } from "@prisma/client";
-import { useEffect, useState } from "react";
-import { ActionFunction, json, LoaderFunction, redirect, useActionData, useLoaderData, useNavigate } from "remix";
-import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
-import EntityPropertiesList from "~/components/entities/EntityPropertiesList";
-import EntityPropertyForm from "~/components/entities/EntityPropertyForm";
+import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { PropertyType } from "~/application/enums/entities/PropertyType";
+import PropertyForm from "~/components/entities/properties/PropertyForm";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { EntityPropertyWithDetails, getEntityById, getEntityBySlug } from "~/utils/db/entities.db.server";
-import {
-  createEntityProperty,
-  deleteEntityProperty,
-  getEntityProperty,
-  updateEntityProperty,
-  updateEntityPropertyOptions,
-} from "~/utils/db/entityProperties.db.server";
-import { validateEntityProperty } from "~/utils/helpers/EntityPropertyHelper";
+import { PropertyWithDetails, getEntityById, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { createProperty, updatePropertyOptions } from "~/utils/db/entities/properties.db.server";
+import { validateProperty } from "~/utils/helpers/PropertyHelper";
 
 type LoaderData = {
-  properties: EntityPropertyWithDetails[];
+  properties: PropertyWithDetails[];
 };
 export let loader: LoaderFunction = async ({ params }) => {
   const entity = await getEntityBySlug(params.slug ?? "");
@@ -29,7 +20,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 
 type ActionData = {
   error?: string;
-  properties?: EntityPropertyWithDetails[];
+  properties?: PropertyWithDetails[];
 };
 const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
@@ -45,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const action = form.get("action")?.toString() ?? "";
   const name = form.get("name")?.toString() ?? "";
   const title = form.get("title")?.toString() ?? "";
-  const type = Number(form.get("type")) as EntityPropertyType;
+  const type = Number(form.get("type")) as PropertyType;
   const isDynamic = Boolean(form.get("is-dynamic"));
   const order = Number(form.get("order"));
   const isDefault = Boolean(form.get("is-default"));
@@ -68,18 +59,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     return JSON.parse(f.toString());
   });
 
-  if (type === EntityPropertyType.ENTITY && !parentId) {
+  if (type === PropertyType.ENTITY && !parentId) {
     return badRequest({ error: "Related entity must be set on Entity-type properties" });
   }
 
-  const errors = await validateEntityProperty(name, title, entity.properties);
+  const errors = await validateProperty(name, title, entity.properties);
   if (errors.length > 0) {
     return badRequest({ error: errors.join(", ") });
   }
 
   if (action === "create") {
     try {
-      const property = await createEntityProperty({
+      const property = await createProperty({
         entityId: entity.id,
         name,
         title,
@@ -93,7 +84,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         pattern,
         parentId,
       });
-      await updateEntityPropertyOptions(property.id, options);
+      await updatePropertyOptions(property.id, options);
       return redirect(`/admin/entities/${params.slug}/properties`);
     } catch (e: any) {
       return badRequest({ error: e.message });
@@ -105,5 +96,5 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
-  return <EntityPropertyForm properties={data.properties} entities={adminData.entities} />;
+  return <PropertyForm properties={data.properties} entities={adminData.entities} />;
 }

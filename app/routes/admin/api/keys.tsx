@@ -6,7 +6,7 @@ import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { ApiKeyWithDetails, deleteApiKey, getAllApiKeys, getApiKeyById, updateApiKey } from "~/utils/db/apiKeys.db.server";
-import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
+import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 
 type LoaderData = {
   apiKeys: ApiKeyWithDetails[];

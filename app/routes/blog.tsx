@@ -6,6 +6,7 @@ import PostsList from "~/components/blog/PostsList";
 import { useTranslation } from "react-i18next";
 import { BlogPostWithDetails, getAllBlogPosts } from "~/utils/db/blog.db.server";
 import { Language } from "remix-i18next";
+import Tabs from "~/components/ui/tabs/Tabs";
 
 type LoaderData = {
   title: string;
@@ -47,6 +48,21 @@ export default function BlogRoute() {
                   <span className="text-lg pl-1 font-normal">(demo)</span>
                 </h1>
                 <p className="mt-4 text-lg leading-6 text-gray-600 dark:text-gray-400">{t("blog.headline")}</p>
+              </div>
+              <div className="flex justify-center mt-6">
+                <Tabs
+                  breakpoint="sm"
+                  tabs={[
+                    {
+                      name: "Blog",
+                      routePath: "/blog",
+                    },
+                    {
+                      name: "Changelog",
+                      routePath: "/changelog",
+                    },
+                  ]}
+                />
               </div>
               <div className="px-4">
                 <PostsList items={posts} />

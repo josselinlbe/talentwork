@@ -4,8 +4,8 @@ import { json, Link, LoaderFunction, Outlet, redirect, useLoaderData } from "rem
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import TableSimple from "~/components/ui/tables/TableSimple";
-import { getEntityBySlug } from "~/utils/db/entities.db.server";
-import { EntityWebhookWithDetails, getEntityWebhooks } from "~/utils/db/entityWebhooks.db.server";
+import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { EntityWebhookWithDetails, getEntityWebhooks } from "~/utils/db/entities/entityWebhooks.db.server";
 
 type LoaderData = {
   items: EntityWebhookWithDetails[];

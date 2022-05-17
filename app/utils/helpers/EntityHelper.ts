@@ -1,7 +1,7 @@
-import { Entity, EntityProperty } from "@prisma/client";
+import { Entity, Property } from "@prisma/client";
 import { Params } from "react-router";
-import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
-import { getEntityByOrder, getEntityByPrefix, getEntityBySlug } from "../db/entities.db.server";
+import { PropertyType } from "~/application/enums/entities/PropertyType";
+import { getEntityByOrder, getEntityByPrefix, getEntityBySlug } from "../db/entities/entities.db.server";
 
 const getEntityFromParams = async (params: Params) => {
   return await getEntityBySlug(params.entity ?? "");
@@ -41,24 +41,24 @@ const validateEntity = async (name: string, slug: string, order: number, prefix:
   return errors;
 };
 
-const getFieldTitle = (field: EntityProperty, isDefault = false): string => {
+const getFieldTitle = (field: Property, isDefault = false): string => {
   switch (field.type) {
-    case EntityPropertyType.USER:
-    case EntityPropertyType.ROLE:
-    case EntityPropertyType.ID:
+    case PropertyType.USER:
+    case PropertyType.ROLE:
+    case PropertyType.ID:
       if (isDefault) {
-        return "entities.defaultFields." + EntityPropertyType[field.type];
+        return "entities.defaultFields." + PropertyType[field.type];
       } else {
-        return "entities.fields." + EntityPropertyType[field.type];
+        return "entities.fields." + PropertyType[field.type];
       }
-    case EntityPropertyType.TEXT:
-    case EntityPropertyType.NUMBER:
-    case EntityPropertyType.DATE:
-    case EntityPropertyType.SELECT:
-    case EntityPropertyType.FORMULA:
-    case EntityPropertyType.MEDIA:
+    case PropertyType.TEXT:
+    case PropertyType.NUMBER:
+    case PropertyType.DATE:
+    case PropertyType.SELECT:
+    case PropertyType.FORMULA:
+    case PropertyType.MEDIA:
       return field.title;
-    case EntityPropertyType.ENTITY:
+    case PropertyType.ENTITY:
       return field.title;
     default:
       return "";

@@ -28,15 +28,15 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => {
-  const description = `Remix SaaS kit with everything you need to start your SaaS app.`;
+  const description = `SaasRock is the Remix SaaS kit with everything you need to start your SaaS app.`;
   return {
     charset: "utf-8",
     title: data?.title,
     description,
     keywords: "Remix,saas,tailwindcss,typescript,starter",
-    "og:title": "Remix SaaS kit",
+    "og:title": "SaasRock",
     "og:type": "website",
-    "og:url": "https://remix.saasfrontends.com",
+    "og:url": "https://demo.saasrock.com",
     "og:image": "https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png",
     "og:card": "summary_large_image",
     "og:creator": "@AlexandroMtzG",
@@ -45,8 +45,8 @@ export const meta: MetaFunction = ({ data }) => {
     "twitter:image": "https://yahooder.sirv.com/saasfrontends/remix/thumbnail.png",
     "twitter:card": "summary_large_image",
     "twitter:creator": "@AlexandroMtzG",
-    "twitter:site": "@SaasFrontends",
-    "twitter:title": "Remix SaaS kit",
+    "twitter:site": "@saas_rock",
+    "twitter:title": "SaasRock",
     "twitter:description": description,
   };
 };

@@ -72,7 +72,7 @@ async function getContractsCreatedSince(tenantId: string, lastDays: number) {
   const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
   const added = await db.contract.count({
     where: {
-      entityRow: {
+      row: {
         createdAt: {
           gte: from,
         },
@@ -84,7 +84,7 @@ async function getContractsCreatedSince(tenantId: string, lastDays: number) {
   });
   const total = await db.contract.count({
     where: {
-      entityRow: {
+      row: {
         linkedAccount: {
           ...linkCondition(tenantId),
         },
@@ -117,7 +117,7 @@ async function getEmployeesCreatedSince(tenantId: string, lastDays: number) {
   const from = DateUtils.daysFromDate(new Date(), lastDays * -1);
   const added = await db.employee.count({
     where: {
-      entityRow: {
+      row: {
         tenantId,
         createdAt: {
           gte: from,
@@ -127,7 +127,7 @@ async function getEmployeesCreatedSince(tenantId: string, lastDays: number) {
   });
   const total = await db.employee.count({
     where: {
-      entityRow: {
+      row: {
         tenantId,
       },
     },

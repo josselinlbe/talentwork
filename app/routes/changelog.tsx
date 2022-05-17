@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
 import ChangelogIssues, { ChangelogItem } from "~/components/front/ChangelogIssues";
 import UrlUtils from "~/utils/app/UrlUtils";
+import Tabs from "~/components/ui/tabs/Tabs";
 
 type LoaderData = {
   items: ChangelogItem[];
@@ -16,7 +17,9 @@ export let loader: LoaderFunction = async ({ request }) => {
   const changelogItems: ChangelogItem[] = [
     {
       date: "April 28, 2022",
-      title: "v0.2.5 - Added Blog",
+      title: "Blogging",
+      description: "Added /blog, /blog/:slug, /admin/blog and /admin/blog/new.",
+      url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-4-blogging-4n70",
       added: [],
       closed: [
         {
@@ -33,6 +36,8 @@ export let loader: LoaderFunction = async ({ request }) => {
     {
       date: "April 19, 2022",
       title: "Custom Pricing Plans builder",
+      description: "Now you can create subscription plans with: Title, Badge, Description, Features, and Monthly/Yearly Price.",
+      url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-3-custom-pricing-plan-builder-28cp",
       added: [
         {
           title: "Epic Feature: Entity Builder #41",
@@ -52,7 +57,9 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
     {
       date: "April 12, 2022",
-      title: "Tenant on URL, Command palette, Dashboards, and User events",
+      title: "Tenant on URL",
+      description: "Now you can access the tenant with the URL, and added App/Admin Command palettes, Dashboards, and User events.",
+      url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-2-tenant-on-url-command-palette-dashboards-and-user-events-45b1",
       added: [
         {
           title: "Feature flags #19",
@@ -108,7 +115,9 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
     {
       date: "April 4, 2022",
-      title: "Language selector, Page loader component, and Deployment",
+      title: "Vercel deployment + i18n",
+      description: "Demo deployed on Vercel, and added Locale Selector, Page Loading component and more.",
+      url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-1-34b6",
       added: [
         {
           title: "Upgrade to React 18 #6",
@@ -223,6 +232,21 @@ export default function ChangelogRoute() {
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.changelog.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-400">{t("front.changelog.headline")}</p>
                 </div>
+                <div className="flex justify-center mt-6">
+                  <Tabs
+                    breakpoint="sm"
+                    tabs={[
+                      {
+                        name: "Blog",
+                        routePath: "/blog",
+                      },
+                      {
+                        name: "Changelog",
+                        routePath: "/changelog",
+                      },
+                    ]}
+                  />
+                </div>
                 <div className="mt-12 mx-auto">
                   <div className="prose text-sm text-black dark:text-white">
                     {/* <div className=" col-span-1">
@@ -236,21 +260,40 @@ export default function ChangelogRoute() {
                           );
                         })}
                       </div> */}
-                    {data.items.map((item, idx) => {
-                      return (
-                        <div key={idx}>
-                          <h2 id={UrlUtils.slugify(item.date, 0)} className="text-black dark:text-white -mb-1 w-full">
-                            {item.date}
-                            <span id={UrlUtils.slugify(item.title, 0)} className=" font-normal pl-2 text-gray-700 dark:text-gray-300 text-sm">
-                              - {item.title}
-                            </span>
-                          </h2>
+                    <div className="relative border-l border-gray-200 dark:border-gray-700">
+                      {data.items.map((item, idx) => {
+                        return (
+                          <div key={idx} className="mb-10 ml-4">
+                            <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                            <time id={UrlUtils.slugify(item.date, 0)} className="text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                              {item.date}
+                            </time>
+                            <h2 id={UrlUtils.slugify(item.date, 0)} className="text-black dark:text-white w-full">
+                              {item.title}
+                            </h2>
+                            <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">{item.description}</p>
+                            <ChangelogIssues title="Closed issues" items={item.closed} icon="✅" />
+                            <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
 
-                          <ChangelogIssues title="Closed issues" items={item.closed} icon="✅" />
-                          <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />
-                        </div>
-                      );
-                    })}
+                            {item.url && (
+                              <a
+                                href={item.url}
+                                className="mt-5 inline-flex items-center py-2 px-4 text-sm font-medium text-gray-600 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-accent-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-accent-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700 no-underline"
+                              >
+                                Learn more{" "}
+                                <svg className="ml-2 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"
+                                  ></path>
+                                </svg>
+                              </a>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>

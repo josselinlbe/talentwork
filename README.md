@@ -1,6 +1,6 @@
-# remix-saas-kit
+# saasrock
 
-![Remix SaaS kit](https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png)
+![SaasRock](https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png)
 
 ## 1. Getting Started
 

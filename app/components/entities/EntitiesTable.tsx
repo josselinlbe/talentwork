@@ -9,7 +9,7 @@ import { useAdminData } from "~/utils/data/useAdminData";
 import EntityIcon from "../layouts/icons/EntityIcon";
 import CheckIcon from "../ui/icons/CheckIcon";
 import XIcon from "../ui/icons/XIcon";
-import { EntityWithCount } from "~/utils/db/entities.db.server";
+import { EntityWithCount } from "~/utils/db/entities/entities.db.server";
 import InputSearch from "../ui/input/InputSearch";
 
 interface Props {
@@ -220,12 +220,24 @@ export default function EntitiesTable({ items }: Props) {
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">{item.prefix}</td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
-                                  <Link
-                                    className=" pb-1 border-b border-accent-400 border-dashed hover:border-dotted"
-                                    to={"/admin/entities/" + item.slug + "/properties"}
-                                  >
-                                    {item.properties.length}
-                                  </Link>
+                                  {item.properties.filter((f) => !f.isDefault).length > 0 ? (
+                                    <Link
+                                      className=" max-w-sm pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate"
+                                      to={"/admin/entities/" + item.slug + "/properties"}
+                                    >
+                                      {item.properties
+                                        .filter((f) => !f.isDefault)
+                                        .map((f) => t(f.title))
+                                        .join(", ")}
+                                    </Link>
+                                  ) : (
+                                    <Link
+                                      className="max-w-sm pb-1 border-b border-red-400 border-dashed hover:border-dotted truncate"
+                                      to={"/admin/entities/" + item.slug + "/properties"}
+                                    >
+                                      {t("shared.notSet")}
+                                    </Link>
+                                  )}
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
                                   <Link to={"/admin/entities/" + item.slug + "/rows"}>{item._count.rows}</Link>

@@ -43,6 +43,11 @@ export const AdminSidebar: SideBarItem[] = [
         path: "/admin/api",
         icon: SvgIcon.KEYS,
       },
+      {
+        title: "Docs",
+        path: "/docs",
+        icon: SvgIcon.DOCS,
+      },
       // {
       //   title: "admin.navigation.title",
       //   path: "/admin/navigation",

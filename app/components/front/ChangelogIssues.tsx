@@ -3,6 +3,8 @@ import { useState } from "react";
 export type ChangelogItem = {
   date: string;
   title: string;
+  description: string;
+  url?: string;
   closed: Issue[];
   added: Issue[];
 };
@@ -19,7 +21,7 @@ interface Props {
   items: Issue[];
 }
 export default function ChangelogIssues({ title, icon, items }: Props) {
-  const [viewImages, setViewImages] = useState(true);
+  const [viewImages, setViewImages] = useState(false);
   function getIssueId(item: Issue) {
     if (item.title.includes("#")) {
       const id = item.title.split("#")[1];

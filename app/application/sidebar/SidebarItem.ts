@@ -5,6 +5,7 @@ export interface SideBarItem {
   title: string;
   path: string;
   icon?: SvgIcon;
+  description?: string;
   entityIcon?: string;
   open?: boolean;
   adminOnly?: boolean;

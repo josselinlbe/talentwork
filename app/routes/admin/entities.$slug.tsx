@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, Outlet, redirect, useLoaderData, useParams } from "remix";
 import EditPageLayout from "~/components/ui/layouts/EditPageLayout";
 import TabsVertical from "~/components/ui/tabs/TabsVertical";
-import { getEntityBySlug } from "~/utils/db/entities.db.server";
+import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 
 type LoaderData = {
   item: Entity;
@@ -35,8 +35,8 @@ export default function EditEntityRoute() {
         { title: t(data.item.title), routePath: `/admin/entities/${params.slug}/details` },
       ]}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-12">
-        <div className="sm:col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12">
+        <div className="lg:col-span-3">
           <TabsVertical
             tabs={[
               {
@@ -74,7 +74,7 @@ export default function EditEntityRoute() {
             ]}
           />
         </div>
-        <div className="sm:col-span-9">
+        <div className="lg:col-span-9">
           <div className="w-full">
             <Outlet />
           </div>

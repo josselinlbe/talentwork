@@ -5,7 +5,7 @@ import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import Loading from "~/components/ui/loaders/Loading";
-import { EntityWithCount, getAllEntitiesWithRowCount } from "~/utils/db/entities.db.server";
+import { EntityWithCount, getAllEntitiesWithRowCount } from "~/utils/db/entities/entities.db.server";
 
 type LoaderData = {
   items: EntityWithCount[];

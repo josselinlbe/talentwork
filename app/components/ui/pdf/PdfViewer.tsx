@@ -8,10 +8,11 @@ interface Props {
   className?: string;
   fileName?: any;
   editing?: boolean;
+  canDownload?: boolean;
   onRemoveFile?: () => void;
 }
 
-export default function PdfViewer({ className, file, onRemoveFile, fileName = "", editing = false }: Props) {
+export default function PdfViewer({ className, file, onRemoveFile, fileName = "", editing = false, canDownload = true }: Props) {
   const { t } = useTranslation();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -126,15 +127,17 @@ export default function PdfViewer({ className, file, onRemoveFile, fileName = ""
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            className="origin-top-right right-0 top-0 mt-1 mr-0 text-gray-600 hover:bg-gray-50 inline-flex items-center px-1.5 py-1.5 border-gray-300 text-xs font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-theme-500"
-            onClick={downloadPdf}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-          </button>
+          {canDownload && (
+            <button
+              type="button"
+              className="origin-top-right right-0 top-0 mt-1 mr-0 text-gray-600 hover:bg-gray-50 inline-flex items-center px-1.5 py-1.5 border-gray-300 text-xs font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-theme-500"
+              onClick={downloadPdf}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </button>
+          )}
           {editing && (
             <button
               type="button"

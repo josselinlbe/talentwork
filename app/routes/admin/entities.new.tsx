@@ -3,7 +3,7 @@ import { ActionFunction, json, redirect } from "remix";
 import EntityForm from "~/components/entities/EntityForm";
 import NewPageLayout from "~/components/ui/layouts/NewPageLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { createEntity } from "~/utils/db/entities.db.server";
+import { createEntity } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 
 type ActionData = {

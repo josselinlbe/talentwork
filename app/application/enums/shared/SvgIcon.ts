@@ -16,6 +16,7 @@ export enum SvgIcon {
   BLOG,
   ENTITIES,
   KEYS,
+  DOCS,
   LINKS,
   PROVIDERS,
   CLIENTS,

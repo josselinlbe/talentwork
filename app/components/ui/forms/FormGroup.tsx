@@ -15,9 +15,10 @@ interface Props {
   children: ReactNode;
   className?: string;
   editing?: boolean;
+  onSubmit?: (e: FormData) => void | undefined;
   confirmationPrompt?: string;
 }
-const FormGroup = ({ id, onCancel, children, className, editing, confirmationPrompt }: Props, ref: Ref<RefFormGroup>) => {
+const FormGroup = ({ id, onCancel, children, className, editing, confirmationPrompt, onSubmit }: Props, ref: Ref<RefFormGroup>) => {
   useImperativeHandle(ref, () => ({}));
 
   const actionData = useActionData<{
@@ -31,14 +32,21 @@ const FormGroup = ({ id, onCancel, children, className, editing, confirmationPro
   const confirmSubmit = useRef<RefConfirmModal>(null);
   const errorModal = useRef<RefErrorModal>(null);
 
+  const [error, setError] = useState<string>();
   const [formData, setFormData] = useState<FormData>();
 
   useEffect(() => {
-    if (actionData?.error) {
-      errorModal.current?.show(t("shared.error"), actionData.error);
-    }
+    setError(actionData?.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
+
+  useEffect(() => {
+    setError(undefined);
+    if (error) {
+      errorModal.current?.show(t("shared.error"), error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   function remove() {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));
@@ -54,23 +62,32 @@ const FormGroup = ({ id, onCancel, children, className, editing, confirmationPro
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.stopPropagation();
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     if (confirmationPrompt) {
       setFormData(formData);
       confirmSubmit.current?.show(confirmationPrompt);
     } else {
-      submit(formData, {
-        method: "post",
-      });
+      if (onSubmit !== undefined) {
+        onSubmit(formData);
+      } else {
+        submit(formData, {
+          method: "post",
+        });
+      }
     }
   }
 
   function yesSubmit() {
     if (formData) {
-      submit(formData, {
-        method: "post",
-      });
+      if (onSubmit !== undefined) {
+        onSubmit(formData);
+      } else {
+        submit(formData, {
+          method: "post",
+        });
+      }
     }
   }
 

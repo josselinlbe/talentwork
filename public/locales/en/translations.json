@@ -857,7 +857,7 @@
       "permissions": "Permissions",
       "features": "Features"
     },
-    "entityProperty": {
+    "property": {
       "object": "Property",
       "plural": "Properties",
       "isDynamic": "Is dynamic field",
@@ -876,7 +876,7 @@
       "children": "Children",
       "values": "Values"
     },
-    "entityRow": {
+    "row": {
       "folio": "Folio"
     },
     "post": {
@@ -1182,5 +1182,7 @@
     "cannotDelete": "Cannot delete on demo environment",
     "cannotUpdate": "Cannot update on demo environment"
   },
-  "t-id": "Invalid tenant ID"
+  "docs": {
+    "title": "Docs"
+  }
 }

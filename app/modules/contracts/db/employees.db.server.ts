@@ -1,9 +1,9 @@
 import { Employee } from "@prisma/client";
 import { db } from "~/utils/db.server";
-import { EntityRowWithDetails } from "~/utils/db/entityRows.db.server";
+import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 
 export type EmployeeWithCreatedByUser = Employee & {
-  entityRow: EntityRowWithDetails;
+  row: RowWithDetails;
 };
 
 export async function getEmployee(id?: string): Promise<EmployeeWithCreatedByUser | null> {
@@ -15,9 +15,9 @@ export async function getEmployee(id?: string): Promise<EmployeeWithCreatedByUse
       id,
     },
     include: {
-      entityRow: {
+      row: {
         include: {
-          ...includeEntityRowDetails,
+          ...includeRowDetails,
         },
       },
     },
@@ -27,7 +27,7 @@ export async function getEmployee(id?: string): Promise<EmployeeWithCreatedByUse
 export async function getEmployeeByEmail(tenantId: string, email: string) {
   return await db.employee.findFirst({
     where: {
-      entityRow: {
+      row: {
         tenantId,
       },
       email,
@@ -38,7 +38,7 @@ export async function getEmployeeByEmail(tenantId: string, email: string) {
 export async function getEmployeesCount(tenantId: string) {
   return await db.employee.count({
     where: {
-      entityRow: {
+      row: {
         tenantId,
       },
     },
@@ -48,7 +48,7 @@ export async function getEmployeesCount(tenantId: string) {
 export async function getEmployees(tenantId: string) {
   return await db.employee.findMany({
     where: {
-      entityRow: {
+      row: {
         tenantId,
       },
     },
@@ -67,7 +67,7 @@ export async function createEmployee(
 ) {
   return await db.employee.create({
     data: {
-      entityRow: {
+      row: {
         create: {
           entityId,
           createdByUserId,

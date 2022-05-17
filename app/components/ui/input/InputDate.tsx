@@ -59,7 +59,7 @@ const InputDate = (
           required={required}
           minLength={minLength}
           maxLength={maxLength}
-          value={new Date(value ?? new Date()).toISOString().split("T")[0]}
+          value={value ? new Date(value).toISOString().split("T")[0] : ""}
           onChange={(e) => (onChange ? onChange(e.target.valueAsDate || new Date()) : {})}
           disabled={disabled}
           readOnly={readOnly}

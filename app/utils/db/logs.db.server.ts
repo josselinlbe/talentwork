@@ -1,12 +1,12 @@
-import { Tenant, User, Log, Entity, EntityRow, EntityRowValue, ApiKey } from "@prisma/client";
+import { Tenant, User, Log, Entity, Row, RowValue, ApiKey } from "@prisma/client";
 import { getClientIPAddress } from "remix-utils";
 import { db } from "../db.server";
-import EntityRowHelper from "../helpers/EntityRowHelper";
+import RowHelper from "../helpers/RowHelper";
 import { TenantUrl } from "../services/urlService";
 import { getUserInfo } from "../session.server";
-import { EntityWithDetails } from "./entities.db.server";
-import { EntityRowWithDetails } from "./entityRows.db.server";
-import { callEntityWebhooks, getEntityWebhook, getEntityWebhooksByAction } from "./entityWebhooks.db.server";
+import { EntityWithDetails } from "./entities/entities.db.server";
+import { callEntityWebhooks } from "./entities/entityWebhooks.db.server";
+import { RowWithDetails } from "./entities/rows.db.server";
 
 export type LogWithDetails = Log & {
   user: User | null;
@@ -35,10 +35,10 @@ export async function getLogs(tenantId: string): Promise<LogWithDetails[]> {
   });
 }
 
-export async function getAllEntityLogs(entityId: string): Promise<LogWithDetails[]> {
+export async function getAllRowLogs(entityId: string): Promise<LogWithDetails[]> {
   return await db.log.findMany({
     where: {
-      entityRow: {
+      row: {
         entityId,
       },
     },
@@ -46,11 +46,11 @@ export async function getAllEntityLogs(entityId: string): Promise<LogWithDetails
   });
 }
 
-export async function getEntityRowLogs(tenantId: string, entityRowId: string): Promise<LogWithDetails[]> {
+export async function getRowLogs(tenantId: string, rowId: string): Promise<LogWithDetails[]> {
   return await db.log.findMany({
     where: {
       tenantId,
-      entityRowId,
+      rowId,
     },
     include,
     orderBy: {
@@ -72,7 +72,7 @@ export async function createLog(request: Request, tenantUrl: TenantUrl, action: 
   });
 }
 
-export async function createEntityRowLog(
+export async function createRowLog(
   request: Request,
   data: {
     tenantId: string;
@@ -80,7 +80,7 @@ export async function createEntityRowLog(
     createdByApiKey?: string | null;
     action: string;
     entity: EntityWithDetails;
-    item: EntityRowWithDetails | null;
+    item: RowWithDetails | null;
   }
 ) {
   const log = await db.log.create({
@@ -89,12 +89,12 @@ export async function createEntityRowLog(
       userId: data.createdByUserId ?? null,
       apiKeyId: data.createdByApiKey ?? null,
       url: new URL(request.url).pathname,
-      entityRowId: data.item?.id ?? null,
+      rowId: data.item?.id ?? null,
       action: data.action,
-      details: data.item !== null ? JSON.stringify(EntityRowHelper.getProperties(data.entity, data.item)) : null,
+      details: data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null,
     },
   });
-  await callEntityWebhooks(log.id, data.entity.id, data.action, EntityRowHelper.getApiFormat(data.entity, data.item));
+  await callEntityWebhooks(log.id, data.entity.id, data.action, RowHelper.getApiFormat(data.entity, data.item));
   return log;
 }
 

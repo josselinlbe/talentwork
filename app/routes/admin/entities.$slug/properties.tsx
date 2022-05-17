@@ -1,12 +1,12 @@
 import { ActionFunction, json, LoaderFunction, Outlet, redirect, useActionData, useLoaderData, useNavigate } from "remix";
-import EntityPropertiesList from "~/components/entities/EntityPropertiesList";
+import PropertiesList from "~/components/entities/properties/PropertiesList";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { EntityPropertyWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
-import { deleteEntityProperty, getEntityProperty } from "~/utils/db/entityProperties.db.server";
+import { PropertyWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { deleteProperty, getProperty } from "~/utils/db/entities/properties.db.server";
 
 type LoaderData = {
   entityId: string;
-  properties: EntityPropertyWithDetails[];
+  properties: PropertyWithDetails[];
 };
 export let loader: LoaderFunction = async ({ params }) => {
   const entity = await getEntityBySlug(params.slug ?? "");
@@ -22,7 +22,7 @@ export let loader: LoaderFunction = async ({ params }) => {
 
 type ActionData = {
   error?: string;
-  properties?: EntityPropertyWithDetails[];
+  properties?: PropertyWithDetails[];
   created?: boolean;
   updated?: boolean;
   deleted?: boolean;
@@ -42,11 +42,11 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (action === "delete") {
     const id = form.get("id")?.toString() ?? "";
-    const existingProperty = await getEntityProperty(id);
+    const existingProperty = await getProperty(id);
     if (!existingProperty) {
       return badRequest({ error: t("shared.notFound") });
     }
-    await deleteEntityProperty(id);
+    await deleteProperty(id);
     return success({
       properties: (await getEntityBySlug(params.slug ?? ""))?.properties,
       deleted: true,
@@ -61,7 +61,7 @@ export default function EditEntityIndexRoute() {
   const actionData = useActionData<ActionData>();
   return (
     <>
-      <EntityPropertiesList entityId={data.entityId} items={actionData?.properties ?? data.properties} />
+      <PropertiesList entityId={data.entityId} items={actionData?.properties ?? data.properties} />
       <Outlet />
     </>
   );

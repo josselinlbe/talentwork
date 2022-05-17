@@ -3,7 +3,7 @@ import { getUserInfo } from "../session.server";
 import { getUser, UserWithoutPassword } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "../app/UrlUtils";
-import { EntityWithDetails, getAllEntities } from "../db/entities.db.server";
+import { EntityWithDetails, getAllEntities } from "../db/entities/entities.db.server";
 import { getMyTenants, MyTenant } from "../db/tenants.db.server";
 import { Entity } from "@prisma/client";
 import { Language } from "remix-i18next";

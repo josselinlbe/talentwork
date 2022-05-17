@@ -1,7 +1,7 @@
 import { Params } from "react-router";
 import { json } from "remix";
 import { createApiKeyLog, getApiKeyByKey, setApiKeyLogStatus } from "../db/apiKeys.db.server";
-import { getEntityBySlug } from "../db/entities.db.server";
+import { getEntityBySlug } from "../db/entities/entities.db.server";
 
 async function setApiError(request: Request, params: Params, error: string, status: number, apiKeyLogId?: string) {
   if (apiKeyLogId) {

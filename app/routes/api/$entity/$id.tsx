@@ -1,20 +1,20 @@
 import { ActionFunction, json, LoaderFunction } from "remix";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
-import { deleteEntityRow, getEntityRow, updateEntityRow } from "~/utils/db/entityRows.db.server";
-import EntityRowHelper from "~/utils/helpers/EntityRowHelper";
+import { deleteRow, getRow, updateRow } from "~/utils/db/entities/rows.db.server";
+import RowHelper from "~/utils/helpers/RowHelper";
 import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
-    const item = await getEntityRow(entity.id, params.id ?? "", tenant.id);
+    const item = await getRow(entity.id, params.id ?? "", tenant.id);
     if (!item) {
       await setApiKeyLogStatus(apiKeyLog.id, { status: 404 });
       return json(null, { status: 404 });
     }
     await setApiKeyLogStatus(apiKeyLog.id, { status: 200 });
-    return json(EntityRowHelper.getApiFormat(entity, item));
+    return json(RowHelper.getApiFormat(entity, item));
   } catch (e: any) {
     await setApiKeyLogStatus(apiKeyLog.id, {
       status: 400,
@@ -28,27 +28,27 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
-    let item = await getEntityRow(entity.id, params.id ?? "", tenant.id);
+    let item = await getRow(entity.id, params.id ?? "", tenant.id);
     if (!item) {
       await setApiKeyLogStatus(apiKeyLog.id, { status: 404 });
       return json(null, { status: 404 });
     }
     if (request.method === "PUT") {
       const form = await request.formData();
-      const rowValues = EntityRowHelper.getRowPropertiesFromForm(entity, form, item);
-      await updateEntityRow(params.id ?? "", {
+      const rowValues = RowHelper.getRowPropertiesFromForm(entity, form, item);
+      await updateRow(params.id ?? "", {
         dynamicProperties: rowValues.dynamicProperties,
         properties: rowValues.properties,
       });
-      item = await getEntityRow(entity.id, params.id ?? "", tenant.id);
+      item = await getRow(entity.id, params.id ?? "", tenant.id);
       await setApiKeyLogStatus(apiKeyLog.id, { status: 200 });
-      return json(EntityRowHelper.getApiFormat(entity, item), {
+      return json(RowHelper.getApiFormat(entity, item), {
         status: 200,
       });
     } else if (request.method === "DELETE") {
-      await deleteEntityRow(item.id);
+      await deleteRow(item.id);
       await setApiKeyLogStatus(apiKeyLog.id, { status: 204 });
-      return json(EntityRowHelper.getApiFormat(entity, item), {
+      return json(RowHelper.getApiFormat(entity, item), {
         status: 204,
       });
     }

@@ -1,34 +1,27 @@
-import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { useTranslation } from "react-i18next";
-import { ActionFunction, Link, LoaderFunction, MetaFunction, redirect, useActionData, useNavigate } from "remix";
+import { ActionFunction, Link, LoaderFunction, MetaFunction, Outlet, redirect, useActionData, useNavigate } from "remix";
 import { json, useLoaderData, useParams } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { deleteEntityRow, EntityRowWithDetails, getEntityRow, getEntityRows, updateEntityRow } from "~/utils/db/entityRows.db.server";
-import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
-import EntityRowsList from "~/components/entities/EntityRowsList";
-import NewPageLayout from "~/components/ui/layouts/NewPageLayout";
+import { deleteRow, RowWithDetails, getRow, updateRow } from "~/utils/db/entities/rows.db.server";
+import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import EditPageLayout from "~/components/ui/layouts/EditPageLayout";
-import EntityRowHelper from "~/utils/helpers/EntityRowHelper";
-import EntityRowForm from "~/components/entities/EntityRowForm";
+import RowHelper from "~/utils/helpers/RowHelper";
+import RowForm from "~/components/entities/rows/RowForm";
 import { getUserInfo } from "~/utils/session.server";
-import EntityRowLogs from "~/components/entities/EntityRowLogs";
-import { createEntityRowLog, createLog, getAllLogs, getEntityRowLogs, getLogs, LogWithDetails } from "~/utils/db/logs.db.server";
-import clsx from "clsx";
+import RowLogs from "~/components/entities/rows/RowLogs";
+import { createRowLog, getRowLogs, LogWithDetails } from "~/utils/db/logs.db.server";
 import DropdownWithClick from "~/components/ui/dropdowns/DropdownWithClick";
 import { Menu } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { EntityRowPropertyValueDto } from "~/application/dtos/entities/EntityRowPropertyValueDto";
-import { EntityRowValue } from "@prisma/client";
-import { getRelatedEntityRows } from "~/utils/services/entitiesService";
+import { getRelatedRows } from "~/utils/services/entitiesService";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
-  item: EntityRowWithDetails;
+  item: RowWithDetails;
   logs: LogWithDetails[];
-  relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: EntityRowWithDetails[] }[];
+  relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -38,14 +31,14 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!entity) {
     return redirect("/app/" + tenantUrl.tenantId);
   }
-  const item = await getEntityRow(entity.id, params.id ?? "", tenantUrl.tenantId);
+  const item = await getRow(entity.id, params.id ?? "", tenantUrl.tenantId);
   if (!item) {
     return redirect(`/app/${params.tenant}/${entity.slug}`);
   }
-  const relatedEntities = await getRelatedEntityRows(entity.properties, tenantUrl.tenantId);
+  const relatedEntities = await getRelatedRows(entity.properties, tenantUrl.tenantId);
 
-  const logs = await getEntityRowLogs(tenantUrl.tenantId, item.id);
-  EntityRowHelper.setObjectProperties(entity, item);
+  const logs = await getRowLogs(tenantUrl.tenantId, item.id);
+  RowHelper.setObjectProperties(entity, item);
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,
     entity,
@@ -70,7 +63,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Invalid entity: " + params.entity });
   }
 
-  const item = await getEntityRow(entity.id, params.id ?? "", tenantUrl.tenantId);
+  const item = await getRow(entity.id, params.id ?? "", tenantUrl.tenantId);
   if (!item) {
     return badRequest({ error: t("shared.notFound") });
   }
@@ -80,19 +73,19 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (action === "edit") {
     try {
-      const rowValues = EntityRowHelper.getRowPropertiesFromForm(entity, form, item);
-      await updateEntityRow(item.id ?? "", {
+      const rowValues = RowHelper.getRowPropertiesFromForm(entity, form, item);
+      await updateRow(item.id ?? "", {
         dynamicProperties: rowValues.dynamicProperties,
         properties: rowValues.properties,
       });
-      await createEntityRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Updated", entity, item });
+      await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Updated", entity, item });
       return json({});
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
   } else if (action === "delete") {
-    await deleteEntityRow(item.id);
-    await createEntityRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Deleted", entity, item });
+    await deleteRow(item.id);
+    await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Deleted", entity, item });
     return redirect(`/app/${params.tenant}/${entity.slug}`);
   } else {
     return badRequest({ error: t("shared.invalidForm") });
@@ -103,7 +96,7 @@ export const meta: MetaFunction = ({ data }) => ({
   title: data?.title,
 });
 
-export default function EntityRowsListRoute() {
+export default function RowsListRoute() {
   const params = useParams();
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
@@ -121,52 +114,55 @@ export default function EntityRowsListRoute() {
   }, [editing]);
 
   return (
-    <EditPageLayout
-      title={t(data.entity.title)}
-      menu={[
-        { title: t(data.entity.titlePlural), routePath: `/app/${params.tenant}/${params.entity}` },
-        {
-          title: t("shared.edit"),
-          routePath: `/app/${params.tenant}/${params.entity}/${params.id}`,
-        },
-      ]}
-    >
-      <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-        <div className="font-bold text-xl uppercase truncate">
-          <span className="truncate">{EntityRowHelper.getRowFolio(data.entity, data.item)}</span>
-        </div>
-        <div className="flex justify-end items-center space-x-2">
-          <div className="flex items-end space-x-2 space-y-0">
-            <DropdownWithClick
-              button={<div className="flex items-center space-x-2">{editing ? t("shared.cancel") : t("shared.edit")}</div>}
-              onClick={() => setEditing(!editing)}
-              options={
-                <div>
-                  <Menu.Item>
-                    <Link
-                      to="."
-                      className="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none"
-                      role="menuitem"
-                      tabIndex={-1}
-                      id="option-menu-item-6"
-                    >
-                      {t("shared.reload")}
-                    </Link>
-                  </Menu.Item>
-                </div>
-              }
-            />
+    <>
+      <EditPageLayout
+        title={t(data.entity.title)}
+        menu={[
+          { title: t(data.entity.titlePlural), routePath: `/app/${params.tenant}/${params.entity}` },
+          {
+            title: t("shared.edit"),
+            routePath: `/app/${params.tenant}/${params.entity}/${params.id}`,
+          },
+        ]}
+      >
+        <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+          <div className="font-bold text-xl uppercase truncate">
+            <span className="truncate">{RowHelper.getRowFolio(data.entity, data.item)}</span>
+          </div>
+          <div className="flex justify-end items-center space-x-2">
+            <div className="flex items-end space-x-2 space-y-0">
+              <DropdownWithClick
+                button={<div className="flex items-center space-x-2">{editing ? t("shared.cancel") : t("shared.edit")}</div>}
+                onClick={() => setEditing(!editing)}
+                options={
+                  <div>
+                    <Menu.Item>
+                      <Link
+                        to="."
+                        className="w-full text-left text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none"
+                        role="menuitem"
+                        tabIndex={-1}
+                        id="option-menu-item-6"
+                      >
+                        {t("shared.reload")}
+                      </Link>
+                    </Menu.Item>
+                  </div>
+                }
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <EntityRowForm entity={data.entity} item={data.item} editing={editing} relatedEntities={data.relatedEntities} />
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <RowForm entity={data.entity} item={data.item} editing={editing} relatedEntities={data.relatedEntities} />
+          </div>
+          <div className="">
+            <RowLogs items={data.logs} />
+          </div>
         </div>
-        <div className="">
-          <EntityRowLogs items={data.logs} />
-        </div>
-      </div>
-    </EditPageLayout>
+      </EditPageLayout>
+      <Outlet />
+    </>
   );
 }

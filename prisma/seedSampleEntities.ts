@@ -1,20 +1,20 @@
 import { LinkedAccount, User, Employee } from "@prisma/client";
-import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
+import { PropertyType } from "~/application/enums/entities/PropertyType";
 import FakePdfBase64 from "~/components/ui/pdf/FakePdfBase64";
 import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
 import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
 import { db } from "~/utils/db.server";
-import { createEntity } from "~/utils/db/entities.db.server";
-import { createEntityProperty } from "~/utils/db/entityProperties.db.server";
-import { createEntityRow, EntityRowWithDetails, getEntityRow, getMaxEntityRowFolio } from "~/utils/db/entityRows.db.server";
-import { defaultEntityProperties } from "~/utils/helpers/EntityPropertyHelper";
+import { createEntity } from "~/utils/db/entities/entities.db.server";
+import { createProperty } from "~/utils/db/entities/properties.db.server";
+import { createRow, RowWithDetails, getRow, getMaxRowFolio } from "~/utils/db/entities/rows.db.server";
+import { defaultProperties } from "~/utils/helpers/PropertyHelper";
 
 export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User) {
   const employees = await createSampleEntity_Employees(tenant1And2Relationship.providerTenantId, user1.id);
   // await createSampleEntity_Contract(tenant1And2Relationship, user1.id, employees);
 }
 
-async function createSampleEntity_Contract(linkedAccount: LinkedAccount, createdByUserId: string, employees: (EntityRowWithDetails | null)[]) {
+async function createSampleEntity_Contract(linkedAccount: LinkedAccount, createdByUserId: string, employees: (RowWithDetails | null)[]) {
   const contractsEntity = await createEntity({
     name: "contract",
     slug: "contracts",
@@ -61,13 +61,13 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
   });
 
   let folio = 1;
-  const maxFolio = await getMaxEntityRowFolio(contractsEntity.id);
+  const maxFolio = await getMaxRowFolio(contractsEntity.id);
   if (maxFolio && maxFolio._max.folio !== null) {
     folio = maxFolio._max.folio + 1;
   }
   await db.contract.create({
     data: {
-      entityRow: {
+      row: {
         create: {
           folio,
           entityId: contractsEntity.id,
@@ -148,54 +148,55 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     {
       name: "firstName",
       title: "models.employee.firstName",
-      type: EntityPropertyType.TEXT,
+      type: PropertyType.TEXT,
       isDynamic: false,
     },
     {
       name: "lastName",
       title: "models.employee.lastName",
-      type: EntityPropertyType.TEXT,
+      type: PropertyType.TEXT,
       isDynamic: false,
     },
     {
       name: "email",
       title: "models.employee.email",
-      type: EntityPropertyType.TEXT,
+      type: PropertyType.TEXT,
       isDynamic: false,
       pattern: "[a-zA-Z0-9._%+-]+@[a-z0-9.-]+.[a-zA-Z]{2,4}",
     },
     {
       name: "salary",
       title: "Salary",
-      type: EntityPropertyType.NUMBER,
+      type: PropertyType.NUMBER,
       isDynamic: true,
     },
   ];
 
   const properties = await Promise.all(
     fields.map(async (field, idx) => {
-      return await createEntityProperty({
+      return await createProperty({
         entityId: employeesEntity.id,
-        order: defaultEntityProperties.length + idx + 1,
+        order: defaultProperties.length + idx + 1,
         ...field,
         isDefault: false,
         isRequired: true,
         isHidden: false,
         isDetail: false,
         pattern: "",
+        parentId: null,
       });
     })
   );
   const salaryProperty = properties.find((f) => f.name === "salary");
 
-  const employee1 = await createEntityRow({
+  const employee1 = await createRow({
     entityId: employeesEntity.id,
     tenantId,
     createdByUserId,
     linkedAccountId: null,
     dynamicProperties: [
       {
-        entityPropertyId: salaryProperty?.id ?? "",
+        propertyId: salaryProperty?.id ?? "",
         numberValue: 100,
       },
     ],
@@ -211,14 +212,14 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
   });
   // So both employees have different createdAt value
   await new Promise((r) => setTimeout(r, 1000));
-  const employee2 = await createEntityRow({
+  const employee2 = await createRow({
     entityId: employeesEntity.id,
     tenantId,
     createdByUserId,
     linkedAccountId: null,
     dynamicProperties: [
       {
-        entityPropertyId: salaryProperty?.id ?? "",
+        propertyId: salaryProperty?.id ?? "",
         numberValue: 200,
       },
     ],
@@ -233,5 +234,5 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     },
   });
 
-  return [await getEntityRow(employeesEntity.id, employee1.id, tenantId), await getEntityRow(employeesEntity.id, employee2.id, tenantId)];
+  return [await getRow(employeesEntity.id, employee1.id, tenantId), await getRow(employeesEntity.id, employee2.id, tenantId)];
 }

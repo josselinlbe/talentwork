@@ -10,9 +10,11 @@ import { useAppData } from "~/utils/data/useAppData";
 import TenantSelect from "./selectors/TenantSelect";
 import LogoDark from "~/assets/img/logo-dark.png";
 import { useTranslation } from "react-i18next";
+import { Link } from "remix";
+import BrandLogo from "../icons/BrandLogo";
 
 interface Props {
-  layout: "app" | "admin";
+  layout: "app" | "admin" | "docs";
   children: ReactNode;
   onOpenCommandPalette: () => void;
 }
@@ -71,7 +73,12 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-3">
-                    <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
+                    {/* <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" /> */}
+                    {layout === "docs" && (
+                      <Link to={"/"}>
+                        <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
+                      </Link>
+                    )}
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
                 </div>
@@ -95,9 +102,15 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
           <div className="flex flex-col h-0 flex-1 shadow-md bg-theme-600">
             <div className="flex-1 flex flex-col overflow-y-auto">
               <nav className="flex-1 px-2 py-4 space-y-3 bg-gray-900 select-none">
-                <div className=" ">
+                {/* <div className=" ">
                   <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
-                </div>
+                </div> */}
+                {layout === "docs" && (
+                  <Link to={"/"}>
+                    <BrandLogo className="h-8 mx-auto dark" />
+                    {/* <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" /> */}
+                  </Link>
+                )}
                 <SidebarMenu layout={layout} />
               </nav>
             </div>
@@ -159,7 +172,7 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
               {layout === "app" && appData.isOwnerOrAdmin && <PendingInvitationsButton />}
               {layout === "app" && <ChatSupportButton />}
               {layout === "app" && <QuickActionsButton />}
-              <ProfileButton layout={layout} />
+              {(layout === "app" || layout === "admin") && <ProfileButton layout={layout} />}
             </div>
           </div>
         </div>

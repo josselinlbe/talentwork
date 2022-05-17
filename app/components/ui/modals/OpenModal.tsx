@@ -40,7 +40,7 @@ export default function OpenModal({ children, onClose, className = "sm:max-w-3xl
             <div
               className={clsx(
                 className,
-                "relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full sm:p-6"
+                "w-full relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full sm:p-6"
               )}
             >
               {children}

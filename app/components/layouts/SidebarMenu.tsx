@@ -10,9 +10,10 @@ import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
 import { useParams } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
 
 interface Props {
-  layout: "app" | "admin";
+  layout: "app" | "admin" | "docs";
   onSelected?: () => void;
 }
 
@@ -23,16 +24,23 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   const appData = useAppData();
 
   const [menu, setMenu] = useState<SideBarItem[]>([]);
-  const [expanded, setExpanded] = useState<number[]>([]);
+  const [expanded, setExpanded] = useState<string[]>([]);
 
   useEffect(() => {
-    setMenu(layout === "admin" ? AdminSidebar : AppSidebar(params, appData.entities));
+    if (layout === "admin") {
+      setMenu(AdminSidebar);
+    } else if (layout === "app") {
+      setMenu(AppSidebar(params, appData.entities));
+    } else if (layout === "docs") {
+      setMenu(DocsSidebar);
+    }
+    // setMenu(layout === "admin" ? AdminSidebar : );
     menu.forEach((group) => {
       group.items?.forEach((element, index) => {
         if (element.open) {
-          expanded.push(index);
+          expanded.push(element.path);
         } else {
-          setExpanded(expanded.filter((f) => f !== index));
+          setExpanded(expanded.filter((f) => f !== element.path));
         }
       });
     });
@@ -40,14 +48,14 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appData.currentTenant?.id]);
 
-  function menuItemIsExpanded(index: number) {
-    return expanded.includes(index);
+  function menuItemIsExpanded(path: string) {
+    return expanded.includes(path);
   }
-  function toggleMenuItem(index: number) {
-    if (expanded.includes(index)) {
-      setExpanded(expanded.filter((item) => item !== index));
+  function toggleMenuItem(path: string) {
+    if (expanded.includes(path)) {
+      setExpanded(expanded.filter((item) => item !== path));
     } else {
-      setExpanded([...expanded, index]);
+      setExpanded([...expanded, path]);
     }
   }
   function getPath(item: SideBarItem) {
@@ -103,7 +111,9 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               )}
                               onClick={onSelected}
                             >
-                              {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
+                              {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                              )}
                               <div>{t(menuItem.title)}</div>
                             </Link>
                           </div>
@@ -113,11 +123,13 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                           <div>
                             <div
                               className="px-4 justify-between mt-1 group flex items-center py-2 text-base leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 focus:bg-slate-800 transition ease-in-out duration-150 text-slate-200 hover:bg-slate-800"
-                              onClick={() => toggleMenuItem(index)}
+                              onClick={() => toggleMenuItem(menuItem.path)}
                             >
                               <div className="flex items-center space-x-4">
                                 <span className="text-slate-200 h-5 w-5 transition ease-in-out">
-                                  {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
+                                  {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                    <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                  )}
                                 </span>
                                 <div>{t(menuItem.title)}</div>
                               </div>
@@ -125,7 +137,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               <svg
                                 className={clsx(
                                   "ml-auto h-5 w-5 transform transition-colors ease-in-out duration-150",
-                                  menuItemIsExpanded(index)
+                                  menuItemIsExpanded(menuItem.path)
                                     ? "rotate-90 ml-auto h-3 w-3 transform group-hover:text-gray-400 group-focus:text-gray-400 transition-colors ease-in-out duration-150"
                                     : "ml-auto h-3 w-3 transform group-hover:text-gray-400 group-focus:text-gray-400 transition-colors ease-in-out duration-150"
                                 )}
@@ -135,7 +147,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               </svg>
                             </div>
                             {/*Expandable link section, show/hide based on state. */}
-                            {menuItemIsExpanded(index) && (
+                            {menuItemIsExpanded(menuItem.path) && (
                               <div className="mt-1">
                                 {menuItem.items.map((subItem, index) => {
                                   return (
@@ -149,7 +161,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                       )}
                                       onClick={onSelected}
                                     >
-                                      {subItem.icon !== undefined && (
+                                      {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
                                         <span className="mr-1 h-5 w-5 transition ease-in-out">
                                           <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
                                         </span>
@@ -197,7 +209,9 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               )}
                             >
                               <div className="flex items-center space-x-5">
-                                {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
+                                {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                  <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                )}
                                 <div>{t(menuItem.title)}</div>
                               </div>
                               {menuItem.isDemo && (
@@ -221,10 +235,12 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                             <button
                               type="button"
                               className="w-full px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
-                              onClick={() => toggleMenuItem(index)}
+                              onClick={() => toggleMenuItem(menuItem.path)}
                             >
                               <div className="flex items-center space-x-5">
-                                {<SidebarIcon className="h-5 w-5 text-white" item={menuItem} />}
+                                {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                  <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                )}
                                 <div>{t(menuItem.title)}</div>
                               </div>
                               {/*Expanded: "text-gray-400 rotate-90", Collapsed: "text-slate-200" */}
@@ -235,7 +251,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                   <svg
                                     className={clsx(
                                       "ml-auto h-5 w-5 transform transition-colors ease-in-out duration-150",
-                                      menuItemIsExpanded(index)
+                                      menuItemIsExpanded(menuItem.path)
                                         ? "rotate-90 ml-auto h-3 w-3 transform  transition-colors ease-in-out duration-150"
                                         : "ml-auto h-3 w-3 transform  transition-colors ease-in-out duration-150"
                                     )}
@@ -248,7 +264,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                 <svg
                                   className={clsx(
                                     "bg-slate-900 ml-auto h-5 w-5 transform transition-colors ease-in-out duration-150",
-                                    menuItemIsExpanded(index)
+                                    menuItemIsExpanded(menuItem.path)
                                       ? "rotate-90 ml-auto h-3 w-3 transform  transition-colors ease-in-out duration-150"
                                       : "ml-auto h-3 w-3 transform  transition-colors ease-in-out duration-150"
                                   )}
@@ -260,7 +276,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                             </button>
 
                             {/*Expandable link section, show/hide based on state. */}
-                            {menuItemIsExpanded(index) && (
+                            {menuItemIsExpanded(menuItem.path) && (
                               <div className="mt-1">
                                 {menuItem.items.map((subItem, index) => {
                                   return (
@@ -275,7 +291,9 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                         !isCurrent(subItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
                                       )}
                                     >
-                                      {<SidebarIcon className="h-5 w-5 text-white" item={subItem} />}
+                                      {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
+                                        <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
+                                      )}
                                       <div>{t(subItem.title)}</div>
                                     </Link>
                                   );

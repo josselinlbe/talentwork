@@ -4,10 +4,10 @@ import { db } from "../../../utils/db.server";
 import { Contract, ContractMember, User, ContractEmployee, Employee, ContractActivity } from "@prisma/client";
 import { ContractMemberRole } from "../enums/ContractMemberRole";
 import { ContractStatus } from "../enums/ContractStatus";
-import { includeEntityRowDetails } from "~/utils/db/entityRows.db.server";
+import { includeRowDetails } from "~/utils/db/entities/rows.db.server";
 
 export type ContractWithDetails = Contract & {
-  entityRow: EntityRowWithDetails;
+  row: RowWithDetails;
   members: (ContractMember & { user: User })[];
   employees: (ContractEmployee & { employee: Employee })[];
   activity: (ContractActivity & { createdByUser: User })[];
@@ -19,7 +19,7 @@ export async function getMonthlyContractsCount(tenantId: string) {
   var lastDayCurrentMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   return await db.contract.count({
     where: {
-      entityRow: {
+      row: {
         createdAt: {
           gte: firstDayCurrentMonth,
           lt: lastDayCurrentMonth,
@@ -48,9 +48,9 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
       id,
     },
     include: {
-      entityRow: {
+      row: {
         include: {
-          ...includeEntityRowDetails,
+          ...includeRowDetails,
         },
       },
       members: {
@@ -74,7 +74,7 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
 
 export async function getContracts(tenantId: string, filter: ContractStatusFilter) {
   const include = {
-    entityRow: {
+    row: {
       include: {
         linkedAccount: {
           include: {
@@ -89,7 +89,7 @@ export async function getContracts(tenantId: string, filter: ContractStatusFilte
   if (filter === ContractStatusFilter.ALL) {
     return await db.contract.findMany({
       where: {
-        entityRow: {
+        row: {
           linkedAccount: {
             OR: [
               {
@@ -108,7 +108,7 @@ export async function getContracts(tenantId: string, filter: ContractStatusFilte
   return await db.contract.findMany({
     where: {
       status: filter,
-      entityRow: {
+      row: {
         linkedAccount: {
           OR: [
             {
@@ -141,7 +141,7 @@ export async function createContract(
 ) {
   const item = await db.contract.create({
     data: {
-      entityRow: {
+      row: {
         create: {
           entityId,
           createdByUserId,

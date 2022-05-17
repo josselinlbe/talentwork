@@ -2,13 +2,16 @@ import { ReactNode, useEffect, useState } from "react";
 import SidebarLayout from "../layouts/SidebarLayout";
 import AppCommandPalette from "../ui/commandPalettes/AppCommandPalette";
 import AdminCommandPalette from "../ui/commandPalettes/AdminCommandPalette";
+import DocsCommandPalette from "../ui/commandPalettes/DocsCommandPalette";
+import { Command } from "~/application/dtos/layout/Command";
 
 interface Props {
-  layout: "app" | "admin";
+  layout: "app" | "admin" | "docs";
   children: ReactNode;
+  commands?: Command[];
 }
 
-export default function AppLayout({ layout, children }: Props) {
+export default function AppLayout({ layout, children, commands }: Props) {
   const [showCommandPalette, setShowCommandPalette] = useState(false);
 
   useEffect(() => {
@@ -30,8 +33,12 @@ export default function AppLayout({ layout, children }: Props) {
       </SidebarLayout>
       {layout === "app" ? (
         <AppCommandPalette isOpen={showCommandPalette} onClosed={() => setShowCommandPalette(false)} />
-      ) : (
+      ) : layout === "admin" ? (
         <AdminCommandPalette isOpen={showCommandPalette} onClosed={() => setShowCommandPalette(false)} />
+      ) : layout === "docs" && commands ? (
+        <DocsCommandPalette isOpen={showCommandPalette} onClosed={() => setShowCommandPalette(false)} defaultCommands={commands} />
+      ) : (
+        <div></div>
       )}
     </div>
   );

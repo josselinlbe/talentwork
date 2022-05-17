@@ -2,8 +2,8 @@ import { Log } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import LogsTable from "~/components/app/events/LogsTable";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { getEntityBySlug } from "~/utils/db/entities.db.server";
-import { getAllEntityLogs, getEntityRowLogs, LogWithDetails } from "~/utils/db/logs.db.server";
+import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { getAllRowLogs, getRowLogs, LogWithDetails } from "~/utils/db/logs.db.server";
 
 type LoaderData = {
   items: LogWithDetails[];
@@ -13,7 +13,7 @@ export let loader: LoaderFunction = async ({ params }) => {
   if (!item) {
     return redirect("/admin/entities");
   }
-  const items = await getAllEntityLogs(item.id);
+  const items = await getAllRowLogs(item.id);
   const data: LoaderData = {
     items,
   };

@@ -2,7 +2,7 @@ import { Entity } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import EntityForm from "~/components/entities/EntityForm";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { updateEntity, deleteEntity, getEntityBySlug } from "~/utils/db/entities.db.server";
+import { updateEntity, deleteEntity, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 
 type LoaderData = {

@@ -2,8 +2,8 @@ import { ActionFunction, json, redirect, useNavigate, useParams } from "remix";
 import EntityWebhookForm from "~/components/entities/webhooks/EntityWebhookForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { getEntityBySlug } from "~/utils/db/entities.db.server";
-import { createEntityWebhook, getEntityWebhook } from "~/utils/db/entityWebhooks.db.server";
+import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { createEntityWebhook } from "~/utils/db/entities/entityWebhooks.db.server";
 
 type ActionData = {
   error?: string;

@@ -4,21 +4,12 @@ import clsx from "~/utils/shared/ClassesUtils";
 import { useNavigate, useParams } from "remix";
 import { useTranslation } from "react-i18next";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { Command } from "~/application/dtos/layout/Command";
 
 interface Props {
   isOpen: boolean;
   onClosed: () => void;
 }
-
-type Command = {
-  title: string;
-  command: string;
-  description: string;
-  bgClassName?: string;
-  textClassName?: string;
-  toPath?: string;
-  onSelected?: () => void;
-};
 
 export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   const { t } = useTranslation();

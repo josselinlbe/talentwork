@@ -5,14 +5,14 @@ import { json, useLoaderData, useParams } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { EntityRowWithDetails, getEntityRows } from "~/utils/db/entityRows.db.server";
-import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
-import EntityRowsList from "~/components/entities/EntityRowsList";
+import { RowWithDetails, getRows } from "~/utils/db/entities/rows.db.server";
+import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import RowsList from "~/components/entities/rows/RowsList";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
-  items: EntityRowWithDetails[];
+  items: RowWithDetails[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -22,7 +22,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!entity) {
     return redirect("/app/" + tenantUrl.tenantId);
   }
-  const items = await getEntityRows(entity.id, tenantUrl.tenantId);
+  const items = await getRows(entity.id, tenantUrl.tenantId);
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,
     entity,
@@ -35,7 +35,7 @@ export const meta: MetaFunction = ({ data }) => ({
   title: data?.title,
 });
 
-export default function EntityRowsListRoute() {
+export default function RowsListRoute() {
   const params = useParams();
   const data = useLoaderData<LoaderData>();
   const { t } = useTranslation();
@@ -58,7 +58,7 @@ export default function EntityRowsListRoute() {
       </div>
       <div className="py-4 space-y-2 mx-auto max-w-5xl xl:max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* <pre>{JSON.stringify(data.items)}</pre> */}
-        <EntityRowsList entity={data.entity} items={data.items} />
+        <RowsList entity={data.entity} items={data.items} />
       </div>
     </div>
   );

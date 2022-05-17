@@ -9,7 +9,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "../app/UrlUtils";
 import { getTenantUrl } from "../services/urlService";
 import { getTenantSubscription, TenantSubscriptionWithDetails } from "../db/tenantSubscriptions.db.server";
-import { getAllEntities } from "../db/entities.db.server";
+import { getAllEntities } from "../db/entities/entities.db.server";
 import { Tenant, Entity } from "@prisma/client";
 import { Language } from "remix-i18next";
 import { Params } from "react-router";

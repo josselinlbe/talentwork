@@ -5,7 +5,7 @@ import { Colors } from "~/application/enums/shared/Colors";
 import ColorBadge from "~/components/ui/badges/ColorBadge";
 import SimpleBadge from "~/components/ui/badges/SimpleBadge";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities.db.server";
+import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 
 type LoaderData = {
   entity: EntityWithDetails;

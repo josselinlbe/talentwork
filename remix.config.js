@@ -13,4 +13,10 @@ module.exports = {
   // serverBuildPath: "api/index.js",
   // publicPath: "/build/",
   // devServerPort: 8002
+  mdx: async (filename) => {
+    const [rehypeHighlight] = await Promise.all([import("rehype-highlight").then((mod) => mod.default)]);
+    return {
+      rehypePlugins: [rehypeHighlight],
+    };
+  },
 };

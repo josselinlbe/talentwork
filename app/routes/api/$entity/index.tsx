@@ -1,21 +1,21 @@
 import { ActionFunction, json, LoaderFunction } from "remix";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
-import { createEntityRow, getEntityRow, getEntityRows } from "~/utils/db/entityRows.db.server";
-import { createEntityRowLog } from "~/utils/db/logs.db.server";
-import EntityRowHelper from "~/utils/helpers/EntityRowHelper";
+import { createRow, getRow, getRows } from "~/utils/db/entities/rows.db.server";
+import { createRowLog } from "~/utils/db/logs.db.server";
+import RowHelper from "~/utils/helpers/RowHelper";
 import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
-    const items = await getEntityRows(entity.id, tenant.id);
+    const items = await getRows(entity.id, tenant.id);
     await setApiKeyLogStatus(apiKeyLog.id, {
       status: 200,
     });
     return json(
       items.map((item) => {
-        return EntityRowHelper.getApiFormat(entity, item);
+        return RowHelper.getApiFormat(entity, item);
       })
     );
   } catch (e: any) {
@@ -32,8 +32,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     const form = await request.formData();
-    const rowValues = EntityRowHelper.getRowPropertiesFromForm(entity, form);
-    const created = await createEntityRow({
+    const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
+    const created = await createRow({
       entityId: entity.id,
       tenantId: tenant.id,
       createdByApiKeyId: apiKeyLog.apiKeyId,
@@ -42,15 +42,15 @@ export const action: ActionFunction = async ({ request, params }) => {
       properties: rowValues.properties,
     });
     await setApiKeyLogStatus(apiKeyLog.id, { status: 201 });
-    const item = await getEntityRow(entity.id, created.id, tenant.id);
-    await createEntityRowLog(request, {
+    const item = await getRow(entity.id, created.id, tenant.id);
+    await createRowLog(request, {
       tenantId: tenant.id,
       createdByApiKey: apiKeyLog.apiKeyId,
       action: "Created",
       entity,
       item,
     });
-    return json(EntityRowHelper.getApiFormat(entity, item), {
+    return json(RowHelper.getApiFormat(entity, item), {
       status: 201,
     });
   } catch (e: any) {

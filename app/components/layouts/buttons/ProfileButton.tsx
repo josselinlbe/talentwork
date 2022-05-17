@@ -10,7 +10,7 @@ import UserUtils from "~/utils/app/UserUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
-  layout: "app" | "admin";
+  layout: "app" | "admin" | "docs";
 }
 
 export default function ProfileButton({ layout }: Props) {

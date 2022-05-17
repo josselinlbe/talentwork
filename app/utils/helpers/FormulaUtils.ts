@@ -1,7 +1,7 @@
-import { EntityRowValue } from "@prisma/client";
+import { RowValue } from "@prisma/client";
 import { HyperFormula } from "hyperformula";
-import { EntityRowDynamicValuesDto } from "~/application/dtos/entities/EntityRowDynamicValuesDto";
-import { EntityPropertyType } from "~/application/enums/entities/EntityPropertyType";
+import { RowDynamicValuesDto } from "~/application/dtos/entities/RowDynamicValuesDto";
+import { PropertyType } from "~/application/enums/entities/PropertyType";
 
 const options = {
   licenseKey: "gpl-v3",
@@ -9,7 +9,7 @@ const options = {
 };
 // const hfInstance = HyperFormula.buildEmpty(options);
 
-function getItemData(item: EntityRowDynamicValuesDto | undefined) {
+function getItemData(item: RowDynamicValuesDto | undefined) {
   const data: any[][] = [];
 
   if (!item) {
@@ -23,7 +23,7 @@ function getItemData(item: EntityRowDynamicValuesDto | undefined) {
   const headersRow: any[] = ["Header.Name", "Header.Total"];
 
   item.headers.forEach((value) => {
-    headersRow.push(value.entityProperty?.title ?? "");
+    headersRow.push(value.property?.title ?? "");
   });
   data.push(headersRow);
 
@@ -38,7 +38,7 @@ function getItemData(item: EntityRowDynamicValuesDto | undefined) {
   // const detailsRow: any[] = ["Detail.Name", "Detail.Total"];
   // if (item.details.length > 0) {
   //   item.details[0].headers.forEach((value) => {
-  //     detailsRow.push(value.entityProperty?.title ?? "");
+  //     detailsRow.push(value.property?.title ?? "");
   //   });
   // }
   // data.push(detailsRow);
@@ -57,7 +57,7 @@ function getItemData(item: EntityRowDynamicValuesDto | undefined) {
   return data;
 }
 
-export function calculate(item: EntityRowDynamicValuesDto | undefined, formula: string | undefined) {
+export function calculate(item: RowDynamicValuesDto | undefined, formula: string | undefined) {
   if (!item || !formula) {
     return "item || formula undefined";
   }
@@ -69,14 +69,14 @@ export function calculate(item: EntityRowDynamicValuesDto | undefined, formula: 
   // return formula;
 
   // build an instance with defined options and data
-  const formFields = item.headers?.filter((f) => f.entityProperty?.type === EntityPropertyType.ENTITY);
+  const formFields = item.headers?.filter((f) => f.property?.type === PropertyType.ENTITY);
   formFields?.forEach((formValue) => {
     // eslint-disable-next-line no-console
     console.log("formValue", formValue);
     // TODO
     // const relatedRequestData = getItemData(formValue.relatedRequest);
-    // console.log(formValue.entityProperty?.name + " Table", relatedRequestData);
-    // hfInstance.addSheet(formValue.entityProperty?.name);
+    // console.log(formValue.property?.name + " Table", relatedRequestData);
+    // hfInstance.addSheet(formValue.property?.name);
     // hfInstance.setSheetContent(hfInstance.countSheets() - 1, relatedRequestData);
   });
   // call getCellValue to get the calculation results
@@ -89,9 +89,9 @@ export function calculate(item: EntityRowDynamicValuesDto | undefined, formula: 
   }
 }
 
-function getFieldValue(value: EntityRowValue) {
+function getFieldValue(value: RowValue) {
   // TODO
-  // switch (getFieldValueType(value.entityProperty)) {
+  // switch (getFieldValueType(value.property)) {
   //   case FormFieldValueType.ID:
   //     return value.idValue;
 

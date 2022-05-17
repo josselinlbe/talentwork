@@ -57,7 +57,7 @@ export default function TabsVertical({ className = "", tabs = [], asLinks = true
   };
   return (
     <nav className={clsx("space-y-1 w-full", className)} aria-label="Sidebar">
-      <div className="sm:hidden">
+      <div className="lg:hidden">
         <label htmlFor="tabs" className="sr-only">
           {t("app.shared.tabs.select")}
         </label>
@@ -77,7 +77,7 @@ export default function TabsVertical({ className = "", tabs = [], asLinks = true
           })}
         </select>
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         {tabs.map((item, idx) => (
           <Link
             key={item.name}
