@@ -28,12 +28,12 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => {
-  const description = `SaasRock is the Remix SaaS kit with everything you need to start your SaaS app.`;
+  const description = `SaasRock is a low-code & extensible framework with out-of-the-box SaaS features, powered by Remix, Tailwind CSS, and Prisma.`;
   return {
     charset: "utf-8",
     title: data?.title,
     description,
-    keywords: "Remix,saas,tailwindcss,typescript,starter",
+    keywords: "remix,saas,tailwindcss,prisma,react,typescript,boilerplate,saas-kit,saas-boilerplate,stripe,postmark,admin-portal,app-dashboard,multi-tenancy",
     "og:title": "SaasRock",
     "og:type": "website",
     "og:url": "https://demo.saasrock.com",
