@@ -8,7 +8,7 @@ import { getUserByEmail, register } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
 import { createStripeCustomer } from "~/utils/stripe.server";
 import { createTenant, createTenantUser } from "~/utils/db/tenants.db.server";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { sendEmail } from "~/utils/email.server";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 
@@ -94,7 +94,7 @@ export const action: ActionFunction = async ({ request }) => {
   await createTenantUser({
     tenantId: tenant.id,
     userId: user.id,
-    role: TenantUserRole.OWNER,
+    role: TenantUserType.OWNER,
   });
 
   await sendEmail(email, "welcome", {

@@ -11,11 +11,15 @@ import { createRow, RowWithDetails, getRow } from "~/utils/db/entities/rows.db.s
 import RowHelper from "~/utils/helpers/RowHelper";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import { getRelatedRows } from "~/utils/services/entitiesService";
+import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
+import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
+import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
   relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[];
+  featureUsageEntity: PlanFeatureUsageDto | undefined;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -26,10 +30,12 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     return redirect("/app/" + tenantUrl.tenantId);
   }
   const relatedEntities = await getRelatedRows(entity.properties, tenantUrl.tenantId);
+  const featureUsageEntity = await getPlanFeatureUsage(tenantUrl.tenantId, t(entity.titlePlural));
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,
     entity,
     relatedEntities,
+    featureUsageEntity,
   };
   return json(data);
 };
@@ -51,13 +57,16 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   try {
     const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
-    return badRequest({ error: JSON.stringify(rowValues) });
+    // return badRequest({
+    //   error: JSON.stringify({ rowValues, form }),
+    // });
     const created = await createRow({
       entityId: entity.id,
       tenantId: tenantUrl.tenantId,
       createdByUserId: userInfo.userId,
       linkedAccountId: rowValues.linkedAccountId,
       dynamicProperties: rowValues.dynamicProperties,
+      dynamicRows: rowValues.dynamicRows,
       properties: rowValues.properties,
     });
     const item = await getRow(entity.id, created.id, tenantUrl.tenantId);
@@ -86,8 +95,10 @@ export default function RowsListRoute() {
         { title: t("shared.new"), routePath: `/app/${params.tenant}/${params.entity}/new` },
       ]}
     >
-      <RowForm entity={data.entity} relatedEntities={data.relatedEntities} />
-      <Outlet />
+      <CheckPlanFeatureLimit item={data.featureUsageEntity}>
+        <RowForm entity={data.entity} relatedEntities={data.relatedEntities} />
+        <Outlet />
+      </CheckPlanFeatureLimit>
     </NewPageLayout>
   );
 }

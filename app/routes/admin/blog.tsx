@@ -1,23 +1,31 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, useLoaderData, useTransition } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData, useTransition } from "remix";
 import PostsTable from "~/components/blog/PostsTable";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import Loading from "~/components/ui/loaders/Loading";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { BlogPostWithDetails, getAllBlogPosts } from "~/utils/db/blog.db.server";
 
 type LoaderData = {
+  title: string;
   items: BlogPostWithDetails[];
 };
 
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader: LoaderFunction = async ({ request }) => {
+  const { t } = await i18nHelper(request);
   const items = await getAllBlogPosts();
 
   const data: LoaderData = {
+    title: `${t("blog.title")} | ${process.env.APP_NAME}`,
     items,
   };
   return json(data);
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data?.title,
+});
 
 export default function Events() {
   const { t } = useTranslation();

@@ -1,0 +1,85 @@
+---
+meta:
+  title: Breadcrumbs | Components | SaasRock
+  description: Breadcrumb components
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Breadcrumbs",
+      routePath: "/docs/components/breadcrumbs",
+    },
+  ]}
+/>
+
+# Breadcrumbs
+
+### Breadcrumb
+
+import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
+
+<Breadcrumb
+  className="w-full"
+  home="/"
+  menu={[
+    { title: "Docs", routePath: "/docs" },
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Breadcrumbs",
+      routePath: "/docs/components/breadcrumbs",
+    },
+  ]}
+/>
+
+```tsx
+<Breadcrumb
+  className="w-full"
+  home="/"
+  menu={[
+    { title: "Docs", routePath: "/docs" },
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Breadcrumbs",
+      routePath: "/docs/components/breadcrumbs",
+    },
+  ]}
+/>
+```
+
+### BreadcrumbSimple
+
+import BreadcrumbSimple from "~/components/ui/breadcrumbs/BreadcrumbSimple";
+
+<BreadcrumbSimple
+  className="w-full not-prose"
+  home="/"
+  menu={[
+    { title: "Docs", routePath: "/docs" },
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Breadcrumbs",
+      routePath: "/docs/components/breadcrumbs",
+    },
+  ]}
+/>
+
+```tsx
+<BreadcrumbSimple
+  className="w-full not-prose"
+  home="/"
+  menu={[
+    { title: "Docs", routePath: "/docs" },
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Breadcrumbs",
+      routePath: "/docs/components/breadcrumbs",
+    },
+  ]}
+/>
+```

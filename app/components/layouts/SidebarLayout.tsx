@@ -8,10 +8,11 @@ import QuickActionsButton from "./buttons/QuickActionsButton";
 import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
 import TenantSelect from "./selectors/TenantSelect";
-import LogoDark from "~/assets/img/logo-dark.png";
 import { useTranslation } from "react-i18next";
 import { Link } from "remix";
 import BrandLogo from "../icons/BrandLogo";
+import InputSelect from "../ui/input/InputSelect";
+import { useElementScrollRestoration } from "~/utils/app/scroll-restoration";
 
 interface Props {
   layout: "app" | "admin" | "docs";
@@ -24,6 +25,7 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
   const appData = useAppData();
 
   const mainElement = useRef<HTMLElement>(null);
+  useElementScrollRestoration(mainElement);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -75,9 +77,24 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                   <nav className="px-2 space-y-3">
                     {/* <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" /> */}
                     {layout === "docs" && (
-                      <Link to={"/"}>
-                        <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
-                      </Link>
+                      <div className="flex flex-col space-y-2">
+                        <Link to={"/"}>
+                          {/* <img className={"h-8 w-auto"} src={LogoDark} alt="Logo" /> */}
+                          <BrandLogo className="h-8 mx-auto dark" />
+                        </Link>
+                        {/* <InputSelect
+                          className="bg-gray-900 border-gray-700 text-gray-300 rounded-sm"
+                          name="v"
+                          title={""}
+                          withLabel={false}
+                          value={"v0.2.6"}
+                          options={[
+                            { name: "v0.2.6 (current)", value: "v0.2.6" },
+                            { name: "v0.2.0", value: "v0.2.0", disabled: true },
+                            { name: "v0.0.1", value: "v0.0.1", disabled: true },
+                          ]}
+                        ></InputSelect> */}
+                      </div>
                     )}
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
@@ -105,12 +122,13 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                 {/* <div className=" ">
                   <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
                 </div> */}
-                {layout === "docs" && (
-                  <Link to={"/"}>
-                    <BrandLogo className="h-8 mx-auto dark" />
-                    {/* <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" /> */}
-                  </Link>
-                )}
+                {/* {layout === "docs" && (
+                  <div className="flex flex-col space-y-2">
+                    <Link to={"/"}>
+                      <BrandLogo className="h-8 mx-auto dark" />
+                    </Link>
+                  </div>
+                )} */}
                 <SidebarMenu layout={layout} />
               </nav>
             </div>
@@ -173,6 +191,20 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
               {layout === "app" && <ChatSupportButton />}
               {layout === "app" && <QuickActionsButton />}
               {(layout === "app" || layout === "admin") && <ProfileButton layout={layout} />}
+              {layout === "docs" && (
+                <InputSelect
+                  className="hidden sm:block"
+                  name="v"
+                  title={""}
+                  withLabel={false}
+                  value={"v0.2.6"}
+                  options={[
+                    { name: "v0.2.6 (current)", value: "v0.2.6" },
+                    { name: "v0.2.0", value: "v0.2.0", disabled: true },
+                    { name: "v0.0.1", value: "v0.0.1", disabled: true },
+                  ]}
+                />
+              )}
             </div>
           </div>
         </div>

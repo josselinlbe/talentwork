@@ -62,6 +62,9 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     return UrlUtils.replaceVariables(params, item.path) ?? "";
   }
   function isCurrent(menuItem: SideBarItem) {
+    if (menuItem.exact) {
+      return location.pathname === getPath(menuItem);
+    }
     return location.pathname?.includes(getPath(menuItem));
   }
   function allowCurrentUserType(item: SideBarItem) {
@@ -71,7 +74,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     return appData.user?.admin !== null;
   }
   function allowCurrentRole(item: SideBarItem) {
-    return !item.userRoles || item.userRoles.includes(appData.currentRole);
+    return !item.tenantUserTypes || item.tenantUserTypes.includes(appData.currentRole);
   }
   const getMenu = (): SidebarGroup[] => {
     const _menu: SidebarGroup[] = [];
@@ -87,12 +90,12 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   };
 
   return (
-    <div>
+    <div className=" ">
       <div className="sm:hidden space-y-2 divide-y-2 divide-slate-800">
         {getMenu().map((group, index) => {
           return (
             <div key={index} className="mt-2">
-              <div className="mt-2">
+              <div id={group.title} className="mt-2">
                 <h3 className="px-1 text-xs leading-4 font-semibold text-slate-500 uppercase tracking-wider">{t(group.title)}</h3>
               </div>
               {group.items.map((menuItem, index) => {
@@ -103,6 +106,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                         return (
                           <div>
                             <Link
+                              id={UrlUtils.slugify(getPath(menuItem))}
                               to={getPath(menuItem)}
                               className={clsx(
                                 "px-4 mt-1 group flex items-center space-x-4 py-2 text-base leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
@@ -153,6 +157,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                   return (
                                     <Link
                                       key={index}
+                                      id={UrlUtils.slugify(getPath(subItem))}
                                       to={getPath(subItem)}
                                       className={clsx(
                                         "pl-14 mt-1 group flex items-center py-2 sm:text-sm leading-5 rounded-sm hover:text-slate-300 focus:outline-none focus:text-slate-300 transition ease-in-out duration-150",
@@ -200,6 +205,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                         return (
                           <div>
                             <Link
+                              id={UrlUtils.slugify(getPath(menuItem))}
                               to={getPath(menuItem)}
                               className={clsx(
                                 "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
@@ -282,6 +288,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                   return (
                                     <Link
                                       key={index}
+                                      id={UrlUtils.slugify(getPath(subItem))}
                                       to={getPath(subItem)}
                                       className={clsx(
                                         "mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 text-slate-300 transition ease-in-out duration-150",

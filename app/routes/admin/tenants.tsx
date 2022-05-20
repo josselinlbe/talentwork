@@ -51,10 +51,6 @@ export default function AdminTenantsRoute() {
       </div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
         <TenantsTable items={data.items} withSearch={true} />
-
-        <h1 className="flex-1 font-bold flex items-center truncate">Tenants - React Table</h1>
-
-        <TenantsTableWithReactTable items={data.items} withSearch={true} />
       </div>
     </div>
   );

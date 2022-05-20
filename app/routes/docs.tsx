@@ -4,7 +4,7 @@ import AppLayout from "~/components/app/AppLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
 import styles from "highlight.js/styles/night-owl.css";
 import { Command } from "~/application/dtos/layout/Command";
-import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
+import { getDocCommands } from "~/utils/services/docsService";
 
 export const links = () => {
   return [
@@ -23,30 +23,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
 
-  const commands: Command[] = [];
-
-  DocsSidebar.forEach((doc, idx) => {
-    const command: Command = {
-      command: (idx + 1).toString(),
-      title: doc.title,
-      description: doc.description ?? "",
-      toPath: "",
-      items: [],
-    };
-    if (doc.items !== undefined && doc.items?.length > 0) {
-      doc.items.forEach((item) => {
-        command.items?.push({
-          command: (idx + 1).toString(),
-          title: item.title,
-          description: item.description ?? "",
-          toPath: item.path,
-        });
-      });
-    } else {
-      command.toPath = doc.path;
-    }
-    commands.push(command);
-  });
+  const commands = await getDocCommands();
 
   const data: LoaderData = {
     title: `${t("docs.title")} | ${process.env.APP_NAME}`,
@@ -62,7 +39,6 @@ export default function DocsRoute() {
     <AppLayout layout="docs" commands={data.commands}>
       <div className="py-4 px-10 w-full col-span-2">
         <div className="prose prose-emerald">
-          <h1>WORK IN PROGRESS</h1>
           <Outlet />
         </div>
       </div>

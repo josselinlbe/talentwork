@@ -77,6 +77,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     return JSON.parse(f.toString());
   });
 
+  if (type === PropertyType.SELECT && options.length === 0) {
+    return badRequest({ error: "Add at least one option" });
+  }
+
   if (type === PropertyType.ENTITY && !parentId) {
     return badRequest({ error: "Related entity must be set on Entity-type properties" });
   }

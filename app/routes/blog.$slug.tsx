@@ -195,7 +195,7 @@ export default function BlogPostRoute() {
             </dl>
             {/* <p className="mt-8 text-xl text-gray-500 leading-8">{post.description}</p> */}
           </div>
-          <div className="mt-6 prose dark:prose-dark prose-indigo prose-lg mx-auto space-y-6">
+          <div className="mt-6 prose dark:prose-dark prose-indigo prose-lg mx-auto space-y-6 max-w-2xl">
             {post.image && <img className="border border-gray-300 dark:border-gray-800 rounded-lg shadow-lg" src={post.image} alt={post.title} />}
             <div dangerouslySetInnerHTML={{ __html: markdown }} />
           </div>

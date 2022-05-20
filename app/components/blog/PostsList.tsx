@@ -5,9 +5,10 @@ import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
   items: BlogPostWithDetails[];
+  withCoverImage: boolean;
 }
 
-export default function PostsList({ items }: Props) {
+export default function PostsList({ items, withCoverImage }: Props) {
   return (
     <div
       className={clsx(
@@ -19,9 +20,11 @@ export default function PostsList({ items }: Props) {
     >
       {items.map((post) => (
         <div key={post.title} className="flex flex-col rounded-lg shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
-          <Link to={"/blog/" + post.slug} className="flex-shrink-0">
-            <img className={clsx("h-48 w-full", items.length <= 2 && "object-contain", items.length > 2 && "object-cover")} src={post.image} alt="" />
-          </Link>
+          {withCoverImage && (
+            <Link to={"/blog/" + post.slug} className="flex-shrink-0">
+              <img className={clsx("h-48 w-full", items.length <= 2 && "object-contain", items.length > 2 && "object-cover")} src={post.image} alt="" />
+            </Link>
+          )}
           <div className="flex-1 bg-white dark:bg-gray-900 p-6 flex flex-col justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-accent-600 dark:text-accent-400">

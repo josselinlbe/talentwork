@@ -1,4 +1,4 @@
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { db } from "~/utils/db.server";
 
 export async function getUserInvitation(id: string) {
@@ -31,7 +31,7 @@ export async function createUserInvitation(
     email: string;
     firstName: string;
     lastName: string;
-    role: TenantUserRole;
+    role: TenantUserType;
   }
 ) {
   const invitation = await db.tenantUserInvitation.create({

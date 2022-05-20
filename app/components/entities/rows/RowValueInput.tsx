@@ -18,7 +18,7 @@ import { RefEntitySelector } from "../EntitySelector";
 import PropertyMediaInput from "../properties/PropertyMediaInput";
 import PropertyValueSelector from "../properties/PropertyValueSelector";
 
-export interface RefRowPropertyControl {
+export interface RefRowValueInput {
   focus: () => void;
 }
 
@@ -59,7 +59,7 @@ const RowValueInput = (
     readOnly,
     relatedEntity,
   }: Props,
-  ref: Ref<RefRowPropertyControl>
+  ref: Ref<RefRowValueInput>
 ) => {
   useImperativeHandle(ref, () => ({ focus }));
 

@@ -1,0 +1,161 @@
+---
+meta:
+  title: Row Value | Custom Entity | SaasRock
+  description: Row Value model life cycle, properties and model
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Custom Entity Models",
+      routePath: "/docs/core-models/custom-entity",
+    },
+    {
+      title: "Row Value",
+      routePath:
+        "/docs/core-models/custom-entity/row-value",
+    },
+  ]}
+/>
+
+# Row Value
+
+- Belongs to 1 [Row](/docs/core-models/custom-entity/row) and 1 [Property](/docs/core-models/custom-entity/property).
+
+## Life Cycle
+
+import DocLifeCycle from "~/components/ui/docs/DocLifeCycle";
+
+<DocLifeCycle
+  items={[
+    {
+      route: "/app/:tenant/:entity-slug",
+      c: false,
+      r: true,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/app/:tenant/:entity-slug/new",
+      c: true,
+      r: false,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/app/:tenant/:entity-slug/:id",
+      c: false,
+      r: true,
+      u: true,
+      d: true,
+    },
+    {
+      route: "/api/:entity-slug",
+      c: true,
+      r: true,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/api/:entity-slug/:id",
+      c: false,
+      r: true,
+      u: true,
+      d: true,
+    },
+  ]}
+/>
+
+## Properties
+
+import DocPropertiesTable, {
+  ModelPropertyType,
+} from "~/components/ui/docs/DocPropertiesTable";
+
+<DocPropertiesTable
+  items={[
+    {
+      name: "rowId",
+      title: "Row",
+      customType: {
+        name: "Row",
+        route: "/docs/core-models/custom-entity/row",
+      },
+      description: "Parent Row.",
+      required: true,
+    },
+    {
+      name: "propertyId",
+      title: "Property",
+      customType: {
+        name: "Property",
+        route: "/docs/core-models/custom-entity/property",
+      },
+      description: "Parent Property.",
+      required: true,
+    },
+    {
+      name: "relatedRowId",
+      title: "Related Row",
+      customType: {
+        name: "Row",
+        route: "/docs/core-models/custom-entity/row",
+      },
+      description: "For properties.[type]=ENTITY",
+      required: false,
+    },
+    {
+      name: "textValue",
+      title: "Text Value",
+      type: ModelPropertyType.String,
+      description: "For properties.[type]=ENTITY",
+      required: false,
+    },
+    {
+      name: "numberValue",
+      title: "Number Value",
+      type: ModelPropertyType.Decimal,
+      description: "For properties.[type]=NUMBER",
+      required: false,
+    },
+    {
+      name: "dateValue",
+      title: "Date Value",
+      type: ModelPropertyType.DateTime,
+      description: "For properties.[type]=DATE",
+      required: false,
+    },
+    {
+      name: "media",
+      title: "Media",
+      customType: {
+        name: "Media[]",
+      },
+      description:
+        "For properties.[type]=MEDIA. Contains the file title, name, type and content.",
+      required: false,
+    },
+  ]}
+/>
+
+## Model
+
+```
+model RowValue {
+  id           String    @id @default(cuid())
+  rowId        String
+  row          Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  propertyId   String
+  property     Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  relatedRowId String?
+  relatedRow   Row?      @relation(name: "relatedRow", fields: [relatedRowId], references: [id], onDelete: Cascade)
+  textValue    String?
+  numberValue  Decimal?
+  dateValue    DateTime?
+  media        Media[]
+}
+```

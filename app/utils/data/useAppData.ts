@@ -1,5 +1,5 @@
 import { redirect, useMatches } from "remix";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { getUserInfo } from "../session.server";
 import { getLinkedAccountsCount } from "../db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
@@ -13,6 +13,10 @@ import { getAllEntities } from "../db/entities/entities.db.server";
 import { Tenant, Entity } from "@prisma/client";
 import { Language } from "remix-i18next";
 import { Params } from "react-router";
+import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
+import { getAllSubscriptionFeatures, getAllSubscriptionProducts } from "../db/subscriptionProducts.db.server";
+import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
+import { getPlanFeaturesUsage } from "../services/subscriptionService";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -20,7 +24,7 @@ export type AppLoaderData = {
   myTenants: MyTenant[];
   currentTenant: Tenant;
   mySubscription: TenantSubscriptionWithDetails | null;
-  currentRole: TenantUserRole;
+  currentRole: TenantUserType;
   isOwnerOrAdmin: boolean;
   pendingInvitations: number;
   entities: Entity[];
@@ -55,15 +59,16 @@ export async function loadAppData(request: Request, params: Params) {
   const myTenants = await getMyTenants(user.id);
   const tenantMembership = myTenants.find((f) => f.tenantId === tenantUrl.tenantId);
 
-  const mySubscription = await getTenantSubscription(tenantUrl.tenantId);
-
-  let currentRole = tenantMembership?.role ?? TenantUserRole.MEMBER;
+  let currentRole = tenantMembership?.role ?? TenantUserType.MEMBER;
   if (user.admin) {
-    currentRole = TenantUserRole.ADMIN;
+    currentRole = TenantUserType.ADMIN;
   }
-  const isOwnerOrAdmin = currentRole == TenantUserRole.OWNER || currentRole == TenantUserRole.ADMIN;
+  const isOwnerOrAdmin = currentRole == TenantUserType.OWNER || currentRole == TenantUserType.ADMIN;
 
   const pendingInvitations = await getLinkedAccountsCount(tenantUrl.tenantId, [LinkedAccountStatus.PENDING]);
+
+  const mySubscription = await getTenantSubscription(tenantUrl.tenantId);
+
   const data: AppLoaderData = {
     i18n: translations,
     user,

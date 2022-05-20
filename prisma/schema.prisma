@@ -11,26 +11,26 @@ datasource db {
 }
 
 model User {
-  id                 String                @id @default(cuid())
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @updatedAt
-  email              String                @unique
-  passwordHash       String
-  firstName          String
-  lastName           String
-  phone              String
-  avatar             String
-  defaultTenantId    String?
-  verifyToken        String?
-  admin              AdminUser?
-  tenants            TenantUser[]
-  invitation         TenantUserInvitation?
-  contracts          ContractMember[]
-  linkedAccounts     LinkedAccount[]
-  createdRows        Row[]
-  contractActivities ContractActivity[]
-  activity           Log[]
-  apiKeys            ApiKey[]
+  id                       String                @id @default(cuid())
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+  email                    String                @unique
+  passwordHash             String
+  firstName                String
+  lastName                 String
+  avatar                   String?
+  phone                    String?
+  defaultTenantId          String?
+  verifyToken              String?
+  admin                    AdminUser?
+  tenants                  TenantUser[]
+  invitation               TenantUserInvitation?
+  logs                     Log[]
+  contracts                ContractMember[]
+  createdContractActivites ContractActivity[]
+  createdLinkedAccounts    LinkedAccount[]
+  createdRows              Row[]
+  createdApiKeys           ApiKey[]
 }
 
 model AdminUser {
@@ -39,40 +39,23 @@ model AdminUser {
   role   Int
 }
 
-model Log {
-  id          String             @id @default(cuid())
-  createdAt   DateTime           @default(now())
-  tenantId    String?
-  tenant      Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  userId      String?
-  user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKeyId    String?
-  apiKey      ApiKey?            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  rowId       String?
-  row         Row?               @relation(fields: [rowId], references: [id], onDelete: Cascade)
-  url         String
-  action      String
-  details     String?
-  webhookLogs EntityWebhookLog[]
-}
-
 model Tenant {
   id                       String                 @id @default(cuid())
   createdAt                DateTime               @default(now())
   updatedAt                DateTime               @updatedAt
   slug                     String                 @unique
   name                     String
-  icon                     String
+  icon                     String?
   subscriptionId           String?
   subscription             TenantSubscription?
   users                    TenantUser[]
   invitations              TenantUserInvitation[]
-  entities                 Row[]
-  activity                 Log[]
+  rows                     Row[]
+  logs                     Log[]
+  apiKeys                  ApiKey[]
   createdLinkedAccounts    LinkedAccount[]        @relation("createdByTenant")
   asProviderLinkedAccounts LinkedAccount[]        @relation("providerTenant")
   asClientLinkedAccounts   LinkedAccount[]        @relation("clientTenant")
-  apiKeys                  ApiKey[]
 }
 
 model TenantSubscription {
@@ -82,22 +65,23 @@ model TenantSubscription {
   stripeSubscriptionId String?
   subscriptionPriceId  String?
   subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
-  quantity             Int
+  quantity             Int?
 }
 
 model TenantUser {
-  id       String     @id @default(cuid())
-  tenantId String
-  tenant   Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  userId   String
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role     Int
-  joined   Int
-  status   Int
-  roles    UserRole[]
+  id        String           @id @default(cuid())
+  createdAt DateTime         @default(now())
+  tenantId  String
+  tenant    Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      Int
+  joined    Int
+  status    Int
+  roles     TenantUserRole[]
 }
 
-model UserRole {
+model TenantUserRole {
   id           String     @id @default(cuid())
   tenantUserId String
   tenantUser   TenantUser @relation(fields: [tenantUserId], references: [id], onDelete: Cascade)
@@ -112,10 +96,25 @@ model TenantUserInvitation {
   email         String
   firstName     String
   lastName      String
-  role          Int
+  type          Int
   pending       Boolean
   createdUserId String? @unique
   user          User?   @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+}
+
+model LinkedAccount {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  createdByUserId   String
+  createdByUser     User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByTenantId String
+  createdByTenant   Tenant   @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
+  providerTenantId  String
+  providerTenant    Tenant   @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
+  clientTenantId    String
+  clientTenant      Tenant   @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
+  status            Int
+  rows              Row[]
 }
 
 model ApiKey {
@@ -133,7 +132,7 @@ model ApiKey {
   entities        ApiKeyEntity[]
   apiKeyLogs      ApiKeyLog[]
   logs            Log[]
-  rows            Row[]
+  createdRows     Row[]
 
   @@unique([tenantId, alias])
 }
@@ -148,6 +147,23 @@ model ApiKeyEntity {
   read     Boolean
   update   Boolean
   delete   Boolean
+}
+
+model Log {
+  id          String             @id @default(cuid())
+  createdAt   DateTime           @default(now())
+  tenantId    String?
+  tenant      Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKeyId    String?
+  apiKey      ApiKey?            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  rowId       String?
+  row         Row?               @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  url         String
+  action      String
+  details     String?
+  webhookLogs EntityWebhookLog[]
 }
 
 model ApiKeyLog {
@@ -169,11 +185,11 @@ model SubscriptionProduct {
   stripeId    String
   order       Int
   title       String
-  description String
-  badge       String
   active      Boolean
   model       Int // 0 = FLAT_RATE, 1 = PER_SEAT, 2 = USAGE_BASED
   public      Boolean
+  description String?
+  badge       String?
   prices      SubscriptionPrice[]
   features    SubscriptionFeature[]
 }
@@ -183,8 +199,8 @@ model SubscriptionPrice {
   subscriptionProductId String
   subscriptionProduct   SubscriptionProduct  @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   stripeId              String
-  type                  Int
-  billingPeriod         Int
+  type                  Int // 0 = ONE_TIME, 1 = RECURRING
+  billingPeriod         Int // 3 = MONTHLY, 4 = YEARLY
   price                 Int
   currency              String
   trialDays             Int
@@ -199,23 +215,8 @@ model SubscriptionFeature {
   order                 Int
   title                 String
   name                  String
-  type                  Int // 0 = Max, 1 = Monthly
+  type                  Int // 0 = NOT_INCLUDED, 1 = INCLUDED, 2 = MONTHLY, 3 = MAX, 4 = UNLIMITED
   value                 Int
-}
-
-model LinkedAccount {
-  id                String   @id @default(cuid())
-  createdAt         DateTime @default(now())
-  createdByUserId   String
-  createdByUser     User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  createdByTenantId String
-  createdByTenant   Tenant   @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
-  providerTenantId  String
-  providerTenant    Tenant   @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
-  clientTenantId    String
-  clientTenant      Tenant   @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
-  status            Int
-  rows              Row[]
 }
 
 model BlogAuthor {
@@ -335,11 +336,11 @@ model Row {
   id                String         @id @default(cuid())
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-  folio             Int
   entityId          String
   entity            Entity         @relation(fields: [entityId], references: [id], onDelete: Cascade)
   tenantId          String
   tenant            Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  folio             Int
   createdByUserId   String?
   createdByUser     User?          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByApiKeyId String?

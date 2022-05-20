@@ -2,7 +2,7 @@ import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo, UserSession } from "~/utils/session.server";
-import { json, LoaderFunction, MetaFunction } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";
@@ -10,6 +10,7 @@ import { Language } from "remix-i18next";
 import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
 import Pricing from "~/components/front/Pricing";
+import { getGumroadProduct } from "~/utils/integrations/gumroadService";
 
 export type IndexLoaderData = {
   title: string;
@@ -17,11 +18,14 @@ export type IndexLoaderData = {
   authenticated: boolean;
   isAdmin: boolean;
   i18n: Record<string, Language>;
+  socialProof: any;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   const { translations } = await i18nHelper(request);
   try {
+    const socialProof = await getGumroadProduct(process.env.GUMROAD_PRODUCT_ID ?? "");
+
     const userSession = await getUserInfo(request);
     const user = await getUser(userSession.userId);
     const data: IndexLoaderData = {
@@ -30,6 +34,7 @@ export let loader: LoaderFunction = async ({ request }) => {
       isAdmin: user?.admin !== null,
       authenticated: userSession.userId?.length > 0,
       i18n: translations,
+      socialProof,
     };
     return json(data);
   } catch (e) {
@@ -44,11 +49,12 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function IndexRoute() {
+  const data = useLoaderData<IndexLoaderData>();
   return (
     <div>
       <TopBanner />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
-        <Hero />
+        <Hero socialProof={data.socialProof} />
         <LogoClouds />
         <Features />
         <FeatureImages />

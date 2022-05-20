@@ -62,7 +62,7 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
 
   useEffect(() => {
     if (!item) {
-      setName(StringUtils.toCamelCase(title));
+      setName(StringUtils.toCamelCase(title.toLowerCase()));
     }
   }, [item, title]);
 

@@ -1,0 +1,45 @@
+---
+meta:
+  title: Uploaders | Components | SaasRock
+  description: Uploaders component
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Uploaders",
+      routePath: "/docs/components/uploaders",
+    },
+  ]}
+/>
+
+# Uploaders
+
+import PreviewUploadersDocument from "~/components/ui/uploaders/PreviewUploadersDocument";
+
+<PreviewUploadersDocument />
+
+```tsx
+import { FileBase64 } from "~/application/dtos/shared/FileBase64";
+
+export default function PreviewUploaders() {
+  function onDropped(base64: string, file: File) {
+    alert(
+      `@onDropped: [${base64.substr(0, 30)}...], [name (${
+        file.name
+      }), size (${file.size})]`
+    );
+  }
+  return (
+    <UploadDocuments
+      multiple={true}
+      onDropped={onDropped}
+    />
+  );
+}
+```

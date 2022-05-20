@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { forwardRef, Ref, RefObject, useImperativeHandle, useRef } from "react";
-import { useTranslation } from "react-i18next";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
 
 export interface RefInputDate {
@@ -14,28 +13,13 @@ interface Props {
   onChange?: (date: Date) => void;
   className?: string;
   help?: string;
-  minLength?: number;
-  maxLength?: number;
   disabled?: boolean;
   readOnly?: boolean;
   required?: boolean;
-  autoComplete?: string;
 }
-const InputDate = (
-  { name, title, value, onChange, className, help, disabled = false, readOnly = false, required = false, minLength, maxLength, autoComplete }: Props,
-  ref: Ref<RefInputDate>
-) => {
-  const { t, i18n } = useTranslation();
-
+const InputDate = ({ name, title, value, onChange, className, help, disabled = false, readOnly = false, required = false }: Props, ref: Ref<RefInputDate>) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
-
-  function getTranslation(value: string) {
-    if (!i18n.exists(value)) {
-      return null;
-    }
-    return t(value);
-  }
 
   return (
     <div className={className}>
@@ -55,11 +39,8 @@ const InputDate = (
           type="date"
           id={name}
           name={name}
-          autoComplete={autoComplete}
           required={required}
-          minLength={minLength}
-          maxLength={maxLength}
-          value={value ? new Date(value).toISOString().split("T")[0] : ""}
+          defaultValue={value ? new Date(value).toISOString().split("T")[0] : ""}
           onChange={(e) => (onChange ? onChange(e.target.valueAsDate || new Date()) : {})}
           disabled={disabled}
           readOnly={readOnly}

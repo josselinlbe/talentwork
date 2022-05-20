@@ -59,13 +59,13 @@ const featureImages = [
 export default function FeatureImages() {
   return (
     <div className="relative overflow-hidden pt-16">
-      <div className="mx-auto max-w-md px-4 text-center sm:px-6 sm:max-w-3xl lg:px-8 lg:max-w-7xl space-y-8">
+      <div className="mx-auto max-w-2xl px-4 text-center sm:px-6 sm:max-w-3xl lg:px-8 lg:max-w-5xl space-y-8">
         <div>
           <h2 className="text-base font-semibold tracking-wider text-theme-600 uppercase">Don't build from scratch</h2>
-          <p className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">+40 SaaS-ready pages</p>
+          <p className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight sm:text-4xl">+40 SaaS-ready pages</p>
           <p className="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-            Phasellus lorem quam molestie id quisque diam aenean nulla in. Accumsan in quis quis nunc, ullamcorper malesuada. Eleifend condimentum id viverra
-            nulla.
+            Marketing pages (Landing, Blog, Pricing), App pages (Dashboard, Account Settings), and Admin pages (Tenant/Users, Pricing, Entity Builder, Blog
+            posts, and more).
           </p>
         </div>
         <div>

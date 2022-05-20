@@ -1,5 +1,4 @@
-import { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 import PdfViewer from "../pdf/PdfViewer";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import ButtonSecondary from "../buttons/ButtonSecondary";
@@ -31,7 +30,7 @@ export default function PreviewMediaModal({ item, onClose, onDownload }: Props) 
           <div className="">
             <div className=" flex items-center space-x-2 justify-between">
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                {item.title}.{item.type.split("/")[1]}
+                {item.title}
               </Dialog.Title>
               <div className="flex space-x-2">
                 <ButtonSecondary type="button" onClick={onDownload}>

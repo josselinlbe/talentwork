@@ -61,7 +61,7 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
   });
 
   let folio = 1;
-  const maxFolio = await getMaxRowFolio(contractsEntity.id);
+  const maxFolio = await getMaxRowFolio(contractsEntity.id, undefined);
   if (maxFolio && maxFolio._max.folio !== null) {
     folio = maxFolio._max.folio + 1;
   }
@@ -209,6 +209,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
         },
       },
     },
+    dynamicRows: [],
   });
   // So both employees have different createdAt value
   await new Promise((r) => setTimeout(r, 1000));
@@ -232,6 +233,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
         },
       },
     },
+    dynamicRows: [],
   });
 
   return [await getRow(employeesEntity.id, employee1.id, tenantId), await getRow(employeesEntity.id, employee2.id, tenantId)];

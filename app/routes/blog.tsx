@@ -65,7 +65,7 @@ export default function BlogRoute() {
                 />
               </div>
               <div className="px-4">
-                <PostsList items={posts} />
+                <PostsList items={posts} withCoverImage={true} />
               </div>
             </div>
           </div>

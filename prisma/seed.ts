@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { seedBlog } from "./seedBlog";
@@ -10,7 +10,7 @@ import { createLinkedAccount } from "~/utils/db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 const db = new PrismaClient();
 
-async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserRole) {
+async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserType) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
     data: {
@@ -33,7 +33,7 @@ async function createUser(firstName: string, lastName: string, email: string, pa
   return user;
 }
 
-async function createTenant(name: string, users: { id: string; role: TenantUserRole }[]) {
+async function createTenant(name: string, users: { id: string; type: TenantUserType }[]) {
   const tenant = await db.tenant.create({
     data: {
       name,
@@ -56,7 +56,7 @@ async function createTenant(name: string, users: { id: string; role: TenantUserR
       data: {
         tenantId: tenant.id,
         userId: user.id,
-        role: user.role,
+        type: user.type,
         joined: TenantUserJoined.CREATOR,
         status: TenantUserStatus.ACTIVE,
       },
@@ -74,8 +74,8 @@ async function seed() {
   if (!adminEmail || !adminPassword) {
     throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set");
   }
-  const admin = await createUser("Admin", "User", adminEmail, adminPassword, TenantUserRole.OWNER);
-  await createUser("Demo", "Admin", "demo@admin.com", "password", TenantUserRole.MEMBER);
+  const admin = await createUser("Admin", "User", adminEmail, adminPassword, TenantUserType.OWNER);
+  await createUser("Demo", "Admin", "demo@admin.com", "password", TenantUserType.MEMBER);
   const user1 = await createUser("John", "Doe", "john.doe@company.com", "password");
   const user2 = await createUser("Luna", "Davis", "luna.davis@company.com", "password");
 
@@ -83,13 +83,13 @@ async function seed() {
   await createUser("Alex", "Martinez", "alex.martinez@company.com", "password");
 
   const tenant1 = await createTenant("Acme Corp 1", [
-    { ...admin, role: TenantUserRole.ADMIN },
-    { ...user1, role: TenantUserRole.ADMIN },
-    { ...user2, role: TenantUserRole.MEMBER },
+    { ...admin, type: TenantUserType.ADMIN },
+    { ...user1, type: TenantUserType.ADMIN },
+    { ...user2, type: TenantUserType.MEMBER },
   ]);
   const tenant2 = await createTenant("Acme Corp 2", [
-    { ...user1, role: TenantUserRole.OWNER },
-    { ...user2, role: TenantUserRole.MEMBER },
+    { ...user1, type: TenantUserType.OWNER },
+    { ...user2, type: TenantUserType.MEMBER },
   ]);
 
   const tenant1And2Relationship = await createLinkedAccount({

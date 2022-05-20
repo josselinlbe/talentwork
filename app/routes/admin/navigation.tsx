@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { AdminSidebar } from "~/application/sidebar/AdminSidebar";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import SidebarIcon from "~/components/layouts/icons/SidebarIcon";
@@ -27,7 +27,7 @@ export default function AdminNavigationRoute() {
   const adminData = useAdminData();
 
   const [items, setItems] = useState<SideBarItem[]>([]);
-  const [roles, setRoles] = useState<TenantUserRole[]>([]);
+  const [tenantUserTypes, setTenantUserTypes] = useState<TenantUserType[]>([]);
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
@@ -42,19 +42,19 @@ export default function AdminNavigationRoute() {
         setItems((items) => [...items, item]);
       });
     });
-    const roleKeys = Object.keys(TenantUserRole).filter((key) => !isNaN(Number(key)));
-    setRoles(roleKeys.map((f) => Number(f)));
+    const roleKeys = Object.keys(TenantUserType).filter((key) => !isNaN(Number(key)));
+    setTenantUserTypes(roleKeys.map((f) => Number(f)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function roleName(role: TenantUserRole) {
-    return t("settings.profile.roles." + TenantUserRole[role]);
+  function tenantUserTypeName(type: TenantUserType) {
+    return t("settings.profile.roles." + TenantUserType[type]);
   }
-  function roleHasAccess(item: SideBarItem, role: TenantUserRole): boolean {
-    return !item.path.includes("/admin") && allowRole(item, role);
+  function tenantUserTypeHasAccess(item: SideBarItem, role: TenantUserType): boolean {
+    return !item.path.includes("/admin") && allowTenantUserType(item, role);
   }
-  function allowRole(item: SideBarItem, role: TenantUserRole) {
-    return !item.userRoles || item.userRoles.includes(role);
+  function allowTenantUserType(item: SideBarItem, role: TenantUserType) {
+    return !item.tenantUserTypes || item.tenantUserTypes.includes(role);
   }
 
   return (
@@ -97,14 +97,14 @@ export default function AdminNavigationRoute() {
                             <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 tracking-wider select-none truncate border border-gray-200">
                               {t("admin.navigation.sysadmin")}
                             </th>
-                            {roles.map((role, idx) => {
+                            {tenantUserTypes.map((role, idx) => {
                               return (
                                 <th
                                   key={idx}
                                   scope="col"
                                   className="px-4 py-2 text-left text-xs font-bold text-gray-500 tracking-wider select-none truncate border border-gray-200"
                                 >
-                                  <div className="flex items-center justify-center space-x-1 text-gray-500">{roleName(role)}</div>
+                                  <div className="flex items-center justify-center space-x-1 text-gray-500">{tenantUserTypeName(role)}</div>
                                 </th>
                               );
                             })}
@@ -135,12 +135,12 @@ export default function AdminNavigationRoute() {
                                   </div>
                                 </td>
 
-                                {roles.map((role) => {
+                                {tenantUserTypes.map((role) => {
                                   return (
                                     <td className="px-4 whitespace-nowrap text-sm text-gray-600 text-center border border-gray-200" key={role}>
                                       <div className="flex justify-center">
                                         {(() => {
-                                          if (roleHasAccess(item, role)) {
+                                          if (tenantUserTypeHasAccess(item, role)) {
                                             return (
                                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
                                                 <path

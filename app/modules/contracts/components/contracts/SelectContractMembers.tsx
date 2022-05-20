@@ -11,7 +11,7 @@ import { Tenant, TenantUser, User } from "@prisma/client";
 import { LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 import IconSign from "../../icons/IconSign";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useParams } from "react-router";
+import { useParams } from "@remix-run/react";
 
 export interface RefSelectContractMembers {
   show: (link: LinkedAccountWithDetailsAndMembers, selected: string[]) => void;

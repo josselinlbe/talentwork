@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const rssString = `
     <rss xmlns:blogChannel="${blogUrl}" version="2.0">
       <channel>
-        <title>Remix SaaS kit Demo - Blog</title>
+        <title>SaasRock - Blog</title>
         <link>${blogUrl}</link>
         <description>Read the latest articles about Remix</description>
         <language>en-us</language>

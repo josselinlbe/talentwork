@@ -128,7 +128,6 @@ const FormGroup = ({ id, onCancel, children, className, editing, confirmationPro
           </div>
         )}
       </div>
-
       <ConfirmModal ref={confirmSubmit} onYes={yesSubmit} />
       <ConfirmModal ref={confirmRemove} onYes={yesRemove} />
       <ErrorModal ref={errorModal} />

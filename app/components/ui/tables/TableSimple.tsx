@@ -1,30 +1,86 @@
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLoaderData, useLocation, useNavigate, useSearchParams, useSubmit, useTransition } from "remix";
+import Constants from "~/application/Constants";
 import { InputType } from "~/application/enums/shared/InputType";
-import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 import ButtonTertiary from "../buttons/ButtonTertiary";
 import InputNumber from "../input/InputNumber";
 import InputSelect from "../input/InputSelect";
 import InputText from "../input/InputText";
+import TablePagination from "./TablePagination";
 
 export type Header<T> = {
   title: string;
   name: string;
   type?: InputType;
   value: (item: T) => any;
+  href?: (item: T) => any | undefined;
   formattedValue?: (item: T) => string;
   options?: { name: string; value: number | string; disabled?: boolean }[];
   setValue?: (value: any, idx: number) => void;
   editable?: (item: T) => boolean;
   className?: string;
+  sortable?: boolean;
+  breakpoint?: "sm" | "md" | "lg" | "xl" | "2xl";
 };
 interface Props<T> {
   headers: Header<T>[];
   items: T[];
   actions?: { title: string; onClick?: (idx: number, item: T) => void; onClickRoute?: (idx: number, item: T) => string }[];
+  updatesUrl?: boolean;
 }
-export default function TableSimple<T>({ headers, items, actions = [] }: Props<T>) {
+export default function TableSimple<T>({ headers, items, actions = [], updatesUrl = false }: Props<T>) {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const submit = useSubmit();
+  const transition = useTransition();
+
+  const data = useLoaderData<{ totalItems: number; totalPages: number }>();
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(Constants.DEFAULT_PAGE_SIZE);
+  const [sortBy, setSortBy] = useState<Header<T>>();
+  const [sortByDirection, setSortByDirection] = useState<string>("");
+
+  useEffect(() => {
+    const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
+    const pageSize = searchParams.get("pageSize") ? Number(searchParams.get("pageSize")) : Constants.DEFAULT_PAGE_SIZE;
+
+    setPage(page);
+    setPageSize(pageSize);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
+  useEffect(() => {
+    if (updatesUrl) {
+      if (sortBy) {
+        const sort = `${sortByDirection}${sortBy.name}`;
+        setSearchParams({ page: page.toString(), sort });
+      } else {
+        setSearchParams({ page: page.toString() });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, sortBy, sortByDirection]);
+
+  function onSortBy(header: Header<T>) {
+    if (sortBy?.name === header.name) {
+      if (sortByDirection === "") {
+        setSortByDirection("-");
+      } else {
+        setSortByDirection("");
+      }
+    } else {
+      setSortBy(header);
+      setSortByDirection("");
+    }
+    setPage(1);
+  }
+
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto">
@@ -35,9 +91,47 @@ export default function TableSimple<T>({ headers, items, actions = [] }: Props<T
                 <tr>
                   {headers.map((header, idxHeader) => {
                     return (
-                      <th key={idxHeader} scope="col" className="text-xs px-2 py-1 text-left font-medium text-gray-500 tracking-wider select-none truncate">
+                      <th
+                        key={idxHeader}
+                        onClick={() => header.sortable && onSortBy(header)}
+                        scope="col"
+                        className={clsx(
+                          "text-xs px-2 py-1 text-left font-medium text-gray-500 tracking-wider select-none truncate",
+                          header.sortable && "cursor-pointer hover:text-gray-700",
+                          header.breakpoint === "sm" && "hidden sm:table-cell",
+                          header.breakpoint === "md" && "hidden mg:table-cell",
+                          header.breakpoint === "lg" && "hidden lg:table-cell",
+                          header.breakpoint === "xl" && "hidden xl:table-cell",
+                          header.breakpoint === "2xl" && "hidden 2xl:table-cell"
+                        )}
+                      >
                         <div className={clsx("flex items-center space-x-1 text-gray-500", header.className)}>
                           <div>{header.title}</div>
+                          <div className={clsx((!header.name || sortBy?.name !== header.name) && "invisible")}>
+                            {(() => {
+                              if (sortByDirection === "") {
+                                return (
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                );
+                              } else {
+                                return (
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                );
+                              }
+                            })()}
+                          </div>
                         </div>
                       </th>
                     );
@@ -48,100 +142,134 @@ export default function TableSimple<T>({ headers, items, actions = [] }: Props<T
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {items.length === 0 && (
+                {items.length === 0 ? (
                   <tr>
                     <td colSpan={headers.length} className="text-center">
                       <div className="p-3 text-gray-500 text-sm">{t("shared.noRecords")}</div>
                     </td>
                   </tr>
-                )}
-                {items.map((item, idxRow) => {
-                  return (
-                    <tr key={idxRow}>
-                      {headers.map((header, idxHeader) => {
-                        return (
-                          <td key={idxHeader} className={clsx("px-2 py-2 whitespace-nowrap text-sm text-gray-600", header.className)}>
-                            {!header.setValue ? (
-                              <>{header.formattedValue ? header.formattedValue(item) : header.value(item)}</>
-                            ) : (
-                              <>
-                                {header.type === undefined || header.type === InputType.TEXT ? (
-                                  <InputText
-                                    withLabel={false}
-                                    name={header.name}
-                                    title={header.title}
-                                    value={header.value(item)}
-                                    disabled={header.editable && !header.editable(item)}
-                                    setValue={(e) => {
-                                      if (header.setValue) {
-                                        header.setValue(e, idxRow);
+                ) : (
+                  items.map((item, idxRow) => {
+                    return (
+                      <tr key={idxRow}>
+                        {headers.map((header, idxHeader) => {
+                          return (
+                            <td
+                              key={idxHeader}
+                              className={clsx(
+                                "px-2 py-2 whitespace-nowrap text-sm text-gray-600",
+                                header.className,
+                                header.breakpoint === "sm" && "hidden sm:table-cell",
+                                header.breakpoint === "md" && "hidden mg:table-cell",
+                                header.breakpoint === "lg" && "hidden lg:table-cell",
+                                header.breakpoint === "xl" && "hidden xl:table-cell",
+                                header.breakpoint === "2xl" && "hidden 2xl:table-cell"
+                              )}
+                            >
+                              {!header.setValue ? (
+                                <>
+                                  {header.href !== undefined ? (
+                                    <Link
+                                      to={header.href(item)}
+                                      className="p-2 hover:bg-gray-50 border border-transparent hover:border-gray-300 rounded-md focus:bg-gray-100"
+                                    >
+                                      <span>{header.formattedValue ? header.formattedValue(item) : header.value(item)}</span>
+                                    </Link>
+                                  ) : (
+                                    <span>{header.formattedValue ? header.formattedValue(item) : header.value(item)}</span>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  {header.type === undefined || header.type === InputType.TEXT ? (
+                                    <InputText
+                                      withLabel={false}
+                                      name={header.name}
+                                      title={header.title}
+                                      value={header.value(item)}
+                                      disabled={header.editable && !header.editable(item)}
+                                      setValue={(e) => {
+                                        if (header.setValue) {
+                                          header.setValue(e, idxRow);
+                                        }
+                                      }}
+                                      required
+                                    />
+                                  ) : header.type === InputType.NUMBER ? (
+                                    <InputNumber
+                                      withLabel={false}
+                                      name={header.name}
+                                      title={header.title}
+                                      value={header.value(item)}
+                                      disabled={header.editable && !header.editable(item)}
+                                      setValue={(e) => {
+                                        if (header.setValue) {
+                                          header.setValue(e, idxRow);
+                                        }
+                                      }}
+                                      required
+                                    />
+                                  ) : header.type === InputType.SELECT ? (
+                                    <InputSelect
+                                      withLabel={false}
+                                      name={header.name}
+                                      title={header.title}
+                                      value={header.value(item)}
+                                      setValue={(e) => {
+                                        if (header.setValue) {
+                                          header.setValue(Number(e), idxRow);
+                                        }
+                                      }}
+                                      options={header.options ?? []}
+                                      required
+                                      disabled={header.editable && !header.editable(item)}
+                                    />
+                                  ) : (
+                                    <td></td>
+                                  )}
+                                </>
+                              )}
+                            </td>
+                          );
+                        })}
+                        {actions && (
+                          <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">
+                            <div className="flex space-x-2">
+                              {actions.map((action) => {
+                                return (
+                                  <ButtonTertiary
+                                    key={action.title}
+                                    onClick={() => {
+                                      if (action.onClick) {
+                                        action.onClick(idxRow, item);
                                       }
                                     }}
-                                    required
-                                  />
-                                ) : header.type === InputType.NUMBER ? (
-                                  <InputNumber
-                                    withLabel={false}
-                                    name={header.name}
-                                    title={header.title}
-                                    value={header.value(item)}
-                                    disabled={header.editable && !header.editable(item)}
-                                    setValue={(e) => {
-                                      if (header.setValue) {
-                                        header.setValue(e, idxRow);
-                                      }
-                                    }}
-                                    required
-                                  />
-                                ) : header.type === InputType.SELECT ? (
-                                  <InputSelect
-                                    withLabel={false}
-                                    name={header.name}
-                                    title={header.title}
-                                    value={header.value(item)}
-                                    setValue={(e) => {
-                                      if (header.setValue) {
-                                        header.setValue(Number(e), idxRow);
-                                      }
-                                    }}
-                                    options={header.options ?? []}
-                                    required
-                                    disabled={header.editable && !header.editable(item)}
-                                  />
-                                ) : (
-                                  <td></td>
-                                )}
-                              </>
-                            )}
+                                    to={action.onClickRoute && action.onClickRoute(idxRow, item)}
+                                  >
+                                    {action.title}
+                                  </ButtonTertiary>
+                                );
+                              })}
+                            </div>
                           </td>
-                        );
-                      })}
-                      {actions && (
-                        <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">
-                          <div className="flex space-x-2">
-                            {actions.map((action) => {
-                              return (
-                                <ButtonTertiary
-                                  key={action.title}
-                                  onClick={() => {
-                                    if (action.onClick) {
-                                      action.onClick(idxRow, item);
-                                    }
-                                  }}
-                                  to={action.onClickRoute && action.onClickRoute(idxRow, item)}
-                                >
-                                  {action.title}
-                                </ButtonTertiary>
-                              );
-                            })}
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
+                        )}
+                      </tr>
+                    );
+                  })
+                )}
+
+                {/* {[...Array(pageSize - items.length)].map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={headers.length + 1} className="whitespace-nowrap text-sm text-gray-600">
+                      <div className="px-2 py-2.5 invisible">No row</div>
+                    </td>
+                  </tr>
+                ))} */}
               </tbody>
             </table>
+            {updatesUrl && (
+              <TablePagination onChange={(e) => setPage(e)} page={page} pageSize={pageSize} totalItems={data.totalItems} totalPages={data.totalPages} />
+            )}
           </div>
         </div>
       </div>

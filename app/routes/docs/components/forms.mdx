@@ -1,0 +1,62 @@
+---
+meta:
+  title: Forms | Components | SaasRock
+  description: Forms component
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Forms",
+      routePath: "/docs/components/forms",
+    },
+  ]}
+/>
+
+# Forms
+
+### InputGroup
+
+import InputGroup from "~/components/ui/forms/InputGroup";
+import InputText from "~/components/ui/input/InputText";
+
+<InputGroup title="Title">
+  <InputText name="first-name" title="First name" />
+</InputGroup>
+
+```tsx
+<InputGroup title="Title">
+  <InputText name="first-name" title="First name" />
+</InputGroup>
+```
+
+import FormGroup from "~/components/ui/forms/FormGroup";
+
+### FormGroup
+
+<FormGroup
+  id="1"
+  editing={true}
+  confirmationPrompt="Submit?"
+>
+  <InputGroup title="Title">
+    <InputText name="first-name" title="First name" />
+  </InputGroup>
+</FormGroup>
+
+```tsx
+<FormGroup
+  id="1"
+  editing={true}
+  confirmationPrompt="Submit?"
+>
+  <InputGroup title="Title">
+    <InputText name="first-name" title="First name" />
+  </InputGroup>
+</FormGroup>
+```

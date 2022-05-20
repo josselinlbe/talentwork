@@ -1,0 +1,32 @@
+---
+meta:
+  title: Modals | Components | SaasRock
+  description: Modals component
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Modals",
+      routePath: "/docs/components/modals",
+    },
+  ]}
+/>
+
+# Modals
+
+import PreviewModals from "~/components/ui/modals/PreviewModals";
+
+<PreviewModals />
+
+```tsx
+<SuccessModal ref={successModal} onClosed={() => alert("Closed success modal")} />
+<ErrorModal ref={errorModal} onClosed={() => alert("Closed error modal")} />
+<ConfirmModal ref={confirmModal} onNo={() => alert("No")} onYes={onYes} />
+<Modal open={open} setOpen={setOpen}>Content here</Modal>
+```

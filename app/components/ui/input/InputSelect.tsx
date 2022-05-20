@@ -4,9 +4,9 @@ interface Props {
   name: string;
   title: string;
   withLabel?: boolean;
-  options: { name: string; value: string | number | readonly string[] | undefined; disabled?: boolean }[];
-  value?: string | number | readonly string[] | undefined;
-  setValue?: React.Dispatch<React.SetStateAction<string | number | readonly string[] | undefined>>;
+  options: { name: string; value: string | number | undefined; disabled?: boolean }[];
+  value?: string | number | undefined;
+  setValue?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   className?: string;
   required?: boolean;
   disabled?: boolean;

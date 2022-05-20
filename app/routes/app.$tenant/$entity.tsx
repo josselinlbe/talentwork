@@ -5,14 +5,17 @@ import { json, useLoaderData, useParams } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { RowWithDetails, getRows } from "~/utils/db/entities/rows.db.server";
+import { RowWithDetails, getRows, countRows } from "~/utils/db/entities/rows.db.server";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import RowsList from "~/components/entities/rows/RowsList";
+import Constants from "~/application/Constants";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
   items: RowWithDetails[];
+  totalItems: number;
+  totalPages: number;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -22,11 +25,29 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!entity) {
     return redirect("/app/" + tenantUrl.tenantId);
   }
-  const items = await getRows(entity.id, tenantUrl.tenantId);
+  // if (!params.page) {
+  //   return redirect(`/app/${tenantUrl.tenantId}/${params.entity}?page=${1}`);
+  // }
+  const pageSize = Constants.DEFAULT_PAGE_SIZE;
+  const paramsPage = new URL(request.url).searchParams.get("page");
+  const paramsSort = new URL(request.url).searchParams.get("sort");
+  const page = paramsPage ? Number(paramsPage) : 1;
+  let orderBy: any = { createdAt: "desc" };
+  if (paramsSort) {
+    const column = paramsSort.replace("-", "").trim();
+    if (column === "createdAt" || column === "folio") {
+      orderBy = { [column]: paramsSort.startsWith("-") ? "desc" : "asc" };
+    }
+  }
+  const items = await getRows(entity.id, tenantUrl.tenantId, pageSize, pageSize * (page - 1), orderBy);
+  const totalItems = await countRows(entity.id, tenantUrl.tenantId);
+  const totalPages = totalItems / pageSize;
   const data: LoaderData = {
-    title: `${t(entity.title)} | ${process.env.APP_NAME}`,
+    title: `${t(entity.titlePlural)} | ${process.env.APP_NAME}`,
     entity,
     items,
+    totalItems,
+    totalPages,
   };
   return json(data);
 };
@@ -58,6 +79,7 @@ export default function RowsListRoute() {
       </div>
       <div className="py-4 space-y-2 mx-auto max-w-5xl xl:max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* <pre>{JSON.stringify(data.items)}</pre> */}
+        {/* totalItems: {data.totalItems} */}
         <RowsList entity={data.entity} items={data.items} />
       </div>
     </div>

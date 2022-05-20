@@ -2,7 +2,7 @@ import { useNavigate } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -63,8 +63,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const role = Number(form.get("tenant-user-role"));
 
   const tenantUsers = await getTenantUsers(tenantUrl.tenantId);
-  const owners = tenantUsers?.filter((f) => f.role === TenantUserRole.OWNER);
-  if (owners?.length === 1 && owners?.find((f) => f.user.email === email) && role !== TenantUserRole.OWNER) {
+  const owners = tenantUsers?.filter((f) => f.role === TenantUserType.OWNER);
+  if (owners?.length === 1 && owners?.find((f) => f.user.email === email) && role !== TenantUserType.OWNER) {
     return badRequest({
       error: t("api.errors.cannotBeWithoutOwner"),
     });
@@ -123,20 +123,20 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
   // const [firstName, setFirstName] = useState("");
   // const [lastName, setLastName] = useState("");
   // const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<TenantUserRole>(actionData?.fields?.role ?? data.member?.role ?? TenantUserRole.MEMBER);
+  const [role, setRole] = useState<TenantUserType>(actionData?.fields?.role ?? data.member?.role ?? TenantUserType.MEMBER);
   const roleOptions = [
     {
-      value: TenantUserRole.OWNER,
+      value: TenantUserType.OWNER,
       name: t("settings.profile.roles.OWNER"),
       description: t("settings.profile.permissions.OWNER"),
     },
     {
-      value: TenantUserRole.ADMIN,
+      value: TenantUserType.ADMIN,
       name: t("settings.profile.roles.ADMIN"),
       description: t("settings.profile.permissions.ADMIN"),
     },
     {
-      value: TenantUserRole.MEMBER,
+      value: TenantUserType.MEMBER,
       name: t("settings.profile.roles.MEMBER"),
       description: t("settings.profile.permissions.MEMBER"),
     },
@@ -163,7 +163,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     confirmRemove.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"));
   }
   function yesRemove() {
-    if (appData.currentRole === TenantUserRole.MEMBER) {
+    if (appData.currentRole === TenantUserType.MEMBER) {
       errorModal.current?.show(t("account.tenant.onlyAdmin"));
     } else {
       const form = new FormData();
@@ -174,7 +174,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
     }
   }
   function changedRole(e: any) {
-    const _role: TenantUserRole = Number(e.target.value);
+    const _role: TenantUserType = Number(e.target.value);
     setRole(_role);
   }
 

@@ -54,7 +54,7 @@ export default function SettingsRoute() {
     },
     {
       name: t("settings.tenant.title"),
-      routePath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/account"),
     },
     {
       name: "API",
@@ -62,7 +62,7 @@ export default function SettingsRoute() {
     },
     {
       name: t("models.log.plural"),
-      routePath: UrlUtils.currentTenantUrl(params, "settings/logs"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/audit-trails"),
     },
   ];
   return (

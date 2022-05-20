@@ -1,4 +1,4 @@
-import { TenantUserRole } from "../enums/tenants/TenantUserRole";
+import { TenantUserType } from "../enums/tenants/TenantUserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 
 export interface SideBarItem {
@@ -9,7 +9,8 @@ export interface SideBarItem {
   entityIcon?: string;
   open?: boolean;
   adminOnly?: boolean;
-  userRoles?: TenantUserRole[];
+  tenantUserTypes?: TenantUserType[];
   items?: SideBarItem[];
   isDemo?: boolean;
+  exact?: boolean;
 }

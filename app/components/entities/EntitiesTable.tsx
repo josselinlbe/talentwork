@@ -4,7 +4,7 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "../ui/buttons/ButtonTertiary";
-import { Link } from "react-router-dom";
+import { Link } from "remix";
 import { useAdminData } from "~/utils/data/useAdminData";
 import EntityIcon from "../layouts/icons/EntityIcon";
 import CheckIcon from "../ui/icons/CheckIcon";
@@ -219,10 +219,10 @@ export default function EntitiesTable({ items }: Props) {
                                   </div>
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">{item.prefix}</td>
-                                <td className="px-2 py-2 whitespace-nowrap text-sm">
+                                <td className="px-2 py-2 whitespace-nowrap text-sm max-w-sm truncate">
                                   {item.properties.filter((f) => !f.isDefault).length > 0 ? (
                                     <Link
-                                      className=" max-w-sm pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate"
+                                      className="  pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate"
                                       to={"/admin/entities/" + item.slug + "/properties"}
                                     >
                                       {item.properties

@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import UserUtils from "~/utils/app/UserUtils";
 import { UserWithoutPassword } from "~/utils/db/users.db.server";
+import UrlUtils from "~/utils/app/UrlUtils";
 
 interface Props {
   user: UserWithoutPassword;
@@ -9,13 +10,16 @@ interface Props {
 
 export default function ProfileBanner({ user }: Props) {
   const { t } = useTranslation();
+  const params = useParams();
   return (
     <div className="px-4 sm:px-8 max-w-5xl mx-auto">
       <div className="py-2 md:flex md:items-center md:justify-between">
         <div className="flex-1 min-w-0">
           {/*Profile */}
           <div className="flex items-center">
-            <Link to="/admin/profile">{user?.avatar && <img className="hidden h-12 w-12 rounded-full sm:block" src={user?.avatar} alt="Profile" />}</Link>
+            <Link to={UrlUtils.currentTenantUrl(params, `settings/profile`)}>
+              {user?.avatar && <img className="hidden h-12 w-12 rounded-full sm:block" src={user?.avatar} alt="Profile" />}
+            </Link>
             <div>
               <div className="flex items-center">
                 <div>

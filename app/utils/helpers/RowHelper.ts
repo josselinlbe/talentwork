@@ -56,7 +56,7 @@ function getDynamicPropertyValue(item: RowValue & { media: Media[] }, type: Prop
     case PropertyType.ID:
       return item.idValue;
     case PropertyType.ENTITY:
-      return item.relatedRowId;
+      return item.relatedRow;
     case PropertyType.MEDIA:
       return item.media;
     // case PropertyType.SELECT:
@@ -97,7 +97,12 @@ function getFormattedValue(value: any, type: PropertyType): string {
     case PropertyType.ID:
       return value;
     case PropertyType.ENTITY:
-      return value;
+      const relatedRow = value as RowWithDetails;
+      if (relatedRow.values.length === 0) {
+        return getRowFolio(relatedRow.entity, relatedRow);
+      }
+      const firstValue = relatedRow.values[0];
+      return getDynamicPropertyValue(firstValue, firstValue.property.type);
     case PropertyType.MEDIA:
       // return (value as MediaDto[]).map((f) => f.name).join(", ");
       return value?.length ?? "0";
@@ -155,8 +160,13 @@ const search = (entity: EntityWithDetails, item: RowWithDetails, searchInput: st
       return true;
     }
   }
-  if (getRowFolio(entity, item)?.toUpperCase().includes(searchInput.toUpperCase())) {
-    return false;
+
+  if (
+    getRowFolio(entity, item)?.toUpperCase().includes(searchInput.toUpperCase()) ||
+    item.createdByUser?.email?.toUpperCase().includes(searchInput.toUpperCase()) ||
+    (item.createdByUser?.firstName + " " + item.createdByUser?.lastName)?.toUpperCase().includes(searchInput.toUpperCase())
+  ) {
+    return true;
   }
   return false;
 };
@@ -174,7 +184,6 @@ const getValueFromType = (type: PropertyType, value: any) => {
     case PropertyType.FORMULA:
       return { textValue: value };
     case PropertyType.DATE:
-      console.log({ dateValue: new Date(value), value });
       return { dateValue: new Date(value) };
     case PropertyType.ENTITY:
       return { relatedRowId: value };
@@ -203,6 +212,7 @@ const setObjectProperties = (entity: EntityWithDetails, item: RowWithDetails) =>
 
 const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, existing?: RowWithDetails) => {
   const dynamicProperties: RowValueDto[] = [];
+  let dynamicRows: RowDetailDto[] = [];
   const properties: any = {};
   if (entity.properties.filter((f) => !f.isDynamic).length > 0) {
     if (existing) {
@@ -219,8 +229,9 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
       });
     }
   }
+
   entity.properties
-    .filter((f) => !f.isHidden)
+    .filter((f) => !f.isHidden && !f.isDetail)
     .forEach((property) => {
       let formValue: FormDataEntryValue | null = null;
       let media: MediaDto[] = [];
@@ -245,26 +256,37 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
       value.media = media;
       const existingValue = existing?.values.find((f) => f.propertyId === property.id);
       if (property.isDynamic) {
-        dynamicProperties.push({
+        const rowValue = {
           id: existingValue?.id ?? null,
           propertyId: property.id,
           property: property,
           ...value,
-        });
+        };
+        if (property.isDetail) {
+          // const currentRow = dynamicRows.find(2);
+          // dynamicRows.push(rowValue);
+        } else {
+          dynamicProperties.push(rowValue);
+        }
       } else {
         properties[entity.name][existing ? "update" : "create"][name] = formValue;
       }
     });
+
+  dynamicRows = form.getAll(`row-details[]`).map((f: FormDataEntryValue) => {
+    return JSON.parse(f.toString()) as RowDetailDto;
+  });
 
   let linkedAccountId: string | null = null;
   if (entity.requiresLinkedAccounts) {
     linkedAccountId = form.get("linked-account-id")?.toString() ?? null;
   }
 
-  console.log({ dynamicProperties, properties });
+  // console.log({ dynamicProperties, dynamicRows, properties });
 
   return {
     dynamicProperties,
+    dynamicRows,
     properties,
     linkedAccountId,
   };

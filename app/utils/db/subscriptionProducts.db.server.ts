@@ -23,7 +23,11 @@ export async function getAllSubscriptionProductsWithTenants(): Promise<Subscript
             },
           },
         },
-        features: true,
+        features: {
+          orderBy: {
+            order: "asc",
+          },
+        },
       },
       orderBy: {
         order: "asc",
@@ -44,7 +48,11 @@ export async function getAllSubscriptionProducts(isPublic?: boolean): Promise<Su
         },
         include: {
           prices: true,
-          features: true,
+          features: {
+            orderBy: {
+              order: "asc",
+            },
+          },
         },
         orderBy: {
           order: "asc",
@@ -61,7 +69,11 @@ export async function getAllSubscriptionProducts(isPublic?: boolean): Promise<Su
       },
       include: {
         prices: true,
-        features: true,
+        features: {
+          orderBy: {
+            order: "asc",
+          },
+        },
       },
       orderBy: {
         order: "asc",
@@ -72,6 +84,10 @@ export async function getAllSubscriptionProducts(isPublic?: boolean): Promise<Su
     });
 }
 
+export async function getAllSubscriptionFeatures(): Promise<SubscriptionFeature[]> {
+  return await db.subscriptionFeature.findMany({});
+}
+
 export async function getSubscriptionProduct(id: string): Promise<SubscriptionProductDto | null> {
   return await db.subscriptionProduct.findUnique({
     where: {
@@ -79,7 +95,11 @@ export async function getSubscriptionProduct(id: string): Promise<SubscriptionPr
     },
     include: {
       prices: true,
-      features: true,
+      features: {
+        orderBy: {
+          order: "asc",
+        },
+      },
     },
   });
 }

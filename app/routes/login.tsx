@@ -1,11 +1,11 @@
-import { ActionFunction, Form, json, Link, LoaderFunction, MetaFunction, useActionData, useSearchParams } from "remix";
+import { ActionFunction, Form, json, Link, LoaderFunction, MetaFunction, redirect, useActionData, useSearchParams } from "remix";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import bcrypt from "bcryptjs";
 import Logo from "~/components/front/Logo";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { getUserByEmail } from "~/utils/db/users.db.server";
+import { getUser, getUserByEmail } from "~/utils/db/users.db.server";
 import UserUtils from "~/utils/app/UserUtils";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 import { createLogLogin } from "~/utils/db/logs.db.server";
@@ -13,6 +13,22 @@ import { getTenant } from "~/utils/db/tenants.db.server";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
+
+  const userInfo = await getUserInfo(request);
+  if (userInfo.userId !== undefined && userInfo.userId !== "") {
+    const user = await getUser(userInfo.userId);
+    if (user) {
+      if (!user?.defaultTenantId) {
+        return redirect("/app");
+      } else {
+        const tenant = await getTenant(user.defaultTenantId);
+        if (tenant) {
+          return redirect(`/app/${tenant?.slug ?? tenant.id}`);
+        }
+      }
+    }
+  }
+
   return json({
     title: `${t("account.login.title")} | ${process.env.APP_NAME}`,
     i18n: translations,
@@ -107,7 +123,7 @@ export default function LoginRoute() {
             </p>
           </div>
           <InfoBanner title="Demo" text={t("account.login.createTestAccount")} redirect="/register">
-            <div className="mt-2 border-t pt-1 border-pink-300 w-full text-xs">
+            <div className="mt-2 border-t pt-1 border-accent-300 w-full text-xs">
               {/* {t("account.login.useTestAccount")} */}
               <p className="mt-1">
                 <span className="font-bold">Email</span>: john.doe@company.com <span className="italic">(tenant)</span> demo@admin.com

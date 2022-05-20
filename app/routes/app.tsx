@@ -122,7 +122,7 @@ export default function AppRoute() {
                   </Combobox>
                 )}
                 <div className="mt-4 flex pb-12">
-                  <Link to="/app/new-tenant" className="text-sm font-medium text-theme-600 dark:text-theme-400 hover:text-theme-500 w-full text-center">
+                  <Link to="/app/new-account" className="text-sm font-medium text-theme-600 dark:text-theme-400 hover:text-theme-500 w-full text-center">
                     Create an organization<span aria-hidden="true"> &rarr;</span>
                   </Link>
                 </div>

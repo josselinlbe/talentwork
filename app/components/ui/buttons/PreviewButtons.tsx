@@ -16,7 +16,6 @@ export default function PreviewButtons() {
   }
   return (
     <div id="buttons">
-      <h3 className="font-medium text-sm">Buttons</h3>
       <div className="bg-white p-6 border-dashed border-gray-300 border">
         <div id="buttons" className="space-y-2 w-full">
           <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">

@@ -7,6 +7,7 @@ export type ChangelogItem = {
   url?: string;
   closed: Issue[];
   added: Issue[];
+  releaseTag?: string;
 };
 
 type Issue = {

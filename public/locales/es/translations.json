@@ -116,7 +116,14 @@
     "invalid": "Inválido",
     "noRecords": "No hay registros",
     "select": "Seleccionar",
-    "undefined": "Indefinido"
+    "undefined": "Indefinido",
+    "details": "Detalles",
+    "rows": "Renglones",
+    "showing": "Mostrando",
+    "from": "De",
+    "to": "A",
+    "of": "De",
+    "results": "Resultados"
   },
   "front": {
     "navbar": {
@@ -128,11 +135,14 @@
       "privacy": "Política de Privacidad"
     },
     "hero": {
-      "headline1": "Construye fácilmente tu SaaS",
-      "headline2": "Autenticación, Subscripciones, Administración de Organizaciones/Usuarios, Blog, i18n, Bitácora, Portal de Admin, Páginas de Ajustes de Cuenta, Constructor de Entidades Personalizadas, Constructor de Plan de Precios y más.",
-      "hint": "Este demo usa v0.2.5",
+      "headline1": "Construye tu SaaS Fácilmente",
+      "headline2": "Framework de bajo código & extensible con funcionalidades para SaaS.",
+      "headline3": "Descarga el código y personaliza: Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
+      "subheadline1": "(en una semana o menos)",
+      "hint": "Este sitio usa v0.2.6",
       "buy": "Obtener código",
       "features": "Funcionalidades",
+      "docs": "Documentación",
       "components": "Componentes",
       "blog": "Blog",
       "contact": "Contáctanos",
@@ -342,7 +352,7 @@
         "select": "Selecciona una pestaña"
       },
       "colors": {
-        "BLUE_GRAY": "Gris azul",
+        "SLATE": "Gris azul",
         "GRAY": "Gris",
         "RED": "Rojo",
         "ORANGE": "Naranja",
@@ -353,7 +363,7 @@
         "EMERALD": "Esmeralda",
         "TEAL": "Verde azulado",
         "CYAN": "Cian",
-        "LIGHT_BLUE": "Azul bajo",
+        "SKY": "Azul bajo",
         "BLUE": "Azul",
         "INDIGO": "Indigo",
         "VIOLET": "Violeta",
@@ -477,6 +487,10 @@
       "limits": {
         "title": "Límites",
         "description": "Seleccion un plan de acuerdo a lo que necesites"
+      },
+      "features": {
+        "title": "Mis funcionalidades y límites",
+        "description": "Funcionalidad incluida en tu subscripción"
       },
       "invoices": {
         "title": "Facturas",
@@ -955,6 +969,15 @@
       "badge": "Leyenda",
       "status": "Estatus",
       "custom": "Personalizado"
+    },
+    "subscriptionFeature": {
+      "object": "Funcionalidad",
+      "plural": "Funcionalidades",
+      "order": "Orden",
+      "title": "Título",
+      "name": "Nombre",
+      "type": "Tipo",
+      "value": "Valor"
     },
     "contract": {
       "object": "Contrato",

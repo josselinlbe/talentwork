@@ -21,7 +21,7 @@ import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ChangeSubscription from "~/components/core/settings/subscription/ChangeSubscription";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import MySubscriptionProducts from "~/components/core/settings/subscription/MySubscriptionProducts";
+import MySubscriptionFeatures from "~/components/core/settings/subscription/MySubscriptionFeatures";
 import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
 import { i18nHelper } from "~/locale/i18n.utils";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
@@ -38,11 +38,14 @@ import {
 import { getTenant } from "~/utils/db/tenants.db.server";
 import { createLog } from "~/utils/db/logs.db.server";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
+import { getPlanFeaturesUsage } from "~/utils/services/subscriptionService";
+import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
   items: Awaited<ReturnType<typeof getAllSubscriptionProducts>>;
   myInvoices: Stripe.Invoice[];
+  myFeatures: PlanFeatureUsageDto[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -96,7 +99,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
           stripeSubscriptionId: session.subscription.toString(),
           quantity,
         });
-        await createLog(request, tenantUrl, "Subscribed", price?.subscriptionProduct.title ?? "");
+        await createLog(request, tenantUrl, "Subscribed", t(price?.subscriptionProduct.title ?? ""));
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
       }
     } catch (e) {}
@@ -116,6 +119,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
   const myInvoices = (await getStripeInvoices(tenantSubscription.stripeCustomerId ?? "")) ?? [];
 
+  const myFeatures = await getPlanFeaturesUsage(tenantUrl.tenantId);
+
   const dashboardData = await loadDashboardData(params);
 
   const items = await getAllSubscriptionProducts(true);
@@ -123,6 +128,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     myInvoices,
     title: `${t("app.navbar.subscription")} | ${process.env.APP_NAME}`,
     items,
+    myFeatures,
     ...dashboardData,
   };
   return json(data);
@@ -326,17 +332,7 @@ export default function SubscriptionRoute() {
         <ChangeSubscription items={data.items} current={appData.mySubscription} billingPeriod={billingPeriod} currency={currency} />
       )}
 
-      <div className="grid lg:grid-cols-2 gap-6 md:gap-2 mb-4">
-        <div className="md:col-span-1">
-          <div className="sm:px-0">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">{t("app.subscription.limits.title")}</h3>
-
-            <div className="mt-1 text-sm leading-5 text-gray-600">{t("app.subscription.limits.description")}</div>
-          </div>
-        </div>
-      </div>
-
-      <MySubscriptionProducts withCurrentPlan={false} />
+      <MySubscriptionFeatures features={data.myFeatures} withCurrentPlan={false} />
 
       {data.myInvoices.length > 0 && (
         <>

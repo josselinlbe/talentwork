@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -34,7 +34,7 @@ export default function MembersListAndTable({ items }: Props) {
   ];
 
   function getUserRole(item: TenantUser) {
-    return t("settings.profile.roles." + TenantUserRole[item.role]);
+    return t("settings.profile.roles." + TenantUserType[item.type]);
   }
   function getUserStatus(item: TenantUser) {
     return t("settings.profile.status." + TenantUserStatus[item.status]);

@@ -20,6 +20,7 @@ import { Tenant } from ".prisma/client";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 import PlanFeatureValue from "~/components/core/settings/subscription/PlanFeatureValue";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
+import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 
 type LoaderData = {
   title: string;
@@ -111,7 +112,7 @@ export default function AdminPricingRoute() {
   const successModal = useRef<RefSuccessModal>(null);
 
   const [items, setItems] = useState<SubscriptionProductDto[]>(data.items);
-  const [allFeatures, setAllFeatures] = useState<{ order: number; name: string; title: string }[]>([]);
+  const [allFeatures, setAllFeatures] = useState<SubscriptionFeatureDto[]>([]);
 
   useEffect(() => {
     if (actionData?.error) {
@@ -129,7 +130,7 @@ export default function AdminPricingRoute() {
   }, [data]);
 
   useEffect(() => {
-    const allFeatures: { order: number; name: string; title: string }[] = [];
+    const allFeatures: SubscriptionFeatureDto[] = [];
     items.forEach((item) => {
       item.features.forEach((feature) => {
         const existing = allFeatures.find((f) => f.name === feature.name);
@@ -138,6 +139,8 @@ export default function AdminPricingRoute() {
             order: feature.order,
             name: feature.name,
             title: feature.title,
+            type: feature.type,
+            value: feature.value,
           });
         }
       });

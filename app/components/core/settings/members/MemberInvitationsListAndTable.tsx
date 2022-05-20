@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserInvitation } from "@prisma/client";
 import { useSubmit } from "remix";
@@ -30,15 +30,15 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
   ];
 
   function getUserRole(item: TenantUserInvitation) {
-    return t("settings.profile.roles." + TenantUserRole[item.role]);
+    return t("settings.profile.roles." + TenantUserType[item.type]);
   }
   function getUserRoleClass(item: TenantUserInvitation) {
-    switch (item.role as TenantUserRole) {
-      case TenantUserRole.OWNER:
+    switch (item.role as TenantUserType) {
+      case TenantUserType.OWNER:
         return "bg-slate-50 text-gray-800 border border-slate-300";
-      case TenantUserRole.ADMIN:
+      case TenantUserType.ADMIN:
         return "bg-rose-50 border border-rose-200";
-      case TenantUserRole.MEMBER:
+      case TenantUserType.MEMBER:
         return "bg-blue-50 border border-blue-200";
     }
   }

@@ -66,10 +66,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
       </head>
       <body className="min-h-screen text-gray-800 dark:text-white bg-white dark:bg-slate-900 max-w-full max-h-full">
         {children}
-        <Scripts />
-        <LiveReload />
-        <ScrollRestoration />
-        <FloatingLoader />
 
         {!debug && (
           <>
@@ -79,6 +75,11 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
             </noscript>
           </>
         )}
+
+        <LiveReload />
+        <FloatingLoader />
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
   );

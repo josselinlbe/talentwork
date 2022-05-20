@@ -61,18 +61,18 @@ export default function PricingPlanForm({ plans, item }: Props) {
         {
           order: 1,
           title: "1 user",
-          name: "users",
+          name: "Users",
           type: SubscriptionFeatureLimitType.MAX,
           value: 1,
         },
       ];
       adminData.entities
-        .filter((f) => f.active)
+        .filter((f) => f.active && f.isFeature)
         .forEach((entity) => {
           features.push({
             order: features.length + 1,
             title: "100 " + t(entity.titlePlural).toLowerCase() + "/month",
-            name: entity.slug,
+            name: t(entity.titlePlural),
             type: SubscriptionFeatureLimitType.MONTHLY,
             value: 100,
           });
@@ -80,7 +80,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
       features.push({
         order: features.length + 1,
         title: "Priority support",
-        name: "priority-support",
+        name: "Priority Support",
         type: SubscriptionFeatureLimitType.NOT_INCLUDED,
         value: 0,
       });

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "@remix-run/react";
+import GitHubIcon from "../icons/GitHubIcon";
 
 export default function TopBanner() {
   const [open, setOpen] = useState(true);
@@ -7,25 +8,33 @@ export default function TopBanner() {
   return (
     <span>
       {open && (
-        <div className="bg-slate-900 border-b-2 border-yellow-500 shadow-2xl">
+        <div className="bg-slate-900 border-b-2 border-theme-500 shadow-2xl">
           <div className="max-w-7xl mx-auto py-1.5 sm:py-3 px-3 sm:px-6 lg:px-8">
             <div className="w-full lg:w-auto lg:justify-end flex items-center space-x-3">
-              <div className="flex-grow">
-                <Link to="/changelog#april-28-2022" className="sm:hidden flex font-bold underline items-center space-x-1 text-white text-sm sm:text-base">
-                  Changelog #4
-                </Link>
-                <Link to="/changelog#april-28-2022" className="hidden sm:flex font-bold underline items-center space-x-1 text-white text-sm sm:text-base">
-                  Changelog #4 - 🎉 Blog feature
-                </Link>
+              <div className="flex-grow flex justify-start">
+                <div>
+                  <a
+                    href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access"
+                    className="sm:hidden flex font-medium border-b border-emerald-400 border-dashed hover:border-dotted items-center space-x-1 text-white text-sm sm:text-base"
+                  >
+                    <span>Get alpha access before launch 🚀</span>
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access"
+                    className="hidden sm:flex font-medium border-b border-emerald-400 border-dashed hover:border-dotted items-center space-x-1 items-baseline text-white text-sm sm:text-base"
+                  >
+                    <span>Get Alpha Access before launch 🚀</span>
+                  </a>
+                </div>
               </div>
-              <div className="flex-shrink-0 order-2 mt-0 w-auto">
+              <div className="hidden sm:flex flex-shrink-0 order-2 mt-0 w-auto">
                 <a
-                  href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-yellow-900 bg-yellow-400 hover:bg-yellow-500"
+                  href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access"
+                  className="flex items-center justify-center space-x-1 px-4 py-2 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-theme-900 bg-theme-400 hover:bg-theme-500"
                 >
-                  Get codebase!
+                  <span>Get early</span>
                 </a>
               </div>
               <div className="flex-shrink-0 order-3 ml-2">

@@ -1,5 +1,6 @@
 import { Row, User, Tenant, LinkedAccount, Contract, Employee, RowValue, ApiKey, Media } from "@prisma/client";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
+import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import { db } from "../../db.server";
 
 export type RowValueWithDetails = RowValue & {
@@ -40,7 +41,16 @@ export const includeRowDetails = {
   employee: true,
   values: {
     include: {
-      relatedRow: true,
+      relatedRow: {
+        include: {
+          entity: true,
+          values: {
+            include: {
+              property: true,
+            },
+          },
+        },
+      },
       media: true,
     },
   },
@@ -60,20 +70,34 @@ export async function getAllRows(entityId: string): Promise<RowWithDetails[]> {
   return await db.row.findMany({
     where: {
       entityId,
+      parentRowId: null,
     },
     include: includeRowDetails,
   });
 }
 
-export async function getRows(entityId: string, tenantId: string): Promise<RowWithDetails[]> {
+export async function getRows(entityId: string, tenantId: string, take?: number, skip?: number, orderBy?: any): Promise<RowWithDetails[]> {
+  // eslint-disable-next-line no-console
+  console.log({ take, skip, orderBy });
   return await db.row.findMany({
+    take,
+    skip,
     where: {
       entityId,
       tenantId,
+      parentRowId: null,
     },
     include: includeRowDetails,
-    orderBy: {
-      createdAt: "desc",
+    orderBy,
+  });
+}
+
+export async function countRows(entityId: string, tenantId: string): Promise<number> {
+  return await db.row.count({
+    where: {
+      entityId,
+      tenantId,
+      parentRowId: null,
     },
   });
 }
@@ -84,6 +108,7 @@ export async function getRow(entityId: string, id: string, tenantId: string): Pr
       id,
       entityId,
       tenantId,
+      parentRowId: null,
     },
     include: {
       ...includeRowDetails,
@@ -91,41 +116,55 @@ export async function getRow(entityId: string, id: string, tenantId: string): Pr
   });
 }
 
-export async function getMaxRowFolio(entityId: string) {
-  return await db.row.aggregate({
-    where: {
+export async function getMaxRowFolio(entityId: string, parentRowId: string | undefined) {
+  let where: any = {
+    entityId,
+  };
+  if (parentRowId) {
+    where = {
       entityId,
-    },
+      parentRowId,
+    };
+  }
+  return await db.row.aggregate({
+    where,
     _max: {
       folio: true,
     },
   });
 }
 
-export async function createRow(data: {
-  entityId: string;
-  tenantId: string;
-  createdByUserId?: string | null;
-  createdByApiKeyId?: string | null;
-  linkedAccountId: string | null;
-  properties: any;
-  dynamicProperties: {
-    propertyId: string;
-    id?: string | null;
-    relatedRowId?: string | null;
-    idValue?: string | null;
-    textValue?: string | null;
-    numberValue?: number | string | null;
-    dateValue?: Date | string | null;
-    media?: MediaDto[];
-  }[];
-}) {
-  let folio = 1;
-  const maxFolio = await getMaxRowFolio(data.entityId);
-  if (maxFolio && maxFolio._max.folio !== null) {
-    folio = maxFolio._max.folio + 1;
+export async function createRow(
+  data: {
+    entityId: string;
+    tenantId: string;
+    createdByUserId?: string | null;
+    createdByApiKeyId?: string | null;
+    linkedAccountId: string | null;
+    properties: any;
+    dynamicProperties: {
+      propertyId: string;
+      id?: string | null;
+      relatedRowId?: string | null;
+      idValue?: string | null;
+      textValue?: string | null;
+      numberValue?: number | string | null;
+      dateValue?: Date | string | null;
+      media?: MediaDto[];
+    }[];
+    dynamicRows: { id?: string | null; values: RowValueDto[] }[];
+  },
+  parentRowId?: string,
+  nextFolio?: number | undefined
+) {
+  let folio = nextFolio ?? 1;
+  if (!nextFolio) {
+    const maxFolio = await getMaxRowFolio(data.entityId, parentRowId);
+    if (maxFolio && maxFolio._max.folio !== null) {
+      folio = maxFolio._max.folio + 1;
+    }
   }
-  return await db.row.create({
+  const row = await db.row.create({
     data: {
       folio,
       entityId: data.entityId,
@@ -133,6 +172,7 @@ export async function createRow(data: {
       createdByUserId: data.createdByUserId ?? null,
       createdByApiKeyId: data.createdByApiKeyId ?? null,
       linkedAccountId: data.linkedAccountId,
+      parentRowId: parentRowId ?? null,
       ...data.properties,
       values: {
         create: data.dynamicProperties
@@ -160,6 +200,26 @@ export async function createRow(data: {
       },
     },
   });
+
+  await Promise.all(
+    data.dynamicRows.map(async (dynamicRow, idx) => {
+      return await createRow(
+        {
+          entityId: data.entityId,
+          tenantId: data.tenantId,
+          createdByUserId: data.createdByUserId,
+          linkedAccountId: data.linkedAccountId,
+          dynamicProperties: dynamicRow.values,
+          dynamicRows: [],
+          properties: [],
+        },
+        row.id,
+        idx + 1
+      );
+    })
+  );
+
+  return row;
 }
 
 export async function updateRow(

@@ -160,7 +160,7 @@ export async function updateTenant(data: { name: string; icon: string; slug: str
   });
 }
 
-export async function updateTenantUser(id: string, data: { role: number }) {
+export async function updateTenantUser(id: string, data: { type: number }) {
   return await db.tenantUser.update({
     where: {
       id,
@@ -178,12 +178,12 @@ export async function createTenant(name: string, subscriptionCustomerId: string,
     },
   });
 
-  await createTenantSubscription(tenant.id, subscriptionCustomerId);
+  await createTenantSubscription(tenant.id, subscriptionCustomerId, 0);
 
   return tenant;
 }
 
-export async function createTenantUser(data: { tenantId: string; userId: string; role: number }) {
+export async function createTenantUser(data: { tenantId: string; userId: string; type: number }) {
   return await db.tenantUser.create({
     data: {
       ...data,

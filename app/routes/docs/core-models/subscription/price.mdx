@@ -1,0 +1,162 @@
+---
+meta:
+  title: Price | Subscription | SaasRock
+  description: Subscription price entity model life cycle, properties and model
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Subscription Models",
+      routePath: "/docs/core-models/subscription",
+    },
+    {
+      title: "Price",
+      routePath: "/docs/core-models/subscription/price",
+    },
+  ]}
+/>
+
+# Price
+
+- Belongs to a [Product](product).
+- [Tenants](/docs/core-models/account/tenant) can subscribe to a Price, linked by a [Tenant Subscription](/docs/core-models/subscription/tenant-subscription).
+
+## Life Cycle
+
+import DocLifeCycle from "~/components/ui/docs/DocLifeCycle";
+
+<DocLifeCycle
+  items={[
+    {
+      route: "/pricing",
+      c: false,
+      r: true,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/admin/setup/pricing",
+      c: true,
+      r: true,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/admin/setup/pricing/new",
+      c: true,
+      r: false,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/admin/setup/pricing/:id",
+      c: true,
+      r: true,
+      u: true,
+      d: true,
+    },
+  ]}
+/>
+
+## Properties
+
+import DocPropertiesTable, {
+  ModelPropertyType,
+} from "~/components/ui/docs/DocPropertiesTable";
+
+<DocPropertiesTable
+  items={[
+    {
+      name: "subscriptionProductId",
+      title: "Product",
+      customType: {
+        name: "SubscriptionProduct",
+        route: "/docs/core-models/subscription/product",
+      },
+      description: "Parent Subscription Product",
+      required: true,
+    },
+    {
+      name: "stripeId",
+      title: "Stripe ID",
+      type: ModelPropertyType.String,
+      description: "Stripe price ID",
+      required: true,
+    },
+    {
+      name: "type",
+      title: "Type",
+      customType: {
+        name: "SubscriptionPriceType",
+        route: "",
+      },
+      description: "RECURRING",
+      required: true,
+    },
+    {
+      name: "billingPeriod",
+      title: "Billing Period",
+      customType: {
+        name: "SubscriptionBillingPeriod",
+        route: "",
+      },
+      description: "MONTHLY, or YEARLY",
+      required: true,
+    },
+    {
+      name: "price",
+      title: "Price",
+      type: ModelPropertyType.Decimal,
+      description: "",
+      required: true,
+    },
+    {
+      name: "currency",
+      title: "Currency",
+      type: ModelPropertyType.String,
+      description: "Default: usd.",
+      required: true,
+    },
+    {
+      name: "active",
+      title: "Active",
+      type: ModelPropertyType.Boolean,
+      description: "",
+      required: true,
+    },
+    {
+      name: "tenantSubscriptions",
+      title: "Tenant Subscriptions",
+      customType: {
+        name: "TenantSubscriptions",
+        route:
+          "/docs/core-models/subscription/tenant-subscription",
+      },
+      description: "",
+      required: true,
+    },
+  ]}
+/>
+
+## Model
+
+```
+model SubscriptionPrice {
+  id                    String               @id @default(cuid())
+  subscriptionProductId String
+  subscriptionProduct   SubscriptionProduct  @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
+  stripeId              String
+  type                  Int // 0 = ONE_TIME, 1 = RECURRING
+  billingPeriod         Int // 3 = MONTHLY, 4 = YEARLY
+  price                 Int
+  currency              String
+  trialDays             Int
+  active                Boolean
+  tenantSubscriptions   TenantSubscription[]
+}
+```

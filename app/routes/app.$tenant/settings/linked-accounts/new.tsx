@@ -3,7 +3,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
 import { getMyTenants } from "~/utils/db/tenants.db.server";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { sendEmail } from "~/utils/email.server";
 import { loadAppData } from "~/utils/data/useAppData";
 import { getTenantUrl } from "~/utils/services/urlService";
@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (tenantMember.tenantId === tenantUrl.tenantId) {
     return badRequest({ error: t("app.linkedAccounts.invitation.cannotInviteCurrentTenant") });
   }
-  if (!tenantMember || (tenantMember.role !== TenantUserRole.OWNER && tenantMember.role !== TenantUserRole.ADMIN)) {
+  if (!tenantMember || (tenantMember.role !== TenantUserType.OWNER && tenantMember.role !== TenantUserType.ADMIN)) {
     return badRequest({ error: t("app.linkedAccounts.invitation.inviteOwnersOrAdmins") });
   }
 

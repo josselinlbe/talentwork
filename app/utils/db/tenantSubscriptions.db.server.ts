@@ -1,10 +1,10 @@
-import { TenantSubscription, SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
+import { TenantSubscription, SubscriptionPrice, SubscriptionProduct, SubscriptionFeature } from "@prisma/client";
 import { db } from "../db.server";
 
 export type TenantSubscriptionWithDetails = TenantSubscription & {
   subscriptionPrice:
     | (SubscriptionPrice & {
-        subscriptionProduct: SubscriptionProduct;
+        subscriptionProduct: SubscriptionProduct & { features: SubscriptionFeature[] };
       })
     | null;
 };
@@ -30,7 +30,11 @@ export async function getTenantSubscription(tenantId: string): Promise<TenantSub
     include: {
       subscriptionPrice: {
         include: {
-          subscriptionProduct: true,
+          subscriptionProduct: {
+            include: {
+              features: true,
+            },
+          },
         },
       },
     },

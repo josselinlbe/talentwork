@@ -1,0 +1,216 @@
+---
+meta:
+  title: User | Account | SaasRock
+  description: User entity model life cycle, properties and model
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Account Models",
+      routePath: "/docs/core-models/account",
+    },
+    {
+      title: "User",
+      routePath: "/docs/core-models/account/user",
+    },
+  ]}
+/>
+
+# User
+
+- Can belong to none, one or many [Tenants](/docs/core-models/account/tenant), linked by the [TenantUser](/docs/core-models/account/tenant-user) model.
+
+## Life Cycle
+
+import DocLifeCycle from "~/components/ui/docs/DocLifeCycle";
+
+<DocLifeCycle
+  items={[
+    {
+      route: "/register",
+      c: true,
+      r: false,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/app/:tenant/settings/profile",
+      c: false,
+      r: true,
+      u: true,
+      d: true,
+    },
+    {
+      route: "/admin/users",
+      c: false,
+      r: true,
+      u: false,
+      d: true,
+    },
+  ]}
+/>
+
+## Properties
+
+import DocPropertiesTable, {
+  ModelPropertyType,
+} from "~/components/ui/docs/DocPropertiesTable";
+
+<DocPropertiesTable
+  items={[
+    {
+      name: "email",
+      title: "Email",
+      type: ModelPropertyType.String,
+      description: "",
+      required: true,
+    },
+    {
+      name: "passwordHash",
+      title: "Password",
+      type: ModelPropertyType.String,
+      description: "Encripted password using bcryptjs",
+      required: true,
+    },
+    {
+      name: "firstName",
+      title: "First name",
+      type: ModelPropertyType.String,
+      description: "",
+      required: true,
+    },
+    {
+      name: "lastName",
+      title: "Last name",
+      type: ModelPropertyType.String,
+      description: "",
+      required: true,
+    },
+    {
+      name: "avatar",
+      title: "Avatar",
+      type: ModelPropertyType.String,
+      description: "",
+      required: false,
+    },
+    {
+      name: "phone",
+      title: "Phone",
+      type: ModelPropertyType.String,
+      description: "",
+      required: false,
+    },
+    {
+      name: "defaultTenantId",
+      title: "Default Tenant",
+      type: ModelPropertyType.String,
+      description:
+        "When the user logs in, it will redirect to the last tenant",
+      required: false,
+    },
+    {
+      name: "verifyToken",
+      title: "Verify Token",
+      type: ModelPropertyType.String,
+      description:
+        "Generated at /forgot-password, validated at /reset",
+      required: false,
+    },
+    {
+      name: "admin",
+      title: "Admin User",
+      customType: { name: "AdminUser" },
+      description:
+        "Determines if a user can access the /admin portal",
+      required: false,
+    },
+    {
+      name: "tenants",
+      title: "Tenants",
+      customType: {
+        name: "TenantUser[]",
+        route: "/docs/core-models/account/tenant-user",
+      },
+      description: "",
+      required: false,
+    },
+    {
+      name: "invitations",
+      title: "Invitations",
+      customType: {
+        name: "TenantUserInvitation[]",
+      },
+      description: "User has been invited to join a tenant",
+      required: false,
+    },
+    {
+      name: "logs",
+      title: "Logs",
+      customType: {
+        name: "Log[]",
+      },
+      description: "User audit trails/events.",
+      required: false,
+    },
+    {
+      name: "createdLinkedAccounts",
+      title: "Linked Accounts",
+      customType: {
+        name: "LinkedAccount[]",
+        route: "/docs/core-models/account/linked-account",
+      },
+      description: "Linked accounts created by user.",
+      required: false,
+    },
+    {
+      name: "createdRows",
+      title: "Rows",
+      customType: {
+        name: "Row[]",
+        route: "/docs/core-models/custom-entity/row",
+      },
+      description: "Custom entity rows created by user",
+      required: false,
+    },
+    {
+      name: "createdApiKeys",
+      title: "API Keys",
+      customType: {
+        name: "APIKey[]",
+        route: "/docs/core-models/account/api-key",
+      },
+      description: "API Keys created by user",
+      required: false,
+    },
+  ]}
+/>
+
+## Model
+
+```
+model User {
+  id                       String                @id @default(cuid())
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+  email                    String                @unique
+  passwordHash             String
+  firstName                String
+  lastName                 String
+  avatar                   String?
+  phone                    String?
+  defaultTenantId          String?
+  verifyToken              String?
+  admin                    AdminUser?
+  tenants                  TenantUser[]
+  invitation               TenantUserInvitation?
+  logs                     Log[]
+  createdLinkedAccounts    LinkedAccount[]
+  createdRows              Row[]
+  createdApiKeys           ApiKey[]
+}
+```

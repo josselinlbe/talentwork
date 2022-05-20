@@ -52,7 +52,7 @@ const InputNumber = (
           required={required}
           min={min}
           max={max}
-          value={value}
+          defaultValue={value ?? ""}
           step={step}
           onChange={(e) => (setValue ? setValue(Number(e.currentTarget.value)) : {})}
           disabled={disabled}

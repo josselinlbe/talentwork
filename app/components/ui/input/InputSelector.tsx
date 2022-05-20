@@ -9,14 +9,13 @@ export interface RefInputSelector {
   focus: () => void;
 }
 
-type Value = string | number | readonly string[] | undefined;
 interface Props {
   name: string;
   title: string;
-  value?: Value;
+  value?: string | number | undefined;
   disabled?: boolean;
-  options: { name: string; value: Value }[];
-  setValue?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  options: { name: string; value: string | number | undefined }[];
+  setValue?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   className?: string;
   withSearch?: boolean;
   onNew?: () => void;
@@ -32,7 +31,7 @@ const InputSelector = (
   const button = useRef<HTMLButtonElement>(null);
   const inputSearch = useRef<HTMLInputElement>(null);
 
-  const [selected, setSelected] = useState<{ name: string; value: Value }>();
+  const [selected, setSelected] = useState<{ name: string; value: string | number | undefined }>();
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
@@ -41,8 +40,8 @@ const InputSelector = (
   }, [options, value]);
 
   useEffect(() => {
-    if (setValue) {
-      setValue(selected?.value?.toString());
+    if (selected && setValue && value !== selected?.value) {
+      setValue(selected?.value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
@@ -88,7 +87,7 @@ const InputSelector = (
                 disabled && "bg-gray-100 cursor-not-allowed"
               )}
             >
-              <input type="hidden" readOnly name={name} value={value} />
+              <input type="hidden" readOnly name={name} value={value ?? ""} />
               <span className="w-full inline-flex truncate">
                 <span className="truncate">
                   {selected ? <span>{selected?.name}</span> : <span className="text-sm text-gray-500">{t("shared.select")}...</span>}

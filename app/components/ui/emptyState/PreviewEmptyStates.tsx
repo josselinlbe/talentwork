@@ -5,7 +5,6 @@ export default function PreviewEmptyStates() {
   const currentRoute = useLocation().pathname;
   return (
     <div id="empty-states" className="space-y-1">
-      <h3 className="font-medium text-sm">Empty States</h3>
       <div className="bg-white p-6 border-dashed border-gray-300 border">
         <div className="space-y-2 w-full">
           <EmptyState

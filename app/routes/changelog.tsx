@@ -17,6 +17,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   const changelogItems: ChangelogItem[] = [
     {
       date: "April 28, 2022",
+      releaseTag: "0.2.5",
       title: "Blogging",
       description: "Added /blog, /blog/:slug, /admin/blog and /admin/blog/new.",
       url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-4-blogging-4n70",
@@ -35,6 +36,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
     {
       date: "April 19, 2022",
+      releaseTag: "0.2.3",
       title: "Custom Pricing Plans builder",
       description: "Now you can create subscription plans with: Title, Badge, Description, Features, and Monthly/Yearly Price.",
       url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-3-custom-pricing-plan-builder-28cp",
@@ -58,6 +60,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     {
       date: "April 12, 2022",
       title: "Tenant on URL",
+      releaseTag: "0.2.2",
       description: "Now you can access the tenant with the URL, and added App/Admin Command palettes, Dashboards, and User events.",
       url: "https://dev.to/alexandromtzg/remix-saas-kit-changelog-2-tenant-on-url-command-palette-dashboards-and-user-events-45b1",
       added: [
@@ -266,7 +269,15 @@ export default function ChangelogRoute() {
                           <div key={idx} className="mb-10 ml-4">
                             <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
                             <time id={UrlUtils.slugify(item.date, 0)} className="text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                              {item.date}
+                              {item.date}{" "}
+                              {item.releaseTag && (
+                                <span>
+                                  -{" "}
+                                  <a className="text-gray-500" href={`https://github.com/AlexandroMtzG/remix-saas-kit/releases/tag/${item.releaseTag}`}>
+                                    v{item.releaseTag}
+                                  </a>
+                                </span>
+                              )}
                             </time>
                             <h2 id={UrlUtils.slugify(item.date, 0)} className="text-black dark:text-white w-full">
                               {item.title}

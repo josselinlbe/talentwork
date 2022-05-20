@@ -1,0 +1,30 @@
+---
+meta:
+  title: PDF Viewer | Components | SaasRock
+  description: PDF Viewer component
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "PDF Viewer",
+      routePath: "/docs/components/pdf-viewer",
+    },
+  ]}
+/>
+
+# PDF Viewer
+
+import PreviewPdfViewers from "~/components/ui/pdf/PreviewPdfViewers";
+import PdfViewer from "~/components/ui/pdf/PdfViewer";
+
+<PreviewPdfViewers />
+
+```tsx
+<PdfViewer file={"data:application/pdf;base64,..."} />
+```

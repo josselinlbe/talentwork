@@ -15,7 +15,7 @@ import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { Tenant } from "@prisma/client";
@@ -178,7 +178,7 @@ export default function TenantRoute() {
   function adminHasPermission(action: "delete-tenant") {
     switch (action) {
       case "delete-tenant":
-        return adminData.user.admin?.role === TenantUserRole.OWNER;
+        return adminData.user.admin?.role === TenantUserType.OWNER;
       default:
         return false;
     }

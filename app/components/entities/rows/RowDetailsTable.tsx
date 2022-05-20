@@ -78,6 +78,8 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
     setItems([
       ...items,
       {
+        id: null,
+        folio: null,
         values: data,
       },
     ]);
@@ -86,13 +88,20 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
 
   function onUpdated(values: RowValueDto[], idx: number) {
     const newItems = items.slice();
-    newItems[idx] = { values };
+    newItems[idx] = {
+      ...newItems[idx],
+      values,
+    };
     setItems(newItems);
     setEditingRow(undefined);
   }
 
   return (
     <div className={clsx(className, "flex flex-col p-0.5")}>
+      {items.map((item, idx) => {
+        return <input key={idx} hidden readOnly type="text" id={`row-details[]`} name={`row-details[]`} value={JSON.stringify(item)} />;
+      })}
+
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden border border-gray-200 sm:rounded-sm">
@@ -108,9 +117,11 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
                         </th>
                       );
                     })}
-                  <th scope="col" className="relative px-3 py-1">
-                    <span className="sr-only">Edit</span>
-                  </th>
+                  {editable && (
+                    <th scope="col" className="relative px-3 py-1">
+                      <span className="sr-only">Edit</span>
+                    </th>
+                  )}
                 </tr>
               </thead>
               {items.length === 0 ? (
@@ -118,7 +129,7 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
                   <tr>
                     <td colSpan={5 + properties.length} className="overflow-hidden">
                       <EmptyState
-                        className="-m-2"
+                        className="-m-2 bg-white"
                         captions={{
                           thereAreNo: "No details",
                         }}
@@ -130,33 +141,43 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
                 <tbody>
                   {items.map((item, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      {/* <td className="truncate px-3 py-1.5 whitespace-nowrap text-sm text-gray-800 w-full">{item.folio}</td> */}
                       {properties
                         .filter((f) => !f.isDefault && f.isDetail)
                         .map((property, idxProperty) => {
                           return (
                             <td key={idxProperty} className="truncate px-3 py-1.5 whitespace-nowrap text-sm text-gray-800 w-full">
+                              {/* value: {RowHelper.getPropertyValue(entity, item, property)?.toString()} */}
+                              {/* <input
+                                type="hidden"
+                                name={`${property.name}[${idxProperty}]`}
+                                value={RowHelper.getPropertyValue(entity, item, property)?.toString()}
+                              /> */}
                               <div>{RowHelper.getDetailFormattedValue(entity, item, property)}</div>
                             </td>
                           );
                         })}
-                      <td className="px-3 py-1.5 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex space-x-1">
-                          <button
-                            type="button"
-                            className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
-                            onClick={() => update(idx, item)}
-                          >
-                            <PencilIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
-                          </button>
-                          <button
-                            type="button"
-                            className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
-                            onClick={() => deleted(item)}
-                          >
-                            <TrashIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
-                          </button>
-                        </div>
-                      </td>
+
+                      {editable && (
+                        <td className="px-3 py-1.5 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex space-x-1">
+                            <button
+                              type="button"
+                              className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
+                              onClick={() => update(idx, item)}
+                            >
+                              <PencilIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
+                            </button>
+                            <button
+                              type="button"
+                              className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
+                              onClick={() => deleted(item)}
+                            >
+                              <TrashIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))}
                   {/* <tr className="bg-gray-100 font-bold">

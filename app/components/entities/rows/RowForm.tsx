@@ -1,6 +1,6 @@
 import { RowWithDetails, RowWithValues } from "~/utils/db/entities/rows.db.server";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
-import { forwardRef, Ref, useEffect, useState } from "react";
+import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
@@ -10,7 +10,7 @@ import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputGroup from "~/components/ui/forms/InputGroup";
 import RowHelper from "~/utils/helpers/RowHelper";
-import RowValueInput from "./RowValueInput";
+import RowValueInput, { RefRowValueInput } from "./RowValueInput";
 import RowDetailsTable from "./RowDetailsTable";
 import { Row } from "@prisma/client";
 import { RowDetailDto } from "~/application/dtos/entities/RowDetailDto";
@@ -35,13 +35,21 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
   const location = useLocation();
   const submit = useSubmit();
 
+  const rowValueInput = useRef<RefRowValueInput>(null);
+
   const [headers, setHeaders] = useState<RowValueDto[]>([]);
-  const [details, setDetails] = useState<Row[]>([]);
+  const [details, setDetails] = useState<RowDetailDto[]>([]);
 
   useEffect(() => {
     loadInitialFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   if (headers.length > 0) {
+  //     rowValueInput.current?.focus();
+  //   }
+  // }, [headers])
 
   function loadInitialFields() {
     const initial: RowValueDto[] = [];
@@ -86,16 +94,6 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
         }
         // confirmationPrompt={item ? t("shared.confirmUpdate", [RowHelper.getRowFolio(entity, item)]) : t("shared.confirmCreate", [t(entity.title)])}
       >
-        {!isDetail && (
-          <RowDetailsTable
-            entity={entity}
-            // currency={currency}
-            properties={entity.properties.filter((f) => f.isDetail)}
-            editable={true}
-            initial={item?.details ?? []}
-            setDetails={(e) => setDetails(e)}
-          />
-        )}
         {headers.length > 0 && (
           <InputGroup title={"Details"}>
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
@@ -117,6 +115,7 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
                       //   }}
                       // />
                       <RowValueInput
+                        ref={rowValueInput}
                         entity={entity}
                         idValue={headers[idxDetailValue].idValue}
                         textValue={headers[idxDetailValue].textValue}
@@ -157,6 +156,27 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
               })}
             </div>
           </InputGroup>
+        )}
+        {!isDetail && entity.properties.filter((f) => f.isDetail).length > 0 && (
+          // <InputGroup title={"Details"}>
+          <div className="space-y-3">
+            <label className="text-sm leading-3 font-medium text-gray-800">
+              <div className="flex space-x-1 items-center">
+                <span className=" italic font-light"></span> Rows
+              </div>
+            </label>
+            <div>
+              <RowDetailsTable
+                entity={entity}
+                // currency={currency}
+                properties={entity.properties.filter((f) => f.isDetail)}
+                editable={!item || editing}
+                initial={item?.details ?? []}
+                setDetails={(e) => setDetails(e)}
+              />
+            </div>
+          </div>
+          // </InputGroup>
         )}
       </FormGroup>
     </>

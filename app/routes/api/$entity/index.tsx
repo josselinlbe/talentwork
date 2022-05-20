@@ -40,6 +40,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       linkedAccountId: rowValues.linkedAccountId,
       dynamicProperties: rowValues.dynamicProperties,
       properties: rowValues.properties,
+      dynamicRows: rowValues.dynamicRows,
     });
     await setApiKeyLogStatus(apiKeyLog.id, { status: 201 });
     const item = await getRow(entity.id, created.id, tenant.id);

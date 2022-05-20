@@ -1,5 +1,5 @@
 import { SideBarItem } from "./SidebarItem";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { Params } from "react-router";
@@ -15,7 +15,7 @@ export const AppSidebar = (params: Params, entities: Entity[]): SideBarItem[] =>
       entitiesItems.push({
         title: entity.titlePlural,
         entityIcon: entity.icon,
-        // userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
+        // tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
         path: `${currentTenantUrl}/` + entity.slug,
       });
     });
@@ -27,20 +27,20 @@ export const AppSidebar = (params: Params, entities: Entity[]): SideBarItem[] =>
         title: "app.sidebar.dashboard",
         path: `${currentTenantUrl}/dashboard`,
         icon: SvgIcon.DASHBOARD,
-        userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
+        tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN, TenantUserType.MEMBER],
       },
       // {
       //   title: "models.contract.plural",
       //   icon: SvgIcon.CONTRACTS,
       //   path: `${currentTenantUrl}/contracts`,
-      //   userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
+      //   tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN, TenantUserType.MEMBER],
       //   isDemo: true,
       // },
       // {
       //   title: "models.employee.plural",
       //   icon: SvgIcon.EMPLOYEES,
       //   path: `${currentTenantUrl}/employees`,
-      //   userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN, TenantUserRole.MEMBER],
+      //   tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN, TenantUserType.MEMBER],
       //   isDemo: true,
       // },
       ...entitiesItems,
@@ -55,13 +55,13 @@ export const AppSidebar = (params: Params, entities: Entity[]): SideBarItem[] =>
         {
           title: "app.sidebar.settings",
           icon: SvgIcon.SETTINGS,
-          userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
+          tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
           path: `${currentTenantUrl}/settings`,
         },
         // {
         //   title: "app.sidebar.logs",
         //   icon: SvgIcon.LOGS,
-        //   userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
+        //   tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
         //   path: `${currentTenantUrl}/logs`,
         // },
         {

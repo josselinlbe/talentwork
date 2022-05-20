@@ -116,7 +116,14 @@
     "invalid": "Invalid",
     "noRecords": "There are no records",
     "select": "Select",
-    "undefined": "Undefined"
+    "undefined": "Undefined",
+    "details": "Details",
+    "rows": "Rows",
+    "showing": "Showing",
+    "from": "From",
+    "to": "To",
+    "of": "Of",
+    "results": "Results"
   },
   "front": {
     "navbar": {
@@ -129,10 +136,13 @@
     },
     "hero": {
       "headline1": "Easily Build Your Own SaaS",
-      "headline2": "Authentication, Subscriptions, Tenant/User Management, Blogging, i18n, Audit Trails, Admin Portal, Account Settings pages, Custom Entity Builder, Advanced Plan Builder and more.",
-      "hint": "This demo uses v0.2.5",
-      "buy": "Get codebase",
+      "headline2": "Low-code & extensible framework with out-of-the-box SaaS features.",
+      "headline3": "Download the code and customize: Authentication, Subscriptions, Blogging, Audit trails, Admin portal, Settings pages, Entity Builder, Subscription Plan Builder, and more.",
+      "subheadline1": "(in a week or less)",
+      "hint": "This site uses v0.2.6",
+      "buy": "Get pre-launch discount",
       "features": "Features",
+      "docs": "Documentation",
       "components": "Components",
       "blog": "Blog",
       "contact": "Contact us",
@@ -342,7 +352,7 @@
         "select": "Select a tab"
       },
       "colors": {
-        "BLUE_GRAY": "Blue gray",
+        "SLATE": "Blue gray",
         "GRAY": "Gray",
         "RED": "Red",
         "ORANGE": "Orange",
@@ -353,7 +363,7 @@
         "EMERALD": "Emerald",
         "TEAL": "Teal",
         "CYAN": "Cyan",
-        "LIGHT_BLUE": "Light blue",
+        "SKY": "Light blue",
         "BLUE": "Blue",
         "INDIGO": "Indigo",
         "VIOLET": "Violet",
@@ -478,6 +488,10 @@
       "limits": {
         "title": "Limits",
         "description": "Select a subscription plan according to your needs"
+      },
+      "features": {
+        "title": "My features and limits",
+        "description": "Features included in your subscription"
       },
       "invoices": {
         "title": "Invoices",
@@ -956,6 +970,15 @@
       "badge": "Badge",
       "status": "Status",
       "custom": "Custom plan"
+    },
+    "subscriptionFeature": {
+      "object": "Feature",
+      "plural": "Features",
+      "order": "Order",
+      "title": "Title",
+      "name": "Name",
+      "type": "Type",
+      "value": "Value"
     },
     "contract": {
       "object": "Contract",

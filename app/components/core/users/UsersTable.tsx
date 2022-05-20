@@ -2,7 +2,7 @@ import { Tenant, TenantUser, User } from "@prisma/client";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSubmit } from "remix";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import InputSearch from "~/components/ui/input/InputSearch";
@@ -75,7 +75,7 @@ export default function UsersTable({ items }: Props) {
     }
   }
   function getUserTenants(user: User & { tenants: (TenantUser & { tenant: Tenant })[] }) {
-    return user.tenants.map((f) => `${f.tenant?.name} (${t("settings.profile.roles." + TenantUserRole[f.role])})`).join(", ");
+    return user.tenants.map((f) => `${f.tenant?.name} (${t("settings.profile.roles." + TenantUserType[f.type])})`).join(", ");
   }
   function deleteUser(item: User) {
     if (confirmDelete.current) {
@@ -95,11 +95,11 @@ export default function UsersTable({ items }: Props) {
   function adminHasPermission(action: "impersonate" | "change-password" | "delete-user") {
     switch (action) {
       case "impersonate":
-        return adminData.user.admin?.role === TenantUserRole.OWNER;
+        return adminData.user.admin?.role === TenantUserType.OWNER;
       case "change-password":
-        return adminData.user.admin?.role === TenantUserRole.OWNER;
+        return adminData.user.admin?.role === TenantUserType.OWNER;
       case "delete-user":
-        return adminData.user.admin?.role === TenantUserRole.OWNER;
+        return adminData.user.admin?.role === TenantUserType.OWNER;
       default:
         return false;
     }

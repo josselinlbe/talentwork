@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, Outlet, redirect, useLocation, useNavigate } from "remix";
+import { json, LoaderFunction, MetaFunction, Outlet, redirect, useLocation, useNavigate } from "remix";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
 
@@ -8,8 +8,15 @@ export let loader: LoaderFunction = async ({ request }) => {
   if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === "/admin/api") {
     return redirect("/admin/api/keys");
   }
-  return json({});
+
+  return json({
+    title: `API | ${process.env.APP_NAME}`,
+  });
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: data?.title,
+});
 
 export default function AdminApiRoute() {
   const { t } = useTranslation();

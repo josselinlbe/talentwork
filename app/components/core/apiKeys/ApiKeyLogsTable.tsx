@@ -78,10 +78,10 @@ export default function ApiKeyLogsTable({ withTenant, items }: Props) {
         name: "status",
         title: t("models.apiKeyLog.status"),
       },
-      {
-        name: "params",
-        title: t("models.apiKeyLog.params"),
-      },
+      // {
+      //   name: "params",
+      //   title: t("models.apiKeyLog.params"),
+      // },
       {
         name: "error",
         title: t("shared.error"),
@@ -229,7 +229,7 @@ export default function ApiKeyLogsTable({ withTenant, items }: Props) {
                                     <span className="text-gray-300">?</span>
                                   )}
                                 </td>
-                                <td className="px-2 py-2 whitespace-nowrap">{item.params}</td>
+                                {/* <td className="px-2 py-2 whitespace-nowrap">{item.params}</td> */}
                                 {/* <td className="px-2 py-2 whitespace-nowrap">{item.body}</td> */}
                                 <td className="px-2 py-2 whitespace-nowrap">{item.error}</td>
                               </tr>

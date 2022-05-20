@@ -1,0 +1,40 @@
+---
+meta:
+  title: Badges | Components | SaasRock
+  description: Badge components
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Badges",
+      routePath: "/docs/components/badges",
+    },
+  ]}
+/>
+
+# Badges
+
+import PreviewColorBadges from "~/components/ui/badges/PreviewColorBadges";
+import PreviewSimpleBadges from "~/components/ui/badges/PreviewSimpleBadges";
+
+### ColorBadge
+
+<PreviewColorBadges />
+
+```tsx
+<ColorBadge color={Colors.RED} />
+```
+
+### SimpleBadge
+
+<PreviewSimpleBadges />
+
+```tsx
+<SimpleBadge title={"RED"} color={Colors.RED} />
+```

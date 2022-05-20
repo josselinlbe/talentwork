@@ -1,0 +1,60 @@
+---
+meta:
+  title: Date Input | Components | SaasRock
+  description: Date Input component
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    { title: "Components", routePath: "/docs/components" },
+    {
+      title: "Inputs",
+      routePath: "/docs/components/inputs",
+    },
+    {
+      title: "Date",
+      routePath: "/docs/components/inputs/date",
+    },
+  ]}
+/>
+
+# Date Input
+
+import PreviewInputDate from "~/components/ui/input/previews/date/PreviewInputDate";
+
+### InputDate
+
+<PreviewInputDate />
+
+```tsx
+<InputDate name="name" title="title" />
+```
+
+import PreviewInputDateWithState from "~/components/ui/input/previews/date/PreviewInputDateWithState";
+
+### InputDate - with State
+
+<PreviewInputDateWithState />
+
+```tsx
+import { useState } from "react";
+import InputDate from "~/components/ui/input/InputDate";
+
+export default function PreviewInputDateWithState() {
+  const [value, setValue] = useState(
+    new Date("1990-01-02")
+  );
+  return (
+    <InputDate
+      name="name"
+      title="Title"
+      value={value}
+      onChange={(e) => setValue(e)}
+    />
+  );
+}
+```

@@ -24,11 +24,6 @@ export const AdminSidebar: SideBarItem[] = [
         items: [],
       },
       {
-        title: "app.sidebar.logs",
-        path: "/admin/logs",
-        icon: SvgIcon.LOGS,
-      },
-      {
         title: "blog.title",
         path: "/admin/blog",
         icon: SvgIcon.BLOG,
@@ -44,9 +39,33 @@ export const AdminSidebar: SideBarItem[] = [
         icon: SvgIcon.KEYS,
       },
       {
+        title: "models.log.plural",
+        path: "/admin/audit-trails",
+        icon: SvgIcon.LOGS,
+      },
+      {
         title: "Docs",
         path: "/docs",
         icon: SvgIcon.DOCS,
+      },
+      {
+        title: "app.sidebar.setup",
+        path: "/admin/setup",
+        icon: SvgIcon.SETUP,
+        items: [
+          {
+            title: "admin.pricing.title",
+            path: "/admin/setup/pricing",
+            items: [],
+            // icon: SvgIcon.PRICING,
+          },
+          {
+            title: "admin.emails.title",
+            path: "/admin/setup/emails",
+            // icon: SvgIcon.EMAILS,
+            items: [],
+          },
+        ],
       },
       // {
       //   title: "admin.navigation.title",
@@ -76,7 +95,7 @@ export const AdminSidebar: SideBarItem[] = [
       //   title: "settings.members.title",
       //   path: "/admin/members",
       //   icon: SvgIcon.MEMBERS,
-      //   userRoles: [TenantUserRole.OWNER, TenantUserRole.ADMIN],
+      //   tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
       // },
     ],
   },
@@ -84,25 +103,6 @@ export const AdminSidebar: SideBarItem[] = [
     title: "App",
     path: "",
     items: [
-      {
-        title: "app.sidebar.setup",
-        path: "/admin/setup",
-        icon: SvgIcon.SETUP,
-        items: [
-          {
-            title: "admin.pricing.title",
-            path: "/admin/setup/pricing",
-            items: [],
-            // icon: SvgIcon.PRICING,
-          },
-          {
-            title: "admin.emails.title",
-            path: "/admin/setup/emails",
-            // icon: SvgIcon.EMAILS,
-            items: [],
-          },
-        ],
-      },
       {
         title: "admin.switchToApp",
         path: "/app",

@@ -44,7 +44,7 @@ export default function StackedLayout({ layout, children }: Props) {
     return appData.user?.admin !== null;
   }
   function allowCurrentRole(item: SideBarItem) {
-    return !item.userRoles || item.userRoles.includes(appData.currentRole);
+    return !item.tenantUserTypes || item.tenantUserTypes.includes(appData.currentRole);
   }
   function signOut() {
     submit(null, { method: "post", action: "/logout" });

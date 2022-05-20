@@ -16,7 +16,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   const navigate = useNavigate();
   const params = useParams();
 
-  const defaultCommands: Command[] = [
+  const commands: Command[] = [
     {
       command: "T",
       title: t("app.commands.tenants.title"),
@@ -53,7 +53,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   useEffect(() => {
     if (!selectedCommand) {
       setCommandSearchTitle(t("app.commands.type"));
-      setItems(defaultCommands);
+      setItems(commands);
     } else {
       if (selectedCommand.toPath) {
         navigate(selectedCommand.toPath);
@@ -88,7 +88,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
             command: "+",
             bgClassName: "bg-teal-600",
             textClassName: "text-teal-200",
-            toPath: "/app/new-tenant",
+            toPath: "/app/new-account",
           });
         }
         if (selectedCommand.command === "P") {
@@ -116,7 +116,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   }, [selectedCommand]);
 
   useEffect(() => {
-    setItems(defaultCommands);
+    setItems(commands);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -148,7 +148,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
   function onClose() {
     setSelectedCommand(undefined);
-    setItems(defaultCommands);
+    setItems(commands);
     onClosed();
   }
 
@@ -230,7 +230,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
 
                   {/* <Combobox.Option value={""} className={({ active }) => clsx("flex cursor-default select-none rounded-xl p-3", active && "bg-gray-100")}>
                     {({ active }) => (
-                      <Link to={`/app/new-tenant`} className="flex justify-between items-center w-full pr-2">
+                      <Link to={`/app/new-account`} className="flex justify-between items-center w-full pr-2">
                         <div className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-500")}>
                           <span className="inline-flex items-center justify-center h-9 w-9">
                             <span className="text-sm font-medium leading-none text-gray-200">
@@ -276,7 +276,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
               )}
 
               {/* <div className="mt-4 flex py-4">
-              <Link to="/app/new-tenant" className="text-sm font-medium text-theme-600 dark:text-theme-400 hover:text-theme-500 w-full text-center">
+              <Link to="/app/new-account" className="text-sm font-medium text-theme-600 dark:text-theme-400 hover:text-theme-500 w-full text-center">
                 Create an organization<span aria-hidden="true"> &rarr;</span>
               </Link>
             </div> */}

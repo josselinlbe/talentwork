@@ -1,0 +1,176 @@
+---
+meta:
+  title: Product | Subscription | SaasRock
+  description: Subscription product entity model life cycle, properties and model
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Subscription Models",
+      routePath: "/docs/core-models/subscription",
+    },
+    {
+      title: "Product",
+      routePath: "/docs/core-models/subscription/product",
+    },
+  ]}
+/>
+
+# Product
+
+- Public products are shown at **_/pricing_**.
+- A product can have many [Prices](price), and many [Features](feature).
+
+## Life Cycle
+
+import DocLifeCycle from "~/components/ui/docs/DocLifeCycle";
+
+<DocLifeCycle
+  items={[
+    {
+      route: "/pricing",
+      c: false,
+      r: true,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/admin/setup/pricing",
+      c: true,
+      r: true,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/admin/setup/pricing/new",
+      c: true,
+      r: false,
+      u: false,
+      d: false,
+    },
+    {
+      route: "/admin/setup/pricing/:id",
+      c: false,
+      r: true,
+      u: true,
+      d: true,
+    },
+  ]}
+/>
+
+## Properties
+
+import DocPropertiesTable, {
+  ModelPropertyType,
+} from "~/components/ui/docs/DocPropertiesTable";
+
+<DocPropertiesTable
+  items={[
+    {
+      name: "stripeId",
+      title: "Stripe ID",
+      type: ModelPropertyType.String,
+      description: "Stripe product ID",
+      required: true,
+    },
+    {
+      name: "order",
+      title: "Order",
+      type: ModelPropertyType.Int,
+      description:
+        "Order of display at /pricing and /app/:tenant/settings/subscription",
+      required: true,
+    },
+    {
+      name: "title",
+      title: "Title",
+      type: ModelPropertyType.String,
+      description:
+        "Can be a i18n key for multi-language support",
+      required: true,
+    },
+    {
+      name: "active",
+      title: "Active",
+      type: ModelPropertyType.Boolean,
+      description: "",
+      required: true,
+    },
+    {
+      name: "model",
+      title: "Pricing Model",
+      customType: {
+        name: "PricingModel",
+      },
+      description:
+        "FLAT_RATE, PER_SEAT, or USAGE_BASED (not supported yet)",
+      required: true,
+    },
+    {
+      name: "public",
+      title: "Public",
+      type: ModelPropertyType.Boolean,
+      description:
+        "Visible at /pricing, uncheck for custom plans",
+      required: true,
+    },
+    {
+      name: "description",
+      title: "Description",
+      type: ModelPropertyType.String,
+      description: "",
+      required: false,
+    },
+    {
+      name: "badge",
+      title: "Badge",
+      type: ModelPropertyType.String,
+      description:
+        "Can be a i18n key. e.g. Recommended, Most popular...",
+      required: false,
+    },
+    {
+      name: "prices",
+      title: "Prices",
+      customType: {
+        name: "SubscriptionPrice[]",
+        route: "/docs/core-models/subscription/price",
+      },
+      description: "",
+      required: false,
+    },
+    {
+      name: "features",
+      title: "Features",
+      customType: {
+        name: "SubscriptionFeature[]",
+        route: "/docs/core-models/subscription/feature",
+      },
+      description: "",
+      required: false,
+    },
+  ]}
+/>
+
+## Model
+
+```
+model SubscriptionProduct {
+  id          String                @id @default(cuid())
+  stripeId    String
+  order       Int
+  title       String
+  description String
+  badge       String
+  active      Boolean
+  model       Int // 0 = FLAT_RATE, 1 = PER_SEAT, 2 = USAGE_BASED
+  public      Boolean
+  prices      SubscriptionPrice[]
+  features    SubscriptionFeature[]
+}
+```

@@ -1,5 +1,5 @@
 import { loadAppData } from "~/utils/data/useAppData";
-import { ActionFunction, json, LoaderFunction, MetaFunction } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenantMember } from "~/utils/db/tenants.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
@@ -7,16 +7,21 @@ import { createUserInvitation } from "~/utils/db/tenantUserInvitations.db.server
 import { sendEmail } from "~/utils/email.server";
 import NewMember from "~/components/core/settings/members/NewMember";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
+import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
 
 export type NewMemberLoaderData = {
   title: string;
+  featureUsageUsers: PlanFeatureUsageDto | undefined;
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
-
+  const tenantUrl = await getTenantUrl(params);
+  const featureUsageUsers = await getPlanFeatureUsage(tenantUrl.tenantId, "Users");
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
+    featureUsageUsers,
   };
   return json(data);
 };
@@ -83,5 +88,6 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function NewMemberRoute() {
-  return <NewMember />;
+  const data = useLoaderData<NewMemberLoaderData>();
+  return <NewMember featureUsageUsers={data.featureUsageUsers} />;
 }

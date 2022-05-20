@@ -1,6 +1,6 @@
 import { Entity } from "@prisma/client";
 import { redirect } from "remix";
-import { TenantUserRole } from "~/application/enums/tenants/TenantUserRole";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import { getTenantMember } from "./db/tenants.db.server";
@@ -23,13 +23,13 @@ export async function requireOwnerOrAdminRole(request: Request, params: Params) 
   const user = await getUser(userInfo.userId);
   if (!user?.admin) {
     const tenantMember = await getTenantMember(userInfo.userId, tenantUrl.tenantId);
-    if (!tenantMember || (tenantMember.role !== TenantUserRole.OWNER && tenantMember.role !== TenantUserRole.ADMIN)) {
+    if (!tenantMember || (tenantMember.role !== TenantUserType.OWNER && tenantMember.role !== TenantUserType.ADMIN)) {
       throw redirect("/401");
     }
   }
 }
 
-export async function requireAuthorization(currentPath: string, currentRole: TenantUserRole, params: Params, entities: Entity[]) {
+export async function requireAuthorization(currentPath: string, currentRole: TenantUserType, params: Params, entities: Entity[]) {
   let foundItem: SideBarItem | undefined;
   AppSidebar(params, entities).forEach((f) => {
     f.items?.forEach((item) => {
@@ -38,7 +38,7 @@ export async function requireAuthorization(currentPath: string, currentRole: Ten
       }
     });
   });
-  if (foundItem && foundItem.userRoles && !foundItem.userRoles.includes(currentRole)) {
+  if (foundItem && foundItem.tenantUserTypes && !foundItem.tenantUserTypes.includes(currentRole)) {
     throw redirect("/401");
   }
 }
