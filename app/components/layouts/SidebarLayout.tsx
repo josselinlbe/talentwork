@@ -122,13 +122,13 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                 {/* <div className=" ">
                   <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
                 </div> */}
-                {/* {layout === "docs" && (
+                {layout === "docs" && (
                   <div className="flex flex-col space-y-2">
                     <Link to={"/"}>
                       <BrandLogo className="h-8 mx-auto dark" />
                     </Link>
                   </div>
-                )} */}
+                )}
                 <SidebarMenu layout={layout} />
               </nav>
             </div>
