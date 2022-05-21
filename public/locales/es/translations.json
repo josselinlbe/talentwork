@@ -123,7 +123,10 @@
     "from": "De",
     "to": "A",
     "of": "De",
-    "results": "Resultados"
+    "results": "Resultados",
+    "tryDemo": "Probar demo",
+    "learnMore": "Ver más",
+    "readDocs": "Leer docs"
   },
   "front": {
     "navbar": {
@@ -138,15 +141,17 @@
       "headline1": "Construye tu SaaS Fácilmente",
       "headline2": "Framework de bajo código & extensible con funcionalidades para SaaS.",
       "headline3": "Descarga el código y personaliza: Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
-      "subheadline1": "(en una semana o menos)",
+      "subheadline1": "",
       "hint": "Este sitio usa v0.2.6",
-      "buy": "Obtener código",
+      "buy": "Obtener early-access",
       "features": "Funcionalidades",
       "docs": "Documentación",
       "components": "Componentes",
       "blog": "Blog",
       "contact": "Contáctanos",
-      "startHint": "Este demo está alojado en Vercel + Supabase."
+      "startHint": "Este demo está alojado en Vercel + Supabase.",
+      "prelaunch": "Obtener acceso pre-lanzamiento 🚀",
+      "cta": "Lo quiero!"
     },
     "pricing": {
       "title": "Precios",
@@ -318,6 +323,7 @@
     "FLAT_RATE": "Precio fijo",
     "PER_SEAT": "Por usuario",
     "USAGE_BASED": "Por uso",
+    "demo": "Estos son planes demo",
     "custom": {
       "title": "Personalizado",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
@@ -1036,8 +1042,8 @@
       "name": "Nombre",
       "firstName": "Nombre",
       "lastName": "Apellido",
-      "role": "Rol",
-      "roles": {
+      "type": "Rol",
+      "types": {
         "OWNER": "Propietario",
         "ADMIN": "Administrador",
         "MEMBER": "Miembro"

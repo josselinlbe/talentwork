@@ -123,7 +123,10 @@
     "from": "From",
     "to": "To",
     "of": "Of",
-    "results": "Results"
+    "results": "Results",
+    "tryDemo": "Try demo",
+    "learnMore": "Learn more",
+    "readDocs": "Read docs"
   },
   "front": {
     "navbar": {
@@ -135,18 +138,20 @@
       "privacy": "Privacy Policy"
     },
     "hero": {
-      "headline1": "Easily Build Your Own SaaS",
+      "headline1": "Easily Build Your SaaS",
       "headline2": "Low-code & extensible framework with out-of-the-box SaaS features.",
       "headline3": "Download the code and customize: Authentication, Subscriptions, Blogging, Audit trails, Admin portal, Settings pages, Entity Builder, Subscription Plan Builder, and more.",
-      "subheadline1": "(in a week or less)",
+      "subheadline1": "",
       "hint": "This site uses v0.2.6",
-      "buy": "Get pre-launch discount",
+      "buy": "Get pre-launch access",
       "features": "Features",
       "docs": "Documentation",
       "components": "Components",
       "blog": "Blog",
       "contact": "Contact us",
-      "startHint": "This demo is hosted on Vercel + Supabase."
+      "startHint": "This demo is hosted on Vercel + Supabase.",
+      "prelaunch": "Get pre-launch access 🚀",
+      "cta": "I want this!"
     },
     "pricing": {
       "title": "Pricing",
@@ -318,6 +323,7 @@
     "FLAT_RATE": "Flat rate",
     "PER_SEAT": "Per seat",
     "USAGE_BASED": "Usage-based",
+    "demo": "These are demo plans",
     "custom": {
       "title": "Custom Plan",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
@@ -673,10 +679,10 @@
       }
     },
     "tenants": {
-      "empty": "There are no organizations",
-      "select": "Select organization",
-      "youBelongToOne": "You belong to one organization",
-      "youBelongToMany": "You belong to {{0}} organizations",
+      "empty": "There are no accounts",
+      "select": "Select account",
+      "youBelongToOne": "You belong to one account",
+      "youBelongToMany": "You belong to {{0}} accounts",
       "create": {
         "title": "Create account",
         "headline": "You will be the owner"
@@ -1020,8 +1026,8 @@
       "name": "Name",
       "firstName": "First name",
       "lastName": "Last name",
-      "role": "Role",
-      "roles": {
+      "type": "Tenant Role",
+      "types": {
         "OWNER": "Owner",
         "ADMIN": "Admin",
         "MEMBER": "Member"

@@ -40,17 +40,17 @@ export default function NewMember({ featureUsageUsers }: Props) {
   const roleOptions = [
     {
       value: 0,
-      name: t("settings.profile.roles.OWNER"),
+      name: t("settings.profile.types.OWNER"),
       description: t("settings.profile.permissions.OWNER"),
     },
     {
       value: 1,
-      name: t("settings.profile.roles.ADMIN"),
+      name: t("settings.profile.types.ADMIN"),
       description: t("settings.profile.permissions.ADMIN"),
     },
     {
       value: 2,
-      name: t("settings.profile.roles.MEMBER"),
+      name: t("settings.profile.types.MEMBER"),
       description: t("settings.profile.permissions.MEMBER"),
     },
   ];

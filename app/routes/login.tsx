@@ -10,6 +10,7 @@ import UserUtils from "~/utils/app/UserUtils";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 import { createLogLogin } from "~/utils/db/logs.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
+import { useState } from "react";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
@@ -108,6 +109,14 @@ export default function LoginRoute() {
 
   const [searchParams] = useSearchParams();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function setDemoAccount(email: string) {
+    setEmail(email);
+    setPassword("password");
+  }
+
   return (
     <div className="bg-white dark:bg-gray-900">
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -126,11 +135,21 @@ export default function LoginRoute() {
             <div className="mt-2 border-t pt-1 border-accent-300 w-full text-xs">
               {/* {t("account.login.useTestAccount")} */}
               <p className="mt-1">
-                <span className="font-bold">Email</span>: john.doe@company.com <span className="italic">(tenant)</span> demo@admin.com
-                <span className="italic">(admin)</span>
+                <span className="font-bold">Email</span>:{" "}
+                <button
+                  type="button"
+                  onClick={() => setDemoAccount("luna.davis@company.com")}
+                  className="border-b border-dashed hover:border-dotted border-accent-300"
+                >
+                  luna.davis@company.com
+                </button>{" "}
+                or{" "}
+                <button type="button" onClick={() => setDemoAccount("demo@admin.com")} className="border-b border-dashed hover:border-dotted border-accent-300">
+                  demo@admin.com
+                </button>
               </p>
               <p>
-                <span className="font-bold">Password</span>: password
+                <span className="font-bold select-all">Password</span>: password
               </p>
             </div>
           </InfoBanner>
@@ -152,6 +171,8 @@ export default function LoginRoute() {
                   defaultValue={actionData?.fields?.email}
                   aria-invalid={Boolean(actionData?.fieldErrors?.email)}
                   aria-errormessage={actionData?.fieldErrors?.email ? "email-error" : undefined}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 {actionData?.fieldErrors?.email ? (
                   <p className="text-rose-500 text-xs py-2" role="alert" id="email-error">
@@ -174,6 +195,8 @@ export default function LoginRoute() {
                   defaultValue={actionData?.fields?.password}
                   aria-invalid={Boolean(actionData?.fieldErrors?.password) || undefined}
                   aria-errormessage={actionData?.fieldErrors?.password ? "password-error" : undefined}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 {actionData?.fieldErrors?.password ? (
                   <p className="text-rose-500 text-xs py-2" role="alert" id="password-error">

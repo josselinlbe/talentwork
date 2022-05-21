@@ -23,7 +23,7 @@ export default function MembersListAndTable({ items }: Props) {
     },
     {
       name: "role",
-      title: t("settings.profile.role"),
+      title: t("settings.profile.type"),
     },
     {
       title: t("shared.status"),
@@ -34,7 +34,7 @@ export default function MembersListAndTable({ items }: Props) {
   ];
 
   function getUserRole(item: TenantUser) {
-    return t("settings.profile.roles." + TenantUserType[item.type]);
+    return t("settings.profile.types." + TenantUserType[item.type]);
   }
   function getUserStatus(item: TenantUser) {
     return t("settings.profile.status." + TenantUserStatus[item.status]);

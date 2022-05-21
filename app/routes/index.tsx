@@ -11,6 +11,7 @@ import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
 import Pricing from "~/components/front/Pricing";
 import { getGumroadProduct } from "~/utils/integrations/gumroadService";
+import { useTranslation } from "react-i18next";
 
 export type IndexLoaderData = {
   title: string;
@@ -49,15 +50,22 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function IndexRoute() {
+  const { t } = useTranslation();
   const data = useLoaderData<IndexLoaderData>();
   return (
     <div>
-      <TopBanner />
+      <TopBanner
+        message={t("front.hero.prelaunch")}
+        cta={{
+          message: t("front.hero.cta"),
+          link: "https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access",
+        }}
+      />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
         <Hero socialProof={data.socialProof} />
         <LogoClouds />
-        <Features />
         <FeatureImages />
+        <Features />
         <Pricing />
         {/* <JoinNow className="relative z-20" /> */}
         <Footer />

@@ -48,7 +48,7 @@ export default function AdminNavigationRoute() {
   }, []);
 
   function tenantUserTypeName(type: TenantUserType) {
-    return t("settings.profile.roles." + TenantUserType[type]);
+    return t("settings.profile.types." + TenantUserType[type]);
   }
   function tenantUserTypeHasAccess(item: SideBarItem, role: TenantUserType): boolean {
     return !item.path.includes("/admin") && allowTenantUserType(item, role);

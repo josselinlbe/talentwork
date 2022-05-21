@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (tenantMember.tenantId === tenantUrl.tenantId) {
     return badRequest({ error: t("app.linkedAccounts.invitation.cannotInviteCurrentTenant") });
   }
-  if (!tenantMember || (tenantMember.role !== TenantUserType.OWNER && tenantMember.role !== TenantUserType.ADMIN)) {
+  if (!tenantMember || (tenantMember.type !== TenantUserType.OWNER && tenantMember.type !== TenantUserType.ADMIN)) {
     return badRequest({ error: t("app.linkedAccounts.invitation.inviteOwnersOrAdmins") });
   }
 

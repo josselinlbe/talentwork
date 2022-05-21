@@ -17,7 +17,7 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
   const headers = [
     {
       name: "role",
-      title: t("settings.profile.role"),
+      title: t("settings.profile.type"),
     },
     {
       name: "email",
@@ -30,7 +30,7 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
   ];
 
   function getUserRole(item: TenantUserInvitation) {
-    return t("settings.profile.roles." + TenantUserType[item.type]);
+    return t("settings.profile.types." + TenantUserType[item.type]);
   }
   function getUserRoleClass(item: TenantUserInvitation) {
     switch (item.role as TenantUserType) {

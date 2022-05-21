@@ -23,7 +23,7 @@ export async function requireOwnerOrAdminRole(request: Request, params: Params) 
   const user = await getUser(userInfo.userId);
   if (!user?.admin) {
     const tenantMember = await getTenantMember(userInfo.userId, tenantUrl.tenantId);
-    if (!tenantMember || (tenantMember.role !== TenantUserType.OWNER && tenantMember.role !== TenantUserType.ADMIN)) {
+    if (!tenantMember || (tenantMember.type !== TenantUserType.OWNER && tenantMember.type !== TenantUserType.ADMIN)) {
       throw redirect("/401");
     }
   }

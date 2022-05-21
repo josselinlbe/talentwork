@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from "remix";
 
 interface Props {
-  images: { title: string; route?: string; src: string }[];
+  images: { group: string; title: string; route?: string; src: string }[];
 }
 export default function Carousel({ images }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentImage, setCurrentImage] = useState<{ title: string; route?: string; src: string } | undefined>(undefined);
+  const [currentImage, setCurrentImage] = useState<{ group: string; title: string; route?: string; src: string } | undefined>(undefined);
 
   useEffect(() => {
     if (images.length > currentIndex) {
@@ -32,8 +32,9 @@ export default function Carousel({ images }: Props) {
   }
 
   return (
-    <div className="relative mx-auto w-full rounded-lg shadow-lg">
-      <div className=" text-left flex mb-2">
+    <div className="relative mx-auto w-full">
+      <div className="text-left flex space-y-3 flex-col mb-2">
+        <h3 className="text-lg font-bold">{currentImage?.group}</h3>
         <div className=" dark:bg-gray-900 italic text-sm font-medium flex space-x-1">
           <span className=" ">
             {currentIndex + 1}/{images.length}
@@ -48,8 +49,8 @@ export default function Carousel({ images }: Props) {
           )}
         </div>
       </div>
-      <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 h-96 border border-gray-700">
-        <div className="absolute bottom-0 mb-14 ml-2">
+      <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 border border-gray-700">
+        <div className="absolute top-0 mt-3 ml-2">
           <button
             onClick={previousImage}
             type="button"
@@ -61,7 +62,7 @@ export default function Carousel({ images }: Props) {
           </button>
         </div>
 
-        <div className="absolute right-2 mr-10 bottom-0 mb-14 w-full text-right">
+        <div className="absolute right-2 mr-10 top-0 mt-3 w-full text-right">
           <button
             onClick={nextImage}
             type="button"

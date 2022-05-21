@@ -39,7 +39,7 @@ type ActionData = {
     lastName: string | undefined;
   };
   fields?: {
-    type: string;
+    action: string;
     firstName: string | undefined;
     lastName: string | undefined;
     avatar: string | undefined;
@@ -53,7 +53,7 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
-  const type = form.get("type");
+  const action = form.get("action");
 
   const firstName = form.get("firstName")?.toString();
   const lastName = form.get("lastName")?.toString();
@@ -63,7 +63,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const passwordNew = form.get("passwordNew")?.toString();
   const passwordNewConfirm = form.get("passwordNewConfirm")?.toString();
 
-  if (typeof type !== "string") {
+  if (typeof action !== "string") {
     return badRequest({
       profileError: `Form not submitted correctly.`,
     });
@@ -74,12 +74,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     include: { admin: true },
   });
 
-  switch (type) {
+  switch (action) {
     case "profile": {
-      const fields = { type, firstName, lastName, avatar, passwordCurrent, passwordNew, passwordNewConfirm };
+      const fields = { action, firstName, lastName, avatar, passwordCurrent, passwordNew, passwordNewConfirm };
       const fieldErrors = {
-        firstName: type === "profile" && (fields.firstName?.length ?? "") < 2 ? "First name required" : "",
-        lastName: type === "profile" && (fields.lastName?.length ?? "") < 2 ? "Last name required" : "",
+        firstName: action === "profile" && (fields.firstName?.length ?? "") < 2 ? "First name required" : "",
+        lastName: action === "profile" && (fields.lastName?.length ?? "") < 2 ? "Last name required" : "",
       };
       if (Object.values(fieldErrors).some(Boolean)) return badRequest({ fieldErrors, fields });
 

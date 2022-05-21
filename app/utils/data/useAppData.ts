@@ -13,10 +13,6 @@ import { getAllEntities } from "../db/entities/entities.db.server";
 import { Tenant, Entity } from "@prisma/client";
 import { Language } from "remix-i18next";
 import { Params } from "react-router";
-import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
-import { getAllSubscriptionFeatures, getAllSubscriptionProducts } from "../db/subscriptionProducts.db.server";
-import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
-import { getPlanFeaturesUsage } from "../services/subscriptionService";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -59,7 +55,7 @@ export async function loadAppData(request: Request, params: Params) {
   const myTenants = await getMyTenants(user.id);
   const tenantMembership = myTenants.find((f) => f.tenantId === tenantUrl.tenantId);
 
-  let currentRole = tenantMembership?.role ?? TenantUserType.MEMBER;
+  let currentRole = tenantMembership?.type ?? TenantUserType.MEMBER;
   if (user.admin) {
     currentRole = TenantUserType.ADMIN;
   }

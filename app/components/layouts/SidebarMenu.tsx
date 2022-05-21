@@ -73,17 +73,17 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     }
     return appData.user?.admin !== null;
   }
-  function allowCurrentRole(item: SideBarItem) {
+  function allowCurrentTenantUserType(item: SideBarItem) {
     return !item.tenantUserTypes || item.tenantUserTypes.includes(appData.currentRole);
   }
   const getMenu = (): SidebarGroup[] => {
     const _menu: SidebarGroup[] = [];
     menu
-      .filter((f) => allowCurrentUserType(f) && allowCurrentRole(f))
+      .filter((f) => allowCurrentUserType(f) && allowCurrentTenantUserType(f))
       .forEach(({ title, items }) => {
         _menu.push({
           title: title.toString(),
-          items: items?.filter((f) => allowCurrentUserType(f) && allowCurrentRole(f)) ?? [],
+          items: items?.filter((f) => allowCurrentUserType(f) && allowCurrentTenantUserType(f)) ?? [],
         });
       });
     return _menu.filter((f) => f.items.length > 0);

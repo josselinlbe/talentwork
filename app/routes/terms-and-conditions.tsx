@@ -1,8 +1,8 @@
-import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
 import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
+import Footer from "~/components/front/Footer";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
@@ -25,7 +25,7 @@ export default function TermsAndConditionsRoute() {
       <div>
         <Header />
         <div className="py-6 min-h-screen">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:flex-col sm:align-center space-y-4">
               <div className="prose mx-auto text-gray-500">
                 <h1 className="flex justify-center text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">
@@ -162,7 +162,7 @@ export default function TermsAndConditionsRoute() {
             </div>
           </div>
         </div>
-        <Footer></Footer>
+        <Footer />
       </div>
     </div>
   );

@@ -60,11 +60,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const email = form.get("email")?.toString().toLowerCase().trim();
   // const firstName = form.get("firstName")?.toString() ?? "";
   // const lastName = Number(form.get("lastName")) ?? "";
-  const role = Number(form.get("tenant-user-role"));
+  const type = Number(form.get("tenant-user-type"));
 
   const tenantUsers = await getTenantUsers(tenantUrl.tenantId);
-  const owners = tenantUsers?.filter((f) => f.role === TenantUserType.OWNER);
-  if (owners?.length === 1 && owners?.find((f) => f.user.email === email) && role !== TenantUserType.OWNER) {
+  const owners = tenantUsers?.filter((f) => f.type === TenantUserType.OWNER);
+  if (owners?.length === 1 && owners?.find((f) => f.user.email === email) && type !== TenantUserType.OWNER) {
     return badRequest({
       error: t("api.errors.cannotBeWithoutOwner"),
     });
@@ -77,7 +77,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: t("shared.notFound"),
       });
     }
-    await updateTenantUser(id, { role });
+    await updateTenantUser(id, { type });
 
     return redirect(UrlUtils.currentTenantUrl(params, "settings/members"));
   } else if (action === "delete") {
@@ -123,21 +123,21 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
   // const [firstName, setFirstName] = useState("");
   // const [lastName, setLastName] = useState("");
   // const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<TenantUserType>(actionData?.fields?.role ?? data.member?.role ?? TenantUserType.MEMBER);
+  const [role, setRole] = useState<TenantUserType>(actionData?.fields?.role ?? data.member?.type ?? TenantUserType.MEMBER);
   const roleOptions = [
     {
       value: TenantUserType.OWNER,
-      name: t("settings.profile.roles.OWNER"),
+      name: t("settings.profile.types.OWNER"),
       description: t("settings.profile.permissions.OWNER"),
     },
     {
       value: TenantUserType.ADMIN,
-      name: t("settings.profile.roles.ADMIN"),
+      name: t("settings.profile.types.ADMIN"),
       description: t("settings.profile.permissions.ADMIN"),
     },
     {
       value: TenantUserType.MEMBER,
-      name: t("settings.profile.roles.MEMBER"),
+      name: t("settings.profile.types.MEMBER"),
       description: t("settings.profile.permissions.MEMBER"),
     },
   ];
@@ -339,17 +339,17 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                                         >
                                           <input
                                             type="radio"
-                                            name="tenant-user-role"
+                                            name="tenant-user-type"
                                             className="h-4 w-4 mt-3 cursor-pointer text-theme-600 border-gray-300 focus:ring-theme-500"
-                                            aria-labelledby="tenant-user-role-0-label"
-                                            aria-describedby="tenant-user-role-0-description"
+                                            aria-labelledby="tenant-user-type-0-label"
+                                            aria-describedby="tenant-user-type-0-description"
                                             value={option.value}
                                             checked={role === option.value}
                                             onChange={changedRole}
                                           />
                                           <div className="ml-3 flex flex-col">
                                             <span
-                                              id="tenant-user-role-0-label"
+                                              id="tenant-user-type-0-label"
                                               className={clsx(
                                                 "block text-sm font-medium",
                                                 role === option.value && "text-theme-900",
@@ -360,7 +360,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                                             </span>
 
                                             <span
-                                              id="tenant-user-role-0-description"
+                                              id="tenant-user-type-0-description"
                                               className={clsx(
                                                 "block text-sm",
                                                 role === option.value && "text-theme-700",

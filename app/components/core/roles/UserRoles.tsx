@@ -133,7 +133,7 @@
 //                       <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
 //                         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">
 //                           <div className=" capitalize px-2 py-1 bg-transparent block w-full border-b  border-transparent text-sm truncate text-gray-800">
-//                             {t("settings.profile.roles." + TenantUserType[item.type])}
+//                             {t("settings.profile.types." + TenantUserType[item.type])}
 //                           </div>
 //                         </td>
 //                         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">

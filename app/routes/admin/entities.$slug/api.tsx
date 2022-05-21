@@ -2,7 +2,6 @@ import { marked } from "marked";
 import { useTranslation } from "react-i18next";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import { Colors } from "~/application/enums/shared/Colors";
-import ColorBadge from "~/components/ui/badges/ColorBadge";
 import SimpleBadge from "~/components/ui/badges/SimpleBadge";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
@@ -27,8 +26,6 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
-  const form = await request.formData();
-  const action = form.get("action")?.toString() ?? "";
   return badRequest(t("shared.invalidForm"));
 };
 

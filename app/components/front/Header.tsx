@@ -62,7 +62,7 @@ export default function Header() {
                           to={loginOrEnterRoute()}
                           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-gray-900 dark:text-slate-300"
                         >
-                          {!authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
+                          {!authenticated ? <div>{t("shared.tryDemo")}</div> : <div>{t("shared.enter")}</div>}
                         </Link>
                       </div>
                     </div>
@@ -115,7 +115,7 @@ export default function Header() {
                     to={loginOrEnterRoute()}
                     className="shadow inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-theme-600 dark:text-white bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:text-slate-300"
                   >
-                    {!authenticated ? <div>{t("account.shared.signIn")}</div> : <div>{t("shared.enter")}</div>}
+                    {!authenticated ? <div>{t("shared.tryDemo")}</div> : <div>{t("shared.enter")}</div>}
                   </Link>
                 </span>
               </div>
@@ -184,7 +184,7 @@ export default function Header() {
                       className="block w-full px-5 py-3 text-center font-medium text-gray-900 dark:text-slate-300 bg-slate-50 dark:bg-slate-800"
                       role="menuitem"
                     >
-                      <div>{t("account.shared.signIn")}</div>
+                      <div>{t("shared.tryDemo")}</div>
                     </Link>
                   </div>
                 </div>

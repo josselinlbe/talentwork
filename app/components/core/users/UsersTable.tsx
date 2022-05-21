@@ -75,7 +75,7 @@ export default function UsersTable({ items }: Props) {
     }
   }
   function getUserTenants(user: User & { tenants: (TenantUser & { tenant: Tenant })[] }) {
-    return user.tenants.map((f) => `${f.tenant?.name} (${t("settings.profile.roles." + TenantUserType[f.type])})`).join(", ");
+    return user.tenants.map((f) => `${f.tenant?.name} (${t("settings.profile.types." + TenantUserType[f.type])})`).join(", ");
   }
   function deleteUser(item: User) {
     if (confirmDelete.current) {

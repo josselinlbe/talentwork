@@ -21,7 +21,7 @@ export default function Pricing() {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-lg mx-auto rounded-lg shadow-lg overflow-hidden lg:max-w-none lg:flex border border-gray-200 dark:border-gray-700">
               <div className="flex-1 bg-white dark:bg-gray-900 px-6 py-8 lg:p-12">
-                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white sm:text-3xl">Lifetime license</h3>
+                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white sm:text-3xl">Build unlimited SaaS apps</h3>
                 <p className="mt-6 text-base text-gray-500">Get constant updates for 1 year.</p>
                 <div className="mt-8">
                   <div className="flex items-center">
@@ -53,11 +53,10 @@ export default function Pricing() {
                 <div className="mt-6">
                   <div className="rounded-md shadow">
                     <a
-                      href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix"
+                      href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access"
                       className="flex items-center justify-center space-x-2 px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-theme-500 hover:bg-theme-600"
                     >
-                      <GitHubIcon className="h-5 w-5" />
-                      <div>Get 1 year of updates</div>
+                      <div>Get pre-launch price 🚀</div>
                     </a>
                   </div>
                 </div>

@@ -8,6 +8,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { Language } from "remix-i18next";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
+import TopBanner from "~/components/ui/banners/TopBanner";
 
 type LoaderData = {
   title: string;
@@ -35,6 +36,7 @@ export default function PricingRoute() {
   return (
     <div>
       <div>
+        <TopBanner message={t("pricing.demo")} />
         <Header />
         <div className="bg-white dark:bg-gray-900 pt-6 min-h-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

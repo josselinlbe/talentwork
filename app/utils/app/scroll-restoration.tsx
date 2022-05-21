@@ -134,13 +134,13 @@ function useScrollRestoration() {
   }, [transition]);
 }
 
-export function useElementScrollRestoration(ref: MutableRefObject<HTMLElement | null>) {
+export function useElementScrollRestoration({ apply }: { apply: boolean }, ref: MutableRefObject<HTMLElement | null>) {
   let positions = useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
   let pendingLocation = useTransition().location;
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current || !apply) return;
     if (pendingLocation) {
       positions.set(location.key, ref.current.scrollTop);
     }
@@ -150,7 +150,7 @@ export function useElementScrollRestoration(ref: MutableRefObject<HTMLElement | 
     // seriously, chill
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useLayoutEffect(() => {
-      if (!ref.current) return;
+      if (!ref.current || !apply) return;
       let y = positions.get(location.key);
       ref.current.scrollTo(0, y || 0);
     }, [location]);

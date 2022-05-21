@@ -25,7 +25,7 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
   const appData = useAppData();
 
   const mainElement = useRef<HTMLElement>(null);
-  useElementScrollRestoration(mainElement);
+  useElementScrollRestoration({ apply: layout === "docs" }, mainElement);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

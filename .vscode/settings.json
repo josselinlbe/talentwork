@@ -11,7 +11,7 @@
     "pricing.features.*",
     "shared.locales.*",
     "settings.profile.status.*",
-    "settings.profile.role.*",
+    "settings.profile.type.*",
     "app.shared.periods.*",
     "app.shared.periodicity.*",
     "app.shared.months.*",
