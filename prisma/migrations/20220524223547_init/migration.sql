@@ -307,7 +307,6 @@ CREATE TABLE "Row" (
     "createdByApiKeyId" TEXT,
     "linkedAccountId" TEXT,
     "contractId" TEXT,
-    "employeeId" TEXT,
     "parentRowId" TEXT,
     CONSTRAINT "Row_createdByUserId_fkey" FOREIGN KEY ("createdByUserId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Row_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
@@ -373,16 +372,6 @@ CREATE TABLE "EntityWebhookLog" (
 );
 
 -- CreateTable
-CREATE TABLE "Employee" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "rowId" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    CONSTRAINT "Employee_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
 CREATE TABLE "Contract" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "rowId" TEXT NOT NULL,
@@ -402,15 +391,6 @@ CREATE TABLE "ContractMember" (
     "signDate" DATETIME,
     CONSTRAINT "ContractMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "ContractMember_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "ContractEmployee" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "contractId" TEXT NOT NULL,
-    "employeeId" TEXT NOT NULL,
-    CONSTRAINT "ContractEmployee_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "ContractEmployee_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -474,9 +454,6 @@ CREATE UNIQUE INDEX "Property_entityId_name_key" ON "Property"("entityId", "name
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Property_entityId_title_key" ON "Property"("entityId", "title");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Employee_rowId_key" ON "Employee"("rowId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Contract_rowId_key" ON "Contract"("rowId");

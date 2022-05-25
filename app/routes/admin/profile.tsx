@@ -15,6 +15,9 @@ import bcrypt from "bcryptjs";
 import { i18nHelper } from "~/locale/i18n.utils";
 import supportedLocales from "~/locale/supportedLocales";
 import { useAdminData } from "~/utils/data/useAdminData";
+import { getMyTenants, getTenantUsers, getTenantWithUsers } from "~/utils/db/tenants.db.server";
+import { deleteAndCancelTenant } from "~/utils/services/tenantService";
+import { deleteUserWithItsTenants } from "~/utils/services/userService";
 
 type LoaderData = {
   title: string;
@@ -157,9 +160,15 @@ export const action: ActionFunction = async ({ request, params }) => {
         });
       }
 
-      await deleteUser(user.id);
+      try {
+        await deleteUserWithItsTenants(user.id);
+      } catch (e: any) {
+        return badRequest({
+          deleteError: e,
+        });
+      }
 
-      return redirect("/login");
+      // return redirect("/login");
     }
   }
 };

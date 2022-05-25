@@ -2,16 +2,21 @@ import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo, UserSession } from "~/utils/session.server";
-import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, Outlet, useLoaderData } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";
 import { Language } from "remix-i18next";
 import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
-import Pricing from "~/components/front/Pricing";
-import { getGumroadProduct } from "~/utils/integrations/gumroadService";
+import PricingCTA from "~/components/front/PricingCTA";
 import { useTranslation } from "react-i18next";
+import { getGitHubCurrentRelease, getGitHubSocialProof } from "~/utils/integrations/githubService";
+import UpcomingFeatures from "~/components/front/UpcomingFeatures";
+import Testimonials from "~/components/front/Testimonials";
+import { TestimonialDto } from "~/application/dtos/hero/TestimonialDto";
+import { getTestimonials } from "~/utils/services/marketingService";
+import Newsletter from "~/components/front/Newsletter";
 
 export type IndexLoaderData = {
   title: string;
@@ -20,12 +25,16 @@ export type IndexLoaderData = {
   isAdmin: boolean;
   i18n: Record<string, Language>;
   socialProof: any;
+  testimonials: TestimonialDto[];
+  currentRelease: { name: string | null; created_at: Date } | undefined;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   const { translations } = await i18nHelper(request);
   try {
-    const socialProof = await getGumroadProduct(process.env.GUMROAD_PRODUCT_ID ?? "");
+    const socialProof = await getGitHubSocialProof();
+    const currentRelease = await getGitHubCurrentRelease();
+    const testimonials = getTestimonials();
 
     const userSession = await getUserInfo(request);
     const user = await getUser(userSession.userId);
@@ -36,6 +45,8 @@ export let loader: LoaderFunction = async ({ request }) => {
       authenticated: userSession.userId?.length > 0,
       i18n: translations,
       socialProof,
+      currentRelease,
+      testimonials,
     };
     return json(data);
   } catch (e) {
@@ -58,17 +69,20 @@ export default function IndexRoute() {
         message={t("front.hero.prelaunch")}
         cta={{
           message: t("front.hero.cta"),
-          link: "https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access",
+          link: "https://alexandromg.gumroad.com/l/SaasRock",
         }}
       />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
         <Hero socialProof={data.socialProof} />
         <LogoClouds />
         <FeatureImages />
+        <Testimonials items={data.testimonials} socialProof={data.socialProof} />
         <Features />
-        <Pricing />
-        {/* <JoinNow className="relative z-20" /> */}
+        <UpcomingFeatures />
+        <PricingCTA currentRelease={data.currentRelease} />
+        <Newsletter />
         <Footer />
+        <Outlet />
       </div>
     </div>
   );

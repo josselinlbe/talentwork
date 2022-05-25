@@ -274,38 +274,38 @@ export default function AdminPricingRoute() {
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead>
                           <tr>
-                            <th className="px-1 py-2 bg-gray-50 text-center text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-center text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.order")}
                             </th>
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.title")}
                             </th>
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.model")}
                             </th>
                             {allFeatures.map((feature) => {
                               return (
                                 <td
                                   key={feature.name}
-                                  className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate"
+                                  className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate"
                                 >
                                   <div className="flex justify-center capitalize">{feature.name}</div>
                                 </td>
                               );
                             })}
-                            {/* <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            {/* <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.badge")}
                             </th> */}
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.plural")}
                             </th>
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.status")}
                             </th>
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("models.subscriptionProduct.serviceId")}
                             </th>
-                            <th className="px-1 py-2 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
+                            <th className="px-1 py-1 bg-gray-50 text-left text-xs leading-2 font-medium text-gray-500 tracking-wider truncate">
                               {t("shared.actions")}
                             </th>
                           </tr>
@@ -314,8 +314,8 @@ export default function AdminPricingRoute() {
                           {sortedItems().map((item, index) => {
                             return (
                               <tr key={index} className="text-gray-600">
-                                <td className="truncate px-1 py-2 text-sm leading-3 text-center">{item.order}</td>
-                                <td className="truncate px-1 py-2 text-sm leading-3">
+                                <td className="truncate px-1 py-1 text-sm leading-3 text-center">{item.order}</td>
+                                <td className="truncate px-1 py-1 text-sm leading-3">
                                   {t(item.title)}{" "}
                                   {item.badge && (
                                     <span className=" ml-1 bg-theme-50 text-theme-800 border border-theme-200 px-1 py-0.5 rounded-md text-xs">
@@ -323,11 +323,11 @@ export default function AdminPricingRoute() {
                                     </span>
                                   )}
                                 </td>
-                                <td className="truncate px-1 py-2 text-sm leading-3">{t("pricing." + PricingModel[item.model])}</td>
-                                {/* <td className="truncate px-1 py-2 text-sm leading-3">{item.badge && <div>{t(item.badge)}</div>}</td> */}
+                                <td className="truncate px-1 py-1 text-sm leading-3">{t("pricing." + PricingModel[item.model])}</td>
+                                {/* <td className="truncate px-1 py-1 text-sm leading-3">{item.badge && <div>{t(item.badge)}</div>}</td> */}
                                 {allFeatures.map((feature) => {
                                   return (
-                                    <td key={feature.name} className="truncate px-1 py-2 text-sm leading-3">
+                                    <td key={feature.name} className="truncate px-1 py-1 text-sm leading-3">
                                       <div className="flex justify-center">
                                         <PlanFeatureValue item={getFeatureValue(item, feature.name)} />
                                       </div>
@@ -335,7 +335,7 @@ export default function AdminPricingRoute() {
                                   );
                                 })}
 
-                                <td className="truncate px-1 py-2 text-sm leading-3">
+                                <td className="truncate px-1 py-1 text-sm leading-3">
                                   <div
                                     title={getTenantsSubscribed(item)
                                       .map((f) => f.name)
@@ -345,7 +345,7 @@ export default function AdminPricingRoute() {
                                     {getTenantsSubscribed(item).length} {t("shared.active")}
                                   </div>
                                 </td>
-                                <td className="truncate px-1 py-2 text-sm leading-3">
+                                <td className="truncate px-1 py-1 text-sm leading-3">
                                   {item.active ? (
                                     <>
                                       <span
@@ -363,7 +363,7 @@ export default function AdminPricingRoute() {
                                     t("shared.inactive")
                                   )}
                                 </td>
-                                <td className="truncate px-1 py-2 text-sm leading-3 text-theme-700">
+                                <td className="truncate px-1 py-1 text-sm leading-3 text-theme-700">
                                   {!item.stripeId ? (
                                     <>
                                       {!item.id ? (
@@ -385,7 +385,7 @@ export default function AdminPricingRoute() {
                                     </a>
                                   )}
                                 </td>
-                                <td className="px-1 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
+                                <td className="px-1 py-1 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
                                   <div className="flex items-center space-x-2">
                                     {item.id ? (
                                       <>

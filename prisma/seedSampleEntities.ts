@@ -1,4 +1,4 @@
-import { LinkedAccount, User, Employee } from "@prisma/client";
+import { LinkedAccount, User } from "@prisma/client";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import FakePdfBase64 from "~/components/ui/pdf/FakePdfBase64";
 import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
@@ -14,7 +14,7 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
   // await createSampleEntity_Contract(tenant1And2Relationship, user1.id, employees);
 }
 
-async function createSampleEntity_Contract(linkedAccount: LinkedAccount, createdByUserId: string, employees: (RowWithDetails | null)[]) {
+async function createSampleEntity_Contract(linkedAccount: LinkedAccount, createdByUserId: string) {
   const contractsEntity = await createEntity({
     name: "contract",
     slug: "contracts",
@@ -92,16 +92,6 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
           },
         ],
       },
-      employees: {
-        create: [
-          {
-            employeeId: employees[0]?.employeeId ?? "",
-          },
-          {
-            employeeId: employees[1]?.employeeId ?? "",
-          },
-        ],
-      },
     },
   });
 }
@@ -149,19 +139,19 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
       name: "firstName",
       title: "models.employee.firstName",
       type: PropertyType.TEXT,
-      isDynamic: false,
+      isDynamic: true,
     },
     {
       name: "lastName",
       title: "models.employee.lastName",
       type: PropertyType.TEXT,
-      isDynamic: false,
+      isDynamic: true,
     },
     {
       name: "email",
       title: "models.employee.email",
       type: PropertyType.TEXT,
-      isDynamic: false,
+      isDynamic: true,
       pattern: "[a-zA-Z0-9._%+-]+@[a-z0-9.-]+.[a-zA-Z]{2,4}",
     },
     {
@@ -187,6 +177,9 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
       });
     })
   );
+  const firstNameProperty = properties.find((f) => f.name === "firstName");
+  const lastNameProperty = properties.find((f) => f.name === "lastName");
+  const emailProperty = properties.find((f) => f.name === "email");
   const salaryProperty = properties.find((f) => f.name === "salary");
 
   const employee1 = await createRow({
@@ -196,19 +189,23 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     linkedAccountId: null,
     dynamicProperties: [
       {
+        propertyId: firstNameProperty?.id ?? "",
+        textValue: "David",
+      },
+      {
+        propertyId: lastNameProperty?.id ?? "",
+        textValue: "N. Crowell",
+      },
+      {
+        propertyId: emailProperty?.id ?? "",
+        textValue: "davidn.crowell@dayrep.com",
+      },
+      {
         propertyId: salaryProperty?.id ?? "",
         numberValue: 100,
       },
     ],
-    properties: {
-      employee: {
-        create: {
-          firstName: "David",
-          lastName: "N. Crowell",
-          email: "davidn.crowell@dayrep.com",
-        },
-      },
-    },
+    properties: null,
     dynamicRows: [],
   });
   // So both employees have different createdAt value
@@ -220,19 +217,23 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     linkedAccountId: null,
     dynamicProperties: [
       {
+        propertyId: firstNameProperty?.id ?? "",
+        textValue: "Sonny",
+      },
+      {
+        propertyId: lastNameProperty?.id ?? "",
+        textValue: "L. Hill",
+      },
+      {
+        propertyId: emailProperty?.id ?? "",
+        textValue: "sonnyl.hill@rhyta.com",
+      },
+      {
         propertyId: salaryProperty?.id ?? "",
         numberValue: 200,
       },
     ],
-    properties: {
-      employee: {
-        create: {
-          firstName: "Sonny",
-          lastName: "L. Hill",
-          email: "sonnyl.hill@rhyta.com",
-        },
-      },
-    },
+    properties: null,
     dynamicRows: [],
   });
 

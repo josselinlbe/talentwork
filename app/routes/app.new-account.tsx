@@ -53,7 +53,7 @@ export const action: ActionFunction = async ({ request }) => {
   await createTenantUser({
     tenantId: tenant.id,
     userId: user.id,
-    role: TenantUserType.OWNER,
+    type: TenantUserType.OWNER,
   });
 
   await updateUserDefaultTenantId({ defaultTenantId: tenant.id }, user.id);

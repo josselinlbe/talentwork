@@ -69,9 +69,9 @@ export default function EntitiesTable({ items }: Props) {
     {
       title: t("models.entity.hasApi"),
     },
-    {
-      title: t("models.entity.requiresLinkedAccounts"),
-    },
+    // {
+    //   title: t("models.entity.requiresLinkedAccounts"),
+    // },
     {
       title: t("shared.actions"),
     },
@@ -187,7 +187,7 @@ export default function EntitiesTable({ items }: Props) {
                           return (
                             <tbody key={idx} className="bg-white divide-y divide-gray-200">
                               <tr className=" text-gray-600">
-                                <td className="w-full px-2 py-2 whitespace-nowrap text-gray-700 text-sm">
+                                <td className="px-2 py-2 whitespace-nowrap text-gray-700 text-sm">
                                   <div className="flex items-center space-x-3">
                                     {/* <div className="w-10 h-10 rounded-md p-2 border bg-gray-50 border-gray-200 shadow-sm flex items-center justify-center">
                                       {item.icon ? (
@@ -219,10 +219,10 @@ export default function EntitiesTable({ items }: Props) {
                                   </div>
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">{item.prefix}</td>
-                                <td className="px-2 py-2 whitespace-nowrap text-sm max-w-sm truncate">
+                                <td className="w-full px-2 py-2 whitespace-nowrap text-gray-700 text-sm">
                                   {item.properties.filter((f) => !f.isDefault).length > 0 ? (
                                     <Link
-                                      className="  pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate"
+                                      className="pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate max-w-sm"
                                       to={"/admin/entities/" + item.slug + "/properties"}
                                     >
                                       {item.properties
@@ -232,7 +232,7 @@ export default function EntitiesTable({ items }: Props) {
                                     </Link>
                                   ) : (
                                     <Link
-                                      className="max-w-sm pb-1 border-b border-red-400 border-dashed hover:border-dotted truncate"
+                                      className="pb-1 border-b border-red-400 border-dashed hover:border-dotted truncate max-w-sm"
                                       to={"/admin/entities/" + item.slug + "/properties"}
                                     >
                                       {t("shared.notSet")}
@@ -240,7 +240,9 @@ export default function EntitiesTable({ items }: Props) {
                                   )}
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
-                                  <Link to={"/admin/entities/" + item.slug + "/rows"}>{item._count.rows}</Link>
+                                  <Link to={"/admin/entities/" + item.slug + "/rows"} className="border-b border-accent-400 border-dashed hover:border-dotted">
+                                    {item._count.rows}
+                                  </Link>
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
                                   <span>{item.isFeature ? <CheckIcon className="h-4 w-4 text-teal-500" /> : <XIcon className="h-4 w-4 text-gray-400" />}</span>
@@ -253,7 +255,7 @@ export default function EntitiesTable({ items }: Props) {
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
                                   <span>{item.hasApi ? <CheckIcon className="h-4 w-4 text-teal-500" /> : <XIcon className="h-4 w-4 text-gray-400" />}</span>
                                 </td>
-                                <td className="px-2 py-2 whitespace-nowrap text-sm">
+                                {/* <td className="px-2 py-2 whitespace-nowrap text-sm">
                                   <span>
                                     {item.requiresLinkedAccounts ? (
                                       <CheckIcon className="h-4 w-4 text-teal-500" />
@@ -261,7 +263,7 @@ export default function EntitiesTable({ items }: Props) {
                                       <XIcon className="h-4 w-4 text-gray-400" />
                                     )}
                                   </span>
-                                </td>
+                                </td> */}
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
                                   <ButtonTertiary to={"/admin/entities/" + item.slug + "/details"}>{t("shared.edit")}</ButtonTertiary>
                                 </td>

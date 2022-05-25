@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await createTenantUser({
       tenantId: invitation.tenantId,
       userId: user.id,
-      role: invitation.role,
+      type: invitation.type,
     });
 
     await sendEmail(invitation.email, "welcome", {
@@ -92,7 +92,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await createTenantUser({
       tenantId: invitation.tenantId,
       userId: existingUser.id,
-      role: invitation.role,
+      type: invitation.type,
     });
 
     const userSession = await setLoggedUser(existingUser);

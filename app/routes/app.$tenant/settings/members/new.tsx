@@ -47,7 +47,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const email = form.get("email")?.toString().toLowerCase().trim() ?? "";
   const firstName = form.get("first-name")?.toString() ?? "";
   const lastName = form.get("last-name")?.toString() ?? "";
-  const role = Number(form.get("tenant-user-role"));
+  const type = Number(form.get("tenant-user-type"));
 
   const user = await getUserByEmail(email);
   if (user) {
@@ -63,7 +63,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     email,
     firstName,
     lastName,
-    role,
+    type,
   });
   if (!invitation) {
     return badRequest({

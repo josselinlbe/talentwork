@@ -42,7 +42,6 @@ export async function createProperty(data: {
   if (data.name.includes(" ")) {
     throw Error("Property names cannot contain spaces");
   }
-  console.log({ data });
   if (data.name.includes("-")) {
     throw Error("Property names cannot contain: -");
   }

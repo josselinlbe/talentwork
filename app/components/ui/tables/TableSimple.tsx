@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLoaderData, useLocation, useNavigate, useSearchParams, useSubmit, useTransition } from "remix";
 import Constants from "~/application/Constants";
@@ -16,7 +16,7 @@ export type Header<T> = {
   type?: InputType;
   value: (item: T) => any;
   href?: (item: T) => any | undefined;
-  formattedValue?: (item: T) => string;
+  formattedValue?: (item: T) => string | ReactNode;
   options?: { name: string; value: number | string; disabled?: boolean }[];
   setValue?: (value: any, idx: number) => void;
   editable?: (item: T) => boolean;

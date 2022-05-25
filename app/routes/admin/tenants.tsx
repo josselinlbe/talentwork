@@ -1,21 +1,19 @@
 import { useTranslation } from "react-i18next";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
-import { adminGetAllTenants, TenantWithDetails } from "~/utils/db/tenants.db.server";
+import { adminGetAllTenantsWithUsage, TenantWithUsage } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
-import TenantsTableWithReactTable from "~/components/core/tenants/TenantsTableWithReactTable";
+import { useAdminData } from "~/utils/data/useAdminData";
 
 type LoaderData = {
   title: string;
-  items: TenantWithDetails[];
+  items: TenantWithUsage[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
-  const items = await adminGetAllTenants();
-  await loadTenantsSubscriptionAndUsage(items);
+  const items = await adminGetAllTenantsWithUsage();
 
   const data: LoaderData = {
     title: `${t("models.tenant.plural")} | ${process.env.APP_NAME}`,
@@ -30,6 +28,7 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function AdminTenantsRoute() {
   const data = useLoaderData<LoaderData>();
+  const adminData = useAdminData();
   const { t } = useTranslation();
 
   return (

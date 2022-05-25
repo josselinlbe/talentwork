@@ -1,47 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@remix-run/react";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
-import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
-import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
-import { TenantWithDetails } from "~/utils/db/tenants.db.server";
 import InputSearch from "~/components/ui/input/InputSearch";
+import TableSimple, { Header } from "~/components/ui/tables/TableSimple";
+import { TenantWithUsage } from "~/utils/db/tenants.db.server";
 
 interface Props {
-  items: TenantWithDetails[];
+  items: TenantWithUsage[];
   withSearch: boolean;
 }
 export default function TenantsTable({ items, withSearch = true }: Props) {
   const { t } = useTranslation();
 
   const [searchInput, setSearchInput] = useState("");
-  const headers = [
-    {
+  const [headers, setHeaders] = useState<Header<TenantWithUsage>[]>([]);
+
+  useEffect(() => {
+    const headers: Header<TenantWithUsage>[] = [];
+    headers.push({
+      name: "tenant",
       title: t("models.tenant.object"),
-    },
-    {
+      value: (i) => i.name,
+    });
+    headers.push({
+      name: "slug",
       title: t("shared.slug"),
-    },
-    {
+      value: (i) => i.slug,
+      href: (i) => `/app/${i.slug}`,
+    });
+    headers.push({
+      name: "subscription",
       title: t("admin.tenants.subscription.title"),
-    },
-    {
+      value: (i) => "",
+      formattedValue: (item) => (
+        <span>
+          {item.subscription?.subscriptionPrice?.subscriptionProduct ? (
+            <>
+              {t(item.subscription?.subscriptionPrice?.subscriptionProduct?.title)}
+              {" - "}
+              <span className=" ">
+                ({item.subscription?.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
+              </span>
+            </>
+          ) : (
+            <span className="italic text-gray-500">{t("settings.subscription.noSubscription")}</span>
+          )}
+        </span>
+      ),
+    });
+    headers.push({
+      name: "users",
       title: t("models.user.plural"),
-    },
-    {
-      title: t("models.contract.plural"),
-    },
-    {
-      title: t("models.employee.plural"),
-    },
-    {
+      value: (i) => i._count.users,
+    });
+    headers.push({
+      name: "rows",
+      title: t("models.entity.rows"),
+      value: (i) => i._count.rows,
+    });
+    // entities.forEach((entity) => {
+    //   headers.push({
+    //     name: entity.name,
+    //     title: t(entity.titlePlural),
+    //     value: (i) => "0",
+    //   });
+    // });
+    headers.push({
+      name: "createdAt",
       title: t("shared.createdAt"),
-    },
-    {
-      title: "", // actions
-    },
-  ];
+      value: (i) => i.createdAt,
+      formattedValue: (item) => (
+        <time dateTime={DateUtils.dateYMDHMS(item.createdAt)} title={DateUtils.dateYMDHMS(item.createdAt)}>
+          {DateUtils.dateAgo(item.createdAt)}
+        </time>
+      ),
+    });
+    setHeaders(headers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const orderedItems = () => {
     if (!filteredItems()) {
@@ -62,113 +99,23 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
     }
     return items.filter((f) => f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()));
   };
-  function billingPeriodName(item: TenantWithDetails) {
+  function billingPeriodName(item: TenantWithUsage) {
     return t("pricing." + SubscriptionBillingPeriod[item.subscription?.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY] + "Short");
   }
 
   return (
     <div className="space-y-2">
       {withSearch && <InputSearch value={searchInput} setValue={setSearchInput} />}
-      {(() => {
-        if (orderedItems().length === 0) {
-          return (
-            <div>
-              <EmptyState
-                className="bg-white"
-                captions={{
-                  thereAreNo: t("app.tenants.empty"),
-                }}
-              />
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <div>
-                <div className="flex flex-col">
-                  <div className="overflow-x-auto">
-                    <div className="py-2 align-middle inline-block min-w-full">
-                      <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              {headers.map((header, idx) => {
-                                return (
-                                  <th
-                                    key={idx}
-                                    scope="col"
-                                    className="text-xs px-3 py-2 text-left font-medium text-gray-500 tracking-wider select-none truncate"
-                                  >
-                                    <div className="flex items-center space-x-1 text-gray-500">
-                                      <div>{header.title}</div>
-                                    </div>
-                                  </th>
-                                );
-                              })}
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
-                            {orderedItems().map((item, idx) => {
-                              return (
-                                <tr key={idx}>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.name}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <Link to={`/app/${item.slug}`} className="underline text-gray-800">
-                                      {item.slug}
-                                    </Link>
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <div className="flex space-x-1">
-                                      <span>
-                                        {item.subscription?.subscriptionPrice?.subscriptionProduct ? (
-                                          <>
-                                            {t(item.subscription?.subscriptionPrice?.subscriptionProduct?.title)}
-                                            {" - "}
-                                            <span className=" ">
-                                              ({item.subscription?.subscriptionPrice?.price ?? "-"}/{billingPeriodName(item)})
-                                            </span>
-                                          </>
-                                        ) : (
-                                          <span className="italic text-gray-500">{t("settings.subscription.noSubscription")}</span>
-                                        )}
-                                      </span>
-                                    </div>
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item.usersCount}
-                                    <span className=" text-gray-400">/{item.subscription?.subscriptionPrice?.subscriptionProduct?.maxUsers ?? "-"}</span>
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item.contractsCount}
-                                    <span className=" text-gray-400">
-                                      /{item.subscription?.subscriptionPrice?.subscriptionProduct?.monthlyContracts ?? "-"}
-                                    </span>
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.employeesCount === 0 ? "-" : item.employeesCount}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <time dateTime={DateUtils.dateYMDHMS(item.createdAt)} title={DateUtils.dateYMDHMS(item.createdAt)}>
-                                      {DateUtils.dateAgo(item.createdAt)}
-                                    </time>
-                                  </td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    <div className="flex items-center space-x-2">
-                                      <ButtonTertiary to={`/admin/tenants/${item.id}`}>{t("admin.tenants.overview")}</ButtonTertiary>
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        }
-      })()}
+      <TableSimple
+        items={orderedItems()}
+        headers={headers}
+        actions={[
+          {
+            title: t("admin.tenants.overview"),
+            onClickRoute: (_, item) => `/admin/tenants/${item.id}`,
+          },
+        ]}
+      />
     </div>
   );
 }

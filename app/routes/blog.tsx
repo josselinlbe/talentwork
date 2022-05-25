@@ -54,12 +54,20 @@ export default function BlogRoute() {
                   breakpoint="sm"
                   tabs={[
                     {
-                      name: "Blog",
+                      name: t("blog.title"),
                       routePath: "/blog",
                     },
                     {
-                      name: "Changelog",
+                      name: t("front.changelog.title"),
                       routePath: "/changelog",
+                    },
+                    {
+                      name: t("front.newsletter.title"),
+                      routePath: "/newsletter",
+                    },
+                    {
+                      name: t("front.contact.title"),
+                      routePath: "/contact",
                     },
                   ]}
                 />

@@ -12,8 +12,8 @@ interface Props {
 export default function InfoBanner({ title = "Note", text = "", redirect, children }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="bg-accent-50 mb-2 rounded-md border border-accent-300 mt-4 not-prose">
-      <div className="rounded-md bg-accent-50 p-4">
+    <div className="bg-accent-100 mb-2 rounded-md border border-accent-300 mt-4 not-prose">
+      <div className="rounded-md p-4">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-accent-400" viewBox="0 0 20 20" fill="currentColor">

@@ -359,7 +359,12 @@ export default function PricingPlanForm({ plans, item }: Props) {
               </div>
 
               <div className="">
-                <ToggleBillingPeriod billingPeriod={billingPeriod} toggleBillingPeriod={toggleBillingPeriod} yearlyDiscount={getYearlyDiscount()} />
+                <ToggleBillingPeriod
+                  className="mt-10"
+                  billingPeriod={billingPeriod}
+                  toggleBillingPeriod={toggleBillingPeriod}
+                  yearlyDiscount={getYearlyDiscount()}
+                />
               </div>
               <div className="mt-6">
                 <Plan

@@ -1,4 +1,5 @@
-import BrandLogo from "../icons/BrandLogo";
+import { useTranslation } from "react-i18next";
+import BrandIcon from "../icons/BrandIcon";
 
 const navigation = {
   features1: [
@@ -6,18 +7,16 @@ const navigation = {
     { name: "App Portal", href: "/docs/features/app-portal" },
     { name: "Authentication", href: "/docs/features/authentication" },
     { name: "Subscriptions", href: "/docs/features/subscriptions" },
-  ],
-  features2: [
     { name: "Entity Builder", href: "/docs/features/entity-builder" },
     { name: "API", href: "/docs/features/api" },
     { name: "Webhooks", href: "/docs/features/webhooks" },
-    { name: "Components", href: "/docs/components" },
   ],
   application: [
-    { name: "Contact", href: "/contact" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Sign up", href: "/register" },
     { name: "Sign in", href: "/login" },
+    { name: "Sign up", href: "/register" },
+    { name: "Contact", href: "/contact" },
+    { name: "Newsletter", href: "/newsletter" },
     { name: "Terms", href: "/terms-and-conditions" },
     { name: "Privacy", href: "/privacy-policy" },
   ],
@@ -28,6 +27,7 @@ const navigation = {
     { name: "Changelog", href: "/changelog" },
     { name: "License", href: "/docs/license" },
     { name: "Community", href: "/docs/community" },
+    { name: "Tutorials", href: "/docs/learning-center" },
   ],
   social: [
     {
@@ -68,7 +68,8 @@ const navigation = {
   ],
 };
 
-export default function Example() {
+export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
@@ -77,8 +78,8 @@ export default function Example() {
       <div className="max-w-7xl mx-auto py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
-            <BrandLogo className="h-10 w-auto" />
-            <p className="text-gray-500 text-base">SaasRock, a low-code & extensible framework with out-of-the-box SaaS features.</p>
+            <BrandIcon className="h-10 w-auto" />
+            <p className="text-gray-500 text-base">{t("front.hero.headline2")}</p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
                 <a key={item.name} href={item.href} className="text-gray-400 hover:text-gray-500">
@@ -88,58 +89,42 @@ export default function Example() {
               ))}
             </div>
           </div>
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Features</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.features1.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Advanced Features</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.features2.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="mt-12 grid grid-cols-3 gap-8 xl:mt-0 xl:col-span-2">
+            <div>
+              <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Core Features</h3>
+              <ul className="mt-4 space-y-4">
+                {navigation.features1.map((item) => (
+                  <li key={item.name}>
+                    <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Demo</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.application.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Boilerplate</h3>
-                <ul className="mt-4 space-y-4">
-                  {navigation.product.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Demo</h3>
+              <ul className="mt-4 space-y-4">
+                {navigation.application.map((item) => (
+                  <li key={item.name}>
+                    <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-0">
+              <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Product</h3>
+              <ul className="mt-4 space-y-4">
+                {navigation.product.map((item) => (
+                  <li key={item.name}>
+                    <a href={item.href} className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

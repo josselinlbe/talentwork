@@ -5,6 +5,7 @@ import { useState } from "react";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
+import Tabs from "~/components/ui/tabs/Tabs";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
@@ -65,6 +66,29 @@ export default function ContactRoute() {
                 <div className="text-center">
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.contact.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500">{t("front.contact.headline")}</p>
+                </div>
+                <div className="flex justify-center mt-6">
+                  <Tabs
+                    breakpoint="sm"
+                    tabs={[
+                      {
+                        name: t("blog.title"),
+                        routePath: "/blog",
+                      },
+                      {
+                        name: t("front.changelog.title"),
+                        routePath: "/changelog",
+                      },
+                      {
+                        name: t("front.newsletter.title"),
+                        routePath: "/newsletter",
+                      },
+                      {
+                        name: t("front.contact.title"),
+                        routePath: "/contact",
+                      },
+                    ]}
+                  />
                 </div>
                 <div className="mt-12">
                   {!data.actionUrl && <WarningBanner title="Not set" text={t("front.contact.setup")} />}

@@ -15,6 +15,7 @@ import { db } from "~/utils/db.server";
 import bcrypt from "bcryptjs";
 import { i18nHelper } from "~/locale/i18n.utils";
 import supportedLocales from "~/locale/supportedLocales";
+import { deleteUserWithItsTenants } from "~/utils/services/userService";
 
 type LoaderData = {
   title: string;
@@ -153,7 +154,13 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
 
-      await deleteUser(user.id);
+      try {
+        await deleteUserWithItsTenants(user.id);
+      } catch (e: any) {
+        return badRequest({
+          deleteError: e,
+        });
+      }
 
       return redirect("/login");
     }

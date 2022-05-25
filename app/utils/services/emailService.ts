@@ -1,5 +1,7 @@
 import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
 import emailTemplates from "~/application/emails/emailTemplates.server";
+import UrlUtils from "../app/UrlUtils";
+import { db } from "../db.server";
 import { createPostmarkTemplate, deletePostmarkTemplate, getPostmarkTemplates } from "../email.server";
 
 export async function getEmailTemplates() {
@@ -38,4 +40,23 @@ export async function createEmailTemplates(templates: EmailTemplate[], alias?: s
 
 export async function deleteEmailTemplate(alias: string) {
   return await deletePostmarkTemplate(alias);
+}
+
+export async function getAvailableTenantSlug(name: string) {
+  let slug = UrlUtils.slugify(name);
+  let tries = 1;
+  do {
+    const existingSlug = await db.tenant.findFirst({
+      where: {
+        slug,
+      },
+    });
+    if (existingSlug !== null) {
+      slug = UrlUtils.slugify(name) + tries.toString();
+      tries++;
+    } else {
+      break;
+    }
+  } while (true);
+  return slug;
 }

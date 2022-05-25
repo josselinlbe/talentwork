@@ -1,4 +1,4 @@
-import { Row, User, Tenant, LinkedAccount, Contract, Employee, RowValue, ApiKey, Media } from "@prisma/client";
+import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, Media } from "@prisma/client";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import { db } from "../../db.server";
@@ -19,10 +19,9 @@ export type RowWithDetails = Row & {
         clientTenant: Tenant;
       })
     | null;
-  contract: Contract | null;
-  employee: Employee | null;
   values: RowValueWithDetails[];
   details: RowWithValues[];
+  contract: Contract | null;
 };
 
 export const includeRowDetails = {
@@ -38,7 +37,6 @@ export const includeRowDetails = {
     },
   },
   contract: true,
-  employee: true,
   values: {
     include: {
       relatedRow: {
@@ -302,7 +300,6 @@ export async function deleteRow(id: string) {
     where: { id },
     include: {
       contract: true,
-      employee: true,
       logs: true,
       values: true,
     },

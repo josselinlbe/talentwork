@@ -167,7 +167,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         error: "Invalid price: " + priceId,
       });
     }
-    const session = await createStripeSession(tenantUrl.tenantId, tenantSubscription.stripeCustomerId, price.stripeId, quantity);
+    const session = await createStripeSession(params.tenant ?? "", tenantSubscription.stripeCustomerId, price.stripeId, quantity);
     if (!session || !session.url) {
       return badRequest({
         error: "Could not update subscription",

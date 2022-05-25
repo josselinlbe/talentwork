@@ -138,7 +138,7 @@
       "privacy": "Política de Privacidad"
     },
     "hero": {
-      "headline1": "Construye tu SaaS Fácilmente",
+      "headline1": "Construye tu propio SaaS",
       "headline2": "Framework de bajo código & extensible con funcionalidades para SaaS.",
       "headline3": "Descarga el código y personaliza: Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
       "subheadline1": "",
@@ -151,11 +151,20 @@
       "contact": "Contáctanos",
       "startHint": "Este demo está alojado en Vercel + Supabase.",
       "prelaunch": "Obtener acceso pre-lanzamiento 🚀",
-      "cta": "Lo quiero!"
+      "cta": "Obtener early-access",
+      "repo": "miembros del repositorio privado"
     },
     "pricing": {
       "title": "Precios",
       "headline": "Planes diseñados para organizaciones de todos los tamaños."
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "headline": "Enviaremos correos de funcionalidad nueva, bug fixes, artículos y más.",
+      "subscribe": "Suscribirse",
+      "subscribing": "Suscribiéndose",
+      "subscribed": "¡Te has suscrito!",
+      "checkEmail": "¡Suscrito! Revisa tu correo electrónico para confirmar."
     },
     "contact": {
       "title": "Contáctanos",
@@ -171,7 +180,7 @@
     },
     "changelog": {
       "title": "Changelog",
-      "headline": "Mantente actualizado con el estatus de los issues en el repositorio privado del Remix SaaS kit."
+      "headline": "Mantente informado de la última funcionalidad y bug fixes."
     },
     "faq": {
       "title": "Preguntas más frecuentes",
@@ -1019,7 +1028,7 @@
   },
   "blog": {
     "title": "Blog",
-    "headline": "Lee las últimas noticias de Remix.",
+    "headline": "Lee las últimas noticias de la plantilla para aplicaciones SaaS con Remix.",
     "published": "Publicado",
     "draft": "Borrador",
     "thisIsADraft": "Este es un borrador",

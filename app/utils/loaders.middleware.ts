@@ -8,6 +8,7 @@ import { getUser } from "./db/users.db.server";
 import { getTenantUrl } from "./services/urlService";
 import { getUserInfo } from "./session.server";
 import { Params } from "react-router";
+import { EntityWithDetails } from "./db/entities/entities.db.server";
 
 export async function requireAdminUser(request: Request) {
   const userInfo = await getUserInfo(request);
@@ -29,7 +30,7 @@ export async function requireOwnerOrAdminRole(request: Request, params: Params) 
   }
 }
 
-export async function requireAuthorization(currentPath: string, currentRole: TenantUserType, params: Params, entities: Entity[]) {
+export async function requireAuthorization(currentPath: string, currentRole: TenantUserType, params: Params, entities: EntityWithDetails[]) {
   let foundItem: SideBarItem | undefined;
   AppSidebar(params, entities).forEach((f) => {
     f.items?.forEach((item) => {

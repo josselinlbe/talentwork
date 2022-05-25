@@ -72,7 +72,7 @@ export default function Plans({ items }: Props) {
     <div>
       <div className="container mx-auto antialiased">
         <main className="lg:mx-4">
-          <ToggleBillingPeriod billingPeriod={billingPeriod} toggleBillingPeriod={toggleBillingPeriod} yearlyDiscount={getYearlyDiscount()} />
+          <ToggleBillingPeriod className="mt-10" billingPeriod={billingPeriod} toggleBillingPeriod={toggleBillingPeriod} yearlyDiscount={getYearlyDiscount()} />
 
           <div className="space-y-6">
             {testProducts && <WarningBanner redirect="/admin/setup/pricing" title={t("shared.warning")} text={t("admin.pricing.thesePricesAreFromFiles")} />}

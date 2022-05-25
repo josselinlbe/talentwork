@@ -22,6 +22,7 @@ const slugify = (str: string, max: number = 25) => {
   let value = str
     .toLowerCase()
     .trim()
+    .replace("/", "-")
     .replace(/[^\w\s-]/g, "")
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");

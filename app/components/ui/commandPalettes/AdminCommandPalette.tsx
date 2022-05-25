@@ -75,14 +75,6 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
             toPath: "/app",
           });
           items.push({
-            title: `${t("app.commands.tenants.edit")}`,
-            description: ``,
-            command: "V",
-            bgClassName: "bg-gray-600",
-            textClassName: "text-white",
-            toPath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
-          });
-          items.push({
             title: `${t("app.commands.tenants.create")}`,
             description: ``,
             command: "+",

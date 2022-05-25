@@ -64,7 +64,7 @@ export default function Hero() {
         <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
           <div className="rounded-md shadow">
             <a
-              href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix"
+              href="https://alexandromg.gumroad.com/l/SaasRock"
               target="_blank"
               rel="noreferrer"
               className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md bg-accent-500 text-theme-50 hover:bg-accent-600 md:py-4 md:text-lg md:px-10"

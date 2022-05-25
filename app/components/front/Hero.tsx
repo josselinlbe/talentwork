@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { Link } from "remix";
 import Carousel from "../ui/images/Carousel";
 import Header from "./Header";
-import { SocialProof } from "~/application/dtos/hero/SocialProof";
+import { SocialProofDto } from "~/application/dtos/hero/SocialProofDto";
 import NumberUtils from "~/utils/shared/NumberUtils";
 
 interface Props {
-  socialProof?: SocialProof | undefined;
+  socialProof?: SocialProofDto | undefined;
 }
 export default function Hero({ socialProof }: Props) {
   const { t } = useTranslation();
@@ -64,7 +64,7 @@ export default function Hero({ socialProof }: Props) {
                 <div className="mt-2 mx-auto lg:mx-0 sm:flex justify-center md:mt-2">
                   <div className="rounded-md shadow">
                     <a
-                      href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access"
+                      href="https://alexandromg.gumroad.com/l/SaasRock"
                       target="_blank"
                       rel="noreferrer"
                       className="w-full flex items-center space-x-2 justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md bg-theme-500 text-theme-50 hover:bg-theme-600 md:py-4 md:text-lg md:px-7"
@@ -73,8 +73,8 @@ export default function Hero({ socialProof }: Props) {
                     </a>
                   </div>
                   {/* <script src="https://gumroad.com/js/gumroad.js"></script>
-                  <a className="gumroad-button align-middle" href="https://alexandromg.gumroad.com/l/SaasFrontends-Remix/alpha-access?wanted=true">
-                    Get code on
+                  <a className="gumroad-button align-middle" href="https://alexandromg.gumroad.com/l/SaasRock">
+                    Subscribe
                   </a> */}
 
                   <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
@@ -88,15 +88,9 @@ export default function Hero({ socialProof }: Props) {
                 </div>
 
                 <div className="mt-8 space-y-3">
-                  {socialProof && (
+                  {socialProof?.totalMembers && (
                     <div className=" text-gray-500">
-                      {NumberUtils.intFormat(socialProof.totalSales)} private repository members + {socialProof.totalDownloads}{" "}
-                      <span className="italictext-sm">
-                        <a className=" border-b border-theme-400 border-dashed" href="https://twitter.com/AlexandroMtzG/status/1508441611428143111">
-                          v0.0.1
-                        </a>
-                      </span>{" "}
-                      downloads{" "}
+                      {NumberUtils.intFormat(socialProof.totalMembers)} {t("front.hero.repo")}
                     </div>
                   )}
                   <Link

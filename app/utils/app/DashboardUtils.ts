@@ -14,3 +14,27 @@ export function getStatChangeType(added: number, total: number): StatChange {
   }
   return change > 0 ? StatChange.Increase : StatChange.Decrease;
 }
+
+export function tenantCondition(tenantId: string): {
+  tenantId: string;
+  linkedAccount: {
+    OR: {
+      providerTenantId?: string;
+      clientTenantId?: string;
+    }[];
+  };
+} {
+  return {
+    tenantId,
+    linkedAccount: {
+      OR: [
+        {
+          providerTenantId: tenantId,
+        },
+        {
+          clientTenantId: tenantId,
+        },
+      ],
+    },
+  };
+}

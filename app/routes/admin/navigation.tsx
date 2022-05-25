@@ -9,6 +9,7 @@ import { json, LoaderFunction, MetaFunction, useParams } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import InputSearch from "~/components/ui/input/InputSearch";
+import { useRootData } from "~/utils/data/useRootData";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
@@ -25,6 +26,7 @@ export default function AdminNavigationRoute() {
   const { t } = useTranslation();
   const params = useParams();
   const adminData = useAdminData();
+  const rootData = useRootData();
 
   const [items, setItems] = useState<SideBarItem[]>([]);
   const [tenantUserTypes, setTenantUserTypes] = useState<TenantUserType[]>([]);
@@ -37,7 +39,7 @@ export default function AdminNavigationRoute() {
         setItems((items) => [...items, item]);
       });
     });
-    AppSidebar(params, adminData.entities).forEach((app) => {
+    AppSidebar(params, adminData.entities, rootData.debug).forEach((app) => {
       app.items?.forEach((item) => {
         setItems((items) => [...items, item]);
       });

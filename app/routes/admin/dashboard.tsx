@@ -1,14 +1,13 @@
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { AdminLoaderData, loadAdminData } from "~/utils/data/useAdminData";
+import { AdminLoaderData, loadAdminData, useAdminData } from "~/utils/data/useAdminData";
 import { DashboardStats } from "~/components/ui/stats/DashboardStats";
 import { getAdminDashboardStats } from "~/utils/services/adminDashboardService";
 import { getSetupSteps } from "~/utils/services/setupService";
 import SetupSteps from "~/components/admin/SetupSteps";
 import ProfileBanner from "~/components/app/ProfileBanner";
-import { adminGetAllTenants, TenantWithDetails } from "~/utils/db/tenants.db.server";
+import { adminGetAllTenants, adminGetAllTenantsWithUsage, TenantWithDetails, TenantWithUsage } from "~/utils/db/tenants.db.server";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
-import { loadTenantsSubscriptionAndUsage } from "~/utils/services/tenantsService";
 import { SetupItem } from "~/application/dtos/setup/SetupItem";
 import { Stat } from "~/application/dtos/stats/Stat";
 
@@ -17,7 +16,7 @@ type LoaderData = AdminLoaderData & {
   stats: Stat[];
   // entitiesStats: Stat[];
   setupSteps: SetupItem[];
-  tenants: TenantWithDetails[];
+  tenants: TenantWithUsage[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -27,8 +26,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   const stats = await getAdminDashboardStats(30);
   // const entitiesStats = await getCustomEntitiesDashboardStats(30);
   const setupSteps = await getSetupSteps();
-  const tenants = await adminGetAllTenants();
-  await loadTenantsSubscriptionAndUsage(tenants);
+  const tenants = await adminGetAllTenantsWithUsage();
 
   const data: LoaderData = {
     ...adminData,
@@ -47,6 +45,7 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function AdminNavigationRoute() {
   const data = useLoaderData<LoaderData>();
+  const adminData = useAdminData();
 
   return (
     <main className="flex-1 relative pb-8 z-0 overflow-y-auto">

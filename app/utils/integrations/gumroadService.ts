@@ -1,4 +1,4 @@
-import { SocialProof } from "~/application/dtos/hero/SocialProof";
+import { SocialProofDto } from "~/application/dtos/hero/SocialProofDto";
 
 export async function getGumroadProduct(id: string) {
   try {
@@ -11,11 +11,8 @@ export async function getGumroadProduct(id: string) {
     });
     const { product } = await data.json();
     // I had to add this manually since GumRoad API doesn't provide the total sales by paid customers
-    const currentCustomers = Number(process.env.GUMROAD_CURRENT_CUSTOMERS);
-    const currentDownloads = Number(process.env.GUMROAD_CURRENT_DOWNLOADS);
-    const socialProof: SocialProof = {
-      totalDownloads: Number(product.sales_count) - currentCustomers,
-      totalSales: Number(product.sales_count) - currentDownloads + currentCustomers,
+    const socialProof: SocialProofDto = {
+      totalDownloads: Number(product.sales_count),
     };
     return socialProof;
   } catch (e) {

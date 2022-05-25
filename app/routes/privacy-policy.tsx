@@ -33,10 +33,10 @@ export default function PrivacyPolicyRoute() {
                   {t("front.privacy.title")}
                 </h1>
                 <p>
-                  Your privacy is important to us. It is SaasFrontends&#39; policy to respect your privacy and comply with any applicable law and regulation
+                  Your privacy is important to us. It is SaasRock&#39; policy to respect your privacy and comply with any applicable law and regulation
                   regarding any personal information we may collect about you, including across our website,{" "}
-                  <a className="text-black dark:text-white" href="https://saasfrontends.com">
-                    https://saasfrontends.com
+                  <a className="text-black dark:text-white" href="https://saasrock.com">
+                    https://saasrock.com
                   </a>
                   , and other sites we own and operate.
                 </p>
@@ -182,7 +182,7 @@ export default function PrivacyPolicyRoute() {
                 <p>
                   Alexandro Martinez
                   <br />
-                  contact@saasfrontends.com
+                  contact@saasrock.com
                 </p>
               </div>
             </div>

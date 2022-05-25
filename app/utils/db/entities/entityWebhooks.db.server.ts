@@ -71,7 +71,8 @@ export async function callEntityWebhooks(logId: string, entityId: string, action
       if (webhook.endpoint) {
         const response = await fetch(webhook.endpoint, {
           method: webhook.method,
-          body,
+          body: JSON.stringify(body),
+          headers: { "Content-Type": "application/json" },
         });
         // eslint-disable-next-line no-console
         console.log({ response });

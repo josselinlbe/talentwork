@@ -1,5 +1,6 @@
 import { TenantUserType } from "../enums/tenants/TenantUserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
+import { ReactNode } from "react";
 
 export interface SideBarItem {
   title: string;
@@ -11,6 +12,6 @@ export interface SideBarItem {
   adminOnly?: boolean;
   tenantUserTypes?: TenantUserType[];
   items?: SideBarItem[];
-  isDemo?: boolean;
+  side?: ReactNode;
   exact?: boolean;
 }

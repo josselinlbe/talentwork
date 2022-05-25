@@ -276,7 +276,7 @@ export default function EmailsRoute() {
                                 <th
                                   key={idx}
                                   scope="col"
-                                  className="text-xs px-1.5 py-2 max-w-xs text-left font-medium text-gray-500 tracking-wider select-none truncate"
+                                  className="text-xs px-1.5 py-1 max-w-xs text-left font-medium text-gray-500 tracking-wider select-none truncate"
                                 >
                                   <div className="flex items-center space-x-1 text-gray-500">
                                     <div>{header.title}</div>
@@ -290,7 +290,7 @@ export default function EmailsRoute() {
                           {items.map((item, idx) => {
                             return (
                               <tr key={idx}>
-                                <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
+                                <td className="px-1.5 py-1 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
                                   <div className="flex justify-center">
                                     {(() => {
                                       if (item.associatedServerId > 0) {
@@ -317,10 +317,10 @@ export default function EmailsRoute() {
                                     })()}
                                   </div>
                                 </td>
-                                {/* <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.name}</td> */}
-                                <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.alias}</td>
-                                <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.subject}</td>
-                                <td className="px-1.5 py-2 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
+                                {/* <td className="px-1.5 py-1 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.name}</td> */}
+                                <td className="px-1.5 py-1 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.alias}</td>
+                                <td className="px-1.5 py-1 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">{item.subject}</td>
+                                <td className="px-1.5 py-1 max-w-xs truncate whitespace-nowrap text-sm text-gray-600">
                                   <div className="flex items-center space-x-2">
                                     {item.associatedServerId <= 0 ? (
                                       <ButtonTertiary

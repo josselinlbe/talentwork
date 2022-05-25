@@ -94,7 +94,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
           //   command: "V",
           //   bgClassName: "bg-gray-600",
           //   textClassName: "text-white",
-          //   toPath: UrlUtils.currentTenantUrl(params, "settings/tenant"),
+          //   toPath: UrlUtils.currentTenantUrl(params, "settings/account"),
           // });
           items.push({
             title: `${t("app.commands.tenants.create")}`,

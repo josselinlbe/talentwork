@@ -2,10 +2,10 @@ import { useTranslation } from "react-i18next";
 import { Tenant } from ".prisma/client";
 import { TenantSubscriptionWithDetails } from "~/utils/db/tenantSubscriptions.db.server";
 import clsx from "clsx";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import { useSubmit, useTransition } from "remix";
+import { Form, useSubmit, useTransition } from "remix";
 import InputSelect from "~/components/ui/input/InputSelect";
 import { SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
@@ -40,18 +40,18 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
     return t("pricing." + SubscriptionBillingPeriod[billingPeriod].toString()).toString();
   }
 
-  const [, setMaxUsers] = useState(0);
-  const [, setMonthlyContracts] = useState(0);
+  // const [, setMaxUsers] = useState(0);
+  // const [, setMonthlyContracts] = useState(0);
 
-  useEffect(() => {
-    loadSubscription();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   loadSubscription();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  function loadSubscription() {
-    setMaxUsers(subscription?.maxUsers ?? 0);
-    setMonthlyContracts(subscription?.monthlyContracts ?? 0);
-  }
+  // function loadSubscription() {
+  //   setMaxUsers(subscription?.maxUsers ?? 0);
+  //   setMonthlyContracts(subscription?.monthlyContracts ?? 0);
+  // }
 
   function save(e: FormEvent) {
     const previousPrice = subscriptionPrices.find((f) => f.id === subscription?.subscriptionPriceId);
@@ -97,7 +97,8 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
     <div>
       <div className="lg:grid lg:grid-cols-1 lg:gap-6">
         <div className="mt-5 lg:mt-0 lg:col-span-2">
-          <form onSubmit={save} method="POST">
+          <Form onSubmit={save} method="post">
+            <input type="hidden" name="action" value="update-tenant-subscription" />
             <div className="shadow overflow-hidden sm:rounded-md">
               <div className="px-4 py-5 bg-white sm:p-6">
                 <div className="grid grid-cols-12 gap-6">
@@ -199,7 +200,7 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
                 </div>
               </div>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
 

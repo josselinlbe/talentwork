@@ -349,8 +349,6 @@ model Row {
   linkedAccount     LinkedAccount? @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
   contractId        String?
   contract          Contract?
-  employeeId        String?
-  employee          Employee?
   logs              Log[]
   values            RowValue[]
   relatedRows       RowValue[]     @relation(name: "relatedRow")
@@ -422,16 +420,6 @@ model EntityWebhookLog {
 //   details   String
 // }
 
-model Employee {
-  id               String             @id @default(cuid())
-  rowId            String             @unique
-  row              Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
-  firstName        String
-  lastName         String
-  email            String
-  ContractEmployee ContractEmployee[]
-}
-
 model Contract {
   id          String             @id @default(cuid())
   rowId       String             @unique
@@ -441,7 +429,6 @@ model Contract {
   file        String
   status      Int
   members     ContractMember[]
-  employees   ContractEmployee[]
   activity    ContractActivity[]
 }
 
@@ -453,14 +440,6 @@ model ContractMember {
   userId     String
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   signDate   DateTime?
-}
-
-model ContractEmployee {
-  id         String   @id @default(cuid())
-  contractId String
-  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
-  employeeId String
-  employee   Employee @relation(fields: [employeeId], references: [id])
 }
 
 model ContractActivity {

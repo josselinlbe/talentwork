@@ -19,7 +19,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);
   return json({
-    title: `${t("account.forgot.title")} | ${process.env.APP_NAME}`,
+    title: `${t("account.register.title")} | ${process.env.APP_NAME}`,
     i18n: translations,
   });
 };
@@ -94,7 +94,7 @@ export const action: ActionFunction = async ({ request }) => {
   await createTenantUser({
     tenantId: tenant.id,
     userId: user.id,
-    role: TenantUserType.OWNER,
+    type: TenantUserType.OWNER,
   });
 
   await sendEmail(email, "welcome", {

@@ -131,7 +131,8 @@ const InputText = (
               className={clsx(
                 "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
                 className,
-                (disabled || readOnly) && "bg-gray-100 cursor-not-allowed"
+                (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
+                lowercase && "lowercase"
               )}
             />
             {button}

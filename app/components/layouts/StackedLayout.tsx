@@ -13,6 +13,8 @@ import LogoLight from "~/assets/img/logo-light.png";
 import { useAppData } from "~/utils/data/useAppData";
 import { useParams, useSubmit } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { useAdminData } from "~/utils/data/useAdminData";
+import { useRootData } from "~/utils/data/useRootData";
 
 interface Props {
   layout: "app" | "admin";
@@ -22,6 +24,7 @@ interface Props {
 export default function StackedLayout({ layout, children }: Props) {
   const params = useParams();
   const appData = useAppData();
+  const rootData = useRootData();
   const { t } = useTranslation();
   const submit = useSubmit();
   const currentRoute = useLocation().pathname;
@@ -33,7 +36,7 @@ export default function StackedLayout({ layout, children }: Props) {
     if (layout === "admin") {
       setMenu(AdminSidebar);
     } else {
-      setMenu(AppSidebar(params, appData.entities));
+      setMenu(AppSidebar(params, appData.entities, rootData.debug));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

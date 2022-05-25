@@ -11,6 +11,8 @@ import { useAppData } from "~/utils/data/useAppData";
 import { useParams } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
+import { useAdminData } from "~/utils/data/useAdminData";
+import { useRootData } from "~/utils/data/useRootData";
 
 interface Props {
   layout: "app" | "admin" | "docs";
@@ -22,22 +24,24 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   const { t } = useTranslation();
   const location = useLocation();
   const appData = useAppData();
+  const rootData = useRootData();
 
   const [menu, setMenu] = useState<SideBarItem[]>([]);
   const [expanded, setExpanded] = useState<string[]>([]);
 
   useEffect(() => {
+    let menu: SideBarItem[] = [];
     if (layout === "admin") {
-      setMenu(AdminSidebar);
+      menu = AdminSidebar;
     } else if (layout === "app") {
-      setMenu(AppSidebar(params, appData.entities));
+      menu = AppSidebar(params, appData.entities, rootData.debug);
     } else if (layout === "docs") {
-      setMenu(DocsSidebar);
+      menu = DocsSidebar;
     }
     // setMenu(layout === "admin" ? AdminSidebar : );
     menu.forEach((group) => {
-      group.items?.forEach((element, index) => {
-        if (element.open) {
+      group.items?.forEach((element) => {
+        if (element.open || isCurrent(element)) {
           expanded.push(element.path);
         } else {
           setExpanded(expanded.filter((f) => f !== element.path));
@@ -45,6 +49,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
       });
     });
 
+    setMenu(menu);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appData.currentTenant?.id]);
 
@@ -208,7 +213,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               id={UrlUtils.slugify(getPath(menuItem))}
                               to={getPath(menuItem)}
                               className={clsx(
-                                "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
+                                "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 truncate",
                                 menuItem.icon !== undefined && "px-4",
                                 isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
                                 !isCurrent(menuItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
@@ -220,18 +225,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                 )}
                                 <div>{t(menuItem.title)}</div>
                               </div>
-                              {menuItem.isDemo && (
-                                <span className="inline-flex space-x-1 items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 italic">
-                                  <div>Demo</div>
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              )}
+                              {menuItem.side}
                             </Link>
                           </div>
                         );
@@ -240,7 +234,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                           <div>
                             <button
                               type="button"
-                              className="w-full px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                              className="w-full px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 text-slate-200 hover:bg-slate-800 focus:bg-slate-800 truncate"
                               onClick={() => toggleMenuItem(menuItem.path)}
                             >
                               <div className="flex items-center space-x-5">
@@ -251,22 +245,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               </div>
                               {/*Expanded: "text-gray-400 rotate-90", Collapsed: "text-slate-200" */}
 
-                              {menuItem.isDemo ? (
-                                <span className="inline-flex space-x-1 items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 italic">
-                                  <div>Demo</div>
-                                  <svg
-                                    className={clsx(
-                                      "ml-auto h-5 w-5 transform transition-colors ease-in-out duration-150",
-                                      menuItemIsExpanded(menuItem.path)
-                                        ? "rotate-90 ml-auto h-3 w-3 transform  transition-colors ease-in-out duration-150"
-                                        : "ml-auto h-3 w-3 transform  transition-colors ease-in-out duration-150"
-                                    )}
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
-                                  </svg>
-                                </span>
-                              ) : (
+                              {menuItem.side ?? (
                                 <svg
                                   className={clsx(
                                     "bg-slate-900 ml-auto h-5 w-5 transform transition-colors ease-in-out duration-150",

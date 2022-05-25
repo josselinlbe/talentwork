@@ -94,7 +94,8 @@ export async function createRowLog(
       details: data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null,
     },
   });
-  await callEntityWebhooks(log.id, data.entity.id, data.action, RowHelper.getApiFormat(data.entity, data.item));
+  const apiFormat = RowHelper.getApiFormat(data.entity, data.item);
+  await callEntityWebhooks(log.id, data.entity.id, data.action, apiFormat);
   return log;
 }
 

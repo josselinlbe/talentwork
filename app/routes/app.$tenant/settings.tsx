@@ -49,12 +49,12 @@ export default function SettingsRoute() {
       routePath: UrlUtils.currentTenantUrl(params, `settings/subscription`),
     },
     {
-      name: t("models.linkedAccount.plural"),
-      routePath: UrlUtils.currentTenantUrl(params, "settings/linked-accounts"),
-    },
-    {
       name: t("settings.tenant.title"),
       routePath: UrlUtils.currentTenantUrl(params, "settings/account"),
+    },
+    {
+      name: t("models.linkedAccount.plural"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/linked-accounts"),
     },
     {
       name: "API",

@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import { getTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import UsersTable from "~/components/core/users/UsersTable";
+import { deleteUserWithItsTenants } from "~/utils/services/userService";
 
 type LoaderData = {
   title: string;
@@ -51,14 +52,14 @@ export const action: ActionFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
 
   const form = await request.formData();
-  const type: UsersActionType = form.get("type")?.toString() as UsersActionType;
+  const action: UsersActionType = form.get("action")?.toString() as UsersActionType;
   const userId = form.get("user-id")?.toString();
   const user = await getUser(userId);
 
-  if (!userId || !user || !type) {
+  if (!userId || !user || !action) {
     return badRequest({ error: "Form not submitted correctly." });
   }
-  switch (type) {
+  switch (action) {
     case UsersActionType.Impersonate: {
       const userSession = await setLoggedUser(user);
       if (!userSession) {
@@ -89,7 +90,13 @@ export const action: ActionFunction = async ({ request }) => {
     }
     case UsersActionType.DeleteUser: {
       // TODO: CANCEL TENANTS SUBSCRIPTIONS, DELETE TENANTS AND SUBSCRIPTIONS
-      await deleteUser(userId);
+      try {
+        await deleteUserWithItsTenants(userId);
+      } catch (e: any) {
+        return badRequest({
+          error: e,
+        });
+      }
       return success({ success: t("shared.deleted") });
     }
     default: {

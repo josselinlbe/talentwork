@@ -31,7 +31,7 @@ export async function createUserInvitation(
     email: string;
     firstName: string;
     lastName: string;
-    role: TenantUserType;
+    type: TenantUserType;
   }
 ) {
   const invitation = await db.tenantUserInvitation.create({

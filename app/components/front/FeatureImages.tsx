@@ -256,14 +256,14 @@ const featureImages = [
   {
     group: "Entity Builder",
     title: "Admin Entity Rows View",
-    route: "/admin/entities/employees/rows",
-    src: "https://yahooder.sirv.com/saasrock/features/entity-builder/admin-rows-view.png",
+    route: "/admin/entities/employees/logs",
+    src: "https://yahooder.sirv.com/saasrock/features/entity-builder/admin-rows-logs.png",
   },
   {
     group: "Entity Builder",
     title: "Admin Entity Rows Logs",
-    route: "/admin/entities/employees/logs",
-    src: "https://yahooder.sirv.com/saasrock/features/entity-builder/admin-rows-logs.png",
+    route: "/admin/entities/employees/rows",
+    src: "https://yahooder.sirv.com/saasrock/features/entity-builder/admin-rows-view.png",
   },
   {
     group: "Entity Builder",

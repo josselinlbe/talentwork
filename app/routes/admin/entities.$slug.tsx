@@ -35,8 +35,8 @@ export default function EditEntityRoute() {
         { title: t(data.item.title), routePath: `/admin/entities/${params.slug}/details` },
       ]}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12">
-        <div className="lg:col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 xl:gap-12">
+        <div className="lg:col-span-2">
           <TabsVertical
             tabs={[
               {
@@ -74,7 +74,7 @@ export default function EditEntityRoute() {
             ]}
           />
         </div>
-        <div className="lg:col-span-9">
+        <div className="lg:col-span-10">
           <div className="w-full">
             <Outlet />
           </div>

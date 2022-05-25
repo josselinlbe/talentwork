@@ -242,17 +242,17 @@ export default function NewMember({ featureUsageUsers }: Props) {
                                     >
                                       <input
                                         type="radio"
-                                        name="tenant-user-role"
+                                        name="tenant-user-type"
                                         className="h-4 w-4 mt-3 cursor-pointer text-theme-600 border-gray-300 focus:ring-theme-500"
-                                        aria-labelledby="tenant-user-role-0-label"
-                                        aria-describedby="tenant-user-role-0-description"
+                                        aria-labelledby="tenant-user-type-0-label"
+                                        aria-describedby="tenant-user-type-0-description"
                                         value={option.value}
                                         checked={role === option.value}
                                         onChange={changedRole}
                                       />
                                       <div className="ml-3 flex flex-col">
                                         <span
-                                          id="tenant-user-role-0-label"
+                                          id="tenant-user-type-0-label"
                                           className={clsx(
                                             "block text-sm font-medium",
                                             role === option.value && "text-theme-900",
@@ -263,7 +263,7 @@ export default function NewMember({ featureUsageUsers }: Props) {
                                         </span>
 
                                         <span
-                                          id="tenant-user-role-0-description"
+                                          id="tenant-user-type-0-description"
                                           className={clsx("block text-sm", role === option.value && "text-theme-700", role !== option.value && "text-gray-500")}
                                         >
                                           {option.description}

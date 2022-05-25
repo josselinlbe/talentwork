@@ -27,8 +27,10 @@ function getBaseTemplateModel() {
 }
 
 export async function sendEmail(to: string, alias: string, data: any, Attachments?: { Name: string; Content: string; ContentType: string }[]) {
-  var client = new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN?.toString() ?? "");
-
+  var client = getClient();
+  if (!client) {
+    return;
+  }
   await client.sendEmailWithTemplate({
     From: process.env.POSTMARK_FROM_EMAIL,
     To: to,
@@ -68,7 +70,8 @@ export async function getPostmarkTemplates(): Promise<EmailTemplate[]> {
 export async function createPostmarkTemplate(template: EmailTemplate, layoutTemplate?: string | undefined) {
   const client = getClient();
   if (!client) {
-    throw Error("Undefined Postmark client");
+    // throw Error("Undefined Postmark client");
+    return;
   }
   return client.createTemplate({
     LayoutTemplate: layoutTemplate,
@@ -83,7 +86,8 @@ export async function createPostmarkTemplate(template: EmailTemplate, layoutTemp
 export async function deletePostmarkTemplate(alias: string) {
   const client = getClient();
   if (!client) {
-    throw Error("Undefined Postmark client");
+    return;
+    // throw Error("Undefined Postmark client");
   }
   return client.deleteTemplate(alias);
 }

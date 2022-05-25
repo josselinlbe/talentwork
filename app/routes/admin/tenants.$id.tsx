@@ -20,6 +20,7 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { Tenant } from "@prisma/client";
 import Stripe from "stripe";
+import { deleteAndCancelTenant } from "~/utils/services/tenantService";
 
 type LoaderData = {
   title: string;
@@ -119,33 +120,36 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ updateSubscriptionError: "Invalid customer ID" });
     }
 
-    const subscriptionPrice = await getSubscriptionPrice(priceId);
-    let newSubscription: Stripe.Subscription | null;
     try {
-      newSubscription = await createStripeSubscription(tenantSubscription?.stripeCustomerId ?? "", subscriptionPrice?.stripeId ?? "");
-    } catch (error: any) {
-      return badRequest({ updateSubscriptionError: error.message });
-    }
-    if (!newSubscription) {
-      return badRequest({ updateSubscriptionError: "Could not create customer subscription" });
-    }
-    if (tenantSubscription.stripeSubscriptionId) {
-      await cancelStripeSubscription(tenantSubscription.stripeSubscriptionId);
-    }
+      const subscriptionPrice = await getSubscriptionPrice(priceId);
+      let newSubscription: Stripe.Subscription | null;
+      try {
+        newSubscription = await createStripeSubscription(tenantSubscription?.stripeCustomerId ?? "", subscriptionPrice?.stripeId ?? "");
+      } catch (error: any) {
+        return badRequest({ updateSubscriptionError: error.message });
+      }
+      if (!newSubscription) {
+        return badRequest({ updateSubscriptionError: "Could not create customer subscription" });
+      }
+      if (tenantSubscription.stripeSubscriptionId) {
+        await cancelStripeSubscription(tenantSubscription.stripeSubscriptionId);
+      }
 
-    await updateTenantStripeSubscriptionId(params.id ?? "", {
-      subscriptionPriceId: priceId,
-      stripeSubscriptionId: newSubscription.id,
-    });
+      await updateTenantStripeSubscriptionId(params.id ?? "", {
+        subscriptionPriceId: priceId,
+        stripeSubscriptionId: newSubscription.id,
+        quantity: 1,
+      });
 
-    return json({ updateSubscriptionSuccess: "Subscription updated" });
+      return json({ updateSubscriptionSuccess: "Subscription updated" });
+    } catch (e: any) {
+      return badRequest({ updateSubscriptionError: e.toString() });
+    }
   } else if (action === "delete-tenant") {
-    const tenantSubscription = await getTenantSubscription(params.id ?? "");
-    if (tenantSubscription?.stripeSubscriptionId) {
-      await cancelStripeSubscription(tenantSubscription?.stripeSubscriptionId);
-    }
-    await deleteTenant(params.id ?? "");
+    await deleteAndCancelTenant(params.id ?? "");
     return redirect("/admin/tenants");
+  } else {
+    return badRequest({ updateDetailsError: t("shared.invalidForm") });
   }
 };
 
