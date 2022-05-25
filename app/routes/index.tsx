@@ -73,13 +73,13 @@ export default function IndexRoute() {
         }}
       />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
-        <Hero socialProof={data.socialProof} />
+        <Hero socialProof={data?.socialProof} />
         <LogoClouds />
         <FeatureImages />
-        <Testimonials items={data.testimonials} socialProof={data.socialProof} />
+        <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />
         <UpcomingFeatures />
-        <PricingCTA currentRelease={data.currentRelease} />
+        <PricingCTA currentRelease={data?.currentRelease} />
         <Newsletter />
         <Footer />
       </div>

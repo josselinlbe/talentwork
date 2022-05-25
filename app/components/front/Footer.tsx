@@ -25,8 +25,8 @@ const navigation = {
     { name: "Stack", href: "/docs/stack" },
     { name: "Roadmap", href: "/docs/roadmap" },
     { name: "Changelog", href: "/changelog" },
-    { name: "License", href: "/docs/license" },
     { name: "Tutorials", href: "/docs/learning-center" },
+    { name: "License", href: "/docs/license" },
     { name: "MVP to Enterprise", href: "/no-code-low-code-and-custom-code" },
   ],
   social: [

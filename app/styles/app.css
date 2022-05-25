@@ -1474,6 +1474,22 @@ select {
   order: 2;
 }
 
+.order-1 {
+  order: 1;
+}
+
+.order-first {
+  order: -9999;
+}
+
+.order-last {
+  order: 9999;
+}
+
+.order-none {
+  order: 0;
+}
+
 .col-span-1 {
   grid-column: span 1 / span 1;
 }
@@ -3121,11 +3137,6 @@ select {
 .border-purple-300 {
   --tw-border-opacity: 1;
   border-color: rgb(216 180 254 / var(--tw-border-opacity));
-}
-
-.border-gray-800 {
-  --tw-border-opacity: 1;
-  border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 
 .border-b-accent-400 {
@@ -5909,6 +5920,10 @@ select {
     order: 3;
   }
 
+  .sm\:order-none {
+    order: 0;
+  }
+
   .sm\:col-span-2 {
     grid-column: span 2 / span 2;
   }
@@ -6147,6 +6162,10 @@ select {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
+  .sm\:grid-rows-1 {
+    grid-template-rows: repeat(1, minmax(0, 1fr));
+  }
+
   .sm\:grid-rows-2 {
     grid-template-rows: repeat(2, minmax(0, 1fr));
   }
@@ -6157,10 +6176,6 @@ select {
 
   .sm\:grid-rows-5 {
     grid-template-rows: repeat(5, minmax(0, 1fr));
-  }
-
-  .sm\:grid-rows-1 {
-    grid-template-rows: repeat(1, minmax(0, 1fr));
   }
 
   .sm\:flex-row {
@@ -6467,6 +6482,10 @@ select {
 
   .md\:right-0 {
     right: 0px;
+  }
+
+  .md\:order-none {
+    order: 0;
   }
 
   .md\:col-span-4 {
