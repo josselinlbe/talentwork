@@ -394,22 +394,22 @@ export const DocsSidebar: SideBarItem[] = [
             title: "Support a Language (i18n)",
             path: "/docs/learning-center/guides/localization/support-a-language",
           },
-          {
-            title: "Create a Blog Post",
-            path: "/docs/learning-center/guides/blogging/create-a-blog-post",
-          },
-          {
-            title: "Create a Custom Entity",
-            path: "/docs/learning-center/guides/custom-entities/create-a-custom-entity",
-          },
-          {
-            title: "Use the API with API Keys",
-            path: "/docs/learning-center/guides/custom-entities/use-the-api-with-api-keys",
-          },
-          {
-            title: "Add Google Sheet Rows with Zapier",
-            path: "/docs/learning-center/guides/custom-entities/add-google-sheet-rows-with-zapier",
-          },
+          // {
+          //   title: "Create a Blog Post",
+          //   path: "/docs/learning-center/guides/blogging/create-a-blog-post",
+          // },
+          // {
+          //   title: "Create a Custom Entity",
+          //   path: "/docs/learning-center/guides/custom-entities/create-a-custom-entity",
+          // },
+          // {
+          //   title: "Use the API with API Keys",
+          //   path: "/docs/learning-center/guides/custom-entities/use-the-api-with-api-keys",
+          // },
+          // {
+          //   title: "Add Google Sheet Rows with Zapier",
+          //   path: "/docs/learning-center/guides/custom-entities/add-google-sheet-rows-with-zapier",
+          // },
         ],
       },
     ],
