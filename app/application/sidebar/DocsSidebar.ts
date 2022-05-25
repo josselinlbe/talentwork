@@ -258,6 +258,10 @@ export const DocsSidebar: SideBarItem[] = [
             title: "Uploaders",
             path: "/docs/components/uploaders",
           },
+          {
+            title: "Logo and Icon",
+            path: "/docs/components/logo-and-icon",
+          },
           // {
           //   title: "Inputs",
           //   path: "/docs/components/inputs",
@@ -294,9 +298,125 @@ export const DocsSidebar: SideBarItem[] = [
     ],
   },
   {
+    title: "Learning Center",
+    path: "/docs/learning-center",
+    items: [
+      {
+        title: "Tutorials",
+        path: "/docs/learning-center/tutorials",
+        items: [
+          {
+            title: "Quick Start",
+            path: "/docs/learning-center/tutorials/quick-start",
+            exact: true,
+          },
+          {
+            title: "Quick Start v0.2.5",
+            path: "/docs/learning-center/tutorials/quick-start-v-0-2-5",
+            exact: true,
+          },
+          // {
+          //   title: "Create Invoice SaaS app",
+          //   path: "/docs/tutorials/create-an-invoicing-saas-app",
+          //
+          //   items: [
+          //     {
+          //       title: "Set up Stripe",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/set-up-stripe",
+          //
+          //     },
+          //     {
+          //       title: "Set up Postmark",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/set-up-postmark",
+          //
+          //     },
+          //     {
+          //       title: "Custom Entity - Companies",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Custom Entity - Tickets",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Custom Entity - Customers",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Custom Entity - Products",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Custom Entity - Invoices",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Webhooks by Zapier",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Using the API",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //     {
+          //       title: "Testing as a Tenant",
+          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
+          //
+          //     },
+          //   ],
+          // },
+        ],
+      },
+      {
+        title: "2-min Guides",
+        path: "/docs/guides",
+        items: [
+          {
+            title: "Customize Theme",
+            path: "/docs/learning-center/guides/branding/theme",
+          },
+          {
+            title: "Update Logo & Icon",
+            path: "/docs/learning-center/guides/branding/logo-and-icon",
+          },
+          {
+            title: "Customize Landing page",
+            path: "/docs/learning-center/guides/branding/landing",
+          },
+          {
+            title: "Support a Language (i18n)",
+            path: "/docs/learning-center/guides/localization/support-a-language",
+          },
+          {
+            title: "Create a Blog Post",
+            path: "/docs/learning-center/guides/blogging/create-a-blog-post",
+          },
+          {
+            title: "Create a Custom Entity",
+            path: "/docs/learning-center/guides/custom-entities/create-a-custom-entity",
+          },
+          {
+            title: "Use the API with API Keys",
+            path: "/docs/learning-center/guides/custom-entities/use-the-api-with-api-keys",
+          },
+          {
+            title: "Add Google Sheet Rows with Zapier",
+            path: "/docs/learning-center/guides/custom-entities/add-google-sheet-rows-with-zapier",
+          },
+        ],
+      },
+    ],
+  },
+  {
     title: "Core Models",
     path: "",
-
     items: [
       {
         title: "Account",
@@ -412,123 +532,6 @@ export const DocsSidebar: SideBarItem[] = [
           {
             title: "Workflow",
             path: "/docs/core-models/custom-entity/workflow",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Learning Center",
-    path: "/docs/learning-center",
-    items: [
-      {
-        title: "Tutorials",
-        path: "/docs/learning-center/tutorials",
-        items: [
-          {
-            title: "Quick Start",
-            path: "/docs/learning-center/tutorials/quick-start",
-            exact: true,
-          },
-          {
-            title: "Quick Start v0.2.5",
-            path: "/docs/learning-center/tutorials/quick-start-v-0-2-5",
-            exact: true,
-          },
-          // {
-          //   title: "Create Invoice SaaS app",
-          //   path: "/docs/tutorials/create-an-invoicing-saas-app",
-          //
-          //   items: [
-          //     {
-          //       title: "Set up Stripe",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/set-up-stripe",
-          //
-          //     },
-          //     {
-          //       title: "Set up Postmark",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/set-up-postmark",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Companies",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Tickets",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Customers",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Products",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Invoices",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Webhooks by Zapier",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Using the API",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Testing as a Tenant",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //   ],
-          // },
-        ],
-      },
-      {
-        title: "2-min Guides",
-        path: "/docs/guides",
-        items: [
-          {
-            title: "Customize Theme",
-            path: "/docs/learning-center/guides/branding/theme",
-          },
-          {
-            title: "Customize Brand logo & icon",
-            path: "/docs/learning-center/guides/branding/logo-and-icon",
-          },
-          {
-            title: "Customize Landing page",
-            path: "/docs/learning-center/guides/branding/landing",
-          },
-          {
-            title: "Support a Language (i18n)",
-            path: "/docs/learning-center/guides/localization/support-a-language",
-          },
-          {
-            title: "Create a Blog Post",
-            path: "/docs/learning-center/guides/blogging/create-a-blog-post",
-          },
-          {
-            title: "Create a Custom Entity",
-            path: "/docs/learning-center/guides/custom-entities/create-a-custom-entity",
-          },
-          {
-            title: "Use the API with API Keys",
-            path: "/docs/learning-center/guides/custom-entities/use-the-api-with-api-keys",
-          },
-          {
-            title: "Add Google Sheet Rows with Zapier",
-            path: "/docs/learning-center/guides/custom-entities/add-google-sheet-rows-with-zapier",
           },
         ],
       },

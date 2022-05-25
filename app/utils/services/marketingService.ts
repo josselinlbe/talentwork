@@ -1,5 +1,5 @@
-import { MarketingFeatureDto, MarketingFeatureStatus, MarketingFeatureType } from "~/application/dtos/hero/MarketingFeatureDto";
-import { TestimonialDto } from "~/application/dtos/hero/TestimonialDto";
+import { MarketingFeatureDto, MarketingFeatureStatus, MarketingFeatureType } from "~/application/dtos/marketing/MarketingFeatureDto";
+import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 
 export function getTestimonials(): TestimonialDto[] {
   return [

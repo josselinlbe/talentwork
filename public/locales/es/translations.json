@@ -141,7 +141,7 @@
       "headline1": "Construye tu propio SaaS",
       "headline2": "Framework de bajo código & extensible con funcionalidades para SaaS.",
       "headline3": "Descarga el código y personaliza: Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
-      "subheadline1": "",
+      "subheadline1": "lanza tu MVP pronto",
       "hint": "Este sitio usa v0.2.6",
       "buy": "Obtener early-access",
       "features": "Funcionalidades",
@@ -160,7 +160,7 @@
     },
     "newsletter": {
       "title": "Newsletter",
-      "headline": "Enviaremos correos de funcionalidad nueva, bug fixes, artículos y más.",
+      "headline": "Suscríbete al newsletter para recibir actualizaciones del producto y obtén la versión v0.0.1 ¡gratis!",
       "subscribe": "Suscribirse",
       "subscribing": "Suscribiéndose",
       "subscribed": "¡Te has suscrito!",

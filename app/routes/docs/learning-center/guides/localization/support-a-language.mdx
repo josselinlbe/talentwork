@@ -1,0 +1,136 @@
+---
+meta:
+  title: Support a Language | Guides | Learning Center | SaasRock
+  description: Learn how to add another language translations
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Support a Language",
+      routePath:
+        "/docs/learning-center/guides/localization/support-a-language",
+    },
+  ]}
+/>
+
+# Support a Language
+
+## Goals:
+
+- **Translate** your app in another language
+
+## Steps
+
+💿 Add the new locale info at `app/locale/supportedLocales.ts`:
+
+```diff
+export default [
+  {
+    lang: "en",
+    flag: "us",
+  },
+  {
+    lang: "es",
+    flag: "mx",
+  },
++  {
++    lang: "fr",
++    flag: "fr",
++  },
+];
+```
+
+<DocTutorialImage
+  alt="Add Locale"
+  src="https://yahooder.sirv.com/saasrock/guides/localization/add-locale.png"
+/>
+
+Ironically, you need to translate the new language name on the currently supported languages.
+
+💿 Open the english translation file `public/locales/en/translations.json` and add the new language i18n key:
+
+```diff
+{
+  "shared": {
+    ...
+    "locales": {
+      "en": "English",
+      "es": "Spanish",
++      "fr": "French"
+      },
+    ...
+```
+
+💿 Open the spanish translation file `public/locales/es/translations.json` and add the new language i18n key:
+
+```diff
+{
+  "shared": {
+    ...
+    "locales": {
+      "en": "Inglés",
+      "es": "Español",
++      "fr": "Francés"
+      },
+    ...
+```
+
+💿 At the landing page, click on the locale selector, there should be the new language displayed correctly.
+
+<DocTutorialImage
+  alt="Locale Selector"
+  src="https://yahooder.sirv.com/saasrock/guides/localization/locale-selector.png"
+/>
+
+💿 Select the language, you should get an error:
+
+<DocTutorialImage
+  alt="Missing Locale"
+  src="https://yahooder.sirv.com/saasrock/guides/localization/missing-locale.png"
+/>
+
+💿 Add the new `fr` locale to the `app/locale/i18n.server.ts` file:
+
+```diff
+export let i18n = new RemixI18Next(backend, {
+  fallbackLng: "en", // here configure your default (fallback) language
+-  supportedLanguages: ["es", "en"], // here configure your supported languages
++  supportedLanguages: ["es", "en", "fr"], // here configure your supported languages
+});
+```
+
+💿 Duplicate the folder `public/locales/en` and rename it to `fr`.
+
+💿 On the new `public/locales/fr/translations.json` file, replace `Easily Build Your Own SaaS` to `Créez votre propre SaaS`.
+
+You should now have 3 `front.hero.headline1 translations`:
+
+- **en/translations.json &rarr; front.hero.headline1**: Easily Build Your Own SaaS
+- **es/translations.json &rarr; front.hero.headline1**: Construye tu propio SaaS
+- **fr/translations.json &rarr; front.hero.headline1**: Créez votre propre SaaS
+
+💿 Finally, refresh the landing page and select the new language.
+
+<DocTutorialImage
+  alt="French Headline"
+  src="https://yahooder.sirv.com/saasrock/guides/localization/french-headline.png"
+/>
+
+---
+
+I hope this quick guide was useful! [Let us know](/docs/community) if you have any question.

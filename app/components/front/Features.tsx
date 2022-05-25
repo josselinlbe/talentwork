@@ -6,7 +6,30 @@ import CheckIcon from "../ui/icons/CheckIcon";
 
 const groups = [
   {
-    headline: "🪨 Rock-solid core features",
+    headline: "New section",
+    subheadline: "Lorem",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut...",
+    items: [
+      {
+        name: "My feature 1",
+        description: "Lorem ipsum dolor sit amet...",
+      },
+      {
+        name: "My feature 2",
+        description: "Lorem ipsum dolor sit amet...",
+      },
+      {
+        name: "My feature 3",
+        description: "Lorem ipsum dolor sit amet...",
+      },
+      {
+        name: "My feature 4",
+        description: "Lorem ipsum dolor sit amet...",
+      },
+    ],
+  },
+  {
+    headline: "🪨 Rock-solid features",
     subheadline: "A rock-solid starter kit",
     description: "Everything you need to start to build an MVP, or to build a whole SaaS application in a few weeks.",
     items: [...getFeatures()],
@@ -110,7 +133,8 @@ export default function Features() {
               <dl
                 className={clsx(
                   "space-y-10 sm:space-y-0 sm:grid sm:grid-cols-2 sm:grid-flow-col sm:gap-x-6 sm:gap-y-10 lg:gap-x-8",
-                  group.items.length <= 4 && "sm:grid-rows-2",
+                  group.items.length <= 2 && "sm:grid-rows-1",
+                  group.items.length > 2 && group.items.length <= 4 && "sm:grid-rows-2",
                   (group.items.length === 5 || group.items.length === 6) && "sm:grid-rows-3",
                   group.items.length > 6 && "sm:grid-rows-5"
                 )}

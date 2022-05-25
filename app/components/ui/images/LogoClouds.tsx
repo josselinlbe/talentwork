@@ -12,9 +12,6 @@ export default function LogoClouds() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-3 gap-8 md:grid-cols-4 lg:grid-cols-7">
           <div className="col-span-1 flex justify-center">
-            <img className="h-12 object-cover" src={LogoRemix} alt="Remix" />
-          </div>
-          <div className="col-span-1 flex justify-center">
             <img className="h-12 object-cover" src={LogoReact} alt="React" />
           </div>
           <div className="col-span-1 flex justify-center">
@@ -22,6 +19,9 @@ export default function LogoClouds() {
           </div>
           <div className="col-span-1 flex justify-center">
             <img className="h-12 object-cover" src={LogoTailwind} alt="Tailwind CSS" />
+          </div>
+          <div className="col-span-1 flex justify-center">
+            <img className="h-12 object-cover" src={LogoRemix} alt="Remix" />
           </div>
           <div className="col-span-1 flex justify-center">
             <img className="h-12 object-cover" src={LogoPrisma} alt="Prisma" />

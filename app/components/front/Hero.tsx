@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "remix";
 import Carousel from "../ui/images/Carousel";
 import Header from "./Header";
-import { SocialProofDto } from "~/application/dtos/hero/SocialProofDto";
+import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
 import NumberUtils from "~/utils/shared/NumberUtils";
 
 interface Props {

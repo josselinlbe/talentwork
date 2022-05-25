@@ -2,7 +2,7 @@ import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo, UserSession } from "~/utils/session.server";
-import { json, LoaderFunction, MetaFunction, Outlet, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";
@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { getGitHubCurrentRelease, getGitHubSocialProof } from "~/utils/integrations/githubService";
 import UpcomingFeatures from "~/components/front/UpcomingFeatures";
 import Testimonials from "~/components/front/Testimonials";
-import { TestimonialDto } from "~/application/dtos/hero/TestimonialDto";
+import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 import { getTestimonials } from "~/utils/services/marketingService";
 import Newsletter from "~/components/front/Newsletter";
 
@@ -82,7 +82,6 @@ export default function IndexRoute() {
         <PricingCTA currentRelease={data.currentRelease} />
         <Newsletter />
         <Footer />
-        <Outlet />
       </div>
     </div>
   );

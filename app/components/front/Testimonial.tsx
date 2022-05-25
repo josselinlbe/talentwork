@@ -1,4 +1,4 @@
-import { TestimonialDto } from "~/application/dtos/hero/TestimonialDto";
+import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 import Piloterr from "~/assets/logos/testimonials/Piloterr";
 
 interface Props {

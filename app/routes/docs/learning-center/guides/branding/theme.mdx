@@ -1,0 +1,154 @@
+---
+meta:
+  title: Customize Theme | Guides | Learning Center | SaasRock
+  description: Learn how to change the color and font theme
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Customize Theme",
+      routePath:
+        "/docs/learning-center/guides/branding/theme",
+    },
+  ]}
+/>
+
+# Customize Theme
+
+## Goals:
+
+- Change the **Theme** and **Accent** color
+- Use a Google **Font**
+
+## Theme Color
+
+💿 Go to `tailwind.config.js` and find the theme extended property, and change `emerald` to `rose`:
+
+```diff
+module.exports = {
+  ...
+  theme: {
+    extend: {
+      ...
+      colors: {
+        ...
+        theme: {
+-          50: colors.emerald[50],
+-          100: colors.emerald[100],
+-          200: colors.emerald[200],
+-          300: colors.emerald[300],
+-          400: colors.emerald[400],
+-          500: colors.emerald[500],
+-          600: colors.emerald[600],
+-          700: colors.emerald[700],
+-          800: colors.emerald[800],
+-          900: colors.emerald[900],
++          50: colors.rose[50],
++          100: colors.rose[100],
++          200: colors.rose[200],
++          300: colors.rose[300],
++          400: colors.rose[400],
++          500: colors.rose[500],
++          600: colors.rose[600],
++          700: colors.rose[700],
++          800: colors.rose[800],
++          900: colors.rose[900],
+        },
+        ...
+```
+
+<DocTutorialImage
+  src="https://yahooder.sirv.com/saasrock/guides/branding/theme/theme.png"
+  alt="Change Theme Color"
+/>
+
+## Accent Color
+
+This color is used on UI components, the default color is gray, but if you want to match the theme color do the same thing for the `accent` property.
+
+```diff
+module.exports = {
+  ...
+  theme: {
+    extend: {
+      ...
+      colors: {
+        ...
+        accent: {
+-          50: colors.gray[50],
+-          100: colors.gray[100],
+-          200: colors.gray[200],
+-          300: colors.gray[300],
+-          400: colors.gray[400],
+-          500: colors.gray[500],
+-          600: colors.gray[600],
+-          700: colors.gray[700],
+-          800: colors.gray[800],
+-          900: colors.gray[900],
++          50: colors.rose[50],
++          100: colors.rose[100],
++          200: colors.rose[200],
++          300: colors.rose[300],
++          400: colors.rose[400],
++          500: colors.rose[500],
++          600: colors.rose[600],
++          700: colors.rose[700],
++          800: colors.rose[800],
++          900: colors.rose[900],
+        },
+        ...
+```
+
+💿 View your change at the [components](/docs/components/buttons) page.
+
+<DocTutorialImage
+  src="https://yahooder.sirv.com/saasrock/guides/branding/theme/accent.png"
+  alt="Change Accent Color"
+/>
+
+## Font
+
+💿 Go to the `styles/app.css` file, and import the custom **Google Font** at the top.
+
+```diff
++ @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+@tailwind base;
+...
+```
+
+💿 Add the custom font name to the start of the **fontFamily**:
+
+```diff
+module.exports = {
+  ...
+  theme: {
+    extend: {
+      fontFamily: {
+-        sans: ["Roboto Mono", ...defaultTheme.fontFamily.sans],
++        sans: ["Poppins", "Roboto Mono", ...defaultTheme.fontFamily.sans],
+      },
+```
+
+<DocTutorialImage
+  src="https://yahooder.sirv.com/saasrock/guides/branding/theme/font.png"
+  alt="Change Font"
+/>
+
+---
+
+I hope this quick guide was useful! [Let us know](/docs/community) if you have any question.

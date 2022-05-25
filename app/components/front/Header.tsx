@@ -8,6 +8,8 @@ import clsx from "clsx";
 import Icon from "./Icon";
 import LocaleSelector from "../ui/selectors/LocaleSelector";
 import { useRootData } from "~/utils/data/useRootData";
+import { NavbarItemDto } from "~/application/dtos/marketing/NavbarItemDto";
+import HeaderFlyoutItem from "./HeaderFlyoutItem";
 
 export default function Header() {
   const { authenticated, isAdmin } = useRootData();
@@ -16,13 +18,11 @@ export default function Header() {
   const location = useLocation();
 
   const [open, setOpen] = useState(false);
-  const links = [
+  const links: NavbarItemDto[] = [
     { path: "/", title: t("front.navbar.product") },
     { path: "/pricing", title: t("front.navbar.pricing") },
-    // { path: "/contact", title: t("front.navbar.contact") },
     { path: "/docs", title: "Docs", className: "" },
     { path: "/blog", title: "Blog", className: "hidden xl:block" },
-    // { path: "/components", title: t("admin.components.title"), className: "hidden xl:block" },
   ];
   function isCurrent(path: string): boolean {
     return location.pathname === path;
@@ -84,18 +84,28 @@ export default function Header() {
               <div className="hidden md:flex space-x-2 sm:space-x-4 md:space-x-6">
                 {links.map((link, idx) => {
                   return (
-                    <Link
-                      key={idx}
-                      to={link.path}
-                      className={clsx(
-                        link.className,
-                        "text-base leading-6 font-medium focus:outline-none transition ease-in-out duration-150 px-3 py-1 rounded-sm",
-                        !isCurrent(link.path) && "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300",
-                        isCurrent(link.path) && "text-gray-900 dark:text-white"
+                    <>
+                      {link.path ? (
+                        <Link
+                          key={idx}
+                          to={link.path}
+                          className={clsx(
+                            link.className,
+                            "text-base leading-6 font-medium focus:outline-none transition ease-in-out duration-150 px-3 py-1 rounded-sm",
+                            !isCurrent(link.path) && "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300",
+                            isCurrent(link.path) && "text-gray-900 dark:text-white"
+                          )}
+                        >
+                          {link.title}
+                        </Link>
+                      ) : (
+                        <HeaderFlyoutItem
+                          className="text-base leading-6 font-medium focus:outline-none transition ease-in-out duration-150 px-3 py-1 rounded-sm"
+                          title={link.title}
+                          items={link.items}
+                        />
                       )}
-                    >
-                      {link.title}
-                    </Link>
+                    </>
                   );
                 })}
                 <LocaleSelector className="hidden lg:block" />
@@ -134,7 +144,7 @@ export default function Header() {
             leaveTo="opacity-0 scale-95"
           >
             <div className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden z-40">
-              <div className="rounded-lg bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-xl ring-1 ring-black ring-opacity-5 overflow-hidden">
+              <div className="rounded-lg bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-xl ring-1 ring-black ring-opacity-5 overflow-visible">
                 <div className="px-5 pt-4 flex items-center justify-between">
                   <div>
                     <Icon />
@@ -157,17 +167,27 @@ export default function Header() {
                   <div className="px-2 pt-2 pb-3" role="none">
                     {links.map((link, idx) => {
                       return (
-                        <Link
-                          key={idx}
-                          to={link.path}
-                          role="menuitem"
-                          className={clsx(
-                            "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
-                            isCurrent(link.path) ? "bg-slate-100 dark:bg-gray-900" : ""
+                        <>
+                          {link.path ? (
+                            <Link
+                              key={idx}
+                              to={link.path}
+                              role="menuitem"
+                              className={clsx(
+                                "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
+                                isCurrent(link.path) ? "bg-slate-100 dark:bg-gray-900" : ""
+                              )}
+                            >
+                              {link.title}
+                            </Link>
+                          ) : (
+                            <HeaderFlyoutItem
+                              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800"
+                              title={link.title}
+                              items={link.items}
+                            />
                           )}
-                        >
-                          {link.title}
-                        </Link>
+                        </>
                       );
                     })}
                   </div>

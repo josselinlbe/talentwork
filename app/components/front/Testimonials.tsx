@@ -1,5 +1,5 @@
-import { SocialProofDto } from "~/application/dtos/hero/SocialProofDto";
-import { TestimonialDto } from "~/application/dtos/hero/TestimonialDto";
+import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
+import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 import Testimonial from "./Testimonial";
 
 interface Props {
@@ -40,7 +40,10 @@ export default function Testimonials({ items, socialProof }: Props) {
         </svg>
       </div>
       <div className="flex justify-center">
-        <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white">Used by {socialProof.totalMembers} developers</h3>
+        <div className="space-y-3 text-center">
+          <h3 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white">Don't take our word for it.</h3>
+          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400">Used by {socialProof.totalMembers} developers</p>
+        </div>
       </div>
       {items.length === 1 ? <Testimonial item={items[0]} /> : <div>TODO: Multiple testimonials components</div>}
     </div>

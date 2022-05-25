@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "remix";
 
 export default function Newsletter() {
+  const { t } = useTranslation();
   return (
     <div className="py-16 sm:py-24">
       <div className="relative sm:py-16">
@@ -31,8 +33,8 @@ export default function Newsletter() {
             </div>
             <div className="relative">
               <div className="sm:text-center">
-                <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">Get product updates.</h2>
-                <p className="mt-6 mx-auto max-w-2xl text-lg text-theme-200">We'll send a monthly email with new features, bug fixes, and more.</p>
+                <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">{t("front.newsletter.title")}</h2>
+                <p className="mt-6 mx-auto max-w-2xl text-lg text-theme-200">{t("front.newsletter.headline")}</p>
               </div>
               <div className="mt-12 sm:mx-auto sm:max-w-lg sm:flex justify-center">
                 <div className="mt-4 sm:mt-0">

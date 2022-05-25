@@ -9,10 +9,10 @@ export enum MarketingFeatureType {
   Enterprise,
 }
 export interface MarketingFeatureDto {
-  status: MarketingFeatureStatus;
   name: string;
-  type: MarketingFeatureType;
   description: string;
+  status?: MarketingFeatureStatus;
+  type?: MarketingFeatureType;
   link?: string;
   save?: number;
   platforms?: {

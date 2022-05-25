@@ -1,4 +1,4 @@
-import { SocialProofDto } from "~/application/dtos/hero/SocialProofDto";
+import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
 import { Octokit } from "octokit";
 
 export async function getGitHubSocialProof(): Promise<SocialProofDto> {

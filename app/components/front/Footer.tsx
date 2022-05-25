@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import BrandIcon from "../icons/BrandIcon";
+import Icon from "./Icon";
 
 const navigation = {
   features1: [
@@ -26,8 +26,8 @@ const navigation = {
     { name: "Roadmap", href: "/docs/roadmap" },
     { name: "Changelog", href: "/changelog" },
     { name: "License", href: "/docs/license" },
-    { name: "Community", href: "/docs/community" },
     { name: "Tutorials", href: "/docs/learning-center" },
+    { name: "MVP to Enterprise", href: "/no-code-low-code-and-custom-code" },
   ],
   social: [
     {
@@ -78,7 +78,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
-            <BrandIcon className="h-10 w-auto" />
+            <Icon className="h-10 w-auto" />
             <p className="text-gray-500 text-base">{t("front.hero.headline2")}</p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
@@ -129,7 +129,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
-          <p className="text-base text-gray-400 xl:text-center">&copy; 2022 SaasRock. All rights reserved.</p>
+          <p className="text-base text-gray-400 xl:text-center">
+            Built with <a href="https://saasrock.com">SaasRock</a>.
+          </p>
         </div>
       </div>
     </footer>

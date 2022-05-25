@@ -1,4 +1,4 @@
-import { SocialProofDto } from "~/application/dtos/hero/SocialProofDto";
+import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
 
 export async function getGumroadProduct(id: string) {
   try {

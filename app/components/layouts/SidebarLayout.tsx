@@ -10,9 +10,9 @@ import { useAppData } from "~/utils/data/useAppData";
 import TenantSelect from "./selectors/TenantSelect";
 import { useTranslation } from "react-i18next";
 import { Link } from "remix";
-import BrandLogo from "../icons/BrandLogo";
 import InputSelect from "../ui/input/InputSelect";
 import { useElementScrollRestoration } from "~/utils/app/scroll-restoration";
+import LogoDark from "~/assets/img/logo-dark.png";
 
 interface Props {
   layout: "app" | "admin" | "docs";
@@ -79,8 +79,8 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                     {layout === "docs" && (
                       <div className="flex flex-col space-y-2">
                         <Link to={"/"}>
-                          {/* <img className={"h-8 w-auto"} src={LogoDark} alt="Logo" /> */}
-                          <BrandLogo className="h-8 mx-auto dark" />
+                          <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
+                          {/* <BrandLogo className="h-8 mx-auto dark" /> */}
                         </Link>
                         {/* <InputSelect
                           className="bg-gray-900 border-gray-700 text-gray-300 rounded-sm"
@@ -125,7 +125,8 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                 {layout === "docs" && (
                   <div className="flex flex-col space-y-2">
                     <Link to={"/"}>
-                      <BrandLogo className="h-8 mx-auto dark" />
+                      {/* <BrandLogo className="h-8 mx-auto dark" /> */}
+                      <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
                     </Link>
                   </div>
                 )}

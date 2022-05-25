@@ -94,7 +94,8 @@
     "path": "Path",
     "locales": {
       "en": "English",
-      "es": "Spanish"
+      "es": "Spanish",
+      "fr": "French"
     },
     "layouts": {
       "sidebar": "Sidebar",
@@ -141,7 +142,7 @@
       "headline1": "Easily Build Your Own SaaS",
       "headline2": "Multi-tenant framework with out-of-the-box SaaS features.",
       "headline3": "Download the code and customize: Authentication, Subscriptions, Blogging, Audit trails, Admin portal, App portal, Entity Builder, Subscription Plan Builder, and more.",
-      "subheadline1": "(launch your MVP 12 months sooner)",
+      "subheadline1": "launch your MVP sooner",
       "hint": "This site uses v0.2.6",
       "buy": "Get pre-launch price",
       "features": "Features",
@@ -160,7 +161,7 @@
     },
     "newsletter": {
       "title": "Newsletter",
-      "headline": "We'll send a monthly email with new features, bug fixes, blog posts and more.",
+      "headline": "Subscribe to the newsletter to get product updates and get v0.0.1 for free!",
       "subscribe": "Subscribe",
       "subscribing": "Subscribing",
       "subscribed": "You're subscribed!",
