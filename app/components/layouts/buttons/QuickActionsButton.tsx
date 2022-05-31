@@ -6,12 +6,14 @@ import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { useParams } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 
 interface Props {
+  entities: EntityWithDetails[];
   className?: string;
 }
 
-export default function QuickActionsButton({ className }: Props) {
+export default function QuickActionsButton({ entities, className }: Props) {
   const { t } = useTranslation();
   const params = useParams();
   const appData = useAppData();
@@ -57,14 +59,24 @@ export default function QuickActionsButton({ className }: Props) {
               tabIndex={-1}
               aria-labelledby="listbox-label"
             >
-              <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-0">
-                <Link to={UrlUtils.currentTenantUrl(params, "contracts/new")} onClick={() => setOpened(false)} className="flex flex-col p-4 hover:bg-gray-50">
-                  <div className="flex justify-between">
-                    <p className="font-semibold">{t("app.contracts.new.title")}</p>
-                  </div>
-                  <p className="text-gray-500 mt-2">{t("app.contracts.new.description")}</p>
-                </Link>
-              </li>
+              {entities.map((entity) => {
+                return (
+                  <li key={entity.name} className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-0">
+                    <Link
+                      to={UrlUtils.currentTenantUrl(params, entity.slug + "/new")}
+                      onClick={() => setOpened(false)}
+                      className="flex flex-col p-4 hover:bg-gray-50"
+                    >
+                      <div className="flex justify-between">
+                        <p className="font-semibold">
+                          {t("shared.new")} {t(entity.title)}
+                        </p>
+                      </div>
+                      {/* <p className="text-gray-500 mt-2">{t("app.contracts.new.description")}</p> */}
+                    </Link>
+                  </li>
+                );
+              })}
               {appData.isOwnerOrAdmin && (
                 <>
                   <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2">

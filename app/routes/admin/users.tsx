@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
-import { adminGetAllTenantUsers, adminGetAllUsers, deleteUser, getUser, updateUserPassword } from "~/utils/db/users.db.server";
+import { adminGetAllTenantUsers, adminGetAllUsers, getUser, updateUserPassword } from "~/utils/db/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { Tenant } from "@prisma/client";

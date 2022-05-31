@@ -1,10 +1,8 @@
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import clsx from "~/utils/shared/ClassesUtils";
-import NumberUtils from "~/utils/shared/NumberUtils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSubmit, useTransition } from "remix";
-import { SubscriptionPrice, SubscriptionProduct, TenantSubscription } from "@prisma/client";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";
@@ -14,7 +12,6 @@ import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/
 import InputNumber from "~/components/ui/input/InputNumber";
 import { TenantSubscriptionWithDetails } from "~/utils/db/tenantSubscriptions.db.server";
 import Modal from "~/components/ui/modals/Modal";
-import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 
 interface Props {
@@ -50,9 +47,6 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
   }
   function getPriceAmount(product: SubscriptionProductDto): number {
     return getPrice(product)?.price ?? 0;
-  }
-  function intFormat(value: number) {
-    return NumberUtils.intFormat(value);
   }
 
   function selectPrice(product: SubscriptionProductDto) {

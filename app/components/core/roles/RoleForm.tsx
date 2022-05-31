@@ -1,18 +1,17 @@
 import { forwardRef, Fragment, Ref, useImperativeHandle, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { UserRole } from "@prisma/client";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 
 export interface RefRoleForm {
   create: (order: number) => void;
-  update: (idx: number, item: UserRole) => void;
+  update: (idx: number, item: any) => void;
   close: () => void;
 }
 
 interface Props {
-  onCreated: (item: UserRole) => void;
-  onUpdated: (idx: number, item: UserRole) => void;
+  onCreated: (item: any) => void;
+  onUpdated: (idx: number, item: any) => void;
 }
 
 const RoleForm = ({ onCreated, onUpdated }: Props, ref: Ref<RefRoleForm>) => {
@@ -20,23 +19,23 @@ const RoleForm = ({ onCreated, onUpdated }: Props, ref: Ref<RefRoleForm>) => {
 
   const [open, setOpen] = useState(false);
 
-  const [item, setItem] = useState<UserRole | undefined>();
-  const [editingIndex, setEditingIndex] = useState(-1);
+  const [item, setItem] = useState<any | undefined>();
+  const [, setEditingIndex] = useState(-1);
 
-  const [order, setOrder] = useState<number>(0);
+  const [, setOrder] = useState<number>(0);
   const [name, setName] = useState("");
-  const [users, setUsers] = useState<UserRole[]>([]);
-  // const [roleUsers, setRoleUsers] = useState<UserRole[]>([]);
+  const [, setUsers] = useState<any[]>([]);
+  // const [roleUsers, setRoleUsers] = useState<any[]>([]);
 
   // useEffect(() => {
-  //   const items: UserRole[] = [];
+  //   const items: any[] = [];
   //   users.forEach((user) => {
   //     items.push({
   //       id: undefined,
   //       tenantId: undefined,
   //       tenant: {} as TenantDto,
   //       roleId: item?.id ?? "",
-  //       role: {} as UserRole,
+  //       role: {} as any,
   //       tenantUserId: user.id,
   //       tenantUser: user,
   //     });
@@ -55,7 +54,7 @@ const RoleForm = ({ onCreated, onUpdated }: Props, ref: Ref<RefRoleForm>) => {
     setOpen(true);
   }
 
-  function update(idx: number, item: UserRole) {
+  function update(idx: number, item: any) {
     setEditingIndex(idx);
 
     setItem(item);
@@ -73,7 +72,7 @@ const RoleForm = ({ onCreated, onUpdated }: Props, ref: Ref<RefRoleForm>) => {
 
   // function save(e) {
   //   e?.preventDefault();
-  //   const saved: UserRole = {
+  //   const saved: any = {
   //     id: undefined,
   //     order,
   //     name,

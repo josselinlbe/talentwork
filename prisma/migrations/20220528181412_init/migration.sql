@@ -135,7 +135,7 @@ CREATE TABLE "Log" (
     CONSTRAINT "Log_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Log_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Log_apiKeyId_fkey" FOREIGN KEY ("apiKeyId") REFERENCES "ApiKey" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "Log_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "Log_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -326,6 +326,7 @@ CREATE TABLE "RowValue" (
     "textValue" TEXT,
     "numberValue" DECIMAL,
     "dateValue" DATETIME,
+    "booleanValue" BOOLEAN,
     CONSTRAINT "RowValue_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "RowValue_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "RowValue_relatedRowId_fkey" FOREIGN KEY ("relatedRowId") REFERENCES "Row" ("id") ON DELETE CASCADE ON UPDATE CASCADE

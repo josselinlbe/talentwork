@@ -42,7 +42,7 @@ export default function Newsletter() {
                     to="/newsletter"
                     className="block w-full rounded-md border border-transparent px-5 py-3 bg-theme-500 text-base font-medium text-white shadow hover:bg-theme-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-theme-600 sm:px-10"
                   >
-                    Subscribe
+                    {t("front.newsletter.subscribe")}
                   </Link>
                 </div>
               </div>

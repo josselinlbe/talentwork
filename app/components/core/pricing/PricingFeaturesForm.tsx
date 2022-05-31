@@ -1,9 +1,7 @@
 import { Entity } from "@prisma/client";
 import { t } from "i18next";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
-import { Colors } from "~/application/enums/shared/Colors";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
-import SimpleBadge from "~/components/ui/badges/SimpleBadge";
 import InputNumber from "~/components/ui/input/InputNumber";
 import InputSelect from "~/components/ui/input/InputSelect";
 import InputText from "~/components/ui/input/InputText";

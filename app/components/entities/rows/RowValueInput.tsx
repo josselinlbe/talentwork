@@ -1,4 +1,4 @@
-import { Property, PropertyOption, Media, UserRole } from "@prisma/client";
+import { PropertyOption, Media } from "@prisma/client";
 import { Ref, useImperativeHandle, useRef, useState, useEffect, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
@@ -16,24 +16,26 @@ import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import RowHelper from "~/utils/helpers/RowHelper";
 import { RefEntitySelector } from "../EntitySelector";
 import PropertyMediaInput from "../properties/PropertyMediaInput";
-import PropertyValueSelector from "../properties/PropertyValueSelector";
+import PropertyOptionSelector from "../properties/PropertyOptionSelector";
+import InputCheckbox from "~/components/ui/input/InputCheckbox";
 
 export interface RefRowValueInput {
   focus: () => void;
 }
 
 interface Props {
+  selected: PropertyWithDetails | undefined;
   entity: EntityWithDetails;
   idValue: string | undefined;
   textValue: string | undefined;
   numberValue: number | undefined;
   dateValue: Date | undefined;
-  selected: PropertyWithDetails | undefined;
+  booleanValue: boolean | undefined;
   relatedRowId?: string | undefined;
   initialMedia?: Media[] | undefined;
   initialOption?: PropertyOption | undefined;
   parentSelectedValue: RowValueDto | undefined;
-  onChange: (value: string | number | Date | undefined | null) => void;
+  onChange: (value: string | number | Date | boolean | undefined | null) => void;
   onChangeRelatedRequest?: (related: string | undefined) => void;
   onChangeOption?: (option: PropertyOption | undefined) => void;
   onChangeMedia?: (option: MediaDto[]) => void;
@@ -48,6 +50,7 @@ const RowValueInput = (
     textValue,
     numberValue,
     dateValue,
+    booleanValue,
     relatedRowId,
     initialMedia,
     initialOption,
@@ -72,13 +75,12 @@ const RowValueInput = (
   const userInput = useRef<RefUserSelector>(null);
   const entitySelector = useRef<RefEntitySelector>(null);
 
-  const [roles, setRoles] = useState<UserRole[]>([]);
+  // const [roles, setRoles] = useState<TenantUserRole[]>([]);
   const [userId, setUserId] = useState<string>();
   const [user, setUser] = useState<TenantUserWithUser>();
-  const [propertyOption, setPropertyOption] = useState<PropertyOption>();
-  const [formField, setProperty] = useState<Property>();
+  // const [formField, setProperty] = useState<Property>();
   const [media, setMedia] = useState<MediaDto[]>([]);
-  const [formula, setFormula] = useState<string>("");
+  // const [formula, setFormula] = useState<string>("");
 
   function focus() {
     if (selected?.type === PropertyType.TEXT) {
@@ -96,16 +98,17 @@ const RowValueInput = (
     }
   }
 
-  useEffect(() => {
-    if (selected?.type === PropertyType.ROLE) {
-      onChange(roles.map((f) => f.id).join(","));
-    }
-  }, [roles]);
+  // useEffect(() => {
+  //   if (selected?.type === PropertyType.ROLE) {
+  //     onChange(roles.map((f) => f.id).join(","));
+  //   }
+  // }, [roles]);
 
   useEffect(() => {
     if (selected?.type === PropertyType.USER) {
       onChange(userId ?? undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
@@ -114,22 +117,14 @@ const RowValueInput = (
         onChangeMedia(media);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [media]);
 
-  useEffect(() => {
-    if (selected?.type === PropertyType.FORMULA) {
-      onChange(formula);
-    }
-  }, [formula]);
-
-  useEffect(() => {
-    if (selected?.type === PropertyType.SELECT) {
-      onChange(propertyOption?.id ?? "");
-      if (onChangeOption) {
-        onChangeOption(propertyOption);
-      }
-    }
-  }, [propertyOption]);
+  // useEffect(() => {
+  //   if (selected?.type === PropertyType.FORMULA) {
+  //     onChange(formula);
+  //   }
+  // }, [formula]);
 
   return (
     <>
@@ -214,16 +209,33 @@ const RowValueInput = (
           />
         </div>
       ) : selected?.type === PropertyType.SELECT ? (
-        <PropertyValueSelector
+        <PropertyOptionSelector
           field={selected}
           initial={initialOption}
           parentSelectedValue={parentSelectedValue}
           onSelected={(e) => {
-            setPropertyOption(e);
+            onChange(e?.id ?? "");
+            if (onChangeOption) {
+              onChangeOption(e);
+            }
           }}
           className={className}
           disabled={readOnly}
         />
+      ) : selected?.type === PropertyType.BOOLEAN ? (
+        <>
+          <InputCheckbox
+            asToggle={true}
+            name={selected.name}
+            title={t(selected.title)}
+            required={selected.isRequired}
+            value={booleanValue}
+            setValue={(e) => onChange(e as boolean)}
+            disabled={selected.isDefault}
+            className={className}
+            readOnly={readOnly}
+          />
+        </>
       ) : selected?.type === PropertyType.MEDIA ? (
         <PropertyMediaInput
           initialMedia={initialMedia}

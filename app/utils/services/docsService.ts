@@ -1,12 +1,6 @@
-import fs from "fs";
-import path from "path";
 import { Command } from "~/application/dtos/layout/Command";
 import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
 import { SideBarItem } from "~/application/sidebar/SidebarItem";
-
-type Doc = {
-  items: Doc[];
-};
 
 // export async function getDoc(fileName: string): Promise<string> {
 //   const items: Doc[] = [];

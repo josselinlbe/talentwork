@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { Property, PropertyOption, RowValue } from "@prisma/client";
+import { PropertyOption } from "@prisma/client";
 import clsx from "clsx";
 import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
@@ -17,11 +17,10 @@ interface Props {
   onSelected: (item: PropertyOption | undefined) => void;
 }
 
-const PropertyValueSelector = ({ className, field, parent, disabled, initial, parentSelectedValue, onSelected }: Props) => {
+const PropertyOptionSelector = ({ className, field, parent, disabled, initial, parentSelectedValue, onSelected }: Props) => {
   const button = useRef<HTMLButtonElement>(null);
 
   const [selected, setSelected] = useState<PropertyOption | undefined>(initial);
-  const [value, setValue] = useState<PropertyOption>();
 
   useEffect(() => {
     setSelected(undefined);
@@ -124,11 +123,11 @@ const PropertyValueSelector = ({ className, field, parent, disabled, initial, pa
       {/* <div>
         {field.options?.map((item, idx) => {
           return <div key={idx}>field: {item.formField?.name}</div>;
-          // return <PropertyValueSelector key={idx} disabled={!selected} field={item} parent={selected} initial={value} onSelected={onSelected} />;
+          // return <PropertyOptionSelector key={idx} disabled={!selected} field={item} parent={selected} initial={value} onSelected={onSelected} />;
         })}
       </div> */}
     </div>
   );
 };
 
-export default PropertyValueSelector;
+export default PropertyOptionSelector;

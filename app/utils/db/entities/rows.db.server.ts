@@ -1,6 +1,7 @@
 import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, Media } from "@prisma/client";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
+import TenantHelper from "~/utils/helpers/TenantHelper";
 import { db } from "../../db.server";
 
 export type RowValueWithDetails = RowValue & {
@@ -74,28 +75,50 @@ export async function getAllRows(entityId: string): Promise<RowWithDetails[]> {
   });
 }
 
-export async function getRows(entityId: string, tenantId: string, take?: number, skip?: number, orderBy?: any): Promise<RowWithDetails[]> {
+function getSearchCondition(query?: string) {
+  let searchInValues: any = {};
+  if (query) {
+    searchInValues = {
+      OR: [
+        {
+          values: {
+            some: {
+              textValue: {
+                contains: query,
+              },
+            },
+          },
+        },
+      ],
+    };
+  }
+  return searchInValues;
+}
+export async function getRows(entityId: string, tenantId: string, take?: number, skip?: number, orderBy?: any, query?: string): Promise<RowWithDetails[]> {
   // eslint-disable-next-line no-console
-  console.log({ take, skip, orderBy });
+  // console.log({ take, skip, orderBy });
+
   return await db.row.findMany({
     take,
     skip,
     where: {
       entityId,
-      tenantId,
+      ...TenantHelper.tenantCondition(tenantId),
       parentRowId: null,
+      ...getSearchCondition(query),
     },
     include: includeRowDetails,
     orderBy,
   });
 }
 
-export async function countRows(entityId: string, tenantId: string): Promise<number> {
+export async function countRows(entityId: string, tenantId: string, query?: string): Promise<number> {
   return await db.row.count({
     where: {
       entityId,
-      tenantId,
+      ...TenantHelper.tenantCondition(tenantId),
       parentRowId: null,
+      ...getSearchCondition(query),
     },
   });
 }
@@ -105,7 +128,7 @@ export async function getRow(entityId: string, id: string, tenantId: string): Pr
     where: {
       id,
       entityId,
-      tenantId,
+      ...TenantHelper.tenantCondition(tenantId),
       parentRowId: null,
     },
     include: {
@@ -122,6 +145,11 @@ export async function getMaxRowFolio(entityId: string, parentRowId: string | und
     where = {
       entityId,
       parentRowId,
+    };
+  } else {
+    where = {
+      entityId,
+      parentRowId: null,
     };
   }
   return await db.row.aggregate({
@@ -148,6 +176,7 @@ export async function createRow(
       textValue?: string | null;
       numberValue?: number | string | null;
       dateValue?: Date | string | null;
+      booleanValue?: boolean | null;
       media?: MediaDto[];
     }[];
     dynamicRows: { id?: string | null; values: RowValueDto[] }[];
@@ -174,7 +203,7 @@ export async function createRow(
       ...data.properties,
       values: {
         create: data.dynamicProperties
-          .filter((f) => !f.id)
+          // .filter((f) => !f.id)
           .map((value) => {
             return {
               propertyId: value.propertyId,
@@ -183,6 +212,7 @@ export async function createRow(
               textValue: value.textValue,
               numberValue: value.numberValue,
               dateValue: value.dateValue,
+              booleanValue: value.booleanValue,
               media: {
                 create: value.media?.map((m) => {
                   return {
@@ -199,14 +229,20 @@ export async function createRow(
     },
   });
 
-  await Promise.all(
-    data.dynamicRows.map(async (dynamicRow, idx) => {
-      return await createRow(
+  await addDetailRows(row, data.dynamicRows);
+
+  return row;
+}
+
+async function addDetailRows(row: Row, dynamicRows: { id?: string | null; values: RowValueDto[] }[]) {
+  return await Promise.all(
+    dynamicRows.map(async (dynamicRow, idx) => {
+      const detailRow = await createRow(
         {
-          entityId: data.entityId,
-          tenantId: data.tenantId,
-          createdByUserId: data.createdByUserId,
-          linkedAccountId: data.linkedAccountId,
+          entityId: row.entityId,
+          tenantId: row.tenantId,
+          createdByUserId: row.createdByUserId,
+          linkedAccountId: row.linkedAccountId,
           dynamicProperties: dynamicRow.values,
           dynamicRows: [],
           properties: [],
@@ -214,10 +250,9 @@ export async function createRow(
         row.id,
         idx + 1
       );
+      return detailRow;
     })
   );
-
-  return row;
 }
 
 export async function updateRow(
@@ -232,10 +267,19 @@ export async function updateRow(
       textValue?: string | null;
       numberValue?: number | string | null;
       dateValue?: Date | string | null;
+      booleanValue?: boolean | null;
       media?: MediaDto[];
     }[];
+    dynamicRows: { id?: string | null; values: RowValueDto[] }[] | null;
   }
 ) {
+  await db.media.deleteMany({
+    where: {
+      rowValue: {
+        rowId: id,
+      },
+    },
+  });
   const update = {
     ...data.properties,
     values: {
@@ -249,6 +293,7 @@ export async function updateRow(
             textValue: value.textValue,
             numberValue: value.numberValue,
             dateValue: value.dateValue,
+            booleanValue: value.booleanValue,
             media: {
               create: value.media?.map((m) => {
                 return {
@@ -272,6 +317,7 @@ export async function updateRow(
               textValue: value.textValue,
               numberValue: value.numberValue,
               dateValue: value.dateValue,
+              booleanValue: value.booleanValue,
               media: {
                 create: value.media?.map((m) => {
                   return {
@@ -287,12 +333,23 @@ export async function updateRow(
         }),
     },
   };
-  return await db.row.update({
+  const row = await db.row.update({
     where: {
       id,
     },
     data: update,
   });
+
+  if (data.dynamicRows !== null) {
+    await db.row.deleteMany({
+      where: {
+        parentRowId: id,
+      },
+    });
+    await addDetailRows(row, data.dynamicRows);
+  }
+
+  return row;
 }
 
 export async function deleteRow(id: string) {

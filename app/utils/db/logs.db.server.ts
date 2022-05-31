@@ -1,6 +1,7 @@
-import { Tenant, User, Log, Entity, Row, RowValue, ApiKey } from "@prisma/client";
+import { Tenant, User, Log, ApiKey } from "@prisma/client";
 import { getClientIPAddress } from "remix-utils";
 import { db } from "../db.server";
+import ApiHelper from "../helpers/ApiHelper";
 import RowHelper from "../helpers/RowHelper";
 import { TenantUrl } from "../services/urlService";
 import { getUserInfo } from "../session.server";
@@ -94,7 +95,7 @@ export async function createRowLog(
       details: data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null,
     },
   });
-  const apiFormat = RowHelper.getApiFormat(data.entity, data.item);
+  const apiFormat = ApiHelper.getApiFormat(data.entity, data.item);
   await callEntityWebhooks(log.id, data.entity.id, data.action, apiFormat);
   return log;
 }

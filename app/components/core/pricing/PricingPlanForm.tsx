@@ -14,10 +14,8 @@ import { useAdminData } from "~/utils/data/useAdminData";
 import NumberUtils from "~/utils/shared/NumberUtils";
 import Plan from "../settings/subscription/Plan";
 import ToggleBillingPeriod from "../settings/subscription/ToggleBillingPeriod";
-import PricingFeaturesForm from "./PricingFeaturesForm";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 import PricingFeaturesTable from "./PricingFeaturesTable";
-import InputSelect from "~/components/ui/input/InputSelect";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import InputRadioGroup from "~/components/ui/input/InputRadioGroup";
 
@@ -142,21 +140,21 @@ export default function PricingPlanForm({ plans, item }: Props) {
     });
   }
 
-  function getModelDescription() {
-    switch (model) {
-      case PricingModel.FLAT_RATE:
-        return "eg: Basic $10, Pro $20, Enterprise $30";
+  // function getModelDescription() {
+  //   switch (model) {
+  //     case PricingModel.FLAT_RATE:
+  //       return "eg: Basic $10, Pro $20, Enterprise $30";
 
-      case PricingModel.PER_SEAT:
-        return "Customers can select quantity, eg: $5 per seat.";
+  //     case PricingModel.PER_SEAT:
+  //       return "Customers can select quantity, eg: $5 per seat.";
 
-      case PricingModel.USAGE_BASED:
-        return "eg: 1$ per contract";
+  //     case PricingModel.USAGE_BASED:
+  //       return "eg: 1$ per contract";
 
-      default:
-        return t("shared.undefined");
-    }
-  }
+  //     default:
+  //       return t("shared.undefined");
+  //   }
+  // }
 
   return (
     <>

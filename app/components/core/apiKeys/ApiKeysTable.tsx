@@ -1,12 +1,10 @@
 import { Entity } from "@prisma/client";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSubmit } from "remix";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import InputSearch from "~/components/ui/input/InputSearch";
-import { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 
@@ -93,7 +91,6 @@ export default function ApiKeysTable({ entities, items, withTenant }: Props) {
 
   function hasExpired(item: ApiKeyWithDetails) {
     const now = new Date();
-    return true;
     return item.expires && item.expires < now;
   }
 

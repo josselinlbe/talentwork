@@ -1,9 +1,8 @@
-import { Log } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import LogsTable from "~/components/app/events/LogsTable";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
-import { getAllRowLogs, getRowLogs, LogWithDetails } from "~/utils/db/logs.db.server";
+import { getAllRowLogs, LogWithDetails } from "~/utils/db/logs.db.server";
 
 type LoaderData = {
   items: LogWithDetails[];
@@ -26,8 +25,6 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
-  const form = await request.formData();
-  const action = form.get("action")?.toString() ?? "";
   return badRequest(t("shared.invalidForm"));
 };
 

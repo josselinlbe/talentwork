@@ -7,9 +7,15 @@ import { RowWithDetails } from "../db/entities/rows.db.server";
 import DateUtils from "../shared/DateUtils";
 import NumberUtils from "../shared/NumberUtils";
 import { RowDetailDto } from "~/application/dtos/entities/RowDetailDto";
+import CheckIcon from "~/components/ui/icons/CheckIcon";
+import XIcon from "~/components/ui/icons/XIcon";
 
 const getCellValue = (entity: Entity, item: RowWithDetails, property: Property) => {
-  return getFormattedValue(getPropertyValue(entity, item, property), property.type);
+  const value = getPropertyValue(entity, item, property);
+  if (property.type === PropertyType.BOOLEAN) {
+    return value ? <CheckIcon className="h-4 w-4 text-teal-500" /> : <XIcon className="h-4 w-4 text-gray-500" />;
+  }
+  return getFormattedValue(value, property.type);
 };
 
 const getPropertyValue = (entity: Entity, item: RowWithDetails, property: Property) => {
@@ -33,7 +39,7 @@ const getPropertyValue = (entity: Entity, item: RowWithDetails, property: Proper
 const getProperties = (entity: EntityWithDetails, item: RowWithDetails) => {
   const customProperties: any = {};
   entity.properties
-    .filter((f) => !f.isHidden)
+    .filter((f) => !f.isHidden && !f.isDetail)
     .forEach((property) => {
       const value = getPropertyValue(entity, item, property);
       customProperties[property.name] = value;
@@ -51,6 +57,8 @@ function getDynamicPropertyValue(item: RowValue & { media: Media[] }, type: Prop
       return item.textValue;
     case PropertyType.DATE:
       return item.dateValue;
+    case PropertyType.BOOLEAN:
+      return item.booleanValue;
     case PropertyType.ROLE:
     case PropertyType.USER:
     case PropertyType.ID:
@@ -90,6 +98,8 @@ function getFormattedValue(value: any, type: PropertyType): string {
     case PropertyType.SELECT:
     case PropertyType.FORMULA:
       return value;
+    case PropertyType.BOOLEAN:
+      return value ? "t" : "f";
     case PropertyType.DATE:
       return DateUtils.dateYMD(value);
     case PropertyType.ROLE:
@@ -97,8 +107,11 @@ function getFormattedValue(value: any, type: PropertyType): string {
     case PropertyType.ID:
       return value;
     case PropertyType.ENTITY:
-      const relatedRow = value as RowWithDetails;
-      if (relatedRow.values.length === 0) {
+      const relatedRow = value as RowWithDetails | null;
+      if (!relatedRow) {
+        return "";
+      }
+      if (relatedRow?.values.length === 0) {
         return getRowFolio(relatedRow.entity, relatedRow);
       }
       const firstValue = relatedRow.values[0];
@@ -185,6 +198,8 @@ const getValueFromType = (type: PropertyType, value: any) => {
       return { textValue: value };
     case PropertyType.DATE:
       return { dateValue: new Date(value) };
+    case PropertyType.BOOLEAN:
+      return { booleanValue: value === "true" || value === true };
     case PropertyType.ENTITY:
       return { relatedRowId: value };
     case PropertyType.MEDIA:
@@ -214,6 +229,15 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
   const dynamicProperties: RowValueDto[] = [];
   let dynamicRows: RowDetailDto[] = [];
   const properties: any = {};
+
+  let linkedAccountId: string | null = null;
+  if (entity.requiresLinkedAccounts) {
+    linkedAccountId = form.get("linked-account-id")?.toString() ?? null;
+    if (!linkedAccountId) {
+      throw Error(`An account link is required`);
+    }
+  }
+
   if (entity.properties.filter((f) => !f.isDynamic).length > 0) {
     if (existing) {
       Object.assign(properties, {
@@ -243,12 +267,17 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
         media = form.getAll(name).map((f: FormDataEntryValue) => {
           return JSON.parse(f.toString());
         });
+        // media.forEach((mediaItem) => {
+        //   console.log("title", mediaItem.title);
+        //   console.log("name", mediaItem.name);
+        //   console.log("type", mediaItem.type);
+        // });
         if (property.isRequired && media.length === 0) {
           throw Error(`${property.title} is required`);
         }
       } else {
         formValue = form.get(name);
-        if (property.isRequired && (!formValue || formValue === null || formValue === undefined)) {
+        if (property.isRequired && (formValue === null || formValue === undefined)) {
           throw Error(`${property.title} is required`);
         }
       }
@@ -273,14 +302,9 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
       }
     });
 
-  dynamicRows = form.getAll(`row-details[]`).map((f: FormDataEntryValue) => {
+  dynamicRows = form.getAll(`rows[]`).map((f: FormDataEntryValue) => {
     return JSON.parse(f.toString()) as RowDetailDto;
   });
-
-  let linkedAccountId: string | null = null;
-  if (entity.requiresLinkedAccounts) {
-    linkedAccountId = form.get("linked-account-id")?.toString() ?? null;
-  }
 
   // console.log({ dynamicProperties, dynamicRows, properties });
 
@@ -289,26 +313,6 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
     dynamicRows,
     properties,
     linkedAccountId,
-  };
-};
-
-const getApiFormat = (entity: EntityWithDetails, item: RowWithDetails | null) => {
-  if (item === null) {
-    return null;
-  }
-  return {
-    id: item.id,
-    createdAt: item.createdAt,
-    createdByUser: item.createdByUser
-      ? {
-          id: item.createdByUserId,
-          email: item.createdByUser?.email,
-          firstName: item.createdByUser?.firstName,
-          lastName: item.createdByUser?.lastName,
-        }
-      : null,
-    folio: getRowFolio(entity, item),
-    ...getProperties(entity, item),
   };
 };
 
@@ -326,5 +330,4 @@ export default {
   getProperties,
   setObjectProperties,
   getRowPropertiesFromForm,
-  getApiFormat,
 };

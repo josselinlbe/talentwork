@@ -15,13 +15,15 @@ import DropdownWithClick from "~/components/ui/dropdowns/DropdownWithClick";
 import { Menu } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { getRelatedRows } from "~/utils/services/entitiesService";
+import { getLinksWithMembers, LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
-  item: RowWithDetails;
+  item: any;
   logs: LogWithDetails[];
   relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[];
+  linkedAccounts: LinkedAccountWithDetailsAndMembers[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -39,12 +41,15 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
   const logs = await getRowLogs(tenantUrl.tenantId, item.id);
   RowHelper.setObjectProperties(entity, item);
+
+  const linkedAccounts = await getLinksWithMembers(tenantUrl.tenantId);
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,
     entity,
     item,
     logs,
     relatedEntities,
+    linkedAccounts,
   };
   return json(data);
 };
@@ -76,6 +81,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       const rowValues = RowHelper.getRowPropertiesFromForm(entity, form, item);
       await updateRow(item.id ?? "", {
         dynamicProperties: rowValues.dynamicProperties,
+        dynamicRows: rowValues.dynamicRows,
         properties: rowValues.properties,
       });
       await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Updated", entity, item });
@@ -84,8 +90,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: e?.toString() });
     }
   } else if (action === "delete") {
-    await deleteRow(item.id);
     await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Deleted", entity, item });
+    await deleteRow(item.id);
     return redirect(`/app/${params.tenant}/${entity.slug}`);
   } else {
     return badRequest({ error: t("shared.invalidForm") });
@@ -111,6 +117,7 @@ export default function RowsListRoute() {
 
   useEffect(() => {
     navigate(".");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editing]);
 
   return (
@@ -155,7 +162,7 @@ export default function RowsListRoute() {
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <RowForm entity={data.entity} item={data.item} editing={editing} relatedEntities={data.relatedEntities} />
+            <RowForm entity={data.entity} item={data.item} editing={editing} relatedEntities={data.relatedEntities} linkedAccounts={data.linkedAccounts} />
           </div>
           <div className="">
             <RowLogs items={data.logs} />

@@ -13,7 +13,6 @@ import LogoLight from "~/assets/img/logo-light.png";
 import { useAppData } from "~/utils/data/useAppData";
 import { useParams, useSubmit } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useAdminData } from "~/utils/data/useAdminData";
 import { useRootData } from "~/utils/data/useRootData";
 
 interface Props {
@@ -108,7 +107,7 @@ export default function StackedLayout({ layout, children }: Props) {
             <div className="flex items-center space-x-2 flex-shrink-0">
               {/* {layout === "admin" && <LayoutSelector className="text-sm" />} */}
               {/* {layout === "admin" && <LocaleSelector className="text-sm" />} */}
-              {layout === "app" && <QuickActionsButton className="text-gray-400" />}
+              {layout === "app" && <QuickActionsButton entities={appData.entities} className="text-gray-400" />}
               <ProfileButton layout={layout} />
               <button
                 onClick={() => setMenuOpened(!menuOpened)}

@@ -163,7 +163,7 @@ const ConfirmModal = (props: Props, ref: Ref<RefConfirmModal>) => {
                   type="button"
                   className={clsx(
                     "w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2  text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 sm:col-start-2 sm:text-sm",
-                    !props.destructive ? "focus:ring-theme-500 bg-theme-600 hover:bg-theme-700" : "focus:ring-red-500 bg-red-600 hover:bg-red-700"
+                    !props.destructive ? "focus:ring-accent-500 bg-accent-600 hover:bg-accent-700" : "focus:ring-red-500 bg-red-600 hover:bg-red-700"
                   )}
                   onClick={yes}
                 >

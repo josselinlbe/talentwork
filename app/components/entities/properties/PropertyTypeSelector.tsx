@@ -21,6 +21,7 @@ export default function PropertyTypeSelector({ className, selected, onSelected }
     // PropertyType.USER,
     // PropertyType.ROLE,
     PropertyType.SELECT,
+    PropertyType.BOOLEAN,
     PropertyType.MEDIA,
     PropertyType.ENTITY,
     // PropertyType.FORMULA,

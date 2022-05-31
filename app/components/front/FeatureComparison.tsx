@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-import { getFeatures } from "~/utils/services/marketingService";
 import CheckIcon from "../ui/icons/CheckIcon";
 import XIcon from "../ui/icons/XIcon";
 

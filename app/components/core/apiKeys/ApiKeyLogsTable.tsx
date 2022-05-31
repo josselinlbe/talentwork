@@ -3,7 +3,6 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useEffect, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
-import { LogWithDetails } from "~/utils/db/logs.db.server";
 import { ApiKeyLogWithDetails } from "~/utils/db/apiKeys.db.server";
 import InputSearch from "~/components/ui/input/InputSearch";
 import SimpleBadge from "~/components/ui/badges/SimpleBadge";

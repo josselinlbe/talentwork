@@ -1,9 +1,6 @@
-import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
-import CheckIcon from "~/components/ui/icons/CheckIcon";
-import XIcon from "~/components/ui/icons/XIcon";
 
 interface Props {
   item: PlanFeatureUsageDto | undefined;

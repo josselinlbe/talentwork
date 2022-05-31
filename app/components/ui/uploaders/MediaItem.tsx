@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
-import ButtonSecondary from "../buttons/ButtonSecondary";
 import ButtonTertiary from "../buttons/ButtonTertiary";
 import DownloadIcon from "../icons/DownloadIcon";
 import EyeIcon from "../icons/EyeIcon";

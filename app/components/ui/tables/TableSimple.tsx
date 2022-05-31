@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useLoaderData, useLocation, useNavigate, useSearchParams, useSubmit, useTransition } from "remix";
-import Constants from "~/application/Constants";
+import { Link, useSearchParams } from "remix";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { InputType } from "~/application/enums/shared/InputType";
 import ButtonTertiary from "../buttons/ButtonTertiary";
 import InputNumber from "../input/InputNumber";
@@ -24,63 +24,30 @@ export type Header<T> = {
   sortable?: boolean;
   breakpoint?: "sm" | "md" | "lg" | "xl" | "2xl";
 };
+
 interface Props<T> {
   headers: Header<T>[];
   items: T[];
   actions?: { title: string; onClick?: (idx: number, item: T) => void; onClickRoute?: (idx: number, item: T) => string }[];
   updatesUrl?: boolean;
+  pagination?: PaginationDto;
 }
-export default function TableSimple<T>({ headers, items, actions = [], updatesUrl = false }: Props<T>) {
+
+export default function TableSimple<T>({ headers, items, actions = [], updatesUrl = false, pagination }: Props<T>) {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const submit = useSubmit();
-  const transition = useTransition();
-
-  const data = useLoaderData<{ totalItems: number; totalPages: number }>();
-
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(Constants.DEFAULT_PAGE_SIZE);
-  const [sortBy, setSortBy] = useState<Header<T>>();
-  const [sortByDirection, setSortByDirection] = useState<string>("");
-
-  useEffect(() => {
-    const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-    const pageSize = searchParams.get("pageSize") ? Number(searchParams.get("pageSize")) : Constants.DEFAULT_PAGE_SIZE;
-
-    setPage(page);
-    setPageSize(pageSize);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search]);
-
-  useEffect(() => {
-    if (updatesUrl) {
-      if (sortBy) {
-        const sort = `${sortByDirection}${sortBy.name}`;
-        setSearchParams({ page: page.toString(), sort });
-      } else {
-        setSearchParams({ page: page.toString() });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, sortBy, sortByDirection]);
 
   function onSortBy(header: Header<T>) {
-    if (sortBy?.name === header.name) {
-      if (sortByDirection === "") {
-        setSortByDirection("-");
-      } else {
-        setSortByDirection("");
-      }
-    } else {
-      setSortBy(header);
-      setSortByDirection("");
+    let sort = header.name.toString();
+    let direction = "-";
+    if (pagination?.sortedBy?.name === header.name) {
+      direction = pagination?.sortedBy?.direction === "asc" ? "-" : "";
     }
-    setPage(1);
+    sort = direction + sort;
+    searchParams.set("page", "1");
+    searchParams.set("sort", sort);
+    setSearchParams(searchParams);
   }
-
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto">
@@ -107,9 +74,9 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                       >
                         <div className={clsx("flex items-center space-x-1 text-gray-500", header.className)}>
                           <div>{header.title}</div>
-                          <div className={clsx((!header.name || sortBy?.name !== header.name) && "invisible")}>
+                          <div className={clsx((!header.name || pagination?.sortedBy?.name !== header.name) && "invisible")}>
                             {(() => {
-                              if (sortByDirection === "") {
+                              if (pagination?.sortedBy?.direction === "asc") {
                                 return (
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path
@@ -267,8 +234,9 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                 ))} */}
               </tbody>
             </table>
-            {updatesUrl && (
-              <TablePagination onChange={(e) => setPage(e)} page={page} pageSize={pageSize} totalItems={data.totalItems} totalPages={data.totalPages} />
+            {/* {JSON.stringify(pagination)} */}
+            {updatesUrl && pagination && (
+              <TablePagination totalItems={pagination.totalItems} totalPages={pagination.totalPages} page={pagination.page} pageSize={pagination.pageSize} />
             )}
           </div>
         </div>

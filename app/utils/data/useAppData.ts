@@ -10,7 +10,7 @@ import UrlUtils from "../app/UrlUtils";
 import { getTenantUrl } from "../services/urlService";
 import { getTenantSubscription, TenantSubscriptionWithDetails } from "../db/tenantSubscriptions.db.server";
 import { EntityWithDetails, getAllEntities } from "../db/entities/entities.db.server";
-import { Tenant, Entity } from "@prisma/client";
+import { Tenant } from "@prisma/client";
 import { Language } from "remix-i18next";
 import { Params } from "react-router";
 

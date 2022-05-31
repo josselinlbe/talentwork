@@ -6,7 +6,6 @@ import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import Loading from "~/components/ui/loaders/Loading";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { useAdminData } from "~/utils/data/useAdminData";
 import { EntityWithCount, getAllEntitiesWithRowCount } from "~/utils/db/entities/entities.db.server";
 
 type LoaderData = {
@@ -32,7 +31,6 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function Events() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
-  const adminData = useAdminData();
   const transition = useTransition();
   const loading = transition.state === "loading";
 

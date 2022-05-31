@@ -1,31 +1,31 @@
-import { useState } from "react";
 import RowsListAndTable from "./RowsListAndTable";
 import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
-import RowHelper from "~/utils/helpers/RowHelper";
-import InputSearch from "~/components/ui/input/InputSearch";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
+import InputSearchWithURL from "~/components/ui/input/InputSearchWithURL";
 
 interface Props {
   entity: EntityWithDetails;
   items: RowWithDetails[];
+  pagination?: PaginationDto;
   withTenant?: boolean;
 }
-export default function RowsList({ entity, items, withTenant = false }: Props) {
-  const [searchInput, setSearchInput] = useState("");
+export default function RowsList({ entity, items, pagination, withTenant = false }: Props) {
+  // const [searchInput, setSearchInput] = useState("");
+  // const filteredItems = () => {
+  //   if (!items) {
+  //     return [];
+  //   }
+  //   const filtered = items.filter((f) => RowHelper.search(entity, f, searchInput));
 
-  const filteredItems = () => {
-    if (!items) {
-      return [];
-    }
-    const filtered = items.filter((f) => RowHelper.search(entity, f, searchInput));
-
-    return filtered;
-  };
+  //   return filtered;
+  // };
 
   return (
     <div className="space-y-2">
-      <InputSearch value={searchInput} setValue={setSearchInput} />
-      <RowsListAndTable entity={entity} items={filteredItems()} withTenant={withTenant} />
+      {/* TODO: IMPLEMENT SEARCH WITH URL ?query={SEARCH_INPUT} */}
+      <InputSearchWithURL />
+      <RowsListAndTable withTenant={withTenant} entity={entity} items={items} pagination={pagination} />
     </div>
   );
 }

@@ -11,7 +11,6 @@ import { useAppData } from "~/utils/data/useAppData";
 import { useParams } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
-import { useAdminData } from "~/utils/data/useAdminData";
 import { useRootData } from "~/utils/data/useRootData";
 
 interface Props {

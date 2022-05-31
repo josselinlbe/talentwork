@@ -1,7 +1,5 @@
 import { EntityWebhook } from "@prisma/client";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "remix";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputSelect from "~/components/ui/input/InputSelect";
 import InputText from "~/components/ui/input/InputText";
@@ -11,10 +9,6 @@ interface Props {
 }
 
 export default function EntityWebhookForm({ item }: Props) {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const params = useParams();
-
   const [action, setAction] = useState<string>(item?.action ?? "Created");
   const [method, setMethod] = useState<string>(item?.method ?? "POST");
   const [endpoint, setEndpoint] = useState<string>(item?.endpoint ?? "");

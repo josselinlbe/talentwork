@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import ButtonPrimary from "../buttons/ButtonPrimary";
-import ButtonSecondary from "../buttons/ButtonSecondary";
 
 interface Props {
   value: string;

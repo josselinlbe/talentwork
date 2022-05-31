@@ -1,12 +1,9 @@
-import { useTranslation } from "react-i18next";
 import MembersListAndTable from "~/components/core/settings/members/MembersListAndTable";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useState } from "react";
-import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { getTenantUsers, TenantUserWithUser } from "~/utils/db/tenants.db.server";
-import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, useLoaderData, useNavigate, useParams } from "remix";
-import { useAppData } from "~/utils/data/useAppData";
+import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useLoaderData, useNavigate, useParams } from "remix";
 import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
 import { i18nHelper } from "~/locale/i18n.utils";
@@ -63,9 +60,7 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function MembersRoute() {
   const params = useParams();
-  const appData = useAppData();
   const data = useLoaderData<LoaderData>();
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -76,16 +71,6 @@ export default function MembersRoute() {
   function yesUpdateSubscription() {
     navigate(UrlUtils.currentTenantUrl(params, `settings/subscription`));
   }
-
-  const maxUsers = (): number => {
-    if (appData.user?.admin !== null) {
-      return 0;
-    }
-    return appData.mySubscription?.subscriptionPrice?.subscriptionProduct.maxUsers ?? 0;
-  };
-  const maxUsersReached = () => {
-    return maxUsers() > 0 && (data.users?.length ?? 0) >= maxUsers();
-  };
   const filteredItems = () => {
     if (!data.users) {
       return [];
@@ -105,10 +90,10 @@ export default function MembersRoute() {
     const filtered = filteredItems()
       .slice()
       .sort((x, y) => {
-        return x.role > y.role ? -1 : 1;
+        return x.type > y.type ? -1 : 1;
       });
     return filtered.sort((x, y) => {
-      return x.role > y.role ? 1 : -1;
+      return x.type > y.type ? 1 : -1;
     });
   };
 
@@ -122,12 +107,6 @@ export default function MembersRoute() {
               <MembersListAndTable items={sortedItems()} />
 
               {data.pendingInvitations.length > 0 && <MemberInvitationsListAndTable items={data.pendingInvitations} />}
-
-              {maxUsersReached() && (
-                <div>
-                  <WarningBanner title={t("app.subscription.errors.limitReached")} text={t("app.subscription.errors.limitReachedUsers", [maxUsers])} />
-                </div>
-              )}
             </div>
           </div>
         </div>

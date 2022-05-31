@@ -36,8 +36,8 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
 
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
 
-  const [parentId, setParentId] = useState<string | undefined>(item?.parentId ?? undefined);
-  const [parent, setParent] = useState<Property | undefined>(item?.parent);
+  const [, setParentId] = useState<string | undefined>(item?.parentId ?? undefined);
+  const [, setParent] = useState<Property | undefined>(item?.parent);
   const [order, setOrder] = useState<number>(item?.order ?? Math.max(...properties.map((o) => o.order)) + 1);
   const [name, setName] = useState<string>(item?.name ?? "");
   const [title, setTitle] = useState<string>(item?.title ?? "");
@@ -58,6 +58,7 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
 
   useEffect(() => {
     setEntity(parentEntity);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -91,22 +92,23 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
   // }, [parent]);
 
   useEffect(() => {
-    switch (type) {
-      case PropertyType.USER:
-      case PropertyType.ROLE:
-        setTitleEnabled(true);
-        // setTitleEnabled(false);
-        break;
-      case PropertyType.ENTITY:
-      case PropertyType.DATE:
-      case PropertyType.TEXT:
-      case PropertyType.NUMBER:
-      case PropertyType.SELECT:
-      case PropertyType.FORMULA:
-      case PropertyType.MEDIA:
-        setTitleEnabled(true);
-        break;
-    }
+    setTitleEnabled(true);
+    // switch (type) {
+    //   case PropertyType.USER:
+    //   case PropertyType.ROLE:
+    //     setTitleEnabled(true);
+    //     // setTitleEnabled(false);
+    //     break;
+    //   case PropertyType.ENTITY:
+    //   case PropertyType.DATE:
+    //   case PropertyType.TEXT:
+    //   case PropertyType.NUMBER:
+    //   case PropertyType.SELECT:
+    //   case PropertyType.FORMULA:
+    //   case PropertyType.MEDIA:
+    //     setTitleEnabled(true);
+    //     break;
+    // }
   }, [type]);
 
   function close() {

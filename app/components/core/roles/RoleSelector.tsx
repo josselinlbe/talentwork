@@ -1,8 +1,6 @@
-import { forwardRef, Fragment, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, Fragment, Ref, useImperativeHandle, useRef } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { UserRole } from "@prisma/client";
 import clsx from "clsx";
-import Loading from "~/components/ui/loaders/Loading";
 import SelectorIcon from "~/components/ui/icons/SelectorIcon";
 import CheckIcon from "~/components/ui/icons/CheckIcon";
 
@@ -11,9 +9,9 @@ export interface RefRoleSelector {
 }
 
 interface Props {
-  items: UserRole[];
+  items: any[];
   className?: string;
-  selected: UserRole[];
+  selected: any[];
   disabled?: boolean;
   onSelected: (item: any) => void;
 }

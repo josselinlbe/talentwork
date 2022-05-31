@@ -1,13 +1,10 @@
-import { Tenant } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData, useNavigate, useParams } from "remix";
 import ApiKeyForm from "~/components/core/apiKeys/ApiKeyForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useAdminData } from "~/utils/data/useAdminData";
 import { useAppData } from "~/utils/data/useAppData";
 import { ApiKeyWithDetails, deleteApiKey, getApiKeyById, updateApiKey } from "~/utils/db/apiKeys.db.server";
-import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
 
 type LoaderData = {
   item: ApiKeyWithDetails;

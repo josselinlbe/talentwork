@@ -135,8 +135,6 @@ export function getBadgeColor(itemColor: Colors, strong?: boolean): string {
       return clsx("bg-slate-50 border border-slate-200 text-slate-600", strong && "bg-slate-400 border-slate-900 text-slate-900");
     case Colors.GRAY:
       return clsx("bg-gray-50 border border-gray-200 text-gray-600", strong && "bg-gray-400 border-gray-900 text-gray-900");
-    case Colors.GRAY:
-      return clsx("bg-gray-50 border border-gray-200 text-gray-600", strong && "bg-gray-400 border-gray-900 text-gray-900");
     case Colors.NEUTRAL:
       return clsx("bg-neutral-50 border border-neutral-200 text-neutral-600", strong && "bg-neutral-400 border-neutral-900 text-neutral-900");
     case Colors.STONE:

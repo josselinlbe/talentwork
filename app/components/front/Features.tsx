@@ -6,29 +6,6 @@ import CheckIcon from "../ui/icons/CheckIcon";
 
 const groups = [
   {
-    headline: "New section",
-    subheadline: "Lorem",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut...",
-    items: [
-      {
-        name: "My feature 1",
-        description: "Lorem ipsum dolor sit amet...",
-      },
-      {
-        name: "My feature 2",
-        description: "Lorem ipsum dolor sit amet...",
-      },
-      {
-        name: "My feature 3",
-        description: "Lorem ipsum dolor sit amet...",
-      },
-      {
-        name: "My feature 4",
-        description: "Lorem ipsum dolor sit amet...",
-      },
-    ],
-  },
-  {
     headline: "🪨 Rock-solid features",
     subheadline: "A rock-solid starter kit",
     description: "Everything you need to start to build an MVP, or to build a whole SaaS application in a few weeks.",

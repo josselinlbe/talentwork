@@ -45,7 +45,6 @@ const FormulaControl = ({ request, selected, onChange }: Props, ref: Ref<RefForm
   }, [request, formula]);
 
   useEffect(() => {
-    console.log("resultChanged", selected?.title);
     onChange(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);

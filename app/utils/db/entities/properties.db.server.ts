@@ -81,20 +81,11 @@ export async function updateProperty(
 }
 
 export async function updatePropertyOptions(id: string, options: { order: number; value: string }[]) {
-  console.log({
-    id,
-    options: JSON.stringify(options),
-  });
   await db.propertyOption.deleteMany({
     where: { propertyId: id },
   });
   Promise.all(
     options.map(async (option) => {
-      console.log({
-        propertyId: id,
-        order: option.order,
-        value: option.value,
-      });
       return await db.propertyOption.create({
         data: {
           propertyId: id,

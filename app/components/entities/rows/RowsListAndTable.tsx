@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
-import EmptyState from "~/components/ui/emptyState/EmptyState";
 import DateUtils from "~/utils/shared/DateUtils";
 import { useEffect, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -13,10 +12,12 @@ import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 import RowHelper from "~/utils/helpers/RowHelper";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import TableSimple, { Header } from "~/components/ui/tables/TableSimple";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 
 interface Props {
   entity: EntityWithDetails;
   items: RowWithDetails[];
+  pagination?: PaginationDto;
   className?: string;
   withFolio?: boolean;
   withTenant?: boolean;
@@ -27,7 +28,7 @@ interface Props {
 //   title: string;
 // };
 
-export default function RowsListAndTable({ entity, items, withTenant = false, withFolio = true, className = "" }: Props) {
+export default function RowsListAndTable({ entity, items, pagination, withTenant = false, withFolio = true, className = "" }: Props) {
   const params = useParams();
   const { t } = useTranslation();
 
@@ -66,8 +67,8 @@ export default function RowsListAndTable({ entity, items, withTenant = false, wi
           href:
             property.type === PropertyType.ENTITY
               ? (item) =>
-                  `/app/${item.tenant.slug}/${RowHelper.getPropertyValue(entity, item, property).entity.slug}/${
-                    RowHelper.getPropertyValue(entity, item, property).id
+                  `/app/${item.tenant.slug}/${RowHelper.getPropertyValue(entity, item, property)?.entity.slug}/${
+                    RowHelper.getPropertyValue(entity, item, property)?.id
                   }`
               : undefined,
         });
@@ -133,6 +134,7 @@ export default function RowsListAndTable({ entity, items, withTenant = false, wi
         <TableSimple
           headers={headers}
           items={items}
+          pagination={pagination}
           actions={[
             {
               title: t("shared.edit"),
@@ -286,7 +288,7 @@ export default function RowsListAndTable({ entity, items, withTenant = false, wi
                                       <td key={property.name} className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">
                                         {property.type === PropertyType.ENTITY ? (
                                           <Link
-                                            to={`/app/${item.tenant.slug}/${RowHelper.getPropertyValue(entity, item, property).entity.slug}/${
+                                            to={`/app/${item.tenant.slug}/${RowHelper.getPropertyValue(entity, item, property)?.entity.slug}/${
                                               RowHelper.getPropertyValue(entity, item, property).id
                                             }`}
                                             className="p-2 hover:bg-gray-50 border border-transparent hover:border-gray-300 rounded-md focus:bg-gray-100"

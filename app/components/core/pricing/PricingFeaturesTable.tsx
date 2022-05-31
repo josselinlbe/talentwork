@@ -1,4 +1,3 @@
-import { Entity } from "@prisma/client";
 import { t } from "i18next";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { InputType } from "~/application/enums/shared/InputType";

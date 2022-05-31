@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "remix";
 import InputText, { RefInputText } from "../ui/input/InputText";
 import { useTranslation } from "react-i18next";
-import UrlUtils from "~/utils/app/UrlUtils";
 import InputGroup from "../ui/forms/InputGroup";
 import EntityIcon from "../layouts/icons/EntityIcon";
 import InputNumber from "../ui/input/InputNumber";
@@ -89,7 +88,7 @@ export default function EntityForm({ item }: Props) {
             required
             help="eg: contract"
             autoComplete="off"
-            lowercase
+            lowercase={true}
           />
 
           <InputText
@@ -101,7 +100,7 @@ export default function EntityForm({ item }: Props) {
             required
             autoComplete="off"
             help="eg: contracts would show at /app/:tenant/contracts"
-            lowercase
+            lowercase={true}
           />
           <InputText
             className="col-span-6"

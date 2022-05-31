@@ -13,13 +13,13 @@ export type PropertyWithDetails = Property & {
   parent?: PropertyWithDetails;
 };
 
-const includePropertiesWithDetails = {
-  properties: {
-    include: {
-      options: true,
-    },
-  },
-};
+// const includePropertiesWithDetails = {
+//   properties: {
+//     include: {
+//       options: true,
+//     },
+//   },
+// };
 
 export async function getAllEntities(active?: boolean): Promise<EntityWithDetails[]> {
   let where = {};
@@ -277,7 +277,6 @@ export async function updateEntity(
     active: boolean;
   }
 ) {
-  console.log({ data });
   return await db.entity.update({
     where: {
       id,

@@ -1,8 +1,9 @@
 import { Entity } from "@prisma/client";
 import { Stat } from "~/application/dtos/stats/Stat";
-import { getStatChangePercentage, getStatChangeType, tenantCondition } from "../app/DashboardUtils";
+import { getStatChangePercentage, getStatChangeType } from "../app/DashboardUtils";
 import { db } from "../db.server";
 import { getAllEntities } from "../db/entities/entities.db.server";
+import TenantHelper from "../helpers/TenantHelper";
 import DateUtils from "../shared/DateUtils";
 
 export async function getAppDashboardStats(tenantId: string, lastDays: number): Promise<Stat[]> {
@@ -38,12 +39,12 @@ async function getRowsCreatedSince(entityId: string, tenantId: string, lastDays:
       createdAt: {
         gte: from,
       },
-      ...tenantCondition(tenantId),
+      ...TenantHelper.tenantCondition(tenantId),
     },
   });
   const total = await db.row.count({
     where: {
-      ...tenantCondition(tenantId),
+      ...TenantHelper.tenantCondition(tenantId),
     },
   });
 

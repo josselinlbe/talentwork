@@ -1,19 +1,13 @@
 import { Entity, Tenant } from "@prisma/client";
-import clsx from "clsx";
 import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "remix";
 import FormGroup from "~/components/ui/forms/FormGroup";
-import InputGroup from "~/components/ui/forms/InputGroup";
-import InputCheckbox from "~/components/ui/input/InputCheckbox";
 import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
-import InputCheckboxWithDescription from "~/components/ui/input/InputCheckboxWithDescription";
 import InputDate from "~/components/ui/input/InputDate";
 import InputNumber from "~/components/ui/input/InputNumber";
 import InputSelect from "~/components/ui/input/InputSelect";
-import InputSelector from "~/components/ui/input/InputSelector";
 import InputText, { RefInputText } from "~/components/ui/input/InputText";
-import { useAdminData } from "~/utils/data/useAdminData";
 import { ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
@@ -92,7 +86,7 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
           autoComplete="off"
         />
 
-        <InputDate className="col-span-6" name="expires" title={t("models.apiKey.expires")} value={expires} onChange={setExpires} required autoComplete="off" />
+        <InputDate className="col-span-6" name="expires" title={t("models.apiKey.expires")} value={expires} onChange={setExpires} required />
 
         <div className="flex flex-col col-span-12">
           <div className="overflow-x-auto">

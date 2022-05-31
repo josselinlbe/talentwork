@@ -1,0 +1,120 @@
+---
+meta:
+  title: Publish a Blog Post | Guides | Learning Center | SaasRock
+  description: Learn how to publish a blog post
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Publish a Blog Post",
+      routePath:
+        "/docs/learning-center/guides/blogging/create-a-blog-post",
+    },
+  ]}
+/>
+
+# Publish a Blog Post
+
+## Goals:
+
+- Publish a blog post
+
+## Steps
+
+💿 Go to the [/admin/blog](/admin/blog) route.
+
+💿 Click on the _**"Write"**_ button.
+
+💿 Define the **Title**, **Slug**, **Description**, and **Cover image** (if any).
+
+<DocTutorialImage
+  alt="Write"
+  src="https://yahooder.sirv.com/saasrock/guides/blogging/publish-a-blog-post/write.png"
+/>
+
+💿 Set the **Author**, **Category**, **Tags** (separated by commas), **Date**, and Reading time.
+
+<WarningBanner title="WARNING">
+  Currently, you can only add <b>Authors</b> and{" "}
+  <b>Categories</b> when seeding the database. Subscribe to
+  the issue #71 for this.
+</WarningBanner>
+
+<DocTutorialImage
+  alt="Set Blog Post Details"
+  src="https://yahooder.sirv.com/saasrock/guides/blogging/publish-a-blog-post/details.png"
+/>
+
+💿 Write some markdown content.
+
+<WarningBanner title="WARNING">
+  Currently, you can only copy-paste markdown content,
+  there's no content editor, yet. Subscribe to the issue #59
+  for this.
+</WarningBanner>
+
+If you don't have any markdown content, copy-paste this:
+
+```md
+# Title
+
+## Subtitle
+
+Lorem ipsum...
+
+- [Item 1](http://saasrock.com/)
+- _Item 2_
+- **Item 3**
+```
+
+💿 Click on the _**"Preview Markdown"**_ button.
+
+<DocTutorialImage
+  alt="Markdown Content"
+  src="https://yahooder.sirv.com/saasrock/guides/blogging/publish-a-blog-post/markdown.png"
+/>
+
+💿 Save the blog post.
+
+It will redirect you to the blog post URL.
+
+<DocTutorialImage
+  alt="Blog Post"
+  src="https://yahooder.sirv.com/saasrock/guides/blogging/publish-a-blog-post/post.png"
+/>
+
+💿 Test that the blog post is not published. Open an _incognito_ tab, and copy-paste the blog post URL.
+
+Blog post not found:
+
+<DocTutorialImage
+  alt="Blog Post Not Found"
+  src="https://yahooder.sirv.com/saasrock/guides/blogging/publish-a-blog-post/not-found.png"
+/>
+
+💿 Finally, go back, click on the _**"Publish"**_ button, and try again on _incognito mode_.
+
+<DocTutorialImage
+  alt="Published Blog Post"
+  src="https://yahooder.sirv.com/saasrock/guides/blogging/publish-a-blog-post/published-post.png"
+/>
+
+---
+
+I hope this quick guide was useful! [Let me know](/docs/community) if you have any question.

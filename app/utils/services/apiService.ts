@@ -60,6 +60,9 @@ export async function getEntityApiKeyFromRequest(request: Request, params: Param
   if (!entity) {
     throw await setApiError(request, params, "Invalid entity", 400, apiKeyLog.id);
   }
+  if (!entity.hasApi) {
+    throw await setApiError(request, params, `${entity.name} does not have the API enabled`, 400, apiKeyLog.id);
+  }
   const permission = apiKey.entities.find((f) => f.entityId === entity.id);
   if (!permission) {
     throw await setApiError(request, params, `API Key does not have access to ${entity.slug}`, 403, apiKeyLog.id);

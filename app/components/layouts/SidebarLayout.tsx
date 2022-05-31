@@ -190,7 +190,7 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
               {layout === "app" && <CurrentSubscriptionButton />}
               {layout === "app" && appData.isOwnerOrAdmin && <PendingInvitationsButton />}
               {layout === "app" && <ChatSupportButton />}
-              {layout === "app" && <QuickActionsButton />}
+              {layout === "app" && <QuickActionsButton entities={appData.entities} />}
               {(layout === "app" || layout === "admin") && <ProfileButton layout={layout} />}
               {layout === "docs" && (
                 <InputSelect

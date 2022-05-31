@@ -1,12 +1,12 @@
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { AdminLoaderData, loadAdminData, useAdminData } from "~/utils/data/useAdminData";
+import { AdminLoaderData, loadAdminData } from "~/utils/data/useAdminData";
 import { DashboardStats } from "~/components/ui/stats/DashboardStats";
 import { getAdminDashboardStats } from "~/utils/services/adminDashboardService";
 import { getSetupSteps } from "~/utils/services/setupService";
 import SetupSteps from "~/components/admin/SetupSteps";
 import ProfileBanner from "~/components/app/ProfileBanner";
-import { adminGetAllTenants, adminGetAllTenantsWithUsage, TenantWithDetails, TenantWithUsage } from "~/utils/db/tenants.db.server";
+import { adminGetAllTenantsWithUsage, TenantWithUsage } from "~/utils/db/tenants.db.server";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
 import { SetupItem } from "~/application/dtos/setup/SetupItem";
 import { Stat } from "~/application/dtos/stats/Stat";
@@ -45,7 +45,6 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function AdminNavigationRoute() {
   const data = useLoaderData<LoaderData>();
-  const adminData = useAdminData();
 
   return (
     <main className="flex-1 relative pb-8 z-0 overflow-y-auto">

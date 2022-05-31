@@ -1,4 +1,3 @@
-import { Link } from "remix";
 import CheckIcon from "../icons/CheckIcon";
 import XIcon from "../icons/XIcon";
 

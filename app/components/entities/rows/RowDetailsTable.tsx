@@ -1,10 +1,7 @@
-import { Row } from "@prisma/client";
 import clsx from "clsx";
 import { useRef, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { RowDetailDto } from "~/application/dtos/entities/RowDetailDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
-import { PropertyType } from "~/application/enums/entities/PropertyType";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import PencilIcon from "~/components/ui/icons/PencilIcon";
@@ -13,8 +10,6 @@ import OpenModal from "~/components/ui/modals/OpenModal";
 import { EntityWithDetails, PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 import RowHelper from "~/utils/helpers/RowHelper";
-import DateUtils from "~/utils/shared/DateUtils";
-import NumberUtils from "~/utils/shared/NumberUtils";
 import RowForm, { RefRowForm } from "./RowForm";
 
 interface Props {
@@ -28,8 +23,6 @@ interface Props {
 }
 
 export default function RowDetailsTable({ entity, properties, editable, initial, className, setDetails }: Props) {
-  const { t } = useTranslation();
-
   const rowForm = useRef<RefRowForm>(null);
 
   const [addingRow, setAddingRow] = useState(false);
@@ -52,23 +45,23 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
     // rowForm.current?.update(idx, item);
   }
 
-  function updated(idx: number, item: RowDetailDto) {
-    rowForm.current?.close();
-    const newItems = items.slice(); //copy the array
-    newItems[idx] = item; //execute the manipulations
-    setItems(newItems);
-  }
+  // function updated(idx: number, item: RowDetailDto) {
+  //   rowForm.current?.close();
+  //   const newItems = items.slice(); //copy the array
+  //   newItems[idx] = item; //execute the manipulations
+  //   setItems(newItems);
+  // }
 
-  function created(item: RowDetailDto, addAnother: boolean) {
-    rowForm.current?.close();
-    setItems([...items, item]);
+  // function created(item: RowDetailDto, addAnother: boolean) {
+  //   rowForm.current?.close();
+  //   setItems([...items, item]);
 
-    if (addAnother) {
-      setTimeout(() => {
-        create(items.length + 1);
-      }, 400);
-    }
-  }
+  //   if (addAnother) {
+  //     setTimeout(() => {
+  //       create(items.length + 1);
+  //     }, 400);
+  //   }
+  // }
 
   function deleted(item: RowDetailDto) {
     setItems(items.filter((f) => f !== item));
@@ -99,7 +92,7 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
   return (
     <div className={clsx(className, "flex flex-col p-0.5")}>
       {items.map((item, idx) => {
-        return <input key={idx} hidden readOnly type="text" id={`row-details[]`} name={`row-details[]`} value={JSON.stringify(item)} />;
+        return <input key={idx} hidden readOnly type="text" id={`rows[]`} name={`rows[]`} value={JSON.stringify(item)} />;
       })}
 
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -200,12 +193,12 @@ export default function RowDetailsTable({ entity, properties, editable, initial,
       )}
       {addingRow && (
         <OpenModal className="sm:max-w-md bg-gray-50" onClose={() => setAddingRow(false)}>
-          <RowForm ref={rowForm} entity={entity} onSubmit={onSubmit} isDetail={true} />
+          <RowForm ref={rowForm} entity={entity} onSubmit={onSubmit} isDetail={true} editing={true} />
         </OpenModal>
       )}
       {editingRow && (
         <OpenModal className="sm:max-w-md bg-gray-50" onClose={() => setEditingRow(undefined)}>
-          <RowForm ref={rowForm} entity={entity} item={editingRow.row} onSubmit={(e) => onUpdated(e, editingRow.index)} isDetail={true} />
+          <RowForm ref={rowForm} entity={entity} item={editingRow.row} onSubmit={(e) => onUpdated(e, editingRow.index)} isDetail={true} editing={true} />
         </OpenModal>
       )}
     </div>

@@ -5,13 +5,10 @@ import { useTranslation } from "react-i18next";
 import { useActionData, useNavigate, useTransition, Form, useLocation, useParams } from "remix";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
-import WarningBanner from "~/components/ui/banners/WarningBanner";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { NewMemberActionData } from "~/routes/app.$tenant/settings/members/new";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useAppData } from "~/utils/data/useAppData";
-import { useMembersData } from "~/utils/data/useMembersData";
 import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import CheckPlanFeatureLimit from "../subscription/CheckPlanFeatureLimit";
 
@@ -22,9 +19,7 @@ interface Props {
 export default function NewMember({ featureUsageUsers }: Props) {
   const params = useParams();
   const location = useLocation();
-  const appData = useAppData();
   const actionData = useActionData<NewMemberActionData>();
-  const membersData = useMembersData(params);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const transition = useTransition();

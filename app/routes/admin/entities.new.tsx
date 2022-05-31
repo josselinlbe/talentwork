@@ -15,8 +15,8 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const action = form.get("action")?.toString() ?? "";
   if (action === "create") {
-    const name = form.get("name")?.toString() ?? "";
-    const slug = form.get("slug")?.toString() ?? "";
+    const name = form.get("name")?.toString().toLowerCase() ?? "";
+    const slug = form.get("slug")?.toString().toLowerCase() ?? "";
     const order = Number(form.get("order"));
     const prefix = form.get("prefix")?.toString() ?? "";
     const title = form.get("title")?.toString() ?? "";

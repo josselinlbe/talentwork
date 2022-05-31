@@ -4,7 +4,6 @@ import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenantsWithUsage, TenantWithUsage } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
-import { useAdminData } from "~/utils/data/useAdminData";
 
 type LoaderData = {
   title: string;
@@ -28,7 +27,6 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function AdminTenantsRoute() {
   const data = useLoaderData<LoaderData>();
-  const adminData = useAdminData();
   const { t } = useTranslation();
 
   return (

@@ -6,7 +6,6 @@ import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "../ui/buttons/ButtonTertiary";
 import { Link } from "remix";
 import { useAdminData } from "~/utils/data/useAdminData";
-import EntityIcon from "../layouts/icons/EntityIcon";
 import CheckIcon from "../ui/icons/CheckIcon";
 import XIcon from "../ui/icons/XIcon";
 import { EntityWithCount } from "~/utils/db/entities/entities.db.server";
@@ -94,7 +93,7 @@ export default function EntitiesTable({ items }: Props) {
     }
     return filteredItems()
       .slice()
-      .sort((x, y) => {
+      .sort((x: any, y: any) => {
         if (x[column] && y[column]) {
           if (sortDirection === -1) {
             return (x[column] > y[column] ? 1 : -1) ?? 1;
@@ -220,24 +219,26 @@ export default function EntitiesTable({ items }: Props) {
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">{item.prefix}</td>
                                 <td className="w-full px-2 py-2 whitespace-nowrap text-gray-700 text-sm">
-                                  {item.properties.filter((f) => !f.isDefault).length > 0 ? (
-                                    <Link
-                                      className="pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate max-w-sm"
-                                      to={"/admin/entities/" + item.slug + "/properties"}
-                                    >
-                                      {item.properties
-                                        .filter((f) => !f.isDefault)
-                                        .map((f) => t(f.title))
-                                        .join(", ")}
-                                    </Link>
-                                  ) : (
-                                    <Link
-                                      className="pb-1 border-b border-red-400 border-dashed hover:border-dotted truncate max-w-sm"
-                                      to={"/admin/entities/" + item.slug + "/properties"}
-                                    >
-                                      {t("shared.notSet")}
-                                    </Link>
-                                  )}
+                                  <div className="max-w-xs truncate">
+                                    {item.properties.filter((f) => !f.isDefault).length > 0 ? (
+                                      <Link
+                                        className="pb-1 border-b border-accent-400 border-dashed hover:border-dotted truncate"
+                                        to={"/admin/entities/" + item.slug + "/properties"}
+                                      >
+                                        {item.properties
+                                          .filter((f) => !f.isDefault)
+                                          .map((f) => t(f.title))
+                                          .join(", ")}
+                                      </Link>
+                                    ) : (
+                                      <Link
+                                        className="pb-1 border-b border-red-400 border-dashed hover:border-dotted truncate"
+                                        to={"/admin/entities/" + item.slug + "/properties"}
+                                      >
+                                        {t("shared.notSet")}
+                                      </Link>
+                                    )}
+                                  </div>
                                 </td>
                                 <td className="px-2 py-2 whitespace-nowrap text-sm">
                                   <Link to={"/admin/entities/" + item.slug + "/rows"} className="border-b border-accent-400 border-dashed hover:border-dotted">

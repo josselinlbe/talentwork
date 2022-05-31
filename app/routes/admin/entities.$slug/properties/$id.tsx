@@ -64,6 +64,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   const pattern = form.get("pattern")?.toString() ?? "";
   const entityId = form.get("entity-id")?.toString() ?? "";
 
+  if (name === "rows") {
+    return badRequest({ error: "Rows is a reserved word" });
+  }
+
   let parentId: string | null = null;
   if (entityId) {
     const parentEntity = await getEntityById(entityId);

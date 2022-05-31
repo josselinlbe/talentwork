@@ -8,7 +8,7 @@ import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
 import { useAppData } from "~/utils/data/useAppData";
 import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
-import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
+import { updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { db } from "~/utils/db.server";

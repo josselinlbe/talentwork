@@ -8,11 +8,9 @@ import { useActionData, useNavigate, useParams, useSubmit } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { NewLinkedAccountActionData } from "~/routes/app.$tenant/settings/linked-accounts/new";
 import OpenModal from "~/components/ui/modals/OpenModal";
-import FormGroup from "~/components/ui/forms/FormGroup";
 import InputGroup from "~/components/ui/forms/InputGroup";
 import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 import InputText, { RefInputText } from "~/components/ui/input/InputText";
-import InputCheckboxWithDescription from "~/components/ui/input/InputCheckboxWithDescription";
 
 interface Props {
   linksCount: number;

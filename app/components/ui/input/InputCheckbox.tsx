@@ -17,18 +17,21 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   asToggle?: boolean;
+  readOnly?: boolean;
 }
-const InputCheckbox = ({ name, title, value, setValue, className, help, required, disabled, asToggle }: Props, ref: Ref<RefInputCheckbox>) => {
+const InputCheckbox = ({ name, title, value, setValue, className, help, required, disabled, asToggle, readOnly }: Props, ref: Ref<RefInputCheckbox>) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
 
-  const [enabled, setEnabled] = useState(value ?? false);
+  const [toggle, setToggle] = useState(value ?? false);
 
   useEffect(() => {
-    if (setValue) {
-      setValue(enabled);
+    if (setValue && value !== toggle) {
+      setValue(toggle);
     }
-  }, [enabled, setValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toggle]);
+
   return (
     <div className={className}>
       <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
@@ -44,18 +47,20 @@ const InputCheckbox = ({ name, title, value, setValue, className, help, required
       <div className="mt-1 flex rounded-md w-full h-8">
         {asToggle ? (
           <Switch
-            checked={enabled}
-            onChange={setEnabled}
+            checked={toggle}
+            onChange={setToggle}
+            disabled={disabled || readOnly}
             className={clsx(
-              enabled ? "bg-accent-600" : "bg-gray-200",
+              toggle ? "bg-accent-600" : "bg-gray-200",
               "relative inline-flex flex-shrink-0 h-5 w-8 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500"
             )}
           >
+            <input type="hidden" readOnly name={name} value={value === true ? "true" : "false"} />
             <span className="sr-only">Use setting</span>
             <span
               aria-hidden="true"
               className={clsx(
-                enabled ? "translate-x-3" : "translate-x-0",
+                toggle ? "translate-x-3" : "translate-x-0",
                 "pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
               )}
             />
@@ -66,10 +71,11 @@ const InputCheckbox = ({ name, title, value, setValue, className, help, required
             id={name}
             name={name}
             checked={value}
+            readOnly={readOnly}
             onChange={(e) => (setValue ? setValue(e.target.checked) : {})}
             disabled={disabled}
             className={clsx(
-              disabled && "bg-gray-100 cursor-not-allowed",
+              (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
               "mt-1 cursor-pointer focus:ring-accent-500 h-6 w-6 text-accent-800 border-gray-300 rounded",
               className
             )}

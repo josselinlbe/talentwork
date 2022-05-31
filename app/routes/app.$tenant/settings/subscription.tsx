@@ -106,9 +106,9 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   }
 
   const stripeSubscription = await getStripeSubscription(tenantSubscription.stripeSubscriptionId ?? "");
-  let mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
+  // let mySubscription: (SubscriptionPrice & { subscriptionProduct: SubscriptionProduct }) | null = null;
   if (stripeSubscription && stripeSubscription?.items.data.length > 0) {
-    mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
+    // mySubscription = await getSubscriptionPriceByStripeId(stripeSubscription?.items.data[0].plan.id);
   } else if (tenantSubscription.stripeSubscriptionId) {
     await updateTenantStripeSubscriptionId(tenantUrl.tenantId, {
       subscriptionPriceId: null,

@@ -159,7 +159,7 @@ model Log {
   apiKeyId    String?
   apiKey      ApiKey?            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
   rowId       String?
-  row         Row?               @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  row         Row?               @relation(fields: [rowId], references: [id])
   url         String
   action      String
   details     String?
@@ -370,6 +370,7 @@ model RowValue {
   textValue    String?
   numberValue  Decimal?
   dateValue    DateTime?
+  booleanValue Boolean?
   media        Media[]
 }
 

@@ -22,7 +22,7 @@ const navigation = {
   ],
   product: [
     { name: "Docs", href: "/docs" },
-    { name: "Stack", href: "/docs/stack" },
+    { name: "Stack", href: "/stack" },
     { name: "Roadmap", href: "/docs/roadmap" },
     { name: "Changelog", href: "/changelog" },
     { name: "Tutorials", href: "/docs/learning-center" },

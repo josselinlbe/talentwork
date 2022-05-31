@@ -64,12 +64,12 @@ export default function LogsTable({ withTenant, items }: Props) {
         title: t("models.log.action"),
       },
       {
-        name: "details",
-        title: t("models.log.details"),
-      },
-      {
         name: "url",
         title: t("models.log.url"),
+      },
+      {
+        name: "details",
+        title: t("models.log.details"),
       },
     ];
     setHeaders(headers);
@@ -93,7 +93,7 @@ export default function LogsTable({ withTenant, items }: Props) {
     }
     return filteredItems()
       .slice()
-      .sort((x, y) => {
+      .sort((x: any, y: any) => {
         if (x[column] && y[column]) {
           if (sortDirection === -1) {
             return (x[column] > y[column] ? 1 : -1) ?? 1;
@@ -197,8 +197,8 @@ export default function LogsTable({ withTenant, items }: Props) {
                                 </td>
 
                                 <td className="px-2 py-2 whitespace-nowrap">{item.action}</td>
-                                <td className="px-2 py-2 whitespace-nowrap">{item.details}</td>
                                 <td className="px-2 py-2 whitespace-nowrap">{item.url}</td>
+                                <td className="px-2 py-2 whitespace-nowrap">{item.details}</td>
                               </tr>
                             </tbody>
                           );

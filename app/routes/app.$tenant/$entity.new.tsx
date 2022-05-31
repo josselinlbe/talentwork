@@ -14,12 +14,14 @@ import { getRelatedRows } from "~/utils/services/entitiesService";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
 import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
+import { getLinksWithMembers, LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 
 type LoaderData = {
   title: string;
   entity: EntityWithDetails;
   relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[];
   featureUsageEntity: PlanFeatureUsageDto | undefined;
+  linkedAccounts: LinkedAccountWithDetailsAndMembers[];
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
@@ -31,11 +33,13 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   }
   const relatedEntities = await getRelatedRows(entity.properties, tenantUrl.tenantId);
   const featureUsageEntity = await getPlanFeatureUsage(tenantUrl.tenantId, t(entity.titlePlural));
+  const linkedAccounts = await getLinksWithMembers(tenantUrl.tenantId);
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,
     entity,
     relatedEntities,
     featureUsageEntity,
+    linkedAccounts,
   };
   return json(data);
 };
@@ -57,9 +61,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   try {
     const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
-    // return badRequest({
-    //   error: JSON.stringify({ rowValues, form }),
-    // });
     const created = await createRow({
       entityId: entity.id,
       tenantId: tenantUrl.tenantId,
@@ -72,7 +73,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     const item = await getRow(entity.id, created.id, tenantUrl.tenantId);
     await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Created", entity, item });
     return redirect(`/app/${params.tenant}/${entity.slug}/${created.id}`);
-    // return badRequest({ error: JSON.stringify(form) });
   } catch (e: any) {
     return badRequest({ error: e?.toString() });
   }
@@ -96,7 +96,7 @@ export default function RowsListRoute() {
       ]}
     >
       <CheckPlanFeatureLimit item={data.featureUsageEntity}>
-        <RowForm entity={data.entity} relatedEntities={data.relatedEntities} />
+        <RowForm entity={data.entity} relatedEntities={data.relatedEntities} linkedAccounts={data.linkedAccounts} />
         <Outlet />
       </CheckPlanFeatureLimit>
     </NewPageLayout>

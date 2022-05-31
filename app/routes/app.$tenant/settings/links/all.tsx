@@ -1,5 +1,4 @@
-import { useTranslation } from "react-i18next";
-import { json, Link, LoaderFunction, MetaFunction, useLoaderData, useNavigate, useParams } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData, useNavigate, useParams } from "remix";
 import { getLinkedAccounts, LinkedAccountWithDetails } from "~/utils/db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { useState } from "react";
@@ -33,7 +32,6 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function AllLinksRoute() {
   const data = useLoaderData<LoaderData>();
   const params = useParams();
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [searchInput, setSearchInput] = useState("");

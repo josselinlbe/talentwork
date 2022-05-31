@@ -11,6 +11,7 @@ export type RowValueDto = {
   textValue?: string | undefined;
   numberValue?: number | undefined;
   dateValue?: Date | undefined;
+  booleanValue?: boolean | undefined;
   selectedOption?: PropertyOption | undefined;
   relatedRow?: RowWithDetails | undefined;
   media?: Media[];

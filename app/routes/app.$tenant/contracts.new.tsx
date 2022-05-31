@@ -278,12 +278,7 @@ export default function NewContractRoute() {
                       </div>
 
                       <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                        <div className="sm:col-span-6">
-                          <label htmlFor="link" className="block text-xs font-medium text-gray-700 truncate">
-                            {t("models.linkedAccount.object")}
-                          </label>
-                          <LinkedAccountSelector ref={linkedAccountSelector} className="mt-1 w-full" onSelected={selectedLink} items={data.links} />
-                        </div>
+                        <LinkedAccountSelector ref={linkedAccountSelector} className="sm:col-span-6" onSelected={selectedLink} items={data.links} />
 
                         <div className="sm:col-span-6">
                           <label htmlFor="name" className="block text-xs font-medium text-gray-700 truncate">

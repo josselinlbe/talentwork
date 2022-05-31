@@ -9,4 +9,5 @@ export enum PropertyType {
   ID,
   SELECT,
   FORMULA,
+  BOOLEAN,
 }

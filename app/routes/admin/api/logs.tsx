@@ -1,7 +1,5 @@
-import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, useLoaderData, useNavigate } from "remix";
+import { json, LoaderFunction, useLoaderData } from "remix";
 import ApiKeyLogsTable from "~/components/core/apiKeys/ApiKeyLogsTable";
-import { useAdminData } from "~/utils/data/useAdminData";
 import { ApiKeyLogWithDetails, getAllApiKeyLogs } from "~/utils/db/apiKeys.db.server";
 
 type LoaderData = {

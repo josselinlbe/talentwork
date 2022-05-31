@@ -6,7 +6,6 @@ import { Link, useSubmit } from "remix";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
-import { getSortedItems } from "~/utils/helpers/TableHelper";
 import ButtonTertiary from "../../ui/buttons/ButtonTertiary";
 import LockClosedIcon from "../../ui/icons/LockClosedIcon";
 import NewFieldIcon from "../../ui/icons/NewFieldIcon";
@@ -33,33 +32,9 @@ export default function PropertiesList({ entityId, items, className }: Props) {
 
   const [showDefaultFields, setShowDefaultFields] = useState(false);
 
-  function create() {
-    const sortedItems = items.sort((a, b) => a.order - b.order);
-    const nextOrder = sortedItems.length > 0 ? sortedItems[sortedItems.length - 1].order + 1 : 1;
-    // propertyForm.current?.create(nextOrder);
-  }
-
-  function update(idx: number, item: PropertyWithDetails) {
-    // propertyForm.current?.update(idx, item);
-  }
-
-  function updated(item: PropertyWithDetails) {
-    // propertyForm.current?.close();
-    // setItems(getSortedItems([...items.filter((f) => f.id !== item.id), item]));
-  }
-
-  function created(item: Property) {
-    // propertyForm.current?.close();
-    // setItems(getSortedItems([...items, item]));
-  }
-
   function deleteField(item: Property) {
     confirmDelete.current?.setValue(item);
     confirmDelete.current?.show(t("shared.confirmDelete"), t("shared.delete"), t("shared.cancel"), t("shared.warningCannotUndo"));
-  }
-
-  function deleted(item: Property) {
-    // setItems(getSortedItems(items.filter((f) => f.id !== item.id)));
   }
 
   function confirmedDelete(item: Property) {
@@ -71,36 +46,36 @@ export default function PropertiesList({ entityId, items, className }: Props) {
     });
   }
 
-  function isLastItem(item: Property) {
-    const customItems = items.filter((f) => !f.isDefault);
-    const maxOrder = Math.max(...customItems.map((o) => o.order));
-    return item.order === maxOrder;
-  }
+  // function isLastItem(item: Property) {
+  //   const customItems = items.filter((f) => !f.isDefault);
+  //   const maxOrder = Math.max(...customItems.map((o) => o.order));
+  //   return item.order === maxOrder;
+  // }
 
-  function setOrder(items: PropertyWithDetails[], idx: number, add: number) {
-    return [
-      ...items.slice(0, idx),
-      Object.assign({}, items[idx], {
-        order: items[idx].order + add,
-      }),
-      ...items.slice(idx + 1),
-    ];
-  }
+  // function setOrder(items: PropertyWithDetails[], idx: number, add: number) {
+  //   return [
+  //     ...items.slice(0, idx),
+  //     Object.assign({}, items[idx], {
+  //       order: items[idx].order + add,
+  //     }),
+  //     ...items.slice(idx + 1),
+  //   ];
+  // }
 
-  function changeOrder(idx: number, add: number) {
-    const defaultItems = items.filter((f) => f.isDefault);
-    const customItems = items.filter((f) => !f.isDefault);
+  // function changeOrder(idx: number, add: number) {
+  //   const defaultItems = items.filter((f) => f.isDefault);
+  //   const customItems = items.filter((f) => !f.isDefault);
 
-    let newItems = setOrder(customItems, idx, add);
-    if (add === -1 && idx > 0) {
-      newItems = setOrder(newItems, idx - 1, 1);
-    }
-    if (add === 1 && !isLastItem(newItems[idx])) {
-      newItems = setOrder(newItems, idx + 1, -1);
-    }
-    newItems = getSortedItems(newItems);
-    // setItems([...defaultItems, ...newItems]);
-  }
+  //   let newItems = setOrder(customItems, idx, add);
+  //   if (add === -1 && idx > 0) {
+  //     newItems = setOrder(newItems, idx - 1, 1);
+  //   }
+  //   if (add === 1 && !isLastItem(newItems[idx])) {
+  //     newItems = setOrder(newItems, idx + 1, -1);
+  //   }
+  //   newItems = getSortedItems(newItems);
+  //   // setItems([...defaultItems, ...newItems]);
+  // }
 
   return (
     <div className={clsx(className, "")}>
@@ -185,7 +160,7 @@ export default function PropertiesList({ entityId, items, className }: Props) {
                             <Link
                               to={item.id}
                               className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
-                              onClick={() => update(idx, item)}
+                              // onClick={() => update(idx, item)}
                             >
                               <PencilIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
                             </Link>
@@ -233,7 +208,7 @@ export default function PropertiesList({ entityId, items, className }: Props) {
                             <Link
                               to={item.id}
                               className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
-                              onClick={() => update(idx, item)}
+                              // onClick={() => update(idx, item)}
                             >
                               <PencilIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
                             </Link>

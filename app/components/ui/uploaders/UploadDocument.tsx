@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { ReactNode, useEffect, useState } from "react";
-import imageCompression from "browser-image-compression";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import { useTranslation } from "react-i18next";
 
@@ -32,21 +31,21 @@ export default function UploadDocuments({ className, title = "", accept, multipl
   function dragLeave() {
     setIsDragging(false);
   }
-  async function compressFile(imageFile: File): Promise<File> {
-    const options = {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 1920 / 2,
-      useWebWorker: true,
-    };
-    try {
-      return await imageCompression(imageFile, options);
-    } catch (error) {
-      return await Promise.reject(error);
-    }
-  }
-  async function compressFileNotImage(imageFile: File): Promise<File> {
-    return Promise.resolve(imageFile);
-  }
+  // async function compressFile(imageFile: File): Promise<File> {
+  //   const options = {
+  //     maxSizeMB: 0.5,
+  //     maxWidthOrHeight: 1920 / 2,
+  //     useWebWorker: true,
+  //   };
+  //   try {
+  //     return await imageCompression(imageFile, options);
+  //   } catch (error) {
+  //     return await Promise.reject(error);
+  //   }
+  // }
+  // async function compressFileNotImage(imageFile: File): Promise<File> {
+  //   return Promise.resolve(imageFile);
+  // }
   async function drop(e: any) {
     try {
       e.preventDefault();
@@ -55,11 +54,12 @@ export default function UploadDocuments({ className, title = "", accept, multipl
     }
     const files: File[] = await Promise.all(
       [...e.dataTransfer.files].map(async (element: File) => {
-        if (element.type.includes("image")) {
-          return await compressFile(element);
-        } else {
-          return await compressFileNotImage(element);
-        }
+        return element;
+        // if (element.type.includes("image")) {
+        //   return await compressFile(element);
+        // } else {
+        //   return await compressFileNotImage(element);
+        // }
       })
     );
     const filesArray: FileBase64[] = [];

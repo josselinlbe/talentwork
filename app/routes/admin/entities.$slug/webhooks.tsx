@@ -1,8 +1,6 @@
-import { EntityWebhook } from "@prisma/client";
 import { useTranslation } from "react-i18next";
-import { json, Link, LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
+import { json, LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
-import FormGroup from "~/components/ui/forms/FormGroup";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { EntityWebhookWithDetails, getEntityWebhooks } from "~/utils/db/entities/entityWebhooks.db.server";

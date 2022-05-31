@@ -1,14 +1,9 @@
-import fs from "fs";
-import { marked } from "marked";
-import path from "path";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 import { db } from "../db.server";
 import { getAllSubscriptionFeatures } from "../db/subscriptionProducts.db.server";
-import { getTenantUsers } from "../db/tenants.db.server";
 import { getTenantSubscription } from "../db/tenantSubscriptions.db.server";
-import DateUtils from "../shared/DateUtils";
 
 export async function getPlanFeaturesUsage(tenantId: string): Promise<PlanFeatureUsageDto[]> {
   const subscription = await getTenantSubscription(tenantId);
@@ -51,7 +46,10 @@ export async function getPlanFeaturesUsage(tenantId: string): Promise<PlanFeatur
         usage.enabled = false;
         usage.message = "You don't have an active subscription";
       } else {
-        if (feature.type === SubscriptionFeatureLimitType.MAX) {
+        if (feature.type === SubscriptionFeatureLimitType.NOT_INCLUDED) {
+          usage.enabled = false;
+          usage.message = "Not included in current plan";
+        } else if (feature.type === SubscriptionFeatureLimitType.MAX) {
           usage.used = await getUsed(tenantId, feature);
           usage.remaining = usage.value - usage.used;
           if (usage.remaining <= 0) {
@@ -86,8 +84,8 @@ async function getUsed(tenantId: string, feature: SubscriptionFeatureDto): Promi
   const date = new Date(),
     y = date.getFullYear(),
     m = date.getMonth();
-  const firstDay = new Date(y, m, 1);
-  var lastDay = new Date(y, m + 1, 0);
+  const firstDay = new Date(y, m, 1, 0, 0, 1);
+  var lastDay = new Date(y, m + 1, 0, 23, 59, 59);
 
   if (feature.name === "Users") {
     if (feature.type === SubscriptionFeatureLimitType.MONTHLY) {

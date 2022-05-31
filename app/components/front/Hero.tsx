@@ -1,7 +1,5 @@
-import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { Link } from "remix";
-import Carousel from "../ui/images/Carousel";
 import Header from "./Header";
 import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
 import NumberUtils from "~/utils/shared/NumberUtils";
@@ -50,15 +48,17 @@ export default function Hero({ socialProof }: Props) {
           <main className="mt-8 mx-auto max-w-7xl px-4 sm:mt-16 sm:px-6 lg:mt-16">
             <div>
               <div className="sm:text-center md:max-w-6xl md:mx-auto lg:col-span-6 space-y-3">
+                <span className="block text-sm font-semibold uppercase tracking-wide text-gray-500 sm:text-base lg:text-sm xl:text-base">
+                  {t("front.hero.subheadline1")}
+                </span>
                 <h1 className="font-extrabold text-5xl sm:text-5xl md:text-5xl lg:text-7xl flex flex-col">
                   <span>{t("front.hero.headline1")}</span>
-                  <span className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-theme-400 to-theme-800">
-                    {t("front.hero.subheadline1")}
-                  </span>
                 </h1>
                 <div className="relative z-10 pb-10 text-gray-500 text-lg md:text-2xl sm:text-center leading-normal md:leading-9 space-y-3">
-                  <p className="sm:text-2xl mx-auto max-w-4xl font-medium text-gray-700 dark:text-gray-400">{t("front.hero.headline2")}</p>
-                  <p className="sm:text-xl mx-auto max-w-3xl">{t("front.hero.headline3")}</p>
+                  {/* <p className="sm:text-2xl mx-auto max-w-4xl font-medium text-gray-700 dark:text-gray-400">{t("front.hero.headline2")}</p> */}
+                  <p className="sm:text-xl mx-auto max-w-4xl">
+                    {t("front.hero.headline2")} - {t("front.hero.headline3")}
+                  </p>
                 </div>
 
                 <div className="mt-2 mx-auto lg:mx-0 sm:flex justify-center md:mt-2">

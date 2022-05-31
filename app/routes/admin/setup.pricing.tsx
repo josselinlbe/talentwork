@@ -17,7 +17,6 @@ import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import clsx from "clsx";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import { Tenant } from ".prisma/client";
-import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 import PlanFeatureValue from "~/components/core/settings/subscription/PlanFeatureValue";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";

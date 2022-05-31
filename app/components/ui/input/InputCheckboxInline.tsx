@@ -16,8 +16,12 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   description?: ReactNode;
+  readOnly?: boolean;
 }
-const InputCheckboxInline = ({ name, title, value, setValue, description, className, help, required, disabled = false }: Props, ref: Ref<RefInputCheckbox>) => {
+const InputCheckboxInline = (
+  { name, title, value, setValue, description, className, help, required, disabled = false, readOnly }: Props,
+  ref: Ref<RefInputCheckbox>
+) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
   return (
@@ -33,8 +37,9 @@ const InputCheckboxInline = ({ name, title, value, setValue, description, classN
               setValue?.(e.target.checked);
             }}
             disabled={disabled}
+            readOnly={readOnly}
             className={clsx(
-              disabled && "bg-gray-100 cursor-not-allowed",
+              (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
               "cursor-pointer focus:ring-accent-500 h-4 w-4 text-accent-600 border-gray-300 rounded"
             )}
           />

@@ -2,7 +2,6 @@ import { AdminUser, Tenant, TenantUser, User } from "@prisma/client";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
-import UrlUtils from "../app/UrlUtils";
 import { getAvailableTenantSlug } from "../services/emailService";
 import { TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
 import { createTenantSubscription } from "./tenantSubscriptions.db.server";

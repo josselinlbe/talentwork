@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { deleteTenant, getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
+import { getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import UpdateTenantDetailsForm from "~/components/core/tenants/UpdateTenantDetailsForm";
 import { createAdminLog } from "~/utils/db/logs.db.server";

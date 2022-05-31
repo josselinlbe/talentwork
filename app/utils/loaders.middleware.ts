@@ -1,4 +1,3 @@
-import { Entity } from "@prisma/client";
 import { redirect } from "remix";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { AppSidebar } from "~/application/sidebar/AppSidebar";

@@ -1,5 +1,5 @@
 import { Media } from "@prisma/client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import PreviewMediaModal from "~/components/ui/media/PreviewMediaModal";

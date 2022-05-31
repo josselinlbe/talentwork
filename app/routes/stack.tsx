@@ -2,7 +2,6 @@ import { json, LoaderFunction, MetaFunction } from "remix";
 import { Language } from "remix-i18next";
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
-import FeatureComparison from "~/components/front/FeatureComparison";
 import { i18nHelper } from "~/locale/i18n.utils";
 import LogoCloudsColor from "~/components/ui/images/LogoCloudsColor";
 

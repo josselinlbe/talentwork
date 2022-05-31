@@ -1,5 +1,4 @@
-import { useTranslation } from "react-i18next";
-import { ActionFunction, json, Link, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, redirect, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useState } from "react";
 import UrlUtils from "~/utils/app/UrlUtils";
@@ -98,8 +97,6 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function LinkedAccountsRoute() {
   const data = useLoaderData<LoaderData>();
-  const params = useParams();
-  const { t } = useTranslation();
 
   const [searchInput, setSearchInput] = useState("");
 

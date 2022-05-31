@@ -1,9 +1,7 @@
 import { useMatches } from "remix";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
-import { getClientLinksCount, getLinkedAccountsCount, getProviderLinksCount } from "../db/linkedAccounts.db.server";
+import { getLinkedAccountsCount } from "../db/linkedAccounts.db.server";
 import { getTenantUsersCount } from "../db/tenants.db.server";
-import { getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
-import { getEmployeesCount } from "~/modules/contracts/db/employees.db.server";
 import { Params } from "react-router";
 import { getTenantUrl } from "../services/urlService";
 

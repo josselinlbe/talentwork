@@ -1,0 +1,163 @@
+---
+meta:
+  title: Use the Custom Entity API | Guides | Learning Center | SaasRock
+  description: Learn how to call GET, POST, PUT and DELETE custom entity API methods
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Use the Custom Entity API",
+      routePath:
+        "/docs/learning-center/guides/entities/use-the-custom-entity-api",
+    },
+  ]}
+/>
+
+# Use the Custom Entity API
+
+## Requirements:
+
+- Follow the [Create a Custom Entity](/docs/learning-center/guides/entities/create-a-custom-entity) guide first
+
+## Goals:
+
+- Create an **API Key**
+- **GET**: List all the tasks
+- **POST**: Create a task
+- **GET**: Get a specific task
+- **PUT**: Update a task
+- **DELETE**: Delete a task
+- View the **API Key Logs**
+
+## Steps
+
+💿 Go to the [/app/acme-corp-1/settings/api/keys/new](/app/acme-corp-1/settings/api/keys/new) to create an API Key with _**/tasks**_ permissions.
+
+<DocTutorialImage
+  alt="Created API Key"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/api-key.png"
+/>
+
+💿 Install [Thunder Client for VS Code](https://www.thunderclient.com/).
+
+💿 Create a **GET** request with the following values:
+
+- **Method**: GET
+- **URL**: http://localhost:3000/api/tasks
+- **Headers**: add the "_**X-API-Key**_" header with your API Key (click on _**Copy to clipboard**_)
+
+💿 Click _**Send**_.
+
+You should get all the tasks in JSON format:
+
+<DocTutorialImage
+  alt="GET - List all tasks"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/get-tasks.png"
+/>
+
+💿 Before making a **POST** request to create a task, go to [/app/acme-corp-1/projects](/app/acme-corp-1/projects), click on _**Edit**_ on any project row and **_copy the ID_** from the URL.
+
+It should look something like this: `cl3me5utq3138gohsoss1mqyv`.
+
+💿 Create a **POST** request with the following values:
+
+- **Method**: POST
+- **URL**: http://localhost:3000/api/tasks
+- **Headers**: set the "_**X-API-Key**_" header
+
+Set the following **JSON** values:
+
+```
+{
+  "project": "cl3tlewvp2739e7hsz7apld93",
+  "order": 2,
+  "name": "Task 2",
+  "dueDate": "2022-12-31",
+  "priority": "High",
+  "completed": false,
+  "attachments[]": [
+    {
+      "name": "My image.png",
+      "type": "image/png",
+      "title": "My image",
+      "file": "https://via.placeholder.com/1000x500.png?text=My%20image"
+    }
+  ],
+  "rows[]": [{ "subtask": "Subtask 1" }, { "subtask": "Subtask 2" }]
+}
+```
+
+You should get a **201 - Created** response.
+
+<DocTutorialImage
+  alt="POST - Create task"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/post-task.png"
+/>
+
+💿 Grab de ID, and make a **GET** request:
+
+- **Method**: GET
+- **URL**: http://localhost:3000/api/tasks/cl3tlv1yc8446e7hsn07ac3gd
+- **Headers**: set the "_**X-API-Key**_" header
+
+<DocTutorialImage
+  alt="PUT - Get task"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/get-task.png"
+/>
+
+💿 Now, let's update the _Task_ with a **PUT** request.
+
+- **Method**: PUT
+- **URL**: http://localhost:3000/api/tasks/cl3tlv1yc8446e7hsn07ac3gd
+- **Headers**: set the "_**X-API-Key**_" header
+
+JSON body:
+
+```
+{
+  "name": "New task name"
+}
+```
+
+<DocTutorialImage
+  alt="PUT - Update task"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/put-task.png"
+/>
+
+💿 Delete the _Task_:
+
+- **Method**: PUT
+- **URL**: http://localhost:3000/api/tasks/cl3tm7c9012472e7hs7n476m9x
+- **Headers**: set the "_**X-API-Key**_" header
+
+<DocTutorialImage
+  alt="DELETE - Delete task"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/delete-task.png"
+/>
+
+💿 Finally, view the [API Key logs](/app/acme-corp-1/settings/api/logs).
+
+<DocTutorialImage
+  alt="API Key Logs"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/use-the-custom-entity-api/api-key-logs.png"
+/>
+
+---
+
+I hope this quick guide was useful! [Let me know](/docs/community) if you have any question.

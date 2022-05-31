@@ -6,8 +6,8 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
-import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, useActionData, useSubmit, useTransition } from "remix";
-import { deleteUser, updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
+import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData, useSubmit, useTransition } from "remix";
+import { updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { db } from "~/utils/db.server";
@@ -15,8 +15,6 @@ import bcrypt from "bcryptjs";
 import { i18nHelper } from "~/locale/i18n.utils";
 import supportedLocales from "~/locale/supportedLocales";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { getMyTenants, getTenantUsers, getTenantWithUsers } from "~/utils/db/tenants.db.server";
-import { deleteAndCancelTenant } from "~/utils/services/tenantService";
 import { deleteUserWithItsTenants } from "~/utils/services/userService";
 
 type LoaderData = {

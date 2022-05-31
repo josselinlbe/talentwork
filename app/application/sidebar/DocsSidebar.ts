@@ -375,7 +375,7 @@ export const DocsSidebar: SideBarItem[] = [
         ],
       },
       {
-        title: "2-min Guides",
+        title: "Quick Guides",
         path: "/docs/guides",
         items: [
           {
@@ -383,7 +383,7 @@ export const DocsSidebar: SideBarItem[] = [
             path: "/docs/learning-center/guides/branding/theme",
           },
           {
-            title: "Update Logo & Icon",
+            title: "Customize Logo & Icon",
             path: "/docs/learning-center/guides/branding/logo-and-icon",
           },
           {
@@ -394,22 +394,26 @@ export const DocsSidebar: SideBarItem[] = [
             title: "Support a Language (i18n)",
             path: "/docs/learning-center/guides/localization/support-a-language",
           },
-          // {
-          //   title: "Create a Blog Post",
-          //   path: "/docs/learning-center/guides/blogging/create-a-blog-post",
-          // },
-          // {
-          //   title: "Create a Custom Entity",
-          //   path: "/docs/learning-center/guides/custom-entities/create-a-custom-entity",
-          // },
-          // {
-          //   title: "Use the API with API Keys",
-          //   path: "/docs/learning-center/guides/custom-entities/use-the-api-with-api-keys",
-          // },
-          // {
-          //   title: "Add Google Sheet Rows with Zapier",
-          //   path: "/docs/learning-center/guides/custom-entities/add-google-sheet-rows-with-zapier",
-          // },
+          {
+            title: "Create a Blog Post",
+            path: "/docs/learning-center/guides/blogging/publish-a-blog-post",
+          },
+          {
+            title: "Create a Custom Entity",
+            path: "/docs/learning-center/guides/entities/create-a-custom-entity",
+          },
+          {
+            title: "Use the Custom Entity API",
+            path: "/docs/learning-center/guides/entities/use-the-custom-entity-api",
+          },
+          {
+            title: "Shared Entity Rows",
+            path: "/docs/learning-center/guides/entities/shared-entity-rows",
+          },
+          {
+            title: "Plan Entity Limits",
+            path: "/docs/learning-center/guides/entities/plan-entity-limits",
+          },
         ],
       },
     ],

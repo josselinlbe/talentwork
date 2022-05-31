@@ -47,7 +47,6 @@ export function ScrollRestoration({ nonce = undefined }: { nonce?: string }) {
         window.scrollTo(0, storedY);
       }
     } catch (error) {
-      console.error(error);
       sessionStorage.removeItem(STORAGE_KEY);
     }
   }).toString();
@@ -144,6 +143,7 @@ export function useElementScrollRestoration({ apply }: { apply: boolean }, ref: 
     if (pendingLocation) {
       positions.set(location.key, ref.current.scrollTop);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingLocation, location]);
 
   if (typeof window !== "undefined") {
@@ -153,6 +153,7 @@ export function useElementScrollRestoration({ apply }: { apply: boolean }, ref: 
       if (!ref.current || !apply) return;
       let y = positions.get(location.key);
       ref.current.scrollTo(0, y || 0);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
   }
 }

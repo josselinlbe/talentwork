@@ -20,6 +20,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     });
     return response.json();
   } catch (e: any) {
+    // eslint-disable-next-line no-console
     console.log(e);
     await setApiKeyLogStatus(apiKeyLog.id, {
       error: JSON.stringify(e),

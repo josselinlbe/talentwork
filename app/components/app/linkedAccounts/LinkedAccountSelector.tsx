@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Transition } from "@headlessui/react";
-import { forwardRef, Fragment, KeyboardEvent, Ref, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, Fragment, KeyboardEvent, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { Link, useParams } from "remix";
 import { LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
+import clsx from "clsx";
 
 export interface RefLinkedAccountSelector {
   select: (link: LinkedAccountWithDetailsAndMembers) => void;
@@ -13,11 +14,13 @@ export interface RefLinkedAccountSelector {
 
 interface Props {
   items: LinkedAccountWithDetailsAndMembers[];
+  initial?: string | undefined;
+  onSelected?: (id: string, link: LinkedAccountWithDetailsAndMembers) => void;
+  disabled?: boolean;
   className?: string;
-  onSelected: (id: string, link: LinkedAccountWithDetailsAndMembers) => void;
 }
 
-const LinkedAccountSelector = ({ items, className = "", onSelected }: Props, ref: Ref<RefLinkedAccountSelector>) => {
+const LinkedAccountSelector = ({ items, initial, className = "", disabled, onSelected }: Props, ref: Ref<RefLinkedAccountSelector>) => {
   const params = useParams();
   const appData = useAppData();
   const { t } = useTranslation();
@@ -28,6 +31,12 @@ const LinkedAccountSelector = ({ items, className = "", onSelected }: Props, ref
 
   const [searchInput, setSearchInput] = useState("");
   const [selected, setSelected] = useState<LinkedAccountWithDetailsAndMembers | undefined>(undefined);
+
+  useEffect(() => {
+    if (initial) {
+      setSelected(items.find((f) => f.id === initial));
+    }
+  }, [initial, items]);
 
   useImperativeHandle(ref, () => ({ select }));
   function select(link: LinkedAccountWithDetailsAndMembers) {
@@ -79,15 +88,24 @@ const LinkedAccountSelector = ({ items, className = "", onSelected }: Props, ref
   return (
     <div className={className} ref={clickOutside}>
       <div>
-        <div className="relative">
+        <label htmlFor="link" className="block text-xs font-medium text-gray-700 truncate">
+          {t("models.linkedAccount.object")}
+        </label>
+
+        <div className="mt-1 w-full relative">
           <button
             type="button"
-            className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500 sm:text-sm"
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
             onClick={toggle}
+            disabled={disabled}
+            className={clsx(
+              "relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-accent-500 focus:border-accent-500 sm:text-sm",
+              disabled && "bg-gray-100 cursor-not-allowed"
+            )}
           >
+            <input type="hidden" readOnly name="linked-account-id" value={selected?.id} />
             {(() => {
               if (selected) {
                 return (

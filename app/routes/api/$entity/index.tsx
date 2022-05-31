@@ -2,7 +2,7 @@ import { ActionFunction, json, LoaderFunction } from "remix";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { createRow, getRow, getRows } from "~/utils/db/entities/rows.db.server";
 import { createRowLog } from "~/utils/db/logs.db.server";
-import RowHelper from "~/utils/helpers/RowHelper";
+import ApiHelper from "~/utils/helpers/ApiHelper";
 import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     });
     return json(
       items.map((item) => {
-        return RowHelper.getApiFormat(entity, item);
+        return ApiHelper.getApiFormat(entity, item);
       })
     );
   } catch (e: any) {
@@ -31,8 +31,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
-    const form = await request.formData();
-    const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
+    const jsonBody = await request.json();
+    const rowValues = ApiHelper.getRowPropertiesFromJson(entity, jsonBody);
     const created = await createRow({
       entityId: entity.id,
       tenantId: tenant.id,
@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       entity,
       item,
     });
-    return json(RowHelper.getApiFormat(entity, item), {
+    return json(ApiHelper.getApiFormat(entity, item), {
       status: 201,
     });
   } catch (e: any) {

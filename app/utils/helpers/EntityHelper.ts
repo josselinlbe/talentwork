@@ -51,17 +51,8 @@ const getFieldTitle = (field: Property, isDefault = false): string => {
       } else {
         return "entities.fields." + PropertyType[field.type];
       }
-    case PropertyType.TEXT:
-    case PropertyType.NUMBER:
-    case PropertyType.DATE:
-    case PropertyType.SELECT:
-    case PropertyType.FORMULA:
-    case PropertyType.MEDIA:
-      return field.title;
-    case PropertyType.ENTITY:
-      return field.title;
     default:
-      return "";
+      return field.title;
   }
 };
 

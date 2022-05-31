@@ -11,7 +11,6 @@ import {
   deleteSubscriptionPrice,
   deleteSubscriptionProduct,
   updateSubscriptionProduct,
-  updateSubscriptionFeature,
   deleteSubscriptionFeatures,
 } from "../db/subscriptionProducts.db.server";
 import { createStripeProduct, createStripePrice, updateStripePrice, deleteStripeProduct, updateStripeProduct } from "../stripe.server";

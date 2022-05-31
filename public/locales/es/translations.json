@@ -139,9 +139,9 @@
     },
     "hero": {
       "headline1": "Construye tu propio SaaS",
-      "headline2": "Framework de bajo código & extensible con funcionalidades para SaaS.",
-      "headline3": "Descarga el código y personaliza: Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
-      "subheadline1": "lanza tu MVP pronto",
+      "headline2": "Framework multi-tenant con funcionalidades SaaS",
+      "headline3": "Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
+      "subheadline1": "Lanza tu MVP pronto",
       "hint": "Este sitio usa v0.2.6",
       "buy": "Obtener early-access",
       "features": "Funcionalidades",
@@ -160,7 +160,7 @@
     },
     "newsletter": {
       "title": "Newsletter",
-      "headline": "Suscríbete al newsletter para recibir actualizaciones del producto y obtén la versión v0.0.1 ¡gratis!",
+      "headline": "Suscríbete para recibir actualizaciones y obtén la versión v0.0.1 gratis!",
       "subscribe": "Suscribirse",
       "subscribing": "Suscribiéndose",
       "subscribed": "¡Te has suscrito!",
@@ -1151,7 +1151,8 @@
       "ID": "ID",
       "SELECT": "Selección",
       "FORMULA": "Fórmula",
-      "MEDIA": "Adjuntos"
+      "MEDIA": "Adjuntos",
+      "BOOLEAN": "Booleano"
     },
     "defaultFields": {
       "USER": "Creado por usuario",

@@ -1,10 +1,9 @@
-import { RowWithDetails, RowWithValues } from "~/utils/db/entities/rows.db.server";
+import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
-import { useTranslation } from "react-i18next";
 import { useLocation, useSubmit } from "remix";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import FormGroup from "~/components/ui/forms/FormGroup";
@@ -12,8 +11,9 @@ import InputGroup from "~/components/ui/forms/InputGroup";
 import RowHelper from "~/utils/helpers/RowHelper";
 import RowValueInput, { RefRowValueInput } from "./RowValueInput";
 import RowDetailsTable from "./RowDetailsTable";
-import { Row } from "@prisma/client";
 import { RowDetailDto } from "~/application/dtos/entities/RowDetailDto";
+import LinkedAccountSelector from "~/components/app/linkedAccounts/LinkedAccountSelector";
+import { LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 
 export interface RefRowForm {
   create: (index: number) => void;
@@ -27,18 +27,18 @@ interface Props {
   editing?: boolean;
   relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[];
   isDetail?: boolean;
+  linkedAccounts: LinkedAccountWithDetailsAndMembers[];
   onSubmit?: (values: RowValueDto[]) => void;
 }
 
-const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = false, onSubmit = () => {} }: Props, ref: Ref<RefRowForm>) => {
-  const { t } = useTranslation();
+const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = false, linkedAccounts, onSubmit = () => {} }: Props, ref: Ref<RefRowForm>) => {
   const location = useLocation();
   const submit = useSubmit();
 
   const rowValueInput = useRef<RefRowValueInput>(null);
 
   const [headers, setHeaders] = useState<RowValueDto[]>([]);
-  const [details, setDetails] = useState<RowDetailDto[]>([]);
+  const [, setDetails] = useState<RowDetailDto[]>([]);
 
   useEffect(() => {
     loadInitialFields();
@@ -62,7 +62,7 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
         const search = location.search;
         const preselected = new URLSearchParams(search).get(property.name);
         let dateValue = existing?.dateValue ?? undefined;
-        if (property.type === PropertyType.DATE) {
+        if (property.type === PropertyType.DATE && !dateValue) {
           dateValue = new Date();
         }
         initial.push({
@@ -72,6 +72,7 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
           textValue: existing?.textValue ?? undefined,
           numberValue: existing?.numberValue ? Number(existing?.numberValue) : undefined,
           dateValue,
+          booleanValue: existing?.booleanValue ? Boolean(existing?.booleanValue) : undefined,
           relatedRowId: existing?.relatedRowId ?? preselected ?? undefined,
           selectedOption,
           media: existing?.media ?? [],
@@ -97,6 +98,15 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
         {headers.length > 0 && (
           <InputGroup title={"Details"}>
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              {entity.requiresLinkedAccounts && (
+                <LinkedAccountSelector
+                  className="col-span-12"
+                  items={linkedAccounts}
+                  initial={item?.linkedAccountId ?? undefined}
+                  disabled={item?.id !== undefined && !editing}
+                />
+              )}
+
               {headers.map((detailValue, idxDetailValue) => {
                 return (
                   <div key={idxDetailValue} className={clsx("w-full col-span-12", detailValue.property.type === PropertyType.ENTITY && "")}>
@@ -121,6 +131,7 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
                         textValue={headers[idxDetailValue].textValue}
                         numberValue={headers[idxDetailValue].numberValue}
                         dateValue={headers[idxDetailValue].dateValue}
+                        booleanValue={headers[idxDetailValue].booleanValue}
                         relatedRowId={headers[idxDetailValue].relatedRowId}
                         initialOption={detailValue.selectedOption}
                         selected={detailValue.property}
@@ -171,7 +182,7 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
                 // currency={currency}
                 properties={entity.properties.filter((f) => f.isDetail)}
                 editable={!item || editing}
-                initial={item?.details ?? []}
+                initial={item?.details.sort((a, b) => a.folio - b.folio) ?? []}
                 setDetails={(e) => setDetails(e)}
               />
             </div>

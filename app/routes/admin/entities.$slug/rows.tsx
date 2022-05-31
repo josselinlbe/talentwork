@@ -1,4 +1,3 @@
-import { Row } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import RowsList from "~/components/entities/rows/RowsList";
 import { i18nHelper } from "~/locale/i18n.utils";
@@ -28,8 +27,6 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
-  const form = await request.formData();
-  const action = form.get("action")?.toString() ?? "";
   return badRequest(t("shared.invalidForm"));
 };
 

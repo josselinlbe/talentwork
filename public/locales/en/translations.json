@@ -139,10 +139,10 @@
       "privacy": "Privacy Policy"
     },
     "hero": {
-      "headline1": "Easily Build Your Own SaaS",
-      "headline2": "Multi-tenant framework with out-of-the-box SaaS features.",
-      "headline3": "Download the code and customize: Authentication, Subscriptions, Blogging, Audit trails, Admin portal, App portal, Entity Builder, Subscription Plan Builder, and more.",
-      "subheadline1": "launch your MVP sooner",
+      "headline1": "Easily build your own SaaS",
+      "headline2": "Multi-tenant framework with out-of-the-box SaaS features",
+      "headline3": "Authentication, Subscriptions, Blogging, Audit trails, Admin portal, App portal, Entity Builder, Subscription Plan Builder, and more.",
+      "subheadline1": "Launch your MVP sooner",
       "hint": "This site uses v0.2.6",
       "buy": "Get pre-launch price",
       "features": "Features",
@@ -1153,7 +1153,8 @@
       "ID": "ID",
       "SELECT": "Select",
       "FORMULA": "Formula",
-      "MEDIA": "Media"
+      "MEDIA": "Media",
+      "BOOLEAN": "Boolean"
     },
     "defaultFields": {
       "USER": "Created by user",
