@@ -59,10 +59,15 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                   return (
                     <li key={idx}>
                       {icon}{" "}
-                      <a className=" text-theme-600 dark:text-theme-400" target="_blank" rel="noreferrer" href={getIssueUrl(issue)}>
-                        #{getIssueId(issue)}
-                      </a>
-                      : {issue.title.split("#")[0]}
+                      {getIssueId(issue) > 0 && (
+                        <>
+                          <a className=" text-theme-600 dark:text-theme-400" target="_blank" rel="noreferrer" href={getIssueUrl(issue)}>
+                            #{getIssueId(issue)}
+                          </a>
+                          :{" "}
+                        </>
+                      )}
+                      {issue.title.split("#")[0]}
                       {viewImages && (
                         <>
                           {issue.img?.map((image, idx) => {
