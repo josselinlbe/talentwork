@@ -91,17 +91,21 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Could not create link" });
   }
 
-  await sendEmail(user.email, "create-linked-account", {
-    action_url: process.env.SERVER_URL + `/app/${tenantMember.tenant.slug}/settings/linked-accounts`,
-    name: user.firstName,
-    invite_sender_name: appData.user?.firstName,
-    invite_sender_email: appData.user?.email,
-    tenant_invitee: tenantName,
-    tenant_creator: appData.currentTenant?.name,
-    invitation_role: inviteeIsProvider ? "as a provider" : "as a client",
-  });
-
   await createLog(request, tenantUrl, "Created tenant relationship", `${tenantName} ${inviteeIsProvider ? "as a provider" : "as a client"}`);
+
+  try {
+    await sendEmail(user.email, "create-linked-account", {
+      action_url: process.env.SERVER_URL + `/app/${tenantMember.tenant.slug}/settings/linked-accounts`,
+      name: user.firstName,
+      invite_sender_name: appData.user?.firstName,
+      invite_sender_email: appData.user?.email,
+      tenant_invitee: tenantName,
+      tenant_creator: appData.currentTenant?.name,
+      invitation_role: inviteeIsProvider ? "as a provider" : "as a client",
+    });
+  } catch (e) {
+    return badRequest({ error: "Link created, but could not send email: " + e });
+  }
 
   const data: NewLinkedAccountActionData = {
     linkedAccount,

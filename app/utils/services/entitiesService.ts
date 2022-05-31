@@ -3,23 +3,22 @@ import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { PropertyWithDetails, EntityWithDetails, getEntityById, getEntityBySlug, getRowsCount } from "../db/entities/entities.db.server";
 import { getProperty } from "../db/entities/properties.db.server";
 import { RowWithDetails, getRows } from "../db/entities/rows.db.server";
-import { getTenantSubscription } from "../db/tenantSubscriptions.db.server";
 
 export type EntityUsageAndLimit = {
   count: number;
   type: EntityLimitType;
   max: number;
 };
-export async function getEntityUsageAndLimit(slug: string, tenantId: string): Promise<EntityUsageAndLimit> {
-  const contractsEntity = await getEntityBySlug(slug);
-  const subscription = await getTenantSubscription(tenantId);
-  const contractsLimit = subscription?.subscriptionPrice?.subscriptionProduct.entityLimits.find((f) => f.entityId === contractsEntity?.id);
-  return {
-    count: await getRowsCount(tenantId, contractsEntity?.id ?? "", contractsLimit),
-    type: contractsLimit?.type ?? EntityLimitType.MAX,
-    max: contractsLimit?.max ?? 0,
-  };
-}
+// export async function getEntityUsageAndLimit(slug: string, tenantId: string): Promise<EntityUsageAndLimit> {
+//   const contractsEntity = await getEntityBySlug(slug);
+//   const subscription = await getTenantSubscription(tenantId);
+//   const contractsLimit = subscription?.subscriptionPrice?.subscriptionProduct.entityLimits.find((f) => f.entityId === contractsEntity?.id);
+//   return {
+//     count: await getRowsCount(tenantId, contractsEntity?.id ?? "", contractsLimit),
+//     type: contractsLimit?.type ?? EntityLimitType.MAX,
+//     max: contractsLimit?.max ?? 0,
+//   };
+// }
 
 // export async function getNextRowFolio(entityId: string) {
 //   const maxFolio = await getMaxRowFolio(entityId);

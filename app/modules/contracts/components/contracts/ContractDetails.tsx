@@ -17,12 +17,14 @@ import { useRef, useState } from "react";
 import { Link, useSubmit, useTransition } from "remix";
 import { ContractWithDetails } from "~/modules/contracts/db/contracts.db.server";
 import IconContract from "../../icons/IconContract";
+import { EmployeeDto } from "../../dtos/EmployeeDto";
 
 interface Props {
   item: ContractWithDetails;
+  employees: EmployeeDto[];
 }
 
-export default function ContractDetails({ item }: Props) {
+export default function ContractDetails({ item, employees }: Props) {
   const { t } = useTranslation();
   const appData = useAppData();
   const transition = useTransition();
@@ -122,14 +124,14 @@ export default function ContractDetails({ item }: Props) {
     }
   }
   const clientFullName = () => {
-    if (item && item.linkedAccount?.clientTenant) {
-      return `${item.linkedAccount.clientTenant.name}`;
+    if (item && item.row.linkedAccount?.clientTenant) {
+      return `${item.row.linkedAccount.clientTenant.name}`;
     }
     return "";
   };
   const providerFullName = () => {
-    if (item && item.linkedAccount?.providerTenant) {
-      return `${item.linkedAccount.providerTenant.name}`;
+    if (item && item.row.linkedAccount?.providerTenant) {
+      return `${item.row.linkedAccount.providerTenant.name}`;
     }
     return "";
   };
@@ -140,7 +142,7 @@ export default function ContractDetails({ item }: Props) {
     if (appData.isOwnerOrAdmin) {
       return true;
     }
-    return item?.createdByUserId === appData.user?.id || true;
+    return item?.row.createdByUserId === appData.user?.id || true;
   };
 
   return (
@@ -386,7 +388,7 @@ export default function ContractDetails({ item }: Props) {
 
                     <div className="space-y-5">
                       <ContractMembers items={item.members} />
-                      {item.employees.length > 0 && <ContractEmployees items={item.employees} />}
+                      {item.employees.length > 0 && <ContractEmployees items={employees} />}
                       <ContractActivities items={item.activity} />
                     </div>
                   </div>

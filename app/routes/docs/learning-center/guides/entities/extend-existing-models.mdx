@@ -1,0 +1,165 @@
+---
+meta:
+  title: Extend Existing Models | Guides | Learning Center | SaasRock
+  description: Learn how you can extend an existing model using the Custom Entity Builder
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Extend Existing Models",
+      routePath:
+        "/docs/learning-center/guides/entities/extend-existing-models",
+    },
+  ]}
+/>
+
+# Extend Existing Models
+
+## Goals:
+
+- Add a model at `schema.prisma`.
+- Extend it with the **Custom Entity Builder**.
+
+## Steps
+
+💿 First, open the `schema.prisma` file and add the following model:
+
+```
+model JobPost {
+  id     String  @id @default(cuid())
+  rowId  String  @unique
+  row    Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  title  String
+  type   String // Fixed - Hourly
+  budget Decimal
+}
+```
+
+💿 On the Row model, add 2 properties:
+
+- **jobPostId** - Nullable String? (not all Rows will be job posts)
+- **jobPost** - Nullable JobPost?
+
+```
+model Row {
+  id                String         @id @default(cuid())
+  ...
+  jobPostId         String?
+  jobPost           JobPost?
+}
+```
+
+This property name will be important, so take note if you have `jobPost` or `JobPost`.
+
+💿 Add a migration to update the database:
+
+```
+npx prisma migrate dev --name added_job_post_model
+```
+
+💿 Start your app, and add the _JobPost_ **Custom Entity**.
+
+<WarningBanner title="WARNING">
+  The <b>name</b> value should be the same as the one on the{" "}
+  <b>Row</b> model <i>(jobPost or JobPost)</i>.
+</WarningBanner>
+
+<DocTutorialImage
+  alt="Job Post Entity"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/job-post-entity.png"
+/>
+
+💿 For each field, click on **_Show advanced options_** and set **Is dynamic** to `false`.
+
+<DocTutorialImage
+  alt="Job Post Property is not Dynamic"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/job-post-property.png"
+/>
+
+You should have at least these 3 properties:
+
+<DocTutorialImage
+  alt="Job Post Properties"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/job-post-properties.png"
+/>
+
+💿 Add a Job Post.
+
+<DocTutorialImage
+  alt="New Job Post"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/new.png"
+/>
+
+There will be an error, since we're trying to access the properties for an object that is not **_included_** on the database query (e.g. _row.jobPost.title_).
+
+<DocTutorialImage
+  alt="Job Post Details Error"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/details-error.png"
+/>
+
+💿 Add the `jobPost` property to the **_includeRowDetails_** constant:
+
+```diff
+export const includeRowDetails = {
++ jobPost: true,
+  createdByUser: true,
+```
+
+💿 Reload the job post.
+
+<DocTutorialImage
+  alt="Job Post"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/job-post.png"
+/>
+
+💿 List all the **Job Posts**.
+
+<DocTutorialImage
+  alt="Job Posts"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/job-posts.png"
+/>
+
+💿 Update all the fields.
+
+<DocTutorialImage
+  alt="Job Post Updated"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/job-post-updated.png"
+/>
+
+💿 Open a new terminal window an run **prisma studio** to browser the **JobPosts** _model/table_ rows.
+
+```
+npx prisma studio
+```
+
+<DocTutorialImage
+  alt="Job Post Prisma Studio Rows"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/prisma-studio.png"
+/>
+
+💿 Finally, delete the job post.
+
+<DocTutorialImage
+  alt="Job Post Deleted"
+  src="https://yahooder.sirv.com/saasrock/guides/entities/extend-existing-models/deleted.png"
+/>
+
+---
+
+I hope this quick guide was useful! [Let me know](/docs/community) if you have any question.

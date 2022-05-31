@@ -1,9 +1,10 @@
-import { ContractEmployee, Employee } from ".prisma/client";
+import { ContractEmployee } from ".prisma/client";
 import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
+import { EmployeeDto } from "../../dtos/EmployeeDto";
 
 interface Props {
-  items: (ContractEmployee & { employee: Employee })[];
+  items: EmployeeDto[];
 }
 
 export default function ContractEmployees({ items }: Props) {
@@ -11,7 +12,7 @@ export default function ContractEmployees({ items }: Props) {
 
   const sortedItems = () => {
     return items?.slice().sort((x, y) => {
-      return x.employee.firstName > y.employee.firstName ? 1 : -1;
+      return x.firstName > y.firstName ? 1 : -1;
     });
   };
 
@@ -27,11 +28,11 @@ export default function ContractEmployees({ items }: Props) {
                   <div className="truncate">
                     <div className="text-sm font-medium text-gray-800 truncate flex items-center space-x-1 justify-between">
                       <div className="text-sm font-medium text-gray-800 truncate flex items-center space-x-1 justify-between">
-                        {employee.employee.firstName} {employee.employee.lastName}
+                        {employee.firstName} {employee.lastName}
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 justify-between truncate">
-                      <p className="text-sm text-gray-500 truncate">{employee.employee.email}</p>
+                      <p className="text-sm text-gray-500 truncate">{employee.email}</p>
                     </div>
                   </div>
                 </li>

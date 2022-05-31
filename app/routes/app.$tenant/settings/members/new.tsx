@@ -12,16 +12,16 @@ import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
 
 export type NewMemberLoaderData = {
   title: string;
-  featureUsageUsers: PlanFeatureUsageDto | undefined;
+  featurePlanUsage: PlanFeatureUsageDto | undefined;
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
-  const featureUsageUsers = await getPlanFeatureUsage(tenantUrl.tenantId, "Users");
+  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "Users");
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
-    featureUsageUsers,
+    featurePlanUsage,
   };
   return json(data);
 };
@@ -89,5 +89,5 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function NewMemberRoute() {
   const data = useLoaderData<NewMemberLoaderData>();
-  return <NewMember featureUsageUsers={data.featureUsageUsers} />;
+  return <NewMember featurePlanUsage={data.featurePlanUsage} />;
 }

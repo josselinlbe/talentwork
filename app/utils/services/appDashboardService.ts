@@ -44,6 +44,7 @@ async function getRowsCreatedSince(entityId: string, tenantId: string, lastDays:
   });
   const total = await db.row.count({
     where: {
+      entityId,
       ...TenantHelper.tenantCondition(tenantId),
     },
   });

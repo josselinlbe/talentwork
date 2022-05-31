@@ -395,6 +395,15 @@ CREATE TABLE "ContractMember" (
 );
 
 -- CreateTable
+CREATE TABLE "ContractEmployee" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "contractId" TEXT NOT NULL,
+    "rowId" TEXT NOT NULL,
+    CONSTRAINT "ContractEmployee_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "ContractEmployee_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "ContractActivity" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

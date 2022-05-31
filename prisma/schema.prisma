@@ -333,25 +333,26 @@ model PropertyOption {
 }
 
 model Row {
-  id                String         @id @default(cuid())
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  id                String             @id @default(cuid())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   entityId          String
-  entity            Entity         @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entity            Entity             @relation(fields: [entityId], references: [id], onDelete: Cascade)
   tenantId          String
-  tenant            Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant            Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   folio             Int
   createdByUserId   String?
-  createdByUser     User?          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByUser     User?              @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByApiKeyId String?
-  createdByApiKey   ApiKey?        @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
+  createdByApiKey   ApiKey?            @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
   linkedAccountId   String?
-  linkedAccount     LinkedAccount? @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
+  linkedAccount     LinkedAccount?     @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
   contractId        String?
   contract          Contract?
+  contractEmployees ContractEmployee[]
   logs              Log[]
   values            RowValue[]
-  relatedRows       RowValue[]     @relation(name: "relatedRow")
+  relatedRows       RowValue[]         @relation(name: "relatedRow")
 
   parentRowId String?
   parentRow   Row?    @relation(name: "parentRowId", fields: [parentRowId], references: [id], onDelete: Cascade)
@@ -431,6 +432,7 @@ model Contract {
   status      Int
   members     ContractMember[]
   activity    ContractActivity[]
+  employees   ContractEmployee[]
 }
 
 model ContractMember {
@@ -441,6 +443,14 @@ model ContractMember {
   userId     String
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   signDate   DateTime?
+}
+
+model ContractEmployee {
+  id         String   @id @default(cuid())
+  contractId String
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  rowId      String
+  row        Row      @relation(fields: [rowId], references: [id], onDelete: Cascade)
 }
 
 model ContractActivity {

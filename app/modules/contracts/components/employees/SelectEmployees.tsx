@@ -6,13 +6,14 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import clsx from "~/utils/shared/ClassesUtils";
 import IconWorkers from "~/modules/contracts/icons/IconWorkers";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
-import { Employee } from "@prisma/client";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useParams } from "remix";
 
 export interface RefSelectEmployees {
   show: (selected: string[]) => void;
 }
+
+type Employee = { id: string; firstName: string; lastName: string; email: string };
 
 interface Props {
   items: Employee[];

@@ -159,8 +159,9 @@
       "headline": "Planes diseñados para organizaciones de todos los tamaños."
     },
     "newsletter": {
-      "title": "Newsletter",
-      "headline": "Suscríbete para recibir actualizaciones y obtén la versión v0.0.1 gratis!",
+      "title": "Entérate de novedades",
+      "headline": "Suscríbete al newsletter para recibir actualizaciones",
+      "email": "Ingresa tu correo",
       "subscribe": "Suscribirse",
       "subscribing": "Suscribiéndose",
       "subscribed": "¡Te has suscrito!",

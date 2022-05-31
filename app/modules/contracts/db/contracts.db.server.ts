@@ -1,15 +1,15 @@
 import { ContractStatusFilter } from "~/modules/contracts/enums/ContractStatusFilter";
 import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
 import { db } from "../../../utils/db.server";
-import { Contract, ContractMember, User, ContractEmployee, Employee, ContractActivity } from "@prisma/client";
+import { Contract, ContractMember, User, ContractEmployee, ContractActivity } from "@prisma/client";
 import { ContractMemberRole } from "../enums/ContractMemberRole";
 import { ContractStatus } from "../enums/ContractStatus";
-import { includeRowDetails } from "~/utils/db/entities/rows.db.server";
+import { getMaxRowFolio, includeRowDetails, RowWithDetails } from "~/utils/db/entities/rows.db.server";
 
 export type ContractWithDetails = Contract & {
   row: RowWithDetails;
   members: (ContractMember & { user: User })[];
-  employees: (ContractEmployee & { employee: Employee })[];
+  employees: (ContractEmployee & { row: RowWithDetails })[];
   activity: (ContractActivity & { createdByUser: User })[];
 };
 
@@ -60,7 +60,11 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
       },
       employees: {
         include: {
-          employee: true,
+          row: {
+            include: {
+              ...includeRowDetails,
+            },
+          },
         },
       },
       activity: {
@@ -137,8 +141,13 @@ export async function createContract(
     status: ContractStatus;
   },
   members: { userId: string; role: ContractMemberRole }[],
-  employees: Employee[]
+  employees: RowWithDetails[]
 ) {
+  let folio = 1;
+  const maxFolio = await getMaxRowFolio(tenantId, entityId, undefined);
+  if (maxFolio && maxFolio._max.folio !== null) {
+    folio = maxFolio._max.folio + 1;
+  }
   const item = await db.contract.create({
     data: {
       row: {
@@ -147,6 +156,7 @@ export async function createContract(
           createdByUserId,
           tenantId,
           linkedAccountId,
+          folio,
         },
       },
       ...data,
@@ -168,7 +178,7 @@ export async function createContract(
       return await db.contractEmployee.create({
         data: {
           contractId: item.id,
-          employeeId: employee.id,
+          rowId: employee.id,
         },
       });
     });
@@ -213,10 +223,4 @@ export async function updateContract(
   }
 
   return item;
-}
-
-export async function deleteContract(id: string) {
-  return await db.contract.delete({
-    where: { id },
-  });
 }

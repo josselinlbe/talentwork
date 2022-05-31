@@ -301,78 +301,11 @@ export const DocsSidebar: SideBarItem[] = [
     title: "Learning Center",
     path: "/docs/learning-center",
     items: [
+      { title: "Learning Center", path: "/docs/learning-center", exact: true },
       {
-        title: "Tutorials",
-        path: "/docs/learning-center/tutorials",
-        items: [
-          {
-            title: "Quick Start",
-            path: "/docs/learning-center/tutorials/quick-start",
-            exact: true,
-          },
-          {
-            title: "Quick Start v0.2.5",
-            path: "/docs/learning-center/tutorials/quick-start-v-0-2-5",
-            exact: true,
-          },
-          // {
-          //   title: "Create Invoice SaaS app",
-          //   path: "/docs/tutorials/create-an-invoicing-saas-app",
-          //
-          //   items: [
-          //     {
-          //       title: "Set up Stripe",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/set-up-stripe",
-          //
-          //     },
-          //     {
-          //       title: "Set up Postmark",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/set-up-postmark",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Companies",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Tickets",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Customers",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Products",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Custom Entity - Invoices",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Webhooks by Zapier",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Using the API",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //     {
-          //       title: "Testing as a Tenant",
-          //       path: "/docs/tutorials/create-an-invoice-saas-app/creating-the-company-entity",
-          //
-          //     },
-          //   ],
-          // },
-        ],
+        title: "Quick Start",
+        path: "/docs/learning-center/tutorials/quick-start",
+        exact: true,
       },
       {
         title: "Quick Guides",
@@ -413,6 +346,10 @@ export const DocsSidebar: SideBarItem[] = [
           {
             title: "Plan Entity Limits",
             path: "/docs/learning-center/guides/entities/plan-entity-limits",
+          },
+          {
+            title: "Extend Existing Models",
+            path: "/docs/learning-center/guides/entities/extend-existing-models",
           },
         ],
       },

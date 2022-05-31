@@ -26,7 +26,6 @@ export type RowWithDetails = Row & {
 };
 
 export const includeRowDetails = {
-  // entity: true,
   createdByUser: true,
   createdByApiKey: true,
   tenant: true,
@@ -112,6 +111,19 @@ export async function getRows(entityId: string, tenantId: string, take?: number,
   });
 }
 
+export async function getRowsInIds(tenantId: string, ids: string[]): Promise<RowWithDetails[]> {
+  return await db.row.findMany({
+    where: {
+      ...TenantHelper.tenantCondition(tenantId),
+      id: {
+        in: ids,
+      },
+      parentRowId: null,
+    },
+    include: includeRowDetails,
+  });
+}
+
 export async function countRows(entityId: string, tenantId: string, query?: string): Promise<number> {
   return await db.row.count({
     where: {
@@ -137,17 +149,17 @@ export async function getRow(entityId: string, id: string, tenantId: string): Pr
   });
 }
 
-export async function getMaxRowFolio(entityId: string, parentRowId: string | undefined) {
-  let where: any = {
-    entityId,
-  };
+export async function getMaxRowFolio(tenantId: string, entityId: string, parentRowId: string | undefined) {
+  let where: any = {};
   if (parentRowId) {
     where = {
+      tenantId,
       entityId,
       parentRowId,
     };
   } else {
     where = {
+      tenantId,
       entityId,
       parentRowId: null,
     };
@@ -186,7 +198,7 @@ export async function createRow(
 ) {
   let folio = nextFolio ?? 1;
   if (!nextFolio) {
-    const maxFolio = await getMaxRowFolio(data.entityId, parentRowId);
+    const maxFolio = await getMaxRowFolio(data.tenantId, data.entityId, parentRowId);
     if (maxFolio && maxFolio._max.folio !== null) {
       folio = maxFolio._max.folio + 1;
     }

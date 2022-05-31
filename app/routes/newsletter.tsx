@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionFunction, json, LoaderFunction, MetaFunction } from "remix";
@@ -5,7 +6,6 @@ import { Form, useActionData, useTransition } from "remix";
 import { Language } from "remix-i18next";
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
-import Tabs from "~/components/ui/tabs/Tabs";
 import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {
@@ -107,30 +107,7 @@ export default function NewsletterRoute() {
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.newsletter.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-400">{t("front.newsletter.headline")}</p>
                 </div>
-                <div className="flex justify-center mt-6">
-                  <Tabs
-                    breakpoint="sm"
-                    tabs={[
-                      {
-                        name: t("blog.title"),
-                        routePath: "/blog",
-                      },
-                      {
-                        name: t("front.changelog.title"),
-                        routePath: "/changelog",
-                      },
-                      {
-                        name: t("front.newsletter.title"),
-                        routePath: "/newsletter",
-                      },
-                      {
-                        name: t("front.contact.title"),
-                        routePath: "/contact",
-                      },
-                    ]}
-                  />
-                </div>
-                <div className="mt-12 mx-auto">
+                <div className="mt-12 mx-auto max-w-xl">
                   <Form replace method="post" aria-hidden={state === "success"} className="mt-9 space-y-3">
                     <div className="sm:col-span-2">
                       <label htmlFor="email" className="block text-sm font-medium text-gray-900 dark:text-slate-300">
@@ -165,7 +142,13 @@ export default function NewsletterRoute() {
                       </div>
                       <button
                         type="submit"
-                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-sm text-white bg-theme-500 hover:bg-theme-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
+                        disabled={state === "submitting"}
+                        className={clsx(
+                          "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-sm text-white bg-theme-500 focus:outline-none",
+                          state === "submitting"
+                            ? "opacity-80 cursor-not-allowed"
+                            : "focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-theme-600 hover:bg-theme-600"
+                        )}
                       >
                         {state === "submitting" ? t("front.newsletter.subscribing") + "..." : t("front.newsletter.subscribe")}
                       </button>

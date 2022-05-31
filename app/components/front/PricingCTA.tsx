@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import { MarketingFeatureType } from "~/application/dtos/marketing/MarketingFeatureDto";
 import { getFeatures, getUpcomingFeatures } from "~/utils/services/marketingService";
 import ToggleBillingPeriod from "../core/settings/subscription/ToggleBillingPeriod";
 import CheckIcon from "../ui/icons/CheckIcon";
@@ -15,11 +16,17 @@ const plans = [
         By subscribing now, <b className="font-bold">you can lock in this pre-release pricing forever</b> for Core Features 🪨.
       </div>
     ),
-    monthlyPrice: 99,
-    monthlyPriceBefore: 199,
-    yearlyPrice: 999,
-    yearlyPriceBefore: 1999,
-    features: [...baseFeatures, ...getFeatures().map((i) => i.name)],
+    monthlyPrice: "99",
+    monthlyPriceBefore: "199",
+    yearlyPrice: "990",
+    yearlyPriceBefore: "2,388",
+    features: [
+      ...baseFeatures,
+      ...getFeatures().map((i) => i.name),
+      ...getUpcomingFeatures()
+        .filter((f) => f.type === MarketingFeatureType.Core)
+        .map((i) => i.name + " (under 🚧)"),
+    ],
     enabled: true,
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Core%20Features%20%F0%9F%AA%A8&wanted=true",
   },
@@ -35,20 +42,23 @@ const plans = [
         <b className="text-red-500 font-bold">Please note that Enterprise Features are still in construction</b>.
       </div>
     ),
-    monthlyPrice: 299,
-    monthlyPriceBefore: 499,
-    yearlyPrice: 2999,
-    yearlyPriceBefore: 4999,
-    features: ["All core features", ...baseFeatures, ...getUpcomingFeatures().map((i) => i.name)],
+    monthlyPrice: "149",
+    monthlyPriceBefore: "499",
+    yearlyPrice: "1,490",
+    yearlyPriceBefore: "5,988",
+    features: [
+      "All core features",
+      ...baseFeatures,
+      ...getUpcomingFeatures()
+        .filter((f) => f.type === MarketingFeatureType.Enterprise)
+        .map((i) => i.name + " (under 🚧)"),
+    ],
     enabled: true,
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Enterprise%20Features%20%F0%9F%9A%80&wanted=true",
   },
 ];
 
-interface Props {
-  currentRelease: { name: string | null; created_at: Date } | undefined;
-}
-export default function PricingCTA({ currentRelease }: Props) {
+export default function PricingCTA() {
   const { t } = useTranslation();
   const [billingPeriod, setBillingPeriod] = useState(SubscriptionBillingPeriod.MONTHLY);
   function toggleBillingPeriod() {
@@ -69,7 +79,7 @@ export default function PricingCTA({ currentRelease }: Props) {
     if (billingPeriod === SubscriptionBillingPeriod.MONTHLY) {
       return plan.monthlyPriceBefore;
     } else {
-      return plan.monthlyPriceBefore;
+      return plan.yearlyPriceBefore;
     }
   }
   return (
@@ -109,13 +119,13 @@ export default function PricingCTA({ currentRelease }: Props) {
                           </h4>
                           <div className="flex-1 border-t-2 border-gray-200 dark:border-gray-700" />
                         </div>
-                        <ul className="mt-8 space-y-5 lg:space-y-0 lg:grid sm:grid sm:grid-cols-2 sm:space-y-0 sm:gap-3 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-5">
+                        <ul className="mt-8 space-y-5 lg:space-y-0 lg:grid sm:grid sm:grid-cols-2 sm:space-y-0 sm:gap-3 lg:grid-cols-3 lg:gap-x-2 lg:gap-y-5">
                           {plan.features.map((feature) => (
                             <li key={feature} className="flex items-start lg:col-span-1">
                               <div className="flex-shrink-0">
                                 <CheckIcon className="h-5 w-5 text-theme-400" aria-hidden="true" />
                               </div>
-                              <p className="ml-3 text-sm text-gray-700 dark:text-gray-400">{feature}</p>
+                              <p className="ml-1 text-sm text-gray-700 dark:text-gray-400 truncate">{feature}</p>
                             </li>
                           ))}
                         </ul>
@@ -150,12 +160,12 @@ export default function PricingCTA({ currentRelease }: Props) {
                               plan.enabled ? "hover:bg-theme-600" : " opacity-75 cursor-not-allowed"
                             )}
                           >
-                            <div>{plan.enabled ? `Get v${currentRelease?.name} + 1 month of updates` : `In construction`}</div>
+                            <div>{plan.enabled ? `Get early access` : `In construction`}</div>
                           </button>
                         </div>
                       </div>
                       <div className="mt-4 text-sm">
-                        <span className="font-bold text-gray-900">Cancel anytime.</span>
+                        <span className="font-medium text-gray-900">Up to 5 developers - Cancel anytime</span>
                       </div>
                     </div>
                   </div>

@@ -13,10 +13,10 @@ import { useEscapeKeypress } from "~/utils/shared/KeypressUtils";
 import CheckPlanFeatureLimit from "../subscription/CheckPlanFeatureLimit";
 
 interface Props {
-  featureUsageUsers: PlanFeatureUsageDto | undefined;
+  featurePlanUsage: PlanFeatureUsageDto | undefined;
 }
 
-export default function NewMember({ featureUsageUsers }: Props) {
+export default function NewMember({ featurePlanUsage }: Props) {
   const params = useParams();
   const location = useLocation();
   const actionData = useActionData<NewMemberActionData>();
@@ -143,7 +143,7 @@ export default function NewMember({ featureUsageUsers }: Props) {
                   <div className="flex items-center justify-between">
                     <h4 className="text-lg font-medium">{t("settings.members.actions.new")}</h4>
                   </div>
-                  <CheckPlanFeatureLimit item={featureUsageUsers}>
+                  <CheckPlanFeatureLimit item={featurePlanUsage}>
                     <Form method="post" className="space-y-4">
                       <div className="grid grid-cols-2 gap-2">
                         {/*Email */}

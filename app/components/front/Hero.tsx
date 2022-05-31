@@ -1,13 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "remix";
 import Header from "./Header";
-import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
-import NumberUtils from "~/utils/shared/NumberUtils";
 
-interface Props {
-  socialProof?: SocialProofDto | undefined;
-}
-export default function Hero({ socialProof }: Props) {
+export default function Hero() {
   const { t } = useTranslation();
   return (
     <div className="relative">
@@ -88,11 +83,6 @@ export default function Hero({ socialProof }: Props) {
                 </div>
 
                 <div className="mt-8 space-y-3">
-                  {socialProof?.totalMembers && (
-                    <div className=" text-gray-500">
-                      {NumberUtils.intFormat(socialProof.totalMembers)} {t("front.hero.repo")}
-                    </div>
-                  )}
                   <Link
                     to="/changelog"
                     className="text-xs border-b border-dashed border-accent-500 dark:border-cyan-300 text-gray-500 hover:border-dotted italic"

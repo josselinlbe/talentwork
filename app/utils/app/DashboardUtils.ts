@@ -4,7 +4,7 @@ export function getStatChangePercentage(added: number, total: number): number {
   if (total <= 0) {
     return 100;
   }
-  return (added * 100) / total;
+  return Math.round((added * 100) / total);
 }
 
 export function getStatChangeType(added: number, total: number): StatChange {

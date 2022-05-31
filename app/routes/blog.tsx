@@ -61,10 +61,10 @@ export default function BlogRoute() {
                       name: t("front.changelog.title"),
                       routePath: "/changelog",
                     },
-                    {
-                      name: t("front.newsletter.title"),
-                      routePath: "/newsletter",
-                    },
+                    // {
+                    //   name: t("front.newsletter.title"),
+                    //   routePath: "/newsletter",
+                    // },
                     {
                       name: t("front.contact.title"),
                       routePath: "/contact",

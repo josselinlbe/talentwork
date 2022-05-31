@@ -160,8 +160,9 @@
       "headline": "Plans designed for organizations of all sizes."
     },
     "newsletter": {
-      "title": "Newsletter",
-      "headline": "Subscribe to the newsletter to get product updates and get v0.0.1 for free!",
+      "title": "Stay up to date",
+      "headline": "Subscribe to the newsletter to get product updates",
+      "email": "Enter your email",
       "subscribe": "Subscribe",
       "subscribing": "Subscribing",
       "subscribed": "You're subscribed!",

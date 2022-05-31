@@ -2,7 +2,7 @@ import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo, UserSession } from "~/utils/session.server";
-import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";
@@ -73,13 +73,13 @@ export default function IndexRoute() {
         }}
       />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
-        <Hero socialProof={data?.socialProof} />
+        <Hero />
         <LogoClouds />
         <FeatureImages />
         <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />
         <UpcomingFeatures />
-        <PricingCTA currentRelease={data?.currentRelease} />
+        <PricingCTA />
         <Newsletter />
         <Footer />
       </div>

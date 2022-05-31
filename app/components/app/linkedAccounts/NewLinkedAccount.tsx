@@ -93,7 +93,7 @@ export default function NewLinkedAccount({ linksCount }: Props) {
               className="col-span-12"
               type="text"
               name="tenant-name"
-              title={t("models.tenant.object")}
+              title={t("settings.tenant.title")}
               autoComplete="off"
               required
               value={tenantName}

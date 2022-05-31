@@ -88,7 +88,6 @@ export default function EntityForm({ item }: Props) {
             required
             help="eg: contract"
             autoComplete="off"
-            lowercase={true}
           />
 
           <InputText

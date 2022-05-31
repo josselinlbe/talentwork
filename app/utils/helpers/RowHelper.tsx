@@ -19,7 +19,7 @@ const getCellValue = (entity: Entity, item: RowWithDetails, property: Property) 
 };
 
 const getPropertyValue = (entity: Entity, item: RowWithDetails, property: Property) => {
-  const value = item.values.find((f) => f.propertyId === property.id);
+  const value = item.values?.find((f) => f.propertyId === property.id);
   if (property.isDynamic && value) {
     return getDynamicPropertyValue(value, property.type);
   }
@@ -283,7 +283,7 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
       }
       const value = getValueFromType(property.type, formValue);
       value.media = media;
-      const existingValue = existing?.values.find((f) => f.propertyId === property.id);
+      const existingValue = existing?.values?.find((f) => f.propertyId === property.id);
       if (property.isDynamic) {
         const rowValue = {
           id: existingValue?.id ?? null,
