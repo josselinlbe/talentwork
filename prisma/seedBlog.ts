@@ -93,6 +93,19 @@ export async function seedBlogPosts() {
       tagNames: ["remix", "webdev", "javascript", "react"],
       published: true,
     },
+    {
+      slug: "saasrock-the-remix-saas-kit-may-2022-product-update",
+      title: "SaasRock - The Remix SaaS kit - May 2022 Product Update",
+      description: "Custom Entities with Views/Forms/API/Webhooks, PER_SEAT pricing model, and new docs page.",
+      date: new Date("2022-05-31T21:09:43.000Z"),
+      image:
+        "https://res.cloudinary.com/practicaldev/image/fetch/s--Bad8lSI0--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://yahooder.sirv.com/saasrock/blog/may-2022-update/cover.png",
+      readingTime: "2 min",
+      authorSlug: "alexandromtzg",
+      categoryName: "Article",
+      tagNames: ["remix", "webdev", "no-code", "entity-builder"],
+      published: true,
+    },
     // {
     //   slug: "saas-dev-challenges-01-ui-ux-design-system",
     //   title: "🎯 SaaS dev challenges - #01 - 🎨 UI/UX & design system",
