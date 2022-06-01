@@ -34,7 +34,7 @@ export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
   return (
     <div className="space-y-2">
-      <div className="font-bold">API Docs: IN CONSTRUCTION</div>
+      <div className="font-bold">API Docs: UNDER CONSTRUCTION</div>
       <div className="prose">
         <div className="flex space-x-2 items-center text-sm font-bold">
           <SimpleBadge title="GET" color={Colors.BLUE} />

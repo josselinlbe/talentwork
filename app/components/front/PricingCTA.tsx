@@ -33,13 +33,13 @@ const plans = [
   {
     title: (
       <div>
-        🚀 Enterprise-Builder <span className=" text-red-500 italic text-lg">(IN CONSTRUCTION)</span>
+        🚀 Enterprise-Builder <span className=" text-red-500 italic text-lg">(UNDER CONSTRUCTION)</span>
       </div>
     ),
     description: (
       <div>
         By subscribing now, <b className="font-bold">you can lock in this pre-release pricing forever</b> for Enterprise Features 🚀.{" "}
-        <b className="text-red-500 font-bold">Please note that Enterprise Features are still in construction</b>.
+        <b className="text-red-500 font-bold">Please note that Enterprise Features are still under construction</b>.
       </div>
     ),
     monthlyPrice: "149",
@@ -160,7 +160,7 @@ export default function PricingCTA() {
                               plan.enabled ? "hover:bg-theme-600" : " opacity-75 cursor-not-allowed"
                             )}
                           >
-                            <div>{plan.enabled ? `Get early access` : `In construction`}</div>
+                            <div>{plan.enabled ? `Get early access` : `Under construction`}</div>
                           </button>
                         </div>
                       </div>

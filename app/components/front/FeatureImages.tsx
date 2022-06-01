@@ -273,7 +273,7 @@ const featureImages = [
   },
   {
     group: "Entity Builder",
-    title: "Entity API Docs (IN CONSTRUCTION)",
+    title: "Entity API Docs (UNDER CONSTRUCTION)",
     route: "/admin/entities/employees/api",
     src: "https://yahooder.sirv.com/saasrock/features/entity-builder/api.png",
   },
