@@ -1,6 +1,6 @@
 import { EntityLimitType } from "~/application/enums/entities/EntityLimitType";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
-import { PropertyWithDetails, EntityWithDetails, getEntityById, getEntityBySlug, getRowsCount } from "../db/entities/entities.db.server";
+import { PropertyWithDetails, EntityWithDetails, getEntityById } from "../db/entities/entities.db.server";
 import { getProperty } from "../db/entities/properties.db.server";
 import { RowWithDetails, getRows } from "../db/entities/rows.db.server";
 

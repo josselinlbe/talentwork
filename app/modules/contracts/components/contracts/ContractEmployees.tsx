@@ -1,4 +1,3 @@
-import { ContractEmployee } from ".prisma/client";
 import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
 import { EmployeeDto } from "../../dtos/EmployeeDto";

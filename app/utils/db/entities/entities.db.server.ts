@@ -1,5 +1,4 @@
 import { Entity, Property, PropertyOption } from "@prisma/client";
-import { EntityLimitType } from "~/application/enums/entities/EntityLimitType";
 import { defaultProperties } from "~/utils/helpers/PropertyHelper";
 import { db } from "../../db.server";
 
@@ -101,43 +100,43 @@ export async function getAllRowsUsage(tenantId: string): Promise<RowsUsage[]> {
   return countEntities;
 }
 
-export async function getRowsCount(tenantId: string, entityId: string): Promise<number> {
-  const whereTenant = {
-    OR: [
-      {
-        tenantId,
-      },
-      {
-        linkedAccount: {
-          OR: [
-            {
-              providerTenantId: tenantId,
-            },
-            {
-              clientTenantId: tenantId,
-            },
-          ],
-        },
-      },
-    ],
-  };
-  if (!entityLimit || entityLimit.type === EntityLimitType.MAX) {
-    return await db.row.count({
-      where: {
-        entityId,
-        ...whereTenant,
-      },
-    });
-  } else {
-    return await db.row.count({
-      where: {
-        entityId: entityLimit.entityId,
-        ...whereTenant,
-        // TODO: CURRENT MONTH
-      },
-    });
-  }
-}
+// export async function getRowsCount(tenantId: string, entityId: string): Promise<number> {
+//   const whereTenant = {
+//     OR: [
+//       {
+//         tenantId,
+//       },
+//       {
+//         linkedAccount: {
+//           OR: [
+//             {
+//               providerTenantId: tenantId,
+//             },
+//             {
+//               clientTenantId: tenantId,
+//             },
+//           ],
+//         },
+//       },
+//     ],
+//   };
+//   if (!entityLimit || entityLimit.type === EntityLimitType.MAX) {
+//     return await db.row.count({
+//       where: {
+//         entityId,
+//         ...whereTenant,
+//       },
+//     });
+//   } else {
+//     return await db.row.count({
+//       where: {
+//         entityId: entityLimit.entityId,
+//         ...whereTenant,
+//         // TODO: CURRENT MONTH
+//       },
+//     });
+//   }
+// }
 
 export async function getEntityById(id: string): Promise<EntityWithDetails | null> {
   return await db.entity.findUnique({
@@ -164,6 +163,27 @@ export async function getEntityBySlug(slug: string): Promise<EntityWithDetails |
   return await db.entity.findFirst({
     where: {
       slug,
+    },
+    include: {
+      properties: {
+        orderBy: { order: "asc" },
+        include: {
+          // entity: {
+          //   include: {
+          //     ...includePropertiesWithDetails,
+          //   },
+          // },
+          options: true,
+        },
+      },
+    },
+  });
+}
+
+export async function getEntityByName(name: string): Promise<EntityWithDetails | null> {
+  return await db.entity.findFirst({
+    where: {
+      name,
     },
     include: {
       properties: {

@@ -2,6 +2,7 @@ import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatur
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
 import { db } from "../db.server";
+import { getEntityByName } from "../db/entities/entities.db.server";
 import { getAllSubscriptionFeatures } from "../db/subscriptionProducts.db.server";
 import { getTenantSubscription } from "../db/tenantSubscriptions.db.server";
 
@@ -87,7 +88,7 @@ async function getUsed(tenantId: string, feature: SubscriptionFeatureDto): Promi
   const firstDay = new Date(y, m, 1, 0, 0, 1);
   var lastDay = new Date(y, m + 1, 0, 23, 59, 59);
 
-  if (feature.name === "Users") {
+  if (feature.name === "user") {
     if (feature.type === SubscriptionFeatureLimitType.MONTHLY) {
       return db.tenantUser.count({
         where: {
@@ -106,11 +107,16 @@ async function getUsed(tenantId: string, feature: SubscriptionFeatureDto): Promi
       });
     }
   } else {
+    const entity = await getEntityByName(feature.name);
+    if (!entity) {
+      throw new Error("Entity does not exist with plural title: " + feature.name);
+    }
     if (feature.type === SubscriptionFeatureLimitType.MONTHLY) {
       return db.row.count({
         where: {
           parentRowId: null,
           tenantId,
+          entityId: entity?.id ?? "",
           createdAt: {
             gte: firstDay,
             lt: lastDay,
@@ -122,6 +128,7 @@ async function getUsed(tenantId: string, feature: SubscriptionFeatureDto): Promi
         where: {
           parentRowId: null,
           tenantId,
+          entityId: entity?.id ?? "",
         },
       });
     }

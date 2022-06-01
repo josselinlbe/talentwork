@@ -191,7 +191,7 @@ export async function createRow(
       booleanValue?: boolean | null;
       media?: MediaDto[];
     }[];
-    dynamicRows: { id?: string | null; values: RowValueDto[] }[];
+    dynamicRows: { id?: string | null; values: RowValueDto[] }[] | null;
   },
   parentRowId?: string,
   nextFolio?: number | undefined
@@ -241,7 +241,9 @@ export async function createRow(
     },
   });
 
-  await addDetailRows(row, data.dynamicRows);
+  if (data.dynamicRows) {
+    await addDetailRows(row, data.dynamicRows);
+  }
 
   return row;
 }

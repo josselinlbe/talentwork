@@ -17,7 +17,7 @@ import { ActionFunction, Form, json, LoaderFunction, MetaFunction, redirect, use
 import { getLinkedAccount, getLinksWithMembers, LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
-import { createContract, getContract, getMonthlyContractsCount } from "~/modules/contracts/db/contracts.db.server";
+import { createContract, getContract } from "~/modules/contracts/db/contracts.db.server";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
 import { sendContract } from "~/modules/contracts/utils/ContractUtils";
@@ -29,8 +29,7 @@ import { getTenantUrl } from "~/utils/services/urlService";
 import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
-import { Row } from "@prisma/client";
-import { getRow, getRows, RowValueWithDetails, RowWithDetails } from "~/utils/db/entities/rows.db.server";
+import { getRow, getRows, RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
 import { createRowLog } from "~/utils/db/logs.db.server";
@@ -53,7 +52,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (preselectLinkIdQueryParam) {
     preselectLink = links.find((f) => f.id === preselectLinkIdQueryParam);
   }
-  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "Contracts");
+  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "contract");
   const employeeEntity = await getEntityBySlug("employees");
   if (!employeeEntity) {
     return badRequest({ error: "Employee entity required" });
@@ -133,8 +132,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Could not create contract" });
   }
   const contract = await getContract(createdContract.id);
-  
-  const contractRow = await getRow(entity.id, contract?.rowId ?? "", tenantUrl.tenantId)
+
+  const contractRow = await getRow(entity.id, contract?.rowId ?? "", tenantUrl.tenantId);
   await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Created", entity, item: contractRow });
 
   const employeeEntity = await getEntityBySlug("employees");

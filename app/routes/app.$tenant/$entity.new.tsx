@@ -32,7 +32,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     return redirect("/app/" + tenantUrl.tenantId);
   }
   const relatedEntities = await getRelatedRows(entity.properties, tenantUrl.tenantId);
-  const featureUsageEntity = await getPlanFeatureUsage(tenantUrl.tenantId, t(entity.titlePlural));
+  const featureUsageEntity = await getPlanFeatureUsage(tenantUrl.tenantId, entity.name);
   const linkedAccounts = await getLinksWithMembers(tenantUrl.tenantId);
   const data: LoaderData = {
     title: `${t(entity.title)} | ${process.env.APP_NAME}`,

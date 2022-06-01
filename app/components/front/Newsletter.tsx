@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { Form, useActionData, useFetcher, useTransition } from "remix";
+import { useFetcher } from "remix";
 
 const social = [
   {

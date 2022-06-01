@@ -9,7 +9,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useEffect } from "react";
 import { sendContract } from "~/modules/contracts/utils/ContractUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { deleteRow, getRow, getRows, getRowsInIds } from "~/utils/db/entities/rows.db.server";
+import { deleteRow, getRow, getRowsInIds } from "~/utils/db/entities/rows.db.server";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 import ApiHelper from "~/utils/helpers/ApiHelper";

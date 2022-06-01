@@ -2,7 +2,7 @@ import Footer from "~/components/front/Footer";
 import Hero from "~/components/front/Hero";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo, UserSession } from "~/utils/session.server";
-import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
 import LogoClouds from "~/components/ui/images/LogoClouds";

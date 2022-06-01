@@ -14,11 +14,19 @@ export default function InputSearchWithURL({ onNew, onNewRoute }: Props) {
   const { t } = useTranslation();
 
   useEffect(() => {
+    const query = searchParams.get("q")?.toString();
+    if (query) {
+      setValue(query);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     searchParams.set("page", "1");
     if (value.length > 0) {
       searchParams.set("q", value);
     } else {
-      searchParams.delete("q");
+      // searchParams.delete("q");
     }
     setSearchParams(searchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps

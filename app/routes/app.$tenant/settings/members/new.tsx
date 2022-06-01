@@ -18,7 +18,7 @@ export type NewMemberLoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
-  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "Users");
+  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "user");
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
     featurePlanUsage,
