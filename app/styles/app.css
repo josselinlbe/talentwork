@@ -1880,10 +1880,6 @@ select {
   height: 0.5rem;
 }
 
-.h-\[32rem\] {
-  height: 32rem;
-}
-
 .h-20 {
   height: 5rem;
 }
@@ -6540,10 +6536,6 @@ select {
 
   .md\:hidden {
     display: none;
-  }
-
-  .md\:h-\[32rem\] {
-    height: 32rem;
   }
 
   .md\:w-auto {

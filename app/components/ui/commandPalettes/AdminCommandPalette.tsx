@@ -51,6 +51,7 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
   const [commandSearchTitle, setCommandSearchTitle] = useState<string>(t("app.commands.type"));
 
   useEffect(() => {
+    setQuery("");
     if (!selectedCommand) {
       setCommandSearchTitle(t("app.commands.type"));
       setItems(commands);
@@ -116,23 +117,39 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
     if (!query || query.trim() === "") {
       setFilteredItems(items);
     } else {
-      const itemsByCommand = items.filter((f) => f.command.trim().toLowerCase() === query.toLowerCase().trim());
-      if (itemsByCommand.length === 1) {
-        setQuery("");
-        setSelectedCommand(itemsByCommand[0]);
-        setFilteredItems(itemsByCommand);
-      } else {
-        setFilteredItems(
-          itemsByCommand.filter(
-            (item) =>
-              item.title.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
-              item.description.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
-              item.command.trim().toLowerCase() === query.toLowerCase().trim()
-          )
-        );
-      }
+      setFilteredItems(
+        items.filter(
+          (item) =>
+            item.toPath?.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+            item.title.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+            item.description.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+            item.command.trim().toLowerCase() === query.toLowerCase().trim()
+        )
+      );
     }
   }, [items, query]);
+
+  // useEffect(() => {
+  //   if (!query || query.trim() === "") {
+  //     setFilteredItems(items);
+  //   } else {
+  //     const itemsByCommand = items.filter((f) => f.command.trim().toLowerCase() === query.toLowerCase().trim());
+  //     if (itemsByCommand.length === 1) {
+  //       setQuery("");
+  //       setSelectedCommand(itemsByCommand[0]);
+  //       setFilteredItems(itemsByCommand);
+  //     } else {
+  //       setFilteredItems(
+  //         itemsByCommand.filter(
+  //           (item) =>
+  //             item.title.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+  //             item.description.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+  //             item.command.trim().toLowerCase() === query.toLowerCase().trim()
+  //         )
+  //       );
+  //     }
+  //   }
+  // }, [items, query]);
 
   function onChange(value: any) {
     setSelectedCommand(value as Command);
