@@ -17,3 +17,5 @@ node_modules
 prisma/dev.db
 .env
 .env.production
+
+.idea
