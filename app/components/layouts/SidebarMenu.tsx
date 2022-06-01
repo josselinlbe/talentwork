@@ -134,11 +134,11 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               onClick={() => toggleMenuItem(menuItem.path)}
                             >
                               <div className="flex items-center space-x-4">
-                                <span className="text-slate-200 h-5 w-5 transition ease-in-out">
-                                  {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                  <span className="text-slate-200 h-5 w-5 transition ease-in-out">
                                     <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
-                                  )}
-                                </span>
+                                  </span>
+                                )}
                                 <div>{t(menuItem.title)}</div>
                               </div>
                               {/*Expanded: "text-gray-400 rotate-90", Collapsed: "text-slate-200" */}

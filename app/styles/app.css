@@ -6542,6 +6542,10 @@ select {
     display: none;
   }
 
+  .md\:h-\[32rem\] {
+    height: 32rem;
+  }
+
   .md\:w-auto {
     width: auto;
   }
@@ -6835,6 +6839,10 @@ select {
 
   .lg\:h-full {
     height: 100%;
+  }
+
+  .lg\:h-\[32rem\] {
+    height: 32rem;
   }
 
   .lg\:w-full {

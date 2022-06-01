@@ -49,7 +49,7 @@ export default function Carousel({ images }: Props) {
           )}
         </div>
       </div>
-      <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 border-4 border-dotted border-gray-500 h-[32rem]">
+      <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 border-4 border-dotted border-gray-500 lg:h-[32rem]">
         <div className="absolute top-0 mt-3 ml-2">
           <button
             onClick={previousImage}
