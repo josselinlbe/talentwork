@@ -46,11 +46,6 @@ export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebu
           tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
           path: `${currentTenantUrl}/settings`,
         },
-        {
-          title: "app.sidebar.settings",
-          icon: SvgIcon.SETTINGS,
-          path: "https://github.com",
-        },
         // {
         //   title: "app.sidebar.logs",
         //   icon: SvgIcon.LOGS,
