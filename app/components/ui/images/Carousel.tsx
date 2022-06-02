@@ -40,13 +40,13 @@ export default function Carousel({ images }: Props) {
             {currentIndex + 1}/{images.length}
           </span>
           <span>&rarr;</span>
-          {currentImage?.route ? (
+          {/* {currentImage?.route ? (
             <Link to={currentImage?.route} className=" border-b border-dashed border-b-theme-300 hover:border-dotted">
               <span>{currentImage?.title} 🔗</span>
             </Link>
-          ) : (
-            <span className="border-b border-transparent">{currentImage?.title} 👇</span>
-          )}
+          ) : ( */}
+          <span className="border-b border-transparent">{currentImage?.title}</span>
+          {/* )} */}
         </div>
       </div>
       <div className="relative block w-full rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-indigo-600 border-4 border-dotted border-gray-500 lg:h-[32rem]">
