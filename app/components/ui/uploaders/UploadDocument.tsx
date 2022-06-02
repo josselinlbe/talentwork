@@ -116,7 +116,7 @@ export default function UploadDocuments({ className, title = "", accept, multipl
         } else {
           return (
             <div>
-              <h1 className="mx-auto font-bold text-lg text-theme-500">{title}</h1>
+              <h3 className="mx-auto font-bold text-lg text-theme-500">{title}</h3>
               <div className="manual">
                 <div className="space-y-1 text-center">
                   {icon}
