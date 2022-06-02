@@ -20,7 +20,7 @@ export default function HeaderFlyoutItem({ title, items, className }: Props) {
             className={clsx(
               className,
               open ? "text-gray-900" : "text-gray-500",
-              "group w-full rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none space-x-1 truncate "
+              "group w-full rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none space-x-2 truncate "
             )}
           >
             <span>{title}</span>
