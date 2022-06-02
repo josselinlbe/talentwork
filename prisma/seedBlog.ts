@@ -19,6 +19,8 @@ export async function seedBlog() {
     { name: "boilerplate", color: Colors.GREEN },
     { name: "design", color: Colors.PINK },
     { name: "winforms", color: Colors.GRAY },
+    { name: "no-code", color: Colors.GRAY },
+    { name: "entity-builder", color: Colors.GRAY },
   ]);
 
   await seedAuthors([
