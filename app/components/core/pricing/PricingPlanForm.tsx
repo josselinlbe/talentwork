@@ -59,7 +59,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
         {
           order: 1,
           title: "1 user",
-          name: "Users",
+          name: "user",
           type: SubscriptionFeatureLimitType.MAX,
           value: 1,
         },
@@ -70,7 +70,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
           features.push({
             order: features.length + 1,
             title: "100 " + t(entity.titlePlural).toLowerCase() + "/month",
-            name: t(entity.titlePlural),
+            name: entity.name,
             type: SubscriptionFeatureLimitType.MONTHLY,
             value: 100,
           });
@@ -78,7 +78,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
       features.push({
         order: features.length + 1,
         title: "Priority support",
-        name: "Priority Support",
+        name: "priority-support",
         type: SubscriptionFeatureLimitType.NOT_INCLUDED,
         value: 0,
       });
