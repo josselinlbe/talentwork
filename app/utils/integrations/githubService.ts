@@ -2,6 +2,11 @@ import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
 import { Octokit } from "octokit";
 
 export async function getGitHubSocialProof(): Promise<SocialProofDto> {
+  if (process.env.NODE_ENV === "development") {
+    return {
+      totalMembers: 100,
+    };
+  }
   const collaborators = await getGitHubRepositoryCollaborators();
   return {
     totalMembers: collaborators?.length ?? 0,
@@ -50,7 +55,9 @@ export async function getGitHubRepositoryReleases(): Promise<{ name: string | nu
 
 export async function getGitHubRepositoryCollaborators() {
   try {
-    const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_TOKEN,
+    });
     await octokit.rest.users.getAuthenticated();
     const { data } = await octokit.rest.repos.listCollaborators({
       owner: "AlexandroMtzG",
