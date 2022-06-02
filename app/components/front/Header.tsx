@@ -23,11 +23,11 @@ export default function Header() {
     { path: "/pricing", title: t("front.navbar.pricing") },
     { path: "/docs", title: "Docs", className: "" },
     {
-      title: "Blog",
+      title: t("front.navbar.about"),
       items: [
         {
           path: "/blog",
-          title: "Blog",
+          title: t("front.navbar.blog"),
         },
         {
           path: "/changelog",
@@ -35,7 +35,7 @@ export default function Header() {
         },
         {
           path: "/contact",
-          title: "Contact us",
+          title: t("front.navbar.contact"),
         },
         {
           path: "/newsletter",

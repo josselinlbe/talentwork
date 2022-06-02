@@ -26,14 +26,12 @@ export type IndexLoaderData = {
   i18n: Record<string, Language>;
   socialProof: any;
   testimonials: TestimonialDto[];
-  currentRelease: { name: string | null; created_at: Date } | undefined;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   const { translations } = await i18nHelper(request);
   try {
     const socialProof = await getGitHubSocialProof();
-    const currentRelease = await getGitHubCurrentRelease();
     const testimonials = getTestimonials();
 
     const userSession = await getUserInfo(request);
@@ -45,7 +43,6 @@ export let loader: LoaderFunction = async ({ request }) => {
       authenticated: userSession.userId?.length > 0,
       i18n: translations,
       socialProof,
-      currentRelease,
       testimonials,
     };
     return json(data);

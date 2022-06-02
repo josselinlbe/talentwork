@@ -136,7 +136,8 @@
       "contact": "Contact",
       "blog": "Blog",
       "terms": "Terms and Conditions",
-      "privacy": "Privacy Policy"
+      "privacy": "Privacy Policy",
+      "about": "About"
     },
     "hero": {
       "headline1": "Easily build your own SaaS",
