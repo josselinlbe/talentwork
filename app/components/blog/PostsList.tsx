@@ -28,29 +28,25 @@ export default function PostsList({ items, withCoverImage }: Props) {
           <div className="flex-1 bg-white dark:bg-gray-900 p-6 flex flex-col justify-between">
             <div className="flex-1">
               <p className="text-sm font-medium text-accent-600 dark:text-accent-400">
-                <a href={post.category.name} className="hover:underline">
-                  {post.category.name}
-                </a>
+                <span>{post.category.name}</span>
               </p>
-              <a href={"/blog/" + post.slug} className="block mt-2">
+              <Link to={"/blog/" + post.slug} className="block mt-2">
                 <p className="text-xl font-semibold ">{post.title}</p>
                 <p className="mt-3 text-base text-gray-500">{post.description}</p>
-              </a>
+              </Link>
             </div>
             <div className="mt-6 flex items-center">
               <div className="flex-shrink-0">
-                <a href={post.author.slug}>
-                  <span className="sr-only">
-                    {post.author.firstName} {post.author.lastName}
-                  </span>
-                  <img className="h-10 w-10 rounded-full" src={post.author.image} alt="" />
-                </a>
+                <span className="sr-only">
+                  {post.author.firstName} {post.author.lastName}
+                </span>
+                <img className="h-10 w-10 rounded-full" src={post.author.image} alt="" />
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium ">
-                  <a href={post.author.slug} className="hover:underline">
+                  <span>
                     {post.author.firstName} {post.author.lastName}
-                  </a>
+                  </span>
                 </p>
                 <div className="flex space-x-1 text-sm text-gray-500">
                   <time dateTime={DateUtils.dateYMD(post.date)}>{DateUtils.dateYMD(post.date)}</time>
