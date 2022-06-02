@@ -5,19 +5,20 @@ import { useTranslation } from "react-i18next";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import InputSearch from "~/components/ui/input/InputSearch";
-import { ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
+import { ApiKeyLogWithDetails, ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
   entities: Entity[];
   items: ApiKeyWithDetails[];
+  logs: ApiKeyLogWithDetails[];
   withTenant?: boolean;
 }
 type Header = {
   name?: string;
   title: string;
 };
-export default function ApiKeysTable({ entities, items, withTenant }: Props) {
+export default function ApiKeysTable({ entities, items, logs, withTenant }: Props) {
   const { t } = useTranslation();
 
   const [searchInput, setSearchInput] = useState("");
@@ -94,6 +95,10 @@ export default function ApiKeysTable({ entities, items, withTenant }: Props) {
     return item.expires && item.expires < now;
   }
 
+  function getApiKeyLogs(item: ApiKeyWithDetails) {
+    return logs.filter((f) => f.apiKeyId === item.id && f.status && ![429].includes(f.status)).length;
+  }
+
   return (
     <div className="space-y-2">
       <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute="new" />
@@ -155,7 +160,7 @@ export default function ApiKeysTable({ entities, items, withTenant }: Props) {
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.alias}</td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {item._count.apiKeyLogs}/{item.max}
+                                    {getApiKeyLogs(item)}/{item.max}
                                   </td>
                                   {entities.map((entity) => {
                                     return (

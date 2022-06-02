@@ -37,8 +37,17 @@ export async function getAllApiKeys(): Promise<ApiKeyWithDetails[]> {
   });
 }
 
-export async function getAllApiKeyLogs(): Promise<ApiKeyLogWithDetails[]> {
+export async function getAllApiKeyLogs(tenantId?: string): Promise<ApiKeyLogWithDetails[]> {
+  let where: any = {};
+  if (tenantId) {
+    where = {
+      apiKey: {
+        tenantId,
+      },
+    };
+  }
   return await db.apiKeyLog.findMany({
+    where,
     include: {
       apiKey: {
         include: { tenant: true },

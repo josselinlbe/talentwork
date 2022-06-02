@@ -1,15 +1,18 @@
 import { json, LoaderFunction, Outlet, useLoaderData } from "remix";
 import ApiKeysTable from "~/components/core/apiKeys/ApiKeysTable";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { ApiKeyWithDetails, getAllApiKeys } from "~/utils/db/apiKeys.db.server";
+import { ApiKeyLogWithDetails, ApiKeyWithDetails, getAllApiKeyLogs, getAllApiKeys } from "~/utils/db/apiKeys.db.server";
 
 type LoaderData = {
   apiKeys: ApiKeyWithDetails[];
+  apiKeyLogs: ApiKeyLogWithDetails[];
 };
 export let loader: LoaderFunction = async ({ params }) => {
   const apiKeys = await getAllApiKeys();
+  const apiKeyLogs = await getAllApiKeyLogs();
   const data: LoaderData = {
     apiKeys,
+    apiKeyLogs,
   };
   return json(data);
 };
@@ -19,7 +22,7 @@ export default function AdminApiKeysRoute() {
   const adminData = useAdminData();
   return (
     <>
-      <ApiKeysTable entities={adminData.entities} items={data.apiKeys} withTenant={true} />
+      <ApiKeysTable entities={adminData.entities} items={data.apiKeys} logs={data.apiKeyLogs} withTenant={true} />
       <Outlet />
     </>
   );
