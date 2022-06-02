@@ -2100,6 +2100,10 @@ select {
   max-width: 24rem;
 }
 
+.max-w-none {
+  max-width: none;
+}
+
 .flex-none {
   flex: none;
 }
@@ -2404,6 +2408,15 @@ select {
 
 .gap-y-8 {
   row-gap: 2rem;
+}
+
+.gap-x-2 {
+  -moz-column-gap: 0.5rem;
+       column-gap: 0.5rem;
+}
+
+.gap-y-5 {
+  row-gap: 1.25rem;
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -4605,6 +4618,11 @@ select {
   color: rgb(15 118 110 / var(--tw-text-opacity));
 }
 
+.text-accent-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
 .text-opacity-40 {
   --tw-text-opacity: 0.4;
 }
@@ -6161,6 +6179,10 @@ select {
 
   .sm\:grid-rows-5 {
     grid-template-rows: repeat(5, minmax(0, 1fr));
+  }
+
+  .sm\:grid-rows-4 {
+    grid-template-rows: repeat(4, minmax(0, 1fr));
   }
 
   .sm\:flex-row {

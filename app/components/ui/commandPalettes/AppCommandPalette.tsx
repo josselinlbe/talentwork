@@ -244,12 +244,12 @@ export default function AppCommandPalette({ onClosed, isOpen }: Props) {
                     >
                       {({ active }) => (
                         <div className="flex justify-between items-center w-full pr-2">
-                          <div className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-theme-600", item.bgClassName)}>
+                          {/* <div className={clsx("flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-theme-600", item.bgClassName)}>
                             <span className="inline-flex items-center justify-center h-9 w-9">
                               <span className={clsx("text-sm font-medium leading-none text-theme-200", item.textClassName)}>{item.command}</span>
                             </span>
-                          </div>
-                          <div className="ml-4 flex-auto">
+                          </div> */}
+                          <div className="flex-auto">
                             <p className={clsx("text-sm font-medium", active ? "text-gray-900" : "text-gray-700")}>{item.title}</p>
                             <p className={clsx("text-sm", active ? "text-gray-700" : "text-gray-500")}>{item.description}</p>
                           </div>

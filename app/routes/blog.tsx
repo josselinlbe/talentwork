@@ -43,13 +43,10 @@ export default function BlogRoute() {
           <div className="max-w-7xl mx-auto py-12 sm:py-6">
             <div className="sm:flex sm:flex-col sm:align-center">
               <div className="text-center">
-                <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">
-                  {t("blog.title")}
-                  <span className="text-lg pl-1 font-normal">(demo)</span>
-                </h1>
+                <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("blog.title")}</h1>
                 <p className="mt-4 text-lg leading-6 text-gray-600 dark:text-gray-400">{t("blog.headline")}</p>
               </div>
-              <div className="flex justify-center mt-6">
+              {/* <div className="flex justify-center mt-6">
                 <Tabs
                   breakpoint="sm"
                   tabs={[
@@ -71,7 +68,7 @@ export default function BlogRoute() {
                     },
                   ]}
                 />
-              </div>
+              </div> */}
               <div className="px-4">
                 <PostsList items={posts} withCoverImage={true} />
               </div>

@@ -67,7 +67,7 @@ export default function ContactRoute() {
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.contact.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500">{t("front.contact.headline")}</p>
                 </div>
-                <div className="flex justify-center mt-6">
+                {/* <div className="flex justify-center mt-6">
                   <Tabs
                     breakpoint="sm"
                     tabs={[
@@ -89,7 +89,7 @@ export default function ContactRoute() {
                       },
                     ]}
                   />
-                </div>
+                </div> */}
                 <div className="mt-12">
                   {!data.actionUrl && <WarningBanner title="Not set" text={t("front.contact.setup")} />}
                   <form action={data.actionUrl} method="POST" className="mt-9 grid grid-cols-1 gap-x-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">

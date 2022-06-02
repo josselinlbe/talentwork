@@ -22,7 +22,27 @@ export default function Header() {
     { path: "/", title: t("front.navbar.product") },
     { path: "/pricing", title: t("front.navbar.pricing") },
     { path: "/docs", title: "Docs", className: "" },
-    { path: "/blog", title: "Blog", className: "hidden xl:block" },
+    {
+      title: "Blog",
+      items: [
+        {
+          path: "/blog",
+          title: "Blog",
+        },
+        {
+          path: "/changelog",
+          title: "Changelog",
+        },
+        {
+          path: "/contact",
+          title: "Contact us",
+        },
+        {
+          path: "/newsletter",
+          title: "Newsletter",
+        },
+      ],
+    },
   ];
   function isCurrent(path: string): boolean {
     return location.pathname === path;

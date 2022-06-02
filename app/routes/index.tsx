@@ -78,8 +78,8 @@ export default function IndexRoute() {
         <FeatureImages />
         <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />
-        <UpcomingFeatures />
         <PricingCTA />
+        <UpcomingFeatures />
         <Newsletter />
         <Footer />
       </div>

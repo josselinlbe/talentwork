@@ -155,7 +155,7 @@
       "repo": "miembros del repositorio privado"
     },
     "pricing": {
-      "title": "Precios",
+      "title": "Precios (demo)",
       "headline": "Planes diseñados para organizaciones de todos los tamaños."
     },
     "newsletter": {
@@ -333,7 +333,7 @@
     "FLAT_RATE": "Precio fijo",
     "PER_SEAT": "Por usuario",
     "USAGE_BASED": "Por uso",
-    "demo": "Estos son planes demo",
+    "demo": "PÁGINA DEMO - Personalizarías esta página",
     "custom": {
       "title": "Personalizado",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
@@ -479,8 +479,8 @@
         "logoutDescription": "Cierra sesión y vuelve a /login"
       },
       "blog": {
-        "title": "Blog",
-        "description": "Nueva publicación"
+        "title": "Escribir publicación",
+        "description": "Blogging"
       }
     },
     "navbar": {

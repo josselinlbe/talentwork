@@ -63,7 +63,7 @@ export default function Newsletter() {
     ? "error"
     : "idle";
   return (
-    <div className="py-16 sm:py-24">
+    <div className="py-12">
       <div className="relative sm:py-16">
         <div aria-hidden="true" className="hidden sm:block">
           <div className="absolute inset-y-0 left-0 w-1/2 bg-gray-50 dark:bg-gray-800 rounded-r-3xl" />

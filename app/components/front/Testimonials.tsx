@@ -8,7 +8,7 @@ interface Props {
 }
 export default function Testimonials({ items, socialProof }: Props) {
   return (
-    <div className="py-12 space-y-10 relative">
+    <div className="pt-3 space-y-10 relative">
       <div className="hidden lg:block lg:absolute lg:inset-0" aria-hidden="true">
         <svg
           className="absolute right-full transform translate-y-1/4 translate-x-1/4 lg:translate-x-1/2"

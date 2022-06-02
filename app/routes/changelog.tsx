@@ -341,7 +341,7 @@ export default function ChangelogRoute() {
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">{t("front.changelog.title")}</h1>
                   <p className="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-400">{t("front.changelog.headline")}</p>
                 </div>
-                <div className="flex justify-center mt-6">
+                {/* <div className="flex justify-center mt-6">
                   <Tabs
                     breakpoint="sm"
                     tabs={[
@@ -363,7 +363,7 @@ export default function ChangelogRoute() {
                       },
                     ]}
                   />
-                </div>
+                </div> */}
                 <div className="mt-12 mx-auto">
                   <div className="prose text-sm text-black dark:text-white">
                     {/* <div className=" col-span-1">
