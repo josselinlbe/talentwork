@@ -482,7 +482,7 @@ export default function ProfileRoute() {
                       {locales.map((locale, idx) => {
                         return (
                           <option key={idx} value={locale.lang}>
-                            {t("shared.locales." + locale.name)}
+                            {t("shared.locales." + locale.lang)}
                           </option>
                         );
                       })}

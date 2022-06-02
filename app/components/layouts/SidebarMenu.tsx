@@ -66,10 +66,12 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
     return UrlUtils.replaceVariables(params, item.path) ?? "";
   }
   function isCurrent(menuItem: SideBarItem) {
-    if (menuItem.exact) {
-      return location.pathname === getPath(menuItem);
+    if (menuItem.path) {
+      if (menuItem.exact) {
+        return location.pathname === getPath(menuItem);
+      }
+      return location.pathname?.includes(getPath(menuItem));
     }
-    return location.pathname?.includes(getPath(menuItem));
   }
   function allowCurrentUserType(item: SideBarItem) {
     if (!item.adminOnly) {
@@ -109,21 +111,38 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                       if (!menuItem.items || menuItem.items.length === 0) {
                         return (
                           <div>
-                            <Link
-                              id={UrlUtils.slugify(getPath(menuItem))}
-                              to={getPath(menuItem)}
-                              className={clsx(
-                                "px-4 mt-1 group flex items-center space-x-4 py-2 text-base leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
-                                isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
-                                !isCurrent(menuItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
-                              )}
-                              onClick={onSelected}
-                            >
-                              {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
-                                <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
-                              )}
-                              <div>{t(menuItem.title)}</div>
-                            </Link>
+                            {menuItem.path.includes("://") ? (
+                              <a
+                                target="_blank"
+                                href={menuItem.path}
+                                rel="noreferrer"
+                                className={clsx(
+                                  "px-4 mt-1 group flex items-center space-x-4 py-2 text-base leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 hover:bg-slate-800 focus:bg-slate-800"
+                                )}
+                                onClick={onSelected}
+                              >
+                                {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                  <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                )}
+                                <div>{t(menuItem.title)}</div>
+                              </a>
+                            ) : (
+                              <Link
+                                id={UrlUtils.slugify(getPath(menuItem))}
+                                to={getPath(menuItem)}
+                                className={clsx(
+                                  "px-4 mt-1 group flex items-center space-x-4 py-2 text-base leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
+                                  isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
+                                  !isCurrent(menuItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                                )}
+                                onClick={onSelected}
+                              >
+                                {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                  <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                )}
+                                <div>{t(menuItem.title)}</div>
+                              </Link>
+                            )}
                           </div>
                         );
                       } else {
@@ -159,24 +178,45 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               <div className="mt-1">
                                 {menuItem.items.map((subItem, index) => {
                                   return (
-                                    <Link
-                                      key={index}
-                                      id={UrlUtils.slugify(getPath(subItem))}
-                                      to={getPath(subItem)}
-                                      className={clsx(
-                                        "pl-14 mt-1 group flex items-center py-2 sm:text-sm leading-5 rounded-sm hover:text-slate-300 focus:outline-none focus:text-slate-300 transition ease-in-out duration-150",
-                                        isCurrent(subItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
-                                        !isCurrent(subItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
-                                      )}
-                                      onClick={onSelected}
-                                    >
-                                      {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
-                                        <span className="mr-1 h-5 w-5 transition ease-in-out">
-                                          <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
-                                        </span>
-                                      )}
-                                      {t(subItem.title)}
-                                    </Link>
+                                    <>
+                                      {menuItem.path.includes("://") ? (
+                                        <a
+                                          target="_blank"
+                                          href={menuItem.path}
+                                          rel="noreferrer"
+                                          className={clsx(
+                                            "pl-14 mt-1 group flex items-center py-2 sm:text-sm leading-5 rounded-sm hover:text-slate-300 focus:outline-none focus:text-slate-300 transition ease-in-out duration-150 text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                                          )}
+                                          onClick={onSelected}
+                                        >
+                                          {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
+                                            <span className="mr-1 h-5 w-5 transition ease-in-out">
+                                              <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
+                                            </span>
+                                          )}
+                                          {t(subItem.title)}
+                                        </a>
+                                      ) : (
+                                        <Link
+                                          key={index}
+                                          id={UrlUtils.slugify(getPath(subItem))}
+                                          to={getPath(subItem)}
+                                          className={clsx(
+                                            "pl-14 mt-1 group flex items-center py-2 sm:text-sm leading-5 rounded-sm hover:text-slate-300 focus:outline-none focus:text-slate-300 transition ease-in-out duration-150",
+                                            isCurrent(subItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
+                                            !isCurrent(subItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                                          )}
+                                          onClick={onSelected}
+                                        >
+                                          {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
+                                            <span className="mr-1 h-5 w-5 transition ease-in-out">
+                                              <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
+                                            </span>
+                                          )}
+                                          {t(subItem.title)}
+                                        </Link>
+                                      )}{" "}
+                                    </>
                                   );
                                 })}
                               </div>
@@ -208,24 +248,46 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                       if (!menuItem.items || menuItem.items.length === 0) {
                         return (
                           <div>
-                            <Link
-                              id={UrlUtils.slugify(getPath(menuItem))}
-                              to={getPath(menuItem)}
-                              className={clsx(
-                                "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 truncate",
-                                menuItem.icon !== undefined && "px-4",
-                                isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
-                                !isCurrent(menuItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
-                              )}
-                            >
-                              <div className="flex items-center space-x-5">
-                                {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
-                                  <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                            {menuItem.path.includes("://") ? (
+                              <a
+                                target="_blank"
+                                href={menuItem.path}
+                                rel="noreferrer"
+                                className={clsx(
+                                  "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 truncate text-slate-200 hover:bg-slate-800 focus:bg-slate-800",
+                                  menuItem.icon !== undefined && "px-4"
                                 )}
-                                <div>{t(menuItem.title)}</div>
-                              </div>
-                              {menuItem.side}
-                            </Link>
+                                onClick={onSelected}
+                              >
+                                <div className="flex items-center space-x-5">
+                                  {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                    <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                  )}
+                                  <div>{t(menuItem.title)}</div>
+                                </div>
+                                {menuItem.side}
+                              </a>
+                            ) : (
+                              <Link
+                                id={UrlUtils.slugify(getPath(menuItem))}
+                                to={getPath(menuItem)}
+                                className={clsx(
+                                  "px-4 justify-between mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150 truncate",
+                                  menuItem.icon !== undefined && "px-4",
+                                  isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
+                                  !isCurrent(menuItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                                )}
+                                onClick={onSelected}
+                              >
+                                <div className="flex items-center space-x-5">
+                                  {(menuItem.icon !== undefined || menuItem.entityIcon !== undefined) && (
+                                    <SidebarIcon className="h-5 w-5 text-white" item={menuItem} />
+                                  )}
+                                  <div>{t(menuItem.title)}</div>
+                                </div>
+                                {menuItem.side}
+                              </Link>
+                            )}
                           </div>
                         );
                       } else {
@@ -264,23 +326,46 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                               <div className="mt-1">
                                 {menuItem.items.map((subItem, index) => {
                                   return (
-                                    <Link
-                                      key={index}
-                                      id={UrlUtils.slugify(getPath(subItem))}
-                                      to={getPath(subItem)}
-                                      className={clsx(
-                                        "mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 text-slate-300 transition ease-in-out duration-150",
-                                        menuItem.icon === undefined && "pl-10",
-                                        menuItem.icon !== undefined && "pl-14",
-                                        isCurrent(subItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
-                                        !isCurrent(subItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                                    <>
+                                      {menuItem.path.includes("://") ? (
+                                        <a
+                                          target="_blank"
+                                          href={menuItem.path}
+                                          rel="noreferrer"
+                                          className={clsx(
+                                            isCurrent(subItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
+                                            "mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 text-slate-300 transition ease-in-out duration-150 ",
+                                            menuItem.icon === undefined && "pl-10",
+                                            menuItem.icon !== undefined && "pl-14"
+                                          )}
+                                          onClick={onSelected}
+                                        >
+                                          {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
+                                            <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
+                                          )}
+                                          <div>{t(subItem.title)}</div>
+                                        </a>
+                                      ) : (
+                                        <Link
+                                          key={index}
+                                          id={UrlUtils.slugify(getPath(subItem))}
+                                          to={getPath(subItem)}
+                                          className={clsx(
+                                            "mt-1 group flex items-center py-2 text-sm leading-5 rounded-sm hover:text-white focus:outline-none focus:text-gray-50 text-slate-300 transition ease-in-out duration-150",
+                                            menuItem.icon === undefined && "pl-10",
+                                            menuItem.icon !== undefined && "pl-14",
+                                            isCurrent(subItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
+                                            !isCurrent(subItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
+                                          )}
+                                          onClick={onSelected}
+                                        >
+                                          {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
+                                            <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
+                                          )}
+                                          <div>{t(subItem.title)}</div>
+                                        </Link>
                                       )}
-                                    >
-                                      {(subItem.icon !== undefined || subItem.entityIcon !== undefined) && (
-                                        <SidebarIcon className="h-5 w-5 text-white" item={subItem} />
-                                      )}
-                                      <div>{t(subItem.title)}</div>
-                                    </Link>
+                                    </>
                                   );
                                 })}
                               </div>
