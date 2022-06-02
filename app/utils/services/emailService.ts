@@ -4,18 +4,25 @@ import UrlUtils from "../app/UrlUtils";
 import { db } from "../db.server";
 import { createPostmarkTemplate, deletePostmarkTemplate, getPostmarkTemplates } from "../email.server";
 
-export async function getEmailTemplates() {
-  const items = await emailTemplates();
-  const templates = await getPostmarkTemplates();
+export async function getEmailTemplates(): Promise<EmailTemplate[]> {
+  let items: EmailTemplate[] = [];
+  try {
+    items = await emailTemplates();
+    const templates = await getPostmarkTemplates();
 
-  items.forEach((item) => {
-    const template = templates.find((f) => f.alias === item.alias);
-    if (template) {
-      item.associatedServerId = template.associatedServerId;
-      item.active = template.active;
-      item.templateId = template.templateId;
-    }
-  });
+    items.forEach((item) => {
+      const template = templates.find((f) => f.alias === item.alias);
+      if (template) {
+        item.associatedServerId = template.associatedServerId;
+        item.active = template.active;
+        item.templateId = template.templateId;
+      }
+    });
+    return items;
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("[ERROR at getEmailTemplates]: " + e);
+  }
   return items;
 }
 
