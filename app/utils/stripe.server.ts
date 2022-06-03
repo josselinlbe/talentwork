@@ -4,23 +4,21 @@ const stripe = new Stripe(process.env.STRIPE_SK?.toString() ?? "", {
   apiVersion: "2020-08-27",
 });
 
-export async function createStripeSession(tenant: string, customer: string, price: string, quantity: number) {
-  const site = process.env.SERVER_URL?.toString() ?? "";
+export async function createStripeSession(request: Request, customer: string, price: string, quantity: number) {
   return await stripe.checkout.sessions.create({
     customer,
-    success_url: site + `/app/${tenant}/settings/subscription?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: site + `/app/${tenant}/settings/subscription`,
+    success_url: `${request.url}?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${request.url}`,
     line_items: [{ price, quantity }],
     mode: "subscription",
   });
 }
 
-export async function createStripeSetupSession(tenant: string, customer: string, price: string) {
-  const site = process.env.SERVER_URL?.toString() ?? "";
+export async function createStripeSetupSession(request: Request, customer: string, price: string) {
   return await stripe.checkout.sessions.create({
     customer,
-    success_url: site + `/app/${tenant}/settings/subscription?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: site + `/app/${tenant}/settings/subscription`,
+    success_url: `${request.url}?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${request.url}`,
     mode: "setup",
     payment_method_types: ["card"],
   });
