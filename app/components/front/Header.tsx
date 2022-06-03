@@ -190,12 +190,12 @@ export default function Header() {
                 </div>
                 <div role="menu" aria-orientation="vertical" aria-labelledby="main-menu">
                   <div className="px-2 pt-2 pb-3" role="none">
-                    {links.map((link, idx) => {
+                    {links.map((link) => {
                       return (
                         <>
                           {link.path ? (
                             <Link
-                              key={idx}
+                              key={link.title}
                               to={link.path}
                               role="menuitem"
                               className={clsx(
@@ -210,7 +210,7 @@ export default function Header() {
                               {link.items?.map((subItem, idxSubItem) => {
                                 return (
                                   <Link
-                                    key={idxSubItem}
+                                    key={subItem.title}
                                     to={subItem.path ?? ""}
                                     role="menuitem"
                                     className={clsx(
