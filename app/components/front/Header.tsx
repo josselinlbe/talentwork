@@ -34,6 +34,10 @@ export default function Header() {
           title: "Changelog",
         },
         {
+          path: "/docs/roadmap",
+          title: "Roadmap",
+        },
+        {
           path: "/contact",
           title: t("front.navbar.contact"),
         },
