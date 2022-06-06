@@ -11,7 +11,7 @@ import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
 import PricingCTA from "~/components/front/PricingCTA";
 import { useTranslation } from "react-i18next";
-import { getGitHubCurrentRelease, getGitHubSocialProof } from "~/utils/integrations/githubService";
+import { getGitHubSocialProof } from "~/utils/integrations/githubService";
 import UpcomingFeatures from "~/components/front/UpcomingFeatures";
 import Testimonials from "~/components/front/Testimonials";
 import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";

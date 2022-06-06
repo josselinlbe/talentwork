@@ -32,15 +32,15 @@ const plans = [
   },
   {
     title: (
-      <div>
+      <>
         🚀 Enterprise-Builder <span className=" text-red-500 italic text-lg">(UNDER CONSTRUCTION)</span>
-      </div>
+      </>
     ),
     description: (
-      <div>
+      <>
         By subscribing now, <b className="font-bold">you can lock in this pre-release pricing forever</b> for Enterprise Features 🚀.{" "}
         <b className="text-red-500 font-bold">Please note that Enterprise Features are still under construction</b>.
-      </div>
+      </>
     ),
     monthlyPrice: "149",
     monthlyPriceBefore: "499",
@@ -111,7 +111,7 @@ export default function PricingCTA() {
                   >
                     <div className="flex-1 bg-white dark:bg-gray-900 px-6 py-8 lg:p-12">
                       <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white sm:text-3xl">{plan.title}</h3>
-                      <p className="mt-6 text-base text-gray-600 dark:text-gray-400 mb-3">{plan.description}</p>
+                      <div className="mt-6 text-base text-gray-600 dark:text-gray-400 mb-3">{plan.description}</div>
                       <div className="mt-8">
                         <div className="flex items-center">
                           <h4 className="flex-shrink-0 pr-4 bg-white dark:bg-gray-900 text-sm tracking-wider font-semibold uppercase text-theme-600">
