@@ -101,7 +101,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   return badRequest(t("shared.invalidForm"));
 };
 
-export default function EditEntityIndexRoute() {
+export default function NewEntityPropertyRoute() {
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
   return <PropertyForm properties={data.properties} entities={adminData.entities} />;
