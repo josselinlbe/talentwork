@@ -15,12 +15,12 @@ import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { Tenant } from "@prisma/client";
 import Stripe from "stripe";
 import { deleteAndCancelTenant } from "~/utils/services/tenantService";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -31,11 +31,12 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
+  await verifyUserHasPermission(request, "admin.account.view");
   let { t } = await i18nHelper(request);
 
   const tenant = await getTenant(params.id);
   if (!tenant) {
-    return redirect("/admin/tenants");
+    return redirect("/admin/accounts");
   }
   const users = await adminGetAllTenantUsers(tenant.id);
   const subscription = await getTenantSubscription(params.id ?? "");
@@ -64,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const action = form.get("action")?.toString() ?? "";
 
-  if (action === "update-tenant-details") {
+  if (action === "edit") {
     const name = form.get("name")?.toString() ?? "";
     const slug = form.get("slug")?.toString().toLowerCase() ?? "";
     const icon = form.get("icon")?.toString() ?? "";
@@ -147,7 +148,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   } else if (action === "delete-tenant") {
     await deleteAndCancelTenant(params.id ?? "");
-    return redirect("/admin/tenants");
+    return redirect("/admin/accounts");
   } else {
     return badRequest({ updateDetailsError: t("shared.invalidForm") });
   }
@@ -179,15 +180,6 @@ export default function TenantRoute() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData]);
 
-  function adminHasPermission(action: "delete-tenant") {
-    switch (action) {
-      case "delete-tenant":
-        return adminData.user.admin?.role === TenantUserType.OWNER;
-      default:
-        return false;
-    }
-  }
-
   function deleteAccount() {
     confirmDelete.current?.show(t("settings.danger.confirmDeleteTenant"), t("shared.confirm"), t("shared.cancel"), t("shared.warningCannotUndo"));
   }
@@ -200,10 +192,10 @@ export default function TenantRoute() {
   return (
     <div>
       <Breadcrumb
-        home="/admin/tenants"
+        home="/admin/accounts"
         menu={[
-          { title: t("models.tenant.plural"), routePath: "/admin/tenants" },
-          { title: data.tenant?.name ?? "", routePath: "/admin/tenants/" + params.id },
+          { title: t("models.tenant.plural"), routePath: "/admin/accounts" },
+          { title: data.tenant?.name ?? "", routePath: "/admin/accounts/" + params.id },
         ]}
       ></Breadcrumb>
 
@@ -217,7 +209,7 @@ export default function TenantRoute() {
             </div>
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
-            <UpdateTenantDetailsForm tenant={data.tenant} actionData={actionData} />
+            <UpdateTenantDetailsForm tenant={data.tenant} actionData={actionData} disabled={!adminData.permissions.includes("admin.account.settings.update")} />
           </div>
         </div>
 
@@ -229,70 +221,83 @@ export default function TenantRoute() {
         </div>
 
         {/* Tenant Users */}
-        <div className="md:grid lg:grid-cols-3 md:gap-2">
-          <div className="md:col-span-1">
-            <div className="sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">{t("models.user.plural")}</h3>
+        {adminData.permissions.includes("admin.account.users") && (
+          <>
+            <div className="md:grid lg:grid-cols-3 md:gap-2">
+              <div className="md:col-span-1">
+                <div className="sm:px-0">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">{t("models.user.plural")}</h3>
+                </div>
+              </div>
+              <div className="mt-5 md:mt-0 md:col-span-2">
+                <UsersTable
+                  items={data.users}
+                  canImpersonate={adminData.permissions.includes("admin.users.impersonate")}
+                  canChangePassword={adminData.permissions.includes("admin.users.changePassword")}
+                  canDelete={adminData.permissions.includes("admin.users.delete")}
+                />
+              </div>
             </div>
-          </div>
-          <div className="mt-5 md:mt-0 md:col-span-2">
-            <UsersTable items={data.users} />
-          </div>
-        </div>
-
-        {/*Separator */}
-        <div className="block">
-          <div className="py-5">
-            <div className="border-t border-gray-200"></div>
-          </div>
-        </div>
+            {/*Separator */}
+            <div className="block">
+              <div className="py-5">
+                <div className="border-t border-gray-200"></div>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Tenant Subscription */}
-        <div className="md:grid lg:grid-cols-3 md:gap-2">
-          <div className="md:col-span-1">
-            <div className="sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">{t("models.subscriptionProduct.object")}</h3>
+        {adminData.permissions.includes("admin.account.subscription") && (
+          <>
+            <div className="md:grid lg:grid-cols-3 md:gap-2">
+              <div className="md:col-span-1">
+                <div className="sm:px-0">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">{t("models.subscriptionProduct.object")}</h3>
+                </div>
+              </div>
+              <div className="mt-5 md:mt-0 md:col-span-2">
+                <UpdateTenantSubscriptionForm tenant={data.tenant} subscription={data.subscription} subscriptionPrices={data.subscriptionPrices} />
+              </div>
             </div>
-          </div>
-          <div className="mt-5 md:mt-0 md:col-span-2">
-            <UpdateTenantSubscriptionForm tenant={data.tenant} subscription={data.subscription} subscriptionPrices={data.subscriptionPrices} />
-          </div>
-        </div>
-
-        {/*Separator */}
-        <div className="block">
-          <div className="py-5">
-            <div className="border-t border-gray-200"></div>
-          </div>
-        </div>
+            {/*Separator */}
+            <div className="block">
+              <div className="py-5">
+                <div className="border-t border-gray-200"></div>
+              </div>
+            </div>
+          </>
+        )}
 
         {/*Danger */}
-        <div className="md:grid lg:grid-cols-3 md:gap-2">
-          <div className="md:col-span-1">
-            <div className="sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">{t("settings.danger.title")}</h3>
-              <p className="mt-1 text-xs leading-5 text-gray-600">{t("settings.danger.description")}</p>
+        {adminData.permissions.includes("admin.account.delete") && (
+          <div className="md:grid lg:grid-cols-3 md:gap-2">
+            <div className="md:col-span-1">
+              <div className="sm:px-0">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">{t("settings.danger.title")}</h3>
+                <p className="mt-1 text-xs leading-5 text-gray-600">{t("settings.danger.description")}</p>
+              </div>
             </div>
-          </div>
-          <div className="mt-12 md:mt-0 md:col-span-2">
-            <div>
-              <input hidden type="text" name="action" value="deleteAccount" readOnly />
-              <div className="bg-white shadow sm:rounded-sm">
-                <div className="px-4 py-5 sm:p-6">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Delete tenant</h3>
-                  <div className="mt-2 max-w-xl text-sm leading-5 text-gray-500">
-                    <p>Delete organization and cancel subscriptions.</p>
-                  </div>
-                  <div className="mt-5">
-                    <ButtonPrimary disabled={!adminHasPermission("delete-tenant")} destructive={true} onClick={deleteAccount}>
-                      {t("settings.danger.deleteAccount")}
-                    </ButtonPrimary>
+            <div className="mt-12 md:mt-0 md:col-span-2">
+              <div>
+                <input hidden type="text" name="action" value="deleteAccount" readOnly />
+                <div className="bg-white shadow sm:rounded-sm">
+                  <div className="px-4 py-5 sm:p-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Delete account</h3>
+                    <div className="mt-2 max-w-xl text-sm leading-5 text-gray-500">
+                      <p>Delete organization and cancel subscriptions.</p>
+                    </div>
+                    <div className="mt-5">
+                      <ButtonPrimary destructive={true} onClick={deleteAccount}>
+                        {t("settings.danger.deleteAccount")}
+                      </ButtonPrimary>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
       <ConfirmModal ref={confirmDelete} onYes={confirmDeleteTenant} />
       <SuccessModal ref={successModal} />

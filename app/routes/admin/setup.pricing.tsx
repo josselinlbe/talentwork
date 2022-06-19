@@ -20,6 +20,8 @@ import { Tenant } from ".prisma/client";
 import PlanFeatureValue from "~/components/core/settings/subscription/PlanFeatureValue";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAdminData } from "~/utils/data/useAdminData";
 
 type LoaderData = {
   title: string;
@@ -28,6 +30,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.pricing.view");
   let { t } = await i18nHelper(request);
   const data: LoaderData = {
     title: `${t("admin.pricing.title")} | ${process.env.APP_NAME}`,
@@ -102,6 +105,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function AdminPricingRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<PricingPlansActionData>();
+  const adminData = useAdminData();
   const { t } = useTranslation();
   const submit = useSubmit();
   const transition = useTransition();
@@ -170,7 +174,7 @@ export default function AdminPricingRoute() {
   }
   // function createPlan(item: SubscriptionProductDto) {
   //   const form = new FormData();
-  //   form.set("action", "create-plan");
+  //   form.set("action", "create");
   //   form.set("order", item.order);
   //   form.set("order", item.description);
   //   employees.forEach((item) => {
@@ -234,7 +238,7 @@ export default function AdminPricingRoute() {
               {t("shared.reload")}
             </ButtonSecondary> */}
 
-            <ButtonPrimary to="new" disabled={loading}>
+            <ButtonPrimary to="new" disabled={loading || !adminData.permissions.includes("admin.pricing.create")}>
               {t("shared.new")}
             </ButtonPrimary>
           </Form>
@@ -244,14 +248,13 @@ export default function AdminPricingRoute() {
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
         {createdPlans() === 0 && (
           <WarningBanner title={t("shared.warning")} text={t("admin.pricing.thesePricesAreFromFiles")}>
-            <button
+            <ButtonTertiary
               type="button"
-              className={clsx("underline font-bold", loading || (createdPlans() > 0 && "cursor-not-allowed opacity-80"))}
               onClick={createAllPlans}
-              disabled={loading || createdPlans() > 0}
+              disabled={loading || createdPlans() > 0 || !adminData.permissions.includes("admin.pricing.create")}
             >
               {t("admin.pricing.generateFromFiles")}
-            </button>
+            </ButtonTertiary>
           </WarningBanner>
         )}
         <div className="flex flex-col">

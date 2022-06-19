@@ -3,8 +3,10 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, Outlet, redirect, useLocation, useNavigate } from "remix";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.apiKeys.view");
   if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === "/admin/api") {
     return redirect("/admin/api/keys");
   }

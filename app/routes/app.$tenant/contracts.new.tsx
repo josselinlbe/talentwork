@@ -33,6 +33,7 @@ import { getRow, getRows, RowWithDetails } from "~/utils/db/entities/rows.db.ser
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
 import { createRowLog } from "~/utils/db/logs.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -44,6 +45,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.entity.contract.create", tenantUrl.tenantId);
 
   const url = new URL(request.url);
   const preselectLinkIdQueryParam = url.searchParams.get("l");

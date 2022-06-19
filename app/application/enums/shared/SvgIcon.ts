@@ -2,6 +2,7 @@ export enum SvgIcon {
   ADMIN,
   TENANTS,
   USERS,
+  ROLES,
   PRICING,
   EMAILS,
   NAVIGATION,

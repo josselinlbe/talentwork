@@ -7,7 +7,7 @@ type LoaderData = {
   apiKeys: ApiKeyWithDetails[];
   apiKeyLogs: ApiKeyLogWithDetails[];
 };
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader: LoaderFunction = async ({ request }) => {
   const apiKeys = await getAllApiKeys();
   const apiKeyLogs = await getAllApiKeyLogs();
   const data: LoaderData = {
@@ -22,7 +22,13 @@ export default function AdminApiKeysRoute() {
   const adminData = useAdminData();
   return (
     <>
-      <ApiKeysTable entities={adminData.entities} items={data.apiKeys} logs={data.apiKeyLogs} withTenant={true} />
+      <ApiKeysTable
+        canCreate={adminData.permissions.includes("admin.apiKeys.create")}
+        entities={adminData.entities}
+        items={data.apiKeys}
+        logs={data.apiKeyLogs}
+        withTenant={true}
+      />
       <Outlet />
     </>
   );

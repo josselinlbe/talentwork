@@ -1,7 +1,13 @@
 export default function ChatSupportButton() {
   function showChat() {
-    // this.$crisp.push(["do", "chat:show"]);
-    // this.$crisp.push(["do", "chat:open"]);
+    try {
+      // @ts-ignore
+      $crisp?.push(["do", "chat:show"]);
+      // @ts-ignore
+      $crisp?.push(["do", "chat:open"]);
+    } catch (e) {
+      // ignore
+    }
   }
   return (
     <div className="hidden sm:inline-flex relative">
@@ -11,7 +17,7 @@ export default function ChatSupportButton() {
             <button
               onClick={showChat}
               type="button"
-              className="text-gray-800 bg-gray-50 border-gray-100 shadow-inner border relative inline-flex items-center p-2 rounded-full font-medium hover:bg-theme-300 hover:text-theme-800 focus:bg-theme-400 focus:text-theme-900 focus:outline-none focus:z-10 focus:ring-2 focus:ring-offset-2 focus:ring-offset-theme-50 focus:ring-theme-100"
+              className="text-gray-800 bg-gray-50 border-gray-100 shadow-inner border relative inline-flex items-center p-2 rounded-full font-medium hover:bg-theme-300 hover:text-theme-800 focus:bg-theme-400 focus:text-theme-900 focus:outline-none"
               aria-haspopup="listbox"
               aria-expanded="true"
               aria-labelledby="chat-label"

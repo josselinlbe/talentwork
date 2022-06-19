@@ -1,9 +1,9 @@
 import { SideBarItem } from "./SidebarItem";
-import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { Params } from "react-router";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
+import { getEntityPermission } from "~/utils/helpers/PermissionsHelper";
 
 export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebugMode?: boolean): SideBarItem[] => {
   const currentTenantUrl = UrlUtils.stripTrailingSlash(UrlUtils.currentTenantUrl(params));
@@ -18,6 +18,7 @@ export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebu
         entityIcon: entity.icon,
         // tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
         path: `${currentTenantUrl}/` + entity.slug,
+        permission: getEntityPermission(entity, "view"),
         // side: isDebugMode && SideText({ text: modelProperties.length > 0 ? "DB Model" : "Custom" }),
       });
     });
@@ -29,7 +30,7 @@ export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebu
         title: "app.sidebar.dashboard",
         path: `${currentTenantUrl}/dashboard`,
         icon: SvgIcon.DASHBOARD,
-        tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN, TenantUserType.MEMBER],
+        // tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN, TenantUserType.MEMBER],
       },
       ...entitiesItems,
     ],
@@ -43,7 +44,7 @@ export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebu
         {
           title: "app.sidebar.settings",
           icon: SvgIcon.SETTINGS,
-          tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
+          // tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
           path: `${currentTenantUrl}/settings`,
         },
         // {

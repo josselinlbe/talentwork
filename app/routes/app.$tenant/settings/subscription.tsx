@@ -15,7 +15,6 @@ import {
   getStripeSubscription,
 } from "~/utils/stripe.server";
 import { getUserInfo } from "~/utils/session.server";
-import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 import { getUser } from "~/utils/db/users.db.server";
 import { SubscriptionPrice, SubscriptionProduct } from "@prisma/client";
 import ChangeSubscription from "~/components/core/settings/subscription/ChangeSubscription";
@@ -40,6 +39,7 @@ import { createLog } from "~/utils/db/logs.db.server";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import { getPlanFeaturesUsage } from "~/utils/services/subscriptionService";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -50,8 +50,8 @@ type LoaderData = DashboardLoaderData & {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.subscription.view", tenantUrl.tenantId);
 
-  await requireOwnerOrAdminRole(request, params);
   const userInfo = await getUserInfo(request);
   const user = await getUser(userInfo.userId);
 
@@ -283,7 +283,16 @@ export default function SubscriptionRoute() {
                     <span>
                       <p className="text-xs text-gray-900 font-bold"></p>
                       <p>
-                        <button onClick={cancel} className="text-gray-500 font-medium hover:underline hover:text-gray-600">
+                        <button
+                          disabled={!appData.permissions.includes("app.settings.subscription.delete")}
+                          onClick={cancel}
+                          className={clsx(
+                            "text-gray-500 font-medium",
+                            appData.permissions.includes("app.settings.subscription.delete")
+                              ? "hover:text-gray-600 hover:underline"
+                              : " cursor-not-allowed opacity-80"
+                          )}
+                        >
                           {t("settings.subscription.clickCancel")}
                         </button>
                       </p>
@@ -329,12 +338,18 @@ export default function SubscriptionRoute() {
           )}
         </>
       ) : (
-        <ChangeSubscription items={data.items} current={appData.mySubscription} billingPeriod={billingPeriod} currency={currency} />
+        <ChangeSubscription
+          items={data.items}
+          current={appData.mySubscription}
+          billingPeriod={billingPeriod}
+          currency={currency}
+          canSubscribe={appData.permissions.includes("app.settings.subscription.update")}
+        />
       )}
 
       <MySubscriptionFeatures features={data.myFeatures} withCurrentPlan={false} />
 
-      {data.myInvoices.length > 0 && (
+      {appData.permissions.includes("app.settings.subscription.invoices.view") && data.myInvoices.length > 0 && (
         <>
           <div className="grid lg:grid-cols-2 gap-6 md:gap-2 mb-4">
             <div className="md:col-span-1">

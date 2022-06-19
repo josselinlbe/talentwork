@@ -62,7 +62,7 @@ export default function Header() {
   return (
     <div>
       <div className="bg-white dark:bg-gray-900 pb-6">
-        <div className="relative pt-6 z-40">
+        <div className="relative pt-6 ">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <nav className="relative flex items-center justify-between sm:h-10 md:justify-center" aria-label="Global">
               <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
@@ -136,7 +136,7 @@ export default function Header() {
                 <LocaleSelector className="hidden lg:block" />
                 <DarkModeToggle className="hidden lg:flex" />
               </div>
-              <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0 z-40">
+              <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
                 <span className="inline-flex space-x-2">
                   {!authenticated && (
                     <Link

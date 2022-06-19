@@ -14,6 +14,7 @@ import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { createAdminLog } from "~/utils/db/logs.db.server";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -21,6 +22,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.emails.view");
   let { t } = await i18nHelper(request);
 
   const items = await getEmailTemplates();
@@ -225,7 +227,11 @@ export default function EmailsRoute() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("admin.emails.title")}</h1>
           <Form method="post" className="flex items-center space-x-2">
-            <ButtonPrimary type="button" onClick={createAllEmailTemplates} disabled={loading || createdTemplates() > 0}>
+            <ButtonPrimary
+              type="button"
+              onClick={createAllEmailTemplates}
+              disabled={loading || createdTemplates() > 0 || adminData.permissions.includes("admin.emails.create")}
+            >
               {t("admin.emails.createAll")}
             </ButtonPrimary>
           </Form>
@@ -325,20 +331,24 @@ export default function EmailsRoute() {
                                     {item.associatedServerId <= 0 ? (
                                       <ButtonTertiary
                                         className="w-14 py-1"
-                                        disabled={loading || item.associatedServerId > 0}
+                                        disabled={loading || item.associatedServerId > 0 || !adminData.permissions.includes("admin.emails.create")}
                                         onClick={() => createTemplate(item)}
                                       >
                                         {t("shared.create")}
                                       </ButtonTertiary>
                                     ) : (
-                                      <a
-                                        className="w-14 py-1 text-theme-600 inline-flex space-x-2 items-center px-1 text-sm font-medium focus:outline-none"
-                                        href={templateUrl(item)}
-                                        rel="noreferrer"
-                                        target="_blank"
-                                      >
-                                        {t("shared.edit")}
-                                      </a>
+                                      <>
+                                        {adminData.permissions.includes("admin.emails.update") && (
+                                          <a
+                                            className="w-14 py-1 text-theme-600 inline-flex space-x-2 items-center px-1 text-sm font-medium focus:outline-none"
+                                            href={templateUrl(item)}
+                                            rel="noreferrer"
+                                            target="_blank"
+                                          >
+                                            {t("shared.edit")}
+                                          </a>
+                                        )}
+                                      </>
                                     )}
                                     <ButtonTertiary
                                       className="py-1"
@@ -351,7 +361,7 @@ export default function EmailsRoute() {
                                     <ButtonTertiary
                                       className="py-1"
                                       destructive={true}
-                                      disabled={loading || item.associatedServerId <= 0}
+                                      disabled={loading || item.associatedServerId <= 0 || !adminData.permissions.includes("admin.emails.delete")}
                                       onClick={() => deleteTemplate(item)}
                                     >
                                       {t("shared.delete")}

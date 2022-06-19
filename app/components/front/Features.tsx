@@ -113,7 +113,8 @@ export default function Features() {
                   group.items.length <= 2 && "sm:grid-rows-1",
                   group.items.length > 2 && group.items.length <= 4 && "sm:grid-rows-2",
                   (group.items.length === 5 || group.items.length === 6) && "sm:grid-rows-3",
-                  group.items.length > 6 && "sm:grid-rows-5"
+                  group.items.length > 6 && "sm:grid-rows-5",
+                  group.items.length > 10 && "sm:grid-rows-6"
                 )}
               >
                 {group.items.map((feature) => (

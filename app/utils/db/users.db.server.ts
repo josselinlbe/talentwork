@@ -1,4 +1,4 @@
-import { AdminUser } from ".prisma/client";
+import { AdminUser, Role, Tenant, TenantUser, UserRole } from ".prisma/client";
 import bcrypt from "bcryptjs";
 import { db } from "~/utils/db.server";
 
@@ -7,17 +7,24 @@ export type UserWithoutPassword = {
   email: string;
   firstName: string;
   lastName: string;
-  avatar: string;
-  phone: string;
+  avatar: string | null;
+  phone: string | null;
   admin?: AdminUser | null;
   defaultTenantId: string | null;
+  createdAt: Date;
 };
 
-export async function adminGetAllTenantUsers(tenantId: string) {
+export type UserWithDetails = UserWithoutPassword & {
+  admin: AdminUser | null;
+  tenants: (TenantUser & { tenant: Tenant })[];
+  roles: (UserRole & { role: Role })[];
+};
+
+export async function adminGetAllTenantUsers(tenantId: string): Promise<UserWithDetails[]> {
   return db.user.findMany({
     where: {
       tenants: {
-        every: {
+        some: {
           tenantId,
         },
       },
@@ -29,17 +36,50 @@ export async function adminGetAllTenantUsers(tenantId: string) {
           tenant: true,
         },
       },
+      roles: {
+        include: {
+          role: true,
+        },
+      },
     },
   });
 }
 
-export async function adminGetAllUsers() {
+export async function adminGetAllUsers(): Promise<UserWithDetails[]> {
   return db.user.findMany({
     include: {
       admin: true,
       tenants: {
         include: {
           tenant: true,
+        },
+      },
+      roles: {
+        include: {
+          role: true,
+        },
+      },
+    },
+  });
+}
+
+export async function getUsersById(ids: string[]): Promise<UserWithDetails[]> {
+  return db.user.findMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+    include: {
+      admin: true,
+      tenants: {
+        include: {
+          tenant: true,
+        },
+      },
+      roles: {
+        include: {
+          role: true,
         },
       },
     },

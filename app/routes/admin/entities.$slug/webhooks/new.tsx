@@ -36,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: e.message });
     }
   }
-  return badRequest(t("shared.invalidForm"));
+  return badRequest({ error: t("shared.invalidForm") });
 };
 
 export default function NewEntityWebhookRoute() {

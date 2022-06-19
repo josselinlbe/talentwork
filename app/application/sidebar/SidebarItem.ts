@@ -11,6 +11,7 @@ export interface SideBarItem {
   open?: boolean;
   adminOnly?: boolean;
   tenantUserTypes?: TenantUserType[];
+  permission?: string;
   items?: SideBarItem[];
   side?: ReactNode;
   exact?: boolean;

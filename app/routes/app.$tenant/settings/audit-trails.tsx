@@ -2,14 +2,16 @@ import { json, LoaderFunction, useLoaderData } from "remix";
 import LogsTable from "~/components/app/events/LogsTable";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import { getLogs, LogWithDetails } from "~/utils/db/logs.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   items: LogWithDetails[];
 };
 
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.auditTrails.view", tenantUrl.tenantId);
 
   const items = await getLogs(tenantUrl.tenantId);
 

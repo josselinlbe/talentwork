@@ -11,6 +11,7 @@ import PricingPlanForm from "~/components/core/pricing/PricingPlanForm";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 export type LoaderData = {
   title: string;
@@ -18,6 +19,7 @@ export type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.pricing.create");
   let { t } = await i18nHelper(request);
 
   const data: LoaderData = {
@@ -38,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const action = form.get("action")?.toString();
 
-  if (action !== "create-plan") {
+  if (action !== "create") {
     return badRequest({ error: t("shared.invalidForm") });
   }
   const order = Number(form.get("order"));

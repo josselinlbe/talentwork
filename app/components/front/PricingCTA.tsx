@@ -10,7 +10,7 @@ import CheckIcon from "../ui/icons/CheckIcon";
 const baseFeatures = ["Monthly updates", "Private repository access"];
 const plans = [
   {
-    title: "🪨 MVP-Builder",
+    title: "Core Features 🪨",
     description: (
       <div>
         By subscribing now, <b className="font-bold">you can lock in this pre-release pricing forever</b> for Core Features 🪨.
@@ -25,21 +25,16 @@ const plans = [
       ...getFeatures().map((i) => i.name),
       ...getUpcomingFeatures()
         .filter((f) => f.type === MarketingFeatureType.Core)
-        .map((i) => i.name + " (under 🚧)"),
+        .map((i) => i.name + " (🚧)"),
     ],
     enabled: true,
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Core%20Features%20%F0%9F%AA%A8&wanted=true",
   },
   {
-    title: (
-      <>
-        🚀 Enterprise-Builder <span className=" text-red-500 italic text-lg">(UNDER CONSTRUCTION)</span>
-      </>
-    ),
+    title: "Enterprise Features 🚀",
     description: (
       <>
         By subscribing now, <b className="font-bold">you can lock in this pre-release pricing forever</b> for Enterprise Features 🚀.{" "}
-        <b className="text-red-500 font-bold">Please note that Enterprise Features are still under construction</b>.
       </>
     ),
     monthlyPrice: "149",
@@ -51,7 +46,7 @@ const plans = [
       ...baseFeatures,
       ...getUpcomingFeatures()
         .filter((f) => f.type === MarketingFeatureType.Enterprise)
-        .map((i) => i.name + " (under 🚧)"),
+        .map((i) => i.name + " (🚧)"),
     ],
     enabled: true,
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Enterprise%20Features%20%F0%9F%9A%80&wanted=true",
@@ -88,10 +83,11 @@ export default function PricingCTA() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl lg:text-4xl">Pre-release Pricing</h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Get a license to run your SaaS in production + Software updates, bug fixes, support, and private access{" "}
               <i>(as long as your subscription is active)</i>.
             </p>
+            <p className="mt-4 font-medium text-2xl italic">🚧 = Under construction</p>
           </div>
         </div>
       </div>
@@ -123,9 +119,13 @@ export default function PricingCTA() {
                           {plan.features.map((feature) => (
                             <li key={feature} className="flex items-start lg:col-span-1">
                               <div className="flex-shrink-0">
-                                <CheckIcon className="h-5 w-5 text-theme-400" aria-hidden="true" />
+                                {feature.includes(" (🚧)") ? (
+                                  <div className="mx-1 text-sm">🚧</div>
+                                ) : (
+                                  <CheckIcon className="h-5 w-5 text-theme-400" aria-hidden="true" />
+                                )}
                               </div>
-                              <p className="ml-1 text-sm text-gray-700 dark:text-gray-400 truncate">{feature}</p>
+                              <p className="ml-1 text-sm text-gray-700 dark:text-gray-400 truncate">{feature.replace(" (🚧)", "")}</p>
                             </li>
                           ))}
                         </ul>

@@ -126,7 +126,11 @@
     "results": "Resultados",
     "tryDemo": "Probar demo",
     "learnMore": "Ver más",
-    "readDocs": "Leer docs"
+    "readDocs": "Leer docs",
+    "setUserRoles": "Establecer roles",
+    "share": "Compartir",
+    "copy": "Copiar",
+    "anonymousUser": "Usuario anónimo"
   },
   "front": {
     "navbar": {
@@ -143,7 +147,7 @@
       "headline2": "Framework multi-tenant con funcionalidades SaaS",
       "headline3": "Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
       "subheadline1": "Lanza tu MVP pronto",
-      "hint": "Este sitio usa v0.2.6",
+      "hint": "Este sitio usa v0.2.7",
       "buy": "Obtener early-access",
       "features": "Funcionalidades",
       "docs": "Documentación",
@@ -183,6 +187,10 @@
     "changelog": {
       "title": "Changelog",
       "headline": "Mantente informado de la última funcionalidad y bug fixes."
+    },
+    "roadmap": {
+      "title": "Roadmap",
+      "headline": "Entérate del estatus actual de SaasRock."
     },
     "faq": {
       "title": "Preguntas más frecuentes",
@@ -269,7 +277,7 @@
       "backend": {
         "hint": ".NET",
         "title": "Funcionalidades Backend",
-        "description": "Multi-organización, Arquitectura limpia, pruebas de integración, subscripciones en Stripe y correos en Postmark.",
+        "description": "Multi-cuentas, Arquitectura limpia, pruebas de integración, subscripciones en Stripe y correos en Postmark.",
         "features": {
           "net": {
             "title": ".NET",
@@ -284,7 +292,7 @@
             "description": "Casi todos los controladores tienen sus propias pruebas de integración."
           },
           "multiTenant": {
-            "title": "Multi-organización & multi-empresa",
+            "title": "Multi-cuentas & multi-empresa",
             "description": "Diseñado para tener una organización por cuenta/subscripción."
           },
           "memberManagement": {
@@ -371,6 +379,8 @@
       "colors": {
         "SLATE": "Gris azul",
         "GRAY": "Gris",
+        "NEUTRAL": "Neutral",
+        "STONE": "Piedra",
         "RED": "Rojo",
         "ORANGE": "Naranja",
         "AMBER": "Ámbar",
@@ -385,6 +395,7 @@
         "INDIGO": "Indigo",
         "VIOLET": "Violeta",
         "PURPLE": "Morado",
+        "FUCHSIA": "Fuchsia",
         "PINK": "Rosa",
         "ROSE": "Rojizo"
       },
@@ -465,11 +476,11 @@
         "description": "No se encontraron comandos con esta búsqueda. Intenta de nuevo."
       },
       "tenants": {
-        "title": "Organizaciones",
-        "description": "Cambia de organización, o crea uno nuevo",
+        "title": "Cuentas",
+        "description": "Cambia de cuenta, o crea uno nuevo",
         "switchTo": "Cambiar a",
-        "viewAll": "Ver todas mis organizaciones",
-        "edit": "Editar nombre, URL e ícono de organización"
+        "viewAll": "Ver todas mis cuentas",
+        "edit": "Editar nombre, URL e ícono de cuenta"
       },
       "profile": {
         "title": "Perfil",
@@ -485,7 +496,7 @@
       }
     },
     "navbar": {
-      "tenant": "Organización",
+      "tenant": "Cuenta",
       "subscription": "Subscripción",
       "members": "Miembros",
       "profile": "Perfil",
@@ -498,7 +509,8 @@
       "dashboard": "Portal",
       "logs": "Bitácora",
       "settings": "Ajustes",
-      "setup": "Configuración"
+      "setup": "Configuración",
+      "rolesAndPermissions": "Roles & Permisos"
     },
     "subscription": {
       "limits": {
@@ -515,7 +527,7 @@
       },
       "errors": {
         "limitReached": "Límite alcanzado",
-        "limitReachedLinkedAccounts": "Has llegado al límite de enlaces con organizaciones.",
+        "limitReachedLinkedAccounts": "Has llegado al límite de enlaces con cuentas.",
         "limitReachedUsers": "Has llegado al límite de usuarios.",
         "limitReachedContracts": "Has llegado al límite de contratos ({{0}})."
       }
@@ -619,7 +631,7 @@
       }
     },
     "linkedAccounts": {
-      "my": "Enlaces con organizaciones",
+      "my": "Enlaces con cuentas",
       "profile": {
         "title": "Perfil",
         "company": "Perfil de empresa",
@@ -629,7 +641,7 @@
         "title": "Pendientes",
         "one": "Invitación pendiente",
         "multiple": "Invitaciones pendientes",
-        "description": "Administra los enlaces con organizaciones pendientes por aceptar.",
+        "description": "Administra los enlaces con cuentas pendientes por aceptar.",
         "invitationSent": "Invitación enviada",
         "invitationSentDescription": "Se ha enviado un correo a {{0}} para que cree su cuenta y acepte tu invitación.",
         "empty": "No tienes invitaciones pendientes"
@@ -643,13 +655,13 @@
       "newDescription": "Enlaza con otra empresa para compartir contratos",
       "link": "Enlazar",
       "invited": "Has invitado a {{0}} a unirse como {{1}} tu empresa {{2}}.",
-      "thereAreNo": "No se encontraron enlaces con organizaciones activos",
+      "thereAreNo": "No se encontraron enlaces con cuentas activos",
       "accountFound": "Cuenta encontrada",
       "accountNotFound": "Cuenta no encontrada",
       "invitation": {
         "toBe": "Invitación a ser",
-        "hasInvitedYou": "te ha invitado a crear enlace entre su organización",
-        "andYourCompany": "y tu empresa",
+        "hasInvitedYou": "te ha invitado a crear enlace entre su cuenta",
+        "andYourCompany": "y tu cuenta",
         "reasonAsProvider": "para compartir contratos",
         "reasonAsClient": "para compartir contratos",
         "message": "Mensaje de",
@@ -662,13 +674,13 @@
         "invite": "No se ha encontrado una cuenta con ese correo y empresa, se le enviará un correo electrónico para invitarlo a unirse.",
         "notFound": "El usuario {{0}} no tiene la empresa '{{1}}'.",
         "cannotInviteSelf": "No puedes invitarte a ti",
-        "cannotInviteCurrentTenant": "No puedes invitar a la organización actual",
+        "cannotInviteCurrentTenant": "No puedes invitar a la cuenta actual",
         "inviteOwnersOrAdmins": "Solo puedes invitar a propietarios o administradores",
-        "existing": "Ya existe un enlace con esta organización"
+        "existing": "Ya existe un enlace con esta cuenta"
       },
       "actions": {
         "selectOne": "Selecciona un cliente o proveedor",
-        "new": "Nuevo enlace con organización",
+        "new": "Nuevo enlace con cuenta",
         "edit": "Editar enlace"
       }
     },
@@ -689,12 +701,12 @@
       }
     },
     "tenants": {
-      "empty": "No hay organizaciones",
-      "select": "Selecciona organización",
-      "youBelongToOne": "Perteneces a una organización",
-      "youBelongToMany": "Perteneces a {{0}} organizaciones",
+      "empty": "No hay cuentas",
+      "select": "Selecciona cuenta",
+      "youBelongToOne": "Perteneces a una cuenta",
+      "youBelongToMany": "Perteneces a {{0}} cuentas",
       "create": {
-        "title": "Crear organización",
+        "title": "Crear cuenta",
         "headline": "Tú serás el propietario"
       },
       "members": {
@@ -711,11 +723,11 @@
         "isTrial": "Es prueba",
         "status": "Estatus",
         "members": "Miembros",
-        "linkedAccounts": "Enlaces con organizaciones",
+        "linkedAccounts": "Enlaces con cuentas",
         "storage": "Almacenamiento"
       },
       "actions": {
-        "deleted": "Se ha eliminado la organización."
+        "deleted": "Se ha eliminado la cuenta."
       }
     }
   },
@@ -734,7 +746,7 @@
       "generateFromFiles": "Clic aquí para generarlos"
     },
     "tenants": {
-      "title": "Organizaciones",
+      "title": "Cuentas",
       "overview": "Detalles",
       "profile": {
         "title": "Perfil"
@@ -744,7 +756,7 @@
       }
     },
     "users": {
-      "deleteWarning": "ADVERTENCIA: Si el usuario es propietario de organizaciones, se cancelará su subscripción y se eliminarán todas sus organizaciones. No se puede recuperar un usuario eliminado."
+      "deleteWarning": "ADVERTENCIA: Si el usuario es propietario de cuentas, se cancelará su subscripción y se eliminarán todas sus cuentas. No se puede recuperar un usuario eliminado."
     },
     "navigation": {
       "title": "Menú",
@@ -926,8 +938,8 @@
       "tags": "Tags"
     },
     "tenant": {
-      "object": "Organización",
-      "plural": "Organizaciones",
+      "object": "Cuenta",
+      "plural": "Cuentas",
       "subscription": "Subscripción"
     },
     "apiKey": {
@@ -963,8 +975,38 @@
       "firstName": "Nombre",
       "lastName": "Apellidos",
       "role": "Rol",
-      "tenants": "Organizaciones",
+      "tenants": "Cuentas",
       "impersonate": "Simular"
+    },
+    "role": {
+      "object": "Rol",
+      "plural": "Roles",
+      "order": "Orden",
+      "name": "Nombre",
+      "description": "Descripción",
+      "type": "Tipo",
+      "assignToNewUsers": "Asignar a nuevos usuarios",
+      "permissions": "Permisos",
+      "adminRoles": "Usuarios Admin",
+      "userRoles": "Usuarios de App"
+    },
+    "permission": {
+      "object": "Permiso",
+      "plural": "Permisos",
+      "order": "Orden",
+      "name": "Nombre",
+      "description": "Descripción",
+      "type": "Tipo",
+      "userRoles": "Roles de Usuarios",
+      "userPermissions": "Permisos de Usuarios",
+      "inRoles": "En Roles"
+    },
+    "group": {
+      "object": "Grupo",
+      "plural": "Grupos",
+      "name": "Nombre",
+      "description": "Descripción",
+      "color": "Color"
     },
     "log": {
       "object": "Bitácora",
@@ -1015,8 +1057,8 @@
       "fullName": "Nombre completo"
     },
     "linkedAccount": {
-      "object": "Enlace con organización",
-      "plural": "Enlaces con organizaciones",
+      "object": "Enlace con cuenta",
+      "plural": "Enlaces con cuentas",
       "type": "Tipo"
     },
     "provider": {
@@ -1090,19 +1132,19 @@
       "title": "Zona de peligro",
       "description": "Ten cuidado aquí",
       "deleteAccount": "Eliminar cuenta",
-      "confirmDelete": "Eliminaremos tu cuenta y todas tus organizaciones",
-      "confirmDeleteTenant": "Se eliminará la organización con toda su información",
+      "confirmDelete": "Eliminaremos tu cuenta y todas tus cuentas",
+      "confirmDeleteTenant": "Se eliminará la cuenta con toda su información",
       "deleteYourAccount": "Elimina tu cuenta",
       "onceYouDelete": "Una vez eliminada tu cuenta, perderás toda la información y acceso asociada a ella"
     },
     "tenant": {
-      "title": "Organización",
+      "title": "Cuenta",
       "general": "Ajustes generales",
-      "generalDescription": "Actualiza la información de tu organización",
-      "updated": "Organización actualizada",
-      "create": "Crear organización",
-      "createDescription": "Crea una nueva organización para otra empresa o para ti",
-      "createConfirm": "¿Crear nueva organización?",
+      "generalDescription": "Actualiza la información de tu cuenta",
+      "updated": "Cuenta actualizada",
+      "create": "Crear cuenta",
+      "createDescription": "Crea una nueva cuenta para otra empresa o para ti",
+      "createConfirm": "¿Crear nueva cuenta?",
       "payment": {
         "title": "Detalles de pago",
         "ending": "terminación en",
@@ -1176,32 +1218,32 @@
   },
   "api": {
     "errors": {
-      "youDontBelong": "No tienes acceso a esta organización",
+      "youDontBelong": "No tienes acceso a esta cuenta",
       "alreadyAdded": "Ya agregado",
       "invalidCoupon": "Cupón inválido",
       "couponInactive": "Cupón inactivo",
       "couponMaxRedeems": "El cupón ya llegó a su límite de usos",
       "invalidStripeCustomerId": "ID de cliente inválido",
       "maxFileReached": "Sube un documento menor a 20 MB",
-      "notLinked": "No tienes permiso a esta organización",
+      "notLinked": "No tienes permiso a esta cuenta",
       "canBeModifiedByCreator": "Solo puede ser eliminado por el creador",
       "cannotUpdateNotPending": "No puedes modificar si no está pendiente",
       "cannotDeleteIfNotPending": "No puedes eliminar un contrato firmado o archivado",
       "nameCannotBeEmpty": "Especifica un nombre",
       "descriptionCannotBeEmpty": "Especifica una descripción",
       "fileCannotBeEmpty": "Sube el archivo en formato PDF",
-      "alreadyLinkedProvider": "Esta organización ya es tu proveedor",
-      "alreadyLinkedClient": "Esta organización ya es tu cliente",
+      "alreadyLinkedProvider": "Esta cuenta ya es tu proveedor",
+      "alreadyLinkedClient": "Esta cuenta ya es tu cliente",
       "invalidSubscription": "Selecciona un plan de acuerdo a lo que necesitas",
       "noActiveSubscriptions": "No hay subscripciones activas",
       "invalidCard": "Tarjeta inválida",
-      "existingUser": "Usuario ya existe en organización",
+      "existingUser": "Usuario ya existe en cuenta",
       "maxNumberOfUsers": "Has llegado al límite de usuarios",
       "invalidPassword": "Credenciales inválidas",
       "invitationNotAvailable": "Invitación no disponible",
       "notAvailable": "No disponible",
-      "cannotBeWithoutOwner": "La organización no puede estar sin propietario",
-      "cannotBeWithoutMembers": "La organización no puede estar sin miembros",
+      "cannotBeWithoutOwner": "La cuenta no puede estar sin propietario",
+      "cannotBeWithoutMembers": "La cuenta no puede estar sin miembros",
       "userNotRegistered": "Usuario no registrado",
       "userAlreadyRegistered": "Usuario ya registrado",
       "userAlreadyVerified": "Usuario ya verificado",
@@ -1215,7 +1257,7 @@
       "alreadyAMember": "Ya pertenece a la empresa",
       "noChanges": "No hay cambios",
       "noSubscription": "No hay subscripción activa",
-      "noOrganizations": "No perteneces a ninguna organización"
+      "noOrganizations": "No perteneces a ninguna cuenta"
     }
   },
   "demo": {

@@ -45,6 +45,14 @@ export default function SettingsRoute() {
       routePath: UrlUtils.currentTenantUrl(params, "settings/members"),
     },
     {
+      name: t("models.role.plural"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/roles-and-permissions"),
+    },
+    {
+      name: t("models.group.plural"),
+      routePath: UrlUtils.currentTenantUrl(params, "settings/groups"),
+    },
+    {
       name: t("settings.subscription.title"),
       routePath: UrlUtils.currentTenantUrl(params, `settings/subscription`),
     },
@@ -69,7 +77,7 @@ export default function SettingsRoute() {
     <div>
       <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2 overflow-auto">
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex space-x-3 items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Tabs tabs={tabs} className="flex-grow" />
+          <Tabs tabs={tabs} className="flex-grow" breakpoint="xl" />
         </div>
       </div>
       <Outlet />

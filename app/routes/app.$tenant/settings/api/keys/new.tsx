@@ -1,12 +1,19 @@
-import { ActionFunction, json, redirect, useNavigate, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect, useNavigate, useParams } from "remix";
 import ApiKeyForm from "~/components/core/apiKeys/ApiKeyForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useAppData } from "~/utils/data/useAppData";
 import { createApiKey, getApiKeys } from "~/utils/db/apiKeys.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { getTenantUrl } from "~/utils/services/urlService";
 import { getUserInfo } from "~/utils/session.server";
+
+export let loader: LoaderFunction = async ({ request, params }) => {
+  const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.apiKeys.create", tenantUrl.tenantId);
+  return json({});
+};
 
 type ActionData = {
   error?: string;
@@ -42,7 +49,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
     return redirect(UrlUtils.currentTenantUrl(params, "settings/api/keys"));
   } else {
-    return badRequest(t("shared.invalidForm"));
+    return badRequest({ error: t("shared.invalidForm") });
   }
 };
 

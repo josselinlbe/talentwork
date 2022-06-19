@@ -13,7 +13,7 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
-  return badRequest(t("shared.invalidForm"));
+  return badRequest({ error: t("shared.invalidForm") });
 };
 
 export default function EditEntityIndexRoute() {

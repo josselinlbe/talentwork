@@ -12,6 +12,7 @@ import NewLinkedAccount from "~/components/app/linkedAccounts/NewLinkedAccount";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { createLinkedAccount, getLinkedAccountByTenantIds, getLinkedAccountsCount } from "~/utils/db/linkedAccounts.db.server";
 import { LinkedAccount } from "@prisma/client";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -20,6 +21,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.linkedAccounts.create", tenantUrl.tenantId);
 
   const data: LoaderData = {
     title: `${t("app.linkedAccounts.actions.new")} | ${process.env.APP_NAME}`,

@@ -19,7 +19,7 @@ async function getTenantStat(lastDays: number) {
     previousStat: (total - added).toString(),
     change: "+" + added.toString(),
     changeType: getStatChangeType(added, total),
-    path: "/admin/tenants",
+    path: "/admin/accounts",
   };
   return tenantStat;
 }

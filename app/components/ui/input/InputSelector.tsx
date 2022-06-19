@@ -1,4 +1,4 @@
-import { KeyboardEvent, Ref, forwardRef, useImperativeHandle, useRef } from "react";
+import { KeyboardEvent, Ref, forwardRef, useImperativeHandle, useRef, ReactNode } from "react";
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import clsx from "~/utils/shared/ClassesUtils";
@@ -14,7 +14,7 @@ interface Props {
   title: string;
   value?: string | number | undefined;
   disabled?: boolean;
-  options: { name: string; value: string | number | undefined }[];
+  options: { name: string | ReactNode; value: string | number | undefined }[];
   setValue?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   className?: string;
   withSearch?: boolean;
@@ -31,7 +31,7 @@ const InputSelector = (
   const button = useRef<HTMLButtonElement>(null);
   const inputSearch = useRef<HTMLInputElement>(null);
 
-  const [selected, setSelected] = useState<{ name: string; value: string | number | undefined }>();
+  const [selected, setSelected] = useState<{ name: string | ReactNode; value: string | number | undefined }>();
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
@@ -66,13 +66,15 @@ const InputSelector = (
     if (!options) {
       return [];
     }
-    return options.filter((f) => f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()));
+    return options.filter(
+      (f) => f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) || f.value?.toString().toUpperCase().includes(searchInput.toUpperCase())
+    );
   };
 
   return (
     <Listbox value={selected} onChange={setSelected} disabled={disabled}>
       {({ open }) => (
-        <div className={className}>
+        <div className={clsx(className, "text-gray-800")}>
           <Listbox.Label htmlFor={name} className="block text-xs font-medium text-gray-600 truncate">
             {title}
             {required && <span className="ml-1 text-red-500">*</span>}
@@ -87,7 +89,7 @@ const InputSelector = (
                 disabled && "bg-gray-100 cursor-not-allowed"
               )}
             >
-              <input type="hidden" readOnly name={name} value={value ?? ""} />
+              <input type="hidden" readOnly name={name} value={selected?.value ?? ""} />
               <span className="w-full inline-flex truncate">
                 <span className="truncate">
                   {selected ? <span>{selected?.name}</span> : <span className="text-sm text-gray-500">{t("shared.select")}...</span>}

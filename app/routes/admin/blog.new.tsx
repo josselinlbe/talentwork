@@ -6,13 +6,15 @@ import PostForm from "~/components/blog/PostForm";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { BlogPostWithDetails, createBlogPost, getAllAuthors, getAllCategories, getAllTags } from "~/utils/db/blog.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   authors: BlogAuthor[];
   categories: BlogCategory[];
   tags: BlogTag[];
 };
-export let loader: LoaderFunction = async (request) => {
+export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.blog.create");
   const data: LoaderData = {
     authors: await getAllAuthors(),
     categories: await getAllCategories(),

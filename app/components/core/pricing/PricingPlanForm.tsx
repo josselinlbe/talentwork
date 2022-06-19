@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Form, useNavigate, useSubmit, useTransition } from "remix";
@@ -18,13 +17,16 @@ import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/
 import PricingFeaturesTable from "./PricingFeaturesTable";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import InputRadioGroup from "~/components/ui/input/InputRadioGroup";
+import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 
 interface Props {
   plans?: SubscriptionProductDto[];
   item?: SubscriptionProductDto | undefined;
+  canUpdate?: boolean;
+  canDelete?: boolean;
 }
 
-export default function PricingPlanForm({ plans, item }: Props) {
+export default function PricingPlanForm({ plans, item, canUpdate = true, canDelete }: Props) {
   const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "submitting";
@@ -134,7 +136,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
 
   function yesRemove() {
     const form = new FormData();
-    form.set("action", "delete-plan");
+    form.set("action", "delete");
     submit(form, {
       method: "post",
     });
@@ -159,7 +161,7 @@ export default function PricingPlanForm({ plans, item }: Props) {
   return (
     <>
       <Form method="post" className="lg:py-2 grid grid-cols-2 gap-4 sm:px-4">
-        <input hidden readOnly name="action" value={item ? "update-plan" : "create-plan"} />
+        <input hidden readOnly name="action" value={item ? "edit" : "create"} />
         <div className="col-span-2 max-w-2xl mx-auto">
           <div className="sm:space-y-4 divide-y divide-gray-200">
             <div className="bg-white py-6 px-8 shadow-lg border border-gray-200 space-y-6">
@@ -382,37 +384,17 @@ export default function PricingPlanForm({ plans, item }: Props) {
           <div className="py-5 flex justify-between space-x-2">
             <div>
               {item && (
-                <button
-                  disabled={loading}
-                  className={clsx(
-                    "inline-flex items-center px-3 py-2 border space-x-2 border-gray-300 shadow-sm sm:text-sm font-medium sm:rounded-md text-red-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                    loading && "bg-gray-100 cursor-not-allowed"
-                  )}
-                  type="button"
-                  onClick={remove}
-                >
+                <ButtonSecondary destructive={true} disabled={loading || !canDelete} type="button" onClick={remove}>
                   <div>{t("shared.delete")}</div>
-                </button>
+                </ButtonSecondary>
               )}
             </div>
 
             <div className="flex items-center space-x-2">
-              <button
-                disabled={loading}
-                className={clsx(
-                  "inline-flex items-center px-3 py-2 border space-x-2 border-gray-300 shadow-sm sm:text-sm font-medium sm:rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                  loading && "bg-gray-100 cursor-not-allowed"
-                )}
-                type="button"
-                onClick={close}
-              >
+              <ButtonSecondary disabled={loading} onClick={close}>
                 <div>{t("shared.cancel")}</div>
-              </button>
-              <LoadingButton
-                type="submit"
-                disabled={loading}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
-              >
+              </ButtonSecondary>
+              <LoadingButton type="submit" disabled={loading || !canUpdate}>
                 {t("shared.save")}
               </LoadingButton>
             </div>

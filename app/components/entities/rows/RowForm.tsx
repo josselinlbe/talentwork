@@ -29,9 +29,13 @@ interface Props {
   isDetail?: boolean;
   linkedAccounts: LinkedAccountWithDetailsAndMembers[];
   onSubmit?: (values: RowValueDto[]) => void;
+  canDelete?: boolean;
 }
 
-const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = false, linkedAccounts, onSubmit = () => {} }: Props, ref: Ref<RefRowForm>) => {
+const RowForm = (
+  { entity, item, editing = false, relatedEntities, isDetail = false, linkedAccounts, onSubmit = () => {}, canDelete }: Props,
+  ref: Ref<RefRowForm>
+) => {
   const location = useLocation();
   const submit = useSubmit();
 
@@ -86,6 +90,7 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
       <FormGroup
         id={item?.id}
         editing={editing}
+        canDelete={canDelete}
         onSubmit={(formData) =>
           isDetail
             ? onSubmit(headers)
@@ -93,7 +98,6 @@ const RowForm = ({ entity, item, editing = false, relatedEntities, isDetail = fa
                 method: "post",
               })
         }
-        // confirmationPrompt={item ? t("shared.confirmUpdate", [RowHelper.getRowFolio(entity, item)]) : t("shared.confirmCreate", [t(entity.title)])}
       >
         {headers.length > 0 && (
           <InputGroup title={"Details"}>

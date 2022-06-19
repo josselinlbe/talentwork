@@ -5,7 +5,7 @@ import AppLayout from "~/components/app/AppLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { loadAdminData } from "~/utils/data/useAdminData";
 
-export let loader: LoaderFunction = async ({ request, params }) => {
+export let loader: LoaderFunction = async ({ request }) => {
   const data = await loadAdminData(request);
   return json(data);
 };
@@ -13,6 +13,15 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 export default function AdminRoute() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      $crisp.push(["do", "chat:hide"]);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     if (UrlUtils.stripTrailingSlash(location.pathname) === "/admin") {

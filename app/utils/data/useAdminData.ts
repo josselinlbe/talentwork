@@ -6,12 +6,15 @@ import UrlUtils from "../app/UrlUtils";
 import { EntityWithDetails, getAllEntities } from "../db/entities/entities.db.server";
 import { getMyTenants, MyTenant } from "../db/tenants.db.server";
 import { Language } from "remix-i18next";
+import { getUserRoles, UserRoleWithPermission } from "../db/permissions/userRoles.db.server";
 
 export type AdminLoaderData = {
   i18n: Record<string, Language>;
   user: UserWithoutPassword;
   myTenants: MyTenant[];
   entities: EntityWithDetails[];
+  roles: UserRoleWithPermission[];
+  permissions: string[];
 };
 
 export function useAdminData(): AdminLoaderData {
@@ -38,11 +41,22 @@ export async function loadAdminData(request: Request) {
 
   const myTenants = await getMyTenants(user.id);
 
+  const roles = await getUserRoles(userInfo.userId);
+  const permissions: string[] = [];
+  roles.forEach((role) => {
+    role.role.permissions.forEach((permission) => {
+      if (!permissions.includes(permission.permission.name)) {
+        permissions.push(permission.permission.name);
+      }
+    });
+  });
   const data: AdminLoaderData = {
     i18n: translations,
     user,
     myTenants,
     entities: await getAllEntities(),
+    roles,
+    permissions,
   };
   return data;
 }

@@ -9,8 +9,9 @@ interface Props {
   setValue?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   className?: string;
   required?: boolean;
+  disabled?: boolean;
 }
-export default function InputRadioGroup({ name, title, value, options, setValue, className, required }: Props) {
+export default function InputRadioGroup({ name, title, value, options, setValue, className, required, disabled }: Props) {
   return (
     <div className={clsx(className, "flex-grow w-full")}>
       <div className="flex items-center justify-between">
@@ -22,7 +23,7 @@ export default function InputRadioGroup({ name, title, value, options, setValue,
 
       <input type="hidden" name={name} value={value} />
 
-      <RadioGroup defaultValue={value} value={value} onChange={(e) => (setValue ? setValue(e) : {})} className="mt-1">
+      <RadioGroup disabled={disabled} defaultValue={value} value={value} onChange={(e) => (setValue ? setValue(e) : {})} className="mt-1">
         <RadioGroup.Label className="sr-only">{title}</RadioGroup.Label>
         <div className={clsx("flex space-x-2")}>
           {options.map((option, idx) => (
@@ -31,7 +32,7 @@ export default function InputRadioGroup({ name, title, value, options, setValue,
               value={option.value}
               className={({ active, checked }) =>
                 clsx(
-                  !option.disabled ? "cursor-pointer focus:outline-none " : "opacity-25 cursor-not-allowed",
+                  !option.disabled && !disabled ? "cursor-pointer focus:outline-none " : "opacity-25 cursor-not-allowed",
                   active ? "ring-2 focus:ring-accent-300 ring-accent-500" : "",
                   checked
                     ? "hover:text-accent-100 bg-theme-800 border-transparent text-white hover:bg-theme-900"

@@ -1,6 +1,8 @@
 import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, Media } from "@prisma/client";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
+import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
+import { getRowPermissionsCondition } from "~/utils/helpers/PermissionsHelper";
 import TenantHelper from "~/utils/helpers/TenantHelper";
 import { db } from "../../db.server";
 
@@ -75,7 +77,19 @@ export async function getAllRows(entityId: string): Promise<RowWithDetails[]> {
 }
 
 function getSearchCondition(query?: string) {
-  let searchInValues: any = {};
+  let searchInValues:
+    | {
+        OR: {
+          values: {
+            some: {
+              textValue: {
+                contains: string;
+              };
+            };
+          };
+        }[];
+      }
+    | {} = {};
   if (query) {
     searchInValues = {
       OR: [
@@ -93,18 +107,28 @@ function getSearchCondition(query?: string) {
   }
   return searchInValues;
 }
-export async function getRows(entityId: string, tenantId: string, take?: number, skip?: number, orderBy?: any, query?: string): Promise<RowWithDetails[]> {
-  // eslint-disable-next-line no-console
-  // console.log({ take, skip, orderBy });
-
+export async function getRows(
+  entityId: string,
+  tenantId: string,
+  userId: string,
+  take?: number,
+  skip?: number,
+  orderBy?: any,
+  query?: string
+): Promise<RowWithDetails[]> {
   return await db.row.findMany({
     take,
     skip,
     where: {
-      entityId,
-      ...TenantHelper.tenantCondition(tenantId),
-      parentRowId: null,
-      ...getSearchCondition(query),
+      AND: [
+        {
+          entityId,
+          ...TenantHelper.tenantCondition(tenantId),
+          parentRowId: null,
+          ...getSearchCondition(query),
+        },
+        await getRowPermissionsCondition(tenantId, userId),
+      ],
     },
     include: includeRowDetails,
     orderBy,
@@ -124,13 +148,18 @@ export async function getRowsInIds(tenantId: string, ids: string[]): Promise<Row
   });
 }
 
-export async function countRows(entityId: string, tenantId: string, query?: string): Promise<number> {
+export async function countRows(entityId: string, tenantId: string, userId: string, query?: string): Promise<number> {
   return await db.row.count({
     where: {
-      entityId,
-      ...TenantHelper.tenantCondition(tenantId),
-      parentRowId: null,
-      ...getSearchCondition(query),
+      AND: [
+        {
+          entityId,
+          ...TenantHelper.tenantCondition(tenantId),
+          parentRowId: null,
+          ...getSearchCondition(query),
+        },
+        await getRowPermissionsCondition(tenantId, userId),
+      ],
     },
   });
 }
@@ -267,6 +296,15 @@ async function addDetailRows(row: Row, dynamicRows: { id?: string | null; values
       return detailRow;
     })
   );
+}
+
+export async function setRowPermissions(rowId: string, data: RowPermissionsDto) {
+  return await db.row.update({
+    where: {
+      id: rowId,
+    },
+    data,
+  });
 }
 
 export async function updateRow(

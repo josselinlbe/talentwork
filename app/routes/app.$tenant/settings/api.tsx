@@ -3,8 +3,12 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, Outlet, redirect, useLocation, useNavigate, useParams } from "remix";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
+  const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.apiKeys.view", tenantUrl.tenantId);
   if (UrlUtils.stripTrailingSlash(new URL(request.url).pathname) === UrlUtils.currentTenantUrl(params, "settings/api")) {
     return redirect(UrlUtils.currentTenantUrl(params, "settings/api/keys"));
   }

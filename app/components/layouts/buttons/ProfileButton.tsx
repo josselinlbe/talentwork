@@ -102,6 +102,25 @@ export default function ProfileButton({ layout }: Props) {
                 >
                   {t("app.navbar.members")}
                 </Link>
+
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.currentTenantUrl(params, "settings/roles")}
+                >
+                  {t("models.role.plural")}
+                </Link>
+
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.currentTenantUrl(params, "settings/groups")}
+                >
+                  {t("models.group.plural")}
+                </Link>
+
                 <Link
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
@@ -110,6 +129,7 @@ export default function ProfileButton({ layout }: Props) {
                 >
                   {t("app.navbar.subscription")}
                 </Link>
+
                 <Link
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"
@@ -118,6 +138,34 @@ export default function ProfileButton({ layout }: Props) {
                 >
                   {t("app.navbar.tenant")}
                 </Link>
+
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.currentTenantUrl(params, `settings/linked-accounts`)}
+                >
+                  {t("models.linkedAccount.plural")}
+                </Link>
+
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.currentTenantUrl(params, `settings/api`)}
+                >
+                  {t("models.apiKey.plural")}
+                </Link>
+
+                <Link
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
+                  role="menuitem"
+                  onClick={closeDropdownUser}
+                  to={UrlUtils.currentTenantUrl(params, "settings/audit-trails")}
+                >
+                  {t("models.log.plural")}
+                </Link>
+
                 <div className="border-t border-gray-200 mt-1"></div>
               </>
             ) : (

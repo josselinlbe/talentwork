@@ -93,6 +93,12 @@ export function getFeatures(): MarketingFeatureDto[] {
       description: "Inputs, Tables, Buttons, Modal Dialogs, Command Palette, Breadcrumbs, Banners...",
       link: "/docs/components",
     },
+    {
+      type: MarketingFeatureType.Core,
+      name: "Roles & Permissions",
+      status: MarketingFeatureStatus.Done,
+      description: "Roles, permissions for page views and actions + Groups, and row-level permissions for CRUD security.",
+    },
   ];
 }
 

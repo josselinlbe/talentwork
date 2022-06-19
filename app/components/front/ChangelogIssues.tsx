@@ -1,4 +1,8 @@
+import { Dialog } from "@headlessui/react";
 import { useState } from "react";
+import ButtonSecondary from "../ui/buttons/ButtonSecondary";
+import XIcon from "../ui/icons/XIcon";
+import OpenModal from "../ui/modals/OpenModal";
 
 export type ChangelogItem = {
   date: string;
@@ -23,6 +27,10 @@ interface Props {
 }
 export default function ChangelogIssues({ title, icon, items }: Props) {
   const [viewImages, setViewImages] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{
+    title: string;
+    img: string;
+  }>();
   function getIssueId(item: Issue) {
     if (item.title.includes("#")) {
       const id = item.title.split("#")[1];
@@ -50,7 +58,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                 <h2 className="text-black dark:text-white font-semibold text-sm">{title}</h2>
                 {imageCount() > 0 && (
                   <button className=" text-xs underline" type="button" onClick={() => setViewImages(!viewImages)}>
-                    ({!viewImages ? "Click here to view images" : "Close images"})
+                    ({!viewImages ? "Click here to expand images" : "Hide images"})
                   </button>
                 )}
               </div>
@@ -68,6 +76,21 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                         </>
                       )}
                       {issue.title.split("#")[0]}
+                      {!viewImages && (
+                        <div className="flex items-baseline space-x-3">
+                          {issue.img?.map((image, idx) => {
+                            return (
+                              <img
+                                onClick={() => setSelectedImage(image)}
+                                key={idx}
+                                alt={image.title}
+                                src={image.img}
+                                className="w-28 object-cover rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 dark:border-gray-700 border-dashed cursor-pointer hover:opacity-90 hover:shadow-2xl hover:border-gray-500"
+                              />
+                            );
+                          })}
+                        </div>
+                      )}
                       {viewImages && (
                         <>
                           {issue.img?.map((image, idx) => {
@@ -92,6 +115,29 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
             </>
           )}
         </>
+        {selectedImage && (
+          <OpenModal onClose={() => setSelectedImage(undefined)}>
+            <div>
+              <div className="">
+                <div className=" flex items-center space-x-2 justify-between">
+                  <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
+                    {selectedImage.title}
+                  </Dialog.Title>
+                  <div className="flex space-x-2">
+                    <ButtonSecondary type="button" onClick={() => setSelectedImage(undefined)}>
+                      <XIcon className="h-4 w-4" />
+                    </ButtonSecondary>
+                  </div>
+                </div>
+                <div className="mt-4 space-y-3">
+                  <div>
+                    <img alt={selectedImage.title} className="h-96 object-contain mx-auto" src={selectedImage.img} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </OpenModal>
+        )}
       </div>
     </div>
   );

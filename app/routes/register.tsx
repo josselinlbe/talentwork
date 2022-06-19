@@ -11,6 +11,7 @@ import { createTenant, createTenantUser } from "~/utils/db/tenants.db.server";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { sendEmail } from "~/utils/email.server";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
+import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
 
 export const meta: MetaFunction = ({ data }) => ({
   title: data?.title,
@@ -91,11 +92,15 @@ export const action: ActionFunction = async ({ request }) => {
   if (!tenant) {
     return badRequest({ error: "Could not create tenant" });
   }
-  await createTenantUser({
-    tenantId: tenant.id,
-    userId: user.id,
-    type: TenantUserType.OWNER,
-  });
+  const roles = await getAllRoles("app");
+  await createTenantUser(
+    {
+      tenantId: tenant.id,
+      userId: user.id,
+      type: TenantUserType.OWNER,
+    },
+    roles
+  );
 
   await sendEmail(email, "welcome", {
     action_url: process.env.SERVER_URL + `/login`,

@@ -5,7 +5,6 @@ import { useState } from "react";
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { useTranslation } from "react-i18next";
 import { i18nHelper } from "~/locale/i18n.utils";
-import Tabs from "~/components/ui/tabs/Tabs";
 
 export let loader: LoaderFunction = async ({ request }) => {
   let { t, translations } = await i18nHelper(request);

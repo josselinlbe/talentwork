@@ -28,7 +28,7 @@ export type Header<T> = {
 interface Props<T> {
   headers: Header<T>[];
   items: T[];
-  actions?: { title: string; onClick?: (idx: number, item: T) => void; onClickRoute?: (idx: number, item: T) => string }[];
+  actions?: { title: string; onClick?: (idx: number, item: T) => void; onClickRoute?: (idx: number, item: T) => string; disabled?: boolean }[];
   updatesUrl?: boolean;
   pagination?: PaginationDto;
 }
@@ -63,6 +63,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                         onClick={() => header.sortable && onSortBy(header)}
                         scope="col"
                         className={clsx(
+                          idxHeader === 0 && "pl-4",
                           "text-xs px-2 py-1 text-left font-medium text-gray-500 tracking-wider select-none truncate",
                           header.sortable && "cursor-pointer hover:text-gray-700",
                           header.breakpoint === "sm" && "hidden sm:table-cell",
@@ -124,6 +125,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                             <td
                               key={idxHeader}
                               className={clsx(
+                                idxHeader === 0 && "pl-4",
                                 "px-2 py-2 whitespace-nowrap text-sm text-gray-600",
                                 header.className,
                                 header.breakpoint === "sm" && "hidden sm:table-cell",
@@ -205,6 +207,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                               {actions.map((action) => {
                                 return (
                                   <ButtonTertiary
+                                    disabled={action.disabled}
                                     key={action.title}
                                     onClick={() => {
                                       if (action.onClick) {

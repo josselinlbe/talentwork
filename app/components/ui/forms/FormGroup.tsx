@@ -1,5 +1,4 @@
 import { Form, useActionData, useSubmit, useTransition } from "@remix-run/react";
-import clsx from "clsx";
 import { t } from "i18next";
 import { FormEvent, forwardRef, ReactNode, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import ButtonSecondary from "../buttons/ButtonSecondary";
@@ -15,10 +14,20 @@ interface Props {
   children: ReactNode;
   className?: string;
   editing?: boolean;
+  canUpdate?: boolean;
+  canDelete?: boolean;
   onSubmit?: (e: FormData) => void | undefined;
-  confirmationPrompt?: string;
+  confirmationPrompt?: {
+    title: string;
+    yesTitle?: string;
+    noTitle?: string;
+    description?: string;
+  };
 }
-const FormGroup = ({ id, onCancel, children, className, editing, confirmationPrompt, onSubmit }: Props, ref: Ref<RefFormGroup>) => {
+const FormGroup = (
+  { id, onCancel, children, className, editing, canUpdate = true, canDelete = true, confirmationPrompt, onSubmit }: Props,
+  ref: Ref<RefFormGroup>
+) => {
   useImperativeHandle(ref, () => ({}));
 
   const actionData = useActionData<{
@@ -67,7 +76,7 @@ const FormGroup = ({ id, onCancel, children, className, editing, confirmationPro
     const formData = new FormData(e.currentTarget);
     if (confirmationPrompt) {
       setFormData(formData);
-      confirmSubmit.current?.show(confirmationPrompt);
+      confirmSubmit.current?.show(confirmationPrompt.title, confirmationPrompt.yesTitle, confirmationPrompt.noTitle, confirmationPrompt.description);
     } else {
       if (onSubmit !== undefined) {
         onSubmit(formData);
@@ -101,17 +110,9 @@ const FormGroup = ({ id, onCancel, children, className, editing, confirmationPro
           <div className="flex justify-between space-x-2">
             <div>
               {id && (
-                <button
-                  disabled={loading}
-                  className={clsx(
-                    "inline-flex items-center px-3 py-2 border space-x-2 border-gray-300 shadow-sm sm:text-sm font-medium sm:rounded-md text-red-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                    loading && "bg-gray-100 cursor-not-allowed"
-                  )}
-                  type="button"
-                  onClick={remove}
-                >
+                <ButtonSecondary disabled={loading || !canDelete} destructive={true} type="button" onClick={remove}>
                   <div>{t("shared.delete")}</div>
-                </button>
+                </ButtonSecondary>
               )}
             </div>
 
@@ -121,7 +122,7 @@ const FormGroup = ({ id, onCancel, children, className, editing, confirmationPro
                   <div>{t("shared.cancel")}</div>
                 </ButtonSecondary>
               )}
-              <LoadingButton type="submit" disabled={loading}>
+              <LoadingButton type="submit" disabled={loading || (id !== undefined && !canUpdate)}>
                 {t("shared.save")}
               </LoadingButton>
             </div>

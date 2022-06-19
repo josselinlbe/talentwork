@@ -64,7 +64,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await deleteEntityWebhook(existing.id);
     return redirect(`/admin/entities/${params.slug}/webhooks`);
   }
-  return badRequest(t("shared.invalidForm"));
+  return badRequest({ error: t("shared.invalidForm") });
 };
 
 export default function EditEntityWebhookRoute() {

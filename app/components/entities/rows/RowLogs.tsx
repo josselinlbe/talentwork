@@ -36,6 +36,7 @@ export default function RowLogs({ items }: Props) {
         <div className="bg-white py-5 px-4 shadow border border-gray-100 rounded-md">
           <div className="flow-root">
             <ul className="-mb-8">
+              {sortedItems().length === 0 && <div className=" text-gray-500 italic mb-6 flex justify-center text-sm">No events</div>}
               {sortedItems().map((activity, idxActivity) => {
                 return (
                   <li key={idxActivity}>
@@ -66,13 +67,18 @@ export default function RowLogs({ items }: Props) {
                                 </div>
                               </div>
                             </div>
-                            <div className="text-right text-xs whitespace-nowrap text-gray-500 lowercase">
-                              {activity.createdAt && <time>{dateDM(activity.createdAt)}</time>}
+                            <div className="text-right text-xs whitespace-nowrap text-gray-500 lowercase truncate">
+                              {activity.createdAt && (
+                                <time dateTime={DateUtils.dateYMDHMS(activity.createdAt)}>
+                                  {dateDM(activity.createdAt)}, {DateUtils.dateHMS(activity.createdAt)}
+                                </time>
+                              )}
                             </div>
                           </div>
                           <div className="min-w-0 flex-1 flex justify-between space-x-4">
                             {activity.user && <div className="font-light text-xs">{activity.user.email}</div>}
                             {activity.apiKey && <div className="font-light text-xs">{activity.apiKey.alias}</div>}
+                            {!activity.user && !activity.apiKey && <div className="font-light text-xs">{t("shared.anonymousUser")}</div>}
                           </div>
                         </div>
                       </div>

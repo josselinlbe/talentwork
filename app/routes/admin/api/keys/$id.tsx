@@ -6,6 +6,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { ApiKeyWithDetails, deleteApiKey, getApiKeyById, updateApiKey } from "~/utils/db/apiKeys.db.server";
 import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   tenants: Tenant[];
@@ -37,6 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: t("shared.notFound") });
   }
   if (action === "edit") {
+    await verifyUserHasPermission(request, "admin.apiKeys.update");
     const entities: { entityId: string; create: boolean; read: boolean; update: boolean; delete: boolean }[] = form
       .getAll("entities[]")
       .map((f: FormDataEntryValue) => {
@@ -54,10 +56,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
     return redirect(`/admin/api/keys`);
   } else if (action === "delete") {
+    await verifyUserHasPermission(request, "admin.apiKeys.delete");
     await deleteApiKey(params.id ?? "");
     return redirect(`/admin/api/keys`);
   } else {
-    return badRequest(t("shared.invalidForm"));
+    return badRequest({ error: t("shared.invalidForm") });
   }
 };
 
@@ -68,7 +71,13 @@ export default function AdminApiEditKeyRoute() {
   return (
     <>
       <OpenModal className="sm:max-w-xl" onClose={() => navigate(`/admin/api`)}>
-        <ApiKeyForm entities={adminData.entities} tenants={data.tenants} item={data.item} />
+        <ApiKeyForm
+          entities={adminData.entities}
+          tenants={data.tenants}
+          item={data.item}
+          canUpdate={adminData.permissions.includes("admin.apiKeys.update")}
+          canDelete={adminData.permissions.includes("admin.apiKeys.delete")}
+        />
       </OpenModal>
     </>
   );

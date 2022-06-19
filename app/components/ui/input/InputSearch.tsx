@@ -30,6 +30,7 @@ export default function InputSearch({ value, setValue, onNew, onNewRoute }: Prop
           placeholder={t("shared.searchDot")}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          autoComplete="off"
         />
       </div>
       {onNew && <ButtonPrimary onClick={onNew}>{t("shared.new")}</ButtonPrimary>}

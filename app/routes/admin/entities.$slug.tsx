@@ -4,11 +4,13 @@ import { json, LoaderFunction, Outlet, redirect, useLoaderData, useParams } from
 import EditPageLayout from "~/components/ui/layouts/EditPageLayout";
 import TabsVertical from "~/components/ui/tabs/TabsVertical";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   item: Entity;
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
+  await verifyUserHasPermission(request, "admin.entities.update");
   const item = await getEntityBySlug(params.slug ?? "");
   if (!item) {
     return redirect("/admin/entities");

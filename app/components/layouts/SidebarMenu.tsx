@@ -12,6 +12,7 @@ import { useParams } from "remix";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
 import { useRootData } from "~/utils/data/useRootData";
+import { useAdminData } from "~/utils/data/useAdminData";
 
 interface Props {
   layout: "app" | "admin" | "docs";
@@ -23,6 +24,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   const { t } = useTranslation();
   const location = useLocation();
   const appData = useAppData();
+  const adminData = useAdminData();
   const rootData = useRootData();
 
   const [menu, setMenu] = useState<SideBarItem[]>([]);
@@ -82,14 +84,17 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
   function allowCurrentTenantUserType(item: SideBarItem) {
     return !item.tenantUserTypes || item.tenantUserTypes.includes(appData.currentRole);
   }
+  function checkUserRolePermissions(item: SideBarItem) {
+    return !item.permission || appData?.permissions?.includes(item.permission) || adminData?.permissions?.includes(item.permission);
+  }
   const getMenu = (): SidebarGroup[] => {
     const _menu: SidebarGroup[] = [];
     menu
-      .filter((f) => allowCurrentUserType(f) && allowCurrentTenantUserType(f))
+      .filter((f) => allowCurrentUserType(f) && allowCurrentTenantUserType(f) && checkUserRolePermissions(f))
       .forEach(({ title, items }) => {
         _menu.push({
           title: title.toString(),
-          items: items?.filter((f) => allowCurrentUserType(f) && allowCurrentTenantUserType(f)) ?? [],
+          items: items?.filter((f) => allowCurrentUserType(f) && allowCurrentTenantUserType(f) && checkUserRolePermissions(f)) ?? [],
         });
       });
     return _menu.filter((f) => f.items.length > 0);

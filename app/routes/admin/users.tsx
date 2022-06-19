@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
-import { adminGetAllTenantUsers, adminGetAllUsers, getUser, updateUserPassword } from "~/utils/db/users.db.server";
+import { adminGetAllTenantUsers, adminGetAllUsers, getUser, updateUserPassword, UserWithDetails } from "~/utils/db/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { Tenant } from "@prisma/client";
@@ -10,15 +10,17 @@ import { getTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import UsersTable from "~/components/core/users/UsersTable";
 import { deleteUserWithItsTenants } from "~/utils/services/userService";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAdminData } from "~/utils/data/useAdminData";
 
 type LoaderData = {
   title: string;
-  items: Awaited<ReturnType<typeof adminGetAllUsers>>;
+  items: UserWithDetails[];
   tenant: Tenant | null;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  // await new Promise((r) => setTimeout(r, 4000));
+  await verifyUserHasPermission(request, "admin.users.view");
   let { t } = await i18nHelper(request);
 
   const tenantId = new URL(request.url).searchParams.get("tenant");
@@ -107,6 +109,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function AdminUsersRoute() {
   const data = useLoaderData<LoaderData>();
+  const adminData = useAdminData();
   const { t } = useTranslation();
 
   return (
@@ -116,7 +119,7 @@ export default function AdminUsersRoute() {
           className="w-full"
           home="/admin/dashboard"
           menu={[
-            { title: t("models.tenant.plural"), routePath: "/admin/tenants" },
+            { title: t("models.tenant.plural"), routePath: "/admin/accounts" },
             { title: data.tenant.name, routePath: `/admin/tenant/${data.tenant.id}/profile` },
             { title: t("models.user.plural"), routePath: "" },
           ]}
@@ -141,7 +144,12 @@ export default function AdminUsersRoute() {
       </div>
 
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
-        <UsersTable items={data.items} />
+        <UsersTable
+          items={data.items}
+          canImpersonate={adminData.permissions.includes("admin.users.impersonate")}
+          canChangePassword={adminData.permissions.includes("admin.users.changePassword")}
+          canDelete={adminData.permissions.includes("admin.users.delete")}
+        />
       </div>
     </div>
   );

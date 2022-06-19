@@ -10,6 +10,8 @@ import PricingPlanForm from "~/components/core/pricing/PricingPlanForm";
 import { getAllSubscriptionProducts, getSubscriptionProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { createAdminLog } from "~/utils/db/logs.db.server";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAdminData } from "~/utils/data/useAdminData";
 
 type LoaderData = {
   title: string;
@@ -43,18 +45,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const form = await request.formData();
   const action = form.get("action")?.toString();
-  if (action === "delete-plan") {
-    const item = await getSubscriptionProduct(params.id ?? "");
-    if (!item) {
-      return badRequest({ error: "Pricing plan not found" });
-    }
-    try {
-      await deletePlan(item);
-      return redirect("/admin/setup/pricing");
-    } catch (error: any) {
-      return badRequest({ error: error.message });
-    }
-  } else if (action === "update-plan") {
+  if (action === "edit") {
+    await verifyUserHasPermission(request, "admin.pricing.update");
     const order = Number(form.get("order"));
     const title = form.get("title")?.toString();
     const description = form.get("description")?.toString() ?? "";
@@ -93,6 +85,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     } catch (e: any) {
       return badRequest({ error: e?.toString() });
     }
+  } else if (action === "delete") {
+    await verifyUserHasPermission(request, "admin.pricing.delete");
+    const item = await getSubscriptionProduct(params.id ?? "");
+    if (!item) {
+      return badRequest({ error: "Pricing plan not found" });
+    }
+    try {
+      await deletePlan(item);
+      return redirect("/admin/setup/pricing");
+    } catch (error: any) {
+      return badRequest({ error: error.message });
+    }
   } else {
     return badRequest({ error: t("shared.invalidForm") });
   }
@@ -105,6 +109,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function EditPricinPlanRoute() {
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
+  const adminData = useAdminData();
   const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -127,7 +132,12 @@ export default function EditPricinPlanRoute() {
           { title: t("admin.pricing.edit"), routePath: "/admin/setup/pricing/edit" + data.item.id },
         ]}
       />
-      <PricingPlanForm item={data.item} plans={data.plans} />
+      <PricingPlanForm
+        item={data.item}
+        plans={data.plans}
+        canUpdate={adminData.permissions.includes("admin.pricing.update")}
+        canDelete={adminData.permissions.includes("admin.pricing.delete")}
+      />
       <ErrorModal ref={errorModal} />
     </div>
   );

@@ -4,6 +4,7 @@ import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { adminGetAllTenantsWithUsage, TenantWithUsage } from "~/utils/db/tenants.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -11,6 +12,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.accounts.view");
   let { t } = await i18nHelper(request);
   const items = await adminGetAllTenantsWithUsage();
 

@@ -63,7 +63,7 @@ export async function getUserInfo(request: Request): Promise<UserSession> {
   // jitsu.track(request.url).catch(() => {});
 
   const session = await getUserSession(request);
-  const userId = session.get("userId") ?? "";
+  const userId = session.get("userId") ?? null;
   const lightOrDarkMode = session.get("lightOrDarkMode") ?? "";
   const lng = session.get("lng") ?? "en";
   return {

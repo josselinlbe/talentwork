@@ -70,7 +70,7 @@ const InputCheckbox = ({ name, title, value, setValue, className, help, required
             type="checkbox"
             id={name}
             name={name}
-            checked={value}
+            defaultChecked={value}
             readOnly={readOnly}
             onChange={(e) => (setValue ? setValue(e.target.checked) : {})}
             disabled={disabled}

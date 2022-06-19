@@ -21,6 +21,8 @@ export async function seedBlog() {
     { name: "winforms", color: Colors.GRAY },
     { name: "no-code", color: Colors.GRAY },
     { name: "entity-builder", color: Colors.GRAY },
+    { name: "roles", color: Colors.GREEN },
+    { name: "permissions", color: Colors.EMERALD },
   ]);
 
   await seedAuthors([
@@ -43,33 +45,6 @@ export async function seedBlog() {
 
 export async function seedBlogPosts() {
   const posts = [
-    // {
-    //   slug: "my-designs-from-2016-to-2020-as-a-non-designer",
-    //   title: "My designs from 2016 to 2020 as a non-designer",
-    //   description: "I've been a developer for almost 9 years, but I always found designing to be tedious work. These are my application designs since 2016.",
-    //   date: new Date("2020-12-18T08:11:34.000Z"),
-    //   image:
-    //     "https://res.cloudinary.com/practicaldev/image/fetch/s--CB8fG5zp--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/i/qhurjvqjjtv8ti3b9h5p.png",
-    //   readingTime: "2 min",
-    //   authorSlug: "alexandromtzg",
-    //   categoryName: "Article",
-    //   tagNames: ["webdev", "design", "winforms", "tailwindcss"],
-    //   published: true,
-    // },
-    // {
-    //   slug: "saasfrontends-v1",
-    //   title: "SaasFrontends - Vue2, Vue3, React and Svelte templates",
-    //   description:
-    //     "Today I'm finally releasing SaasFrontends v1.0, a SaaS template in Vue2, Vue3, React and Svelte, using Tailwind CSS as CSS Framework and .NET as the backend.",
-    //   date: new Date("2022-01-17T13:09:29.000Z"),
-    //   image:
-    //     "https://res.cloudinary.com/practicaldev/image/fetch/s--tVwYN6PG--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://yahooder.sirv.com/saasfrontends/meta/social-card-large.jpg",
-    //   readingTime: "5 min",
-    //   authorSlug: "alexandromtzg",
-    //   categoryName: "Article",
-    //   tagNames: ["vue", "react", "svelte", "boilerplate"],
-    //   published: true,
-    // },
     {
       slug: "remix-saas-kit-v0-0-1-quickstart-core-concepts",
       title: "Remix SaaS kit v0.0.1 - QuickStart & Core Concepts",
@@ -108,32 +83,20 @@ export async function seedBlogPosts() {
       tagNames: ["remix", "webdev", "no-code", "entity-builder"],
       published: true,
     },
-    // {
-    //   slug: "saas-dev-challenges-01-ui-ux-design-system",
-    //   title: "🎯 SaaS dev challenges - #01 - 🎨 UI/UX & design system",
-    //   description: "It's daunting thinking of building a SaaS app because deep down, we all know how much stuff we'll need to go through...",
-    //   date: new Date("2022-04-25T09:02:30.000Z"),
-    //   image:
-    //     "https://res.cloudinary.com/practicaldev/image/fetch/s--UcfrSJUG--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://yahooder.sirv.com/blog/saas-dev-challenges/01/thumb.png",
-    //   readingTime: "4 min",
-    //   authorSlug: "alexandromtzg",
-    //   categoryName: "Article",
-    //   tagNames: ["learnings", "saas", "webdev", "tips"],
-    //   published: true,
-    // },
-    // {
-    //   slug: "saas-dev-challenges-02-authentication",
-    //   title: "🎯 SaaS dev challenges - #02 - 🗝 ️Authentication",
-    //   description: "In my previous post, I talked about how UI/UX is a challenge you face right after you start your SaaS. TLDR: Use an existing UI library...",
-    //   date: new Date("2022-04-26T09:02:30.000Z"),
-    //   image:
-    //     "https://res.cloudinary.com/practicaldev/image/fetch/s--Iyh8V1FV--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://yahooder.sirv.com/blog/saas-dev-challenges/02/thumb.png",
-    //   readingTime: "3 min",
-    //   authorSlug: "alexandromtzg",
-    //   categoryName: "Article",
-    //   tagNames: ["learnings", "saas", "webdev", "authentication"],
-    //   published: true,
-    // },
+    {
+      slug: "saasrock-v0-2-7-roles-permissions-groups-and-row-level-visibility",
+      title: "SaasRock v0.2.7 - Roles, Permissions, Groups, and Row-level visibility",
+      description:
+        "Added admin and application Roles & Permissions for page views and actions. Added application Groups and Row-level visibility - only you, public, or share with account members, groups, or specific users.",
+      date: new Date("2022-06-18T19:43:00.000Z"),
+      image:
+        "https://res.cloudinary.com/practicaldev/image/fetch/s--lJ0dd22_--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://yahooder.sirv.com/saasrock/blog/june-2022-update/cover2.png",
+      readingTime: "2 min",
+      authorSlug: "alexandromtzg",
+      categoryName: "Article",
+      tagNames: ["remix", "roles", "permissions", "javascript"],
+      published: true,
+    },
   ];
 
   return Promise.all(

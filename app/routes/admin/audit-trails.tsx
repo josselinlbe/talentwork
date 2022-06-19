@@ -5,6 +5,7 @@ import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getAllLogs, LogWithDetails } from "~/utils/db/logs.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -12,6 +13,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.auditTrails.view");
   const { t } = await i18nHelper(request);
   const items = await getAllLogs();
 

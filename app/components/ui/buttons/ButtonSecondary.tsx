@@ -17,7 +17,7 @@ export default function ButtonSecondary({ className = "", type = "button", onCli
   return (
     <span>
       {(() => {
-        if (!to) {
+        if (!to || disabled) {
           return (
             <button
               onClick={onClick}

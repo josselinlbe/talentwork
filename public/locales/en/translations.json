@@ -127,7 +127,11 @@
     "results": "Results",
     "tryDemo": "Try demo",
     "learnMore": "Learn more",
-    "readDocs": "Read docs"
+    "readDocs": "Read docs",
+    "setUserRoles": "Set user roles",
+    "share": "Share",
+    "copy": "Copy",
+    "anonymousUser": "Anonymous user"
   },
   "front": {
     "navbar": {
@@ -144,7 +148,7 @@
       "headline2": "Multi-tenant framework with out-of-the-box SaaS features",
       "headline3": "Authentication, Subscriptions, Blogging, Audit trails, Admin portal, App portal, Entity Builder, Subscription Plan Builder, and more.",
       "subheadline1": "Launch your MVP sooner",
-      "hint": "This site uses v0.2.6",
+      "hint": "This site uses v0.2.7",
       "buy": "Get pre-launch price",
       "features": "Features",
       "docs": "Documentation",
@@ -184,6 +188,10 @@
     "changelog": {
       "title": "Changelog",
       "headline": "Stay up to date with the latest features and bug fixes."
+    },
+    "roadmap": {
+      "title": "Roadmap",
+      "headline": "Learn more about SaasRock's current status."
     },
     "faq": {
       "title": "Frequently asked questions",
@@ -372,6 +380,8 @@
       "colors": {
         "SLATE": "Blue gray",
         "GRAY": "Gray",
+        "NEUTRAL": "Neutral",
+        "STONE": "Stone",
         "RED": "Red",
         "ORANGE": "Orange",
         "AMBER": "Amber",
@@ -386,6 +396,7 @@
         "INDIGO": "Indigo",
         "VIOLET": "Violet",
         "PURPLE": "Purple",
+        "FUCHSIA": "Fuchsia",
         "PINK": "Pink",
         "ROSE": "Rose"
       },
@@ -500,7 +511,8 @@
       "dashboard": "Dashboard",
       "settings": "Settings",
       "logs": "Logs",
-      "setup": "Set up"
+      "setup": "Set up",
+      "rolesAndPermissions": "Roles & Permissions"
     },
     "subscription": {
       "limits": {
@@ -736,7 +748,7 @@
       "generateFromFiles": "Click here to create them."
     },
     "tenants": {
-      "title": "Tenants",
+      "title": "Accounts",
       "overview": "Overview",
       "profile": {
         "title": "Profile"
@@ -928,8 +940,8 @@
       "tags": "Tags"
     },
     "tenant": {
-      "object": "Tenant",
-      "plural": "Tenants",
+      "object": "Account",
+      "plural": "Accounts",
       "subscription": "Subscription"
     },
     "apiKey": {
@@ -965,8 +977,40 @@
       "firstName": "First name",
       "lastName": "Last name",
       "role": "Role",
-      "tenants": "Tenants",
+      "tenants": "Accounts",
       "impersonate": "Impersonate"
+    },
+    "role": {
+      "object": "Role",
+      "plural": "Roles",
+      "order": "Order",
+      "name": "Name",
+      "description": "Description",
+      "isDefault": "Is default",
+      "type": "Type",
+      "assignToNewUsers": "Assign to new users",
+      "permissions": "Permissions",
+      "adminRoles": "Admin Users",
+      "userRoles": "App Users"
+    },
+    "permission": {
+      "object": "Permission",
+      "plural": "Permissions",
+      "order": "Order",
+      "name": "Name",
+      "description": "Description",
+      "isDefault": "Is default",
+      "type": "Type",
+      "userRoles": "User Roles",
+      "userPermissions": "User Permissions",
+      "inRoles": "In Roles"
+    },
+    "group": {
+      "object": "Group",
+      "plural": "Groups",
+      "name": "Name",
+      "description": "Description",
+      "color": "Color"
     },
     "log": {
       "object": "Audit Trail",
@@ -1038,7 +1082,7 @@
       "name": "Name",
       "firstName": "First name",
       "lastName": "Last name",
-      "type": "Tenant Role",
+      "type": "Account Role",
       "types": {
         "OWNER": "Owner",
         "ADMIN": "Admin",
@@ -1076,7 +1120,7 @@
       "description": "Be careful",
       "deleteAccount": "Delete account",
       "confirmDelete": "We will delete your account and all your organizations",
-      "confirmDeleteTenant": "Tenant will be deleted with all its data",
+      "confirmDeleteTenant": "Account will be deleted with all its data",
       "deleteYourAccount": "Delete your account",
       "onceYouDelete": "Once you delete your account, you will lose all data associated with it"
     },
@@ -1212,7 +1256,7 @@
       "invalidLinkInvitation": "Invalid invitation",
       "notPendingLinkInvitation": "Invalid invitation",
       "emailInvalidLinkInvitation": "Invalid account link invitation email",
-      "tenantInvalidLinkInvitation": "Invalid organization in account link invitation",
+      "tenantInvalidLinkInvitation": "Invalid account in link invitation",
       "cannotDeleteAdmin": "You cannot delete a system admin",
       "alreadyAMember": "Already a member",
       "noChanges": "No changes",

@@ -3,6 +3,9 @@ const tenantCondition = (
 ): {
   OR: [
     {
+      visibility: string;
+    },
+    {
       tenantId: string;
     },
     {
@@ -17,6 +20,9 @@ const tenantCondition = (
 } => {
   return {
     OR: [
+      {
+        visibility: "public",
+      },
       {
         tenantId,
       },

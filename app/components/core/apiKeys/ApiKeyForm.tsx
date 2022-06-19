@@ -1,7 +1,6 @@
 import { Entity, Tenant } from "@prisma/client";
 import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "remix";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 import InputDate from "~/components/ui/input/InputDate";
@@ -16,10 +15,11 @@ interface Props {
   entities: Entity[];
   item?: ApiKeyWithDetails | null;
   tenants?: Tenant[];
+  canUpdate?: boolean;
+  canDelete?: boolean;
 }
-export default function ApiKeyForm({ entities, item, tenants }: Props) {
+export default function ApiKeyForm({ entities, item, tenants, canUpdate = true, canDelete }: Props) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const inputName = useRef<RefInputText>(null);
 
@@ -54,7 +54,7 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
   }, []);
 
   return (
-    <FormGroup id={item?.id} onCancel={() => navigate("/admin/entities")} editing={true}>
+    <FormGroup id={item?.id} editing={true} canUpdate={canUpdate} canDelete={canDelete}>
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
         {tenants && (
           <>
@@ -70,12 +70,21 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
                   };
                 }) ?? []
               }
-              disabled={tenants === undefined}
+              disabled={tenants === undefined || !canUpdate}
             ></InputSelect>
-            <InputNumber className="col-span-6" name="max" title={t("models.apiKey.max")} value={max} setValue={setMax} readOnly={tenants === undefined} />
+            <InputNumber
+              disabled={!canUpdate}
+              className="col-span-6"
+              name="max"
+              title={t("models.apiKey.max")}
+              value={max}
+              setValue={setMax}
+              readOnly={tenants === undefined}
+            />
           </>
         )}
         <InputText
+          disabled={!canUpdate}
           ref={inputName}
           className="col-span-6"
           name="alias"
@@ -86,7 +95,15 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
           autoComplete="off"
         />
 
-        <InputDate className="col-span-6" name="expires" title={t("models.apiKey.expires")} value={expires} onChange={setExpires} required />
+        <InputDate
+          disabled={!canUpdate}
+          className="col-span-6"
+          name="expires"
+          title={t("models.apiKey.expires")}
+          value={expires}
+          onChange={setExpires}
+          required
+        />
 
         <div className="flex flex-col col-span-12">
           <div className="overflow-x-auto">
@@ -132,6 +149,7 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
                           <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">/{item.slug}</td>
                           <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                             <InputCheckboxInline
+                              disabled={!canUpdate}
                               name=""
                               title=""
                               value={permissions.find((f) => f.entityId === item.id)?.create ?? false}
@@ -144,6 +162,7 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                             <InputCheckboxInline
+                              disabled={!canUpdate}
                               name=""
                               title=""
                               value={permissions.find((f) => f.entityId === item.id)?.read ?? false}
@@ -156,6 +175,7 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                             <InputCheckboxInline
+                              disabled={!canUpdate}
                               name=""
                               title=""
                               value={permissions.find((f) => f.entityId === item.id)?.update ?? false}
@@ -168,6 +188,7 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                             <InputCheckboxInline
+                              disabled={!canUpdate}
                               name=""
                               title=""
                               value={permissions.find((f) => f.entityId === item.id)?.delete ?? false}
@@ -188,7 +209,14 @@ export default function ApiKeyForm({ entities, item, tenants }: Props) {
           </div>
         </div>
 
-        <InputCheckboxInline className="col-span-12" name="active" title={t("models.apiKey.active")} value={active} setValue={setActive} />
+        <InputCheckboxInline
+          disabled={!canUpdate}
+          className="col-span-12"
+          name="active"
+          title={t("models.apiKey.active")}
+          value={active}
+          setValue={setActive}
+        />
       </div>
     </FormGroup>
   );

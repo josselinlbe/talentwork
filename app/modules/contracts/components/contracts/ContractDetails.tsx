@@ -12,21 +12,22 @@ import DropdownWithClick from "~/components/ui/dropdowns/DropdownWithClick";
 import ContractEmployees from "./ContractEmployees";
 import ContractActivities from "./ContractActivities";
 import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
-import { useAppData } from "~/utils/data/useAppData";
 import { useRef, useState } from "react";
 import { Link, useSubmit, useTransition } from "remix";
 import { ContractWithDetails } from "~/modules/contracts/db/contracts.db.server";
 import IconContract from "../../icons/IconContract";
 import { EmployeeDto } from "../../dtos/EmployeeDto";
+import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 
 interface Props {
   item: ContractWithDetails;
   employees: EmployeeDto[];
+  canUpdate?: boolean;
+  canDelete?: boolean;
 }
 
-export default function ContractDetails({ item, employees }: Props) {
+export default function ContractDetails({ item, employees, canUpdate = true, canDelete }: Props) {
   const { t } = useTranslation();
-  const appData = useAppData();
   const transition = useTransition();
   const submit = useSubmit();
   const loading = transition.state === "submitting";
@@ -138,12 +139,6 @@ export default function ContractDetails({ item, employees }: Props) {
   const canBeEdited = () => {
     return item?.members.filter((f) => f.role === 0 && f.signDate).length === 0;
   };
-  const canEdit = () => {
-    if (appData.isOwnerOrAdmin) {
-      return true;
-    }
-    return item?.row.createdByUserId === appData.user?.id || true;
-  };
 
   return (
     <div className="max-w-5xl xl:max-w-7xl mx-auto pb-6">
@@ -156,14 +151,10 @@ export default function ContractDetails({ item, employees }: Props) {
                   <span className="truncate">{item.name}</span>
                 </div>
                 <div className="flex justify-end items-end space-x-2">
-                  {editing && appData.isOwnerOrAdmin && (
-                    <button
-                      onClick={deleteContract}
-                      type="button"
-                      className="bg-white py-2 px-4 border border-gray-300 sm:rounded-md shadow-sm sm:text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
+                  {editing && (
+                    <ButtonSecondary destructive onClick={deleteContract} disabled={!canDelete} type="button">
                       {t("shared.delete")}
-                    </button>
+                    </ButtonSecondary>
                   )}
                   {editing && (
                     <button
@@ -206,25 +197,23 @@ export default function ContractDetails({ item, employees }: Props) {
                         }
                         options={
                           <div>
-                            {canEdit() && (
-                              <Menu.Item>
-                                <button
-                                  type="button"
-                                  onClick={toggleEdit}
-                                  disabled={!canBeEdited()}
-                                  className={clsx(
-                                    "w-full text-left text-gray-700 block px-4 py-2 text-sm focus:outline-none",
-                                    !canBeEdited() && " bg-gray-100 cursor-not-allowed",
-                                    canBeEdited() && " hover:bg-gray-50"
-                                  )}
-                                  role="menuitem"
-                                  tabIndex={-1}
-                                  id="option-menu-item-1"
-                                >
-                                  <div>{t("shared.edit")}</div>
-                                </button>
-                              </Menu.Item>
-                            )}
+                            <Menu.Item>
+                              <button
+                                type="button"
+                                onClick={toggleEdit}
+                                disabled={!canBeEdited() || !canUpdate}
+                                className={clsx(
+                                  "w-full text-left text-gray-700 block px-4 py-2 text-sm focus:outline-none",
+                                  (!canBeEdited() || !canUpdate) && " bg-gray-100 cursor-not-allowed",
+                                  canBeEdited() && canUpdate && " hover:bg-gray-50"
+                                )}
+                                role="menuitem"
+                                tabIndex={-1}
+                                id="option-menu-item-1"
+                              >
+                                <div>{t("shared.edit")}</div>
+                              </button>
+                            </Menu.Item>
                             <Menu.Item>
                               <Link
                                 to="."

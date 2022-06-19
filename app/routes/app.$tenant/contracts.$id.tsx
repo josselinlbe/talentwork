@@ -15,6 +15,8 @@ import { getTenantUrl } from "~/utils/services/urlService";
 import ApiHelper from "~/utils/helpers/ApiHelper";
 import { EmployeeDto } from "~/modules/contracts/dtos/EmployeeDto";
 import { createRowLog } from "~/utils/db/logs.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAppData } from "~/utils/data/useAppData";
 
 type LoaderData = {
   title: string;
@@ -24,6 +26,7 @@ type LoaderData = {
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.entity.contract.read", tenantUrl.tenantId);
   const item = await getContract(params.id);
   const employeeEntity = await getEntityBySlug("employees");
   if (!employeeEntity) {
@@ -121,6 +124,7 @@ export default function ContractRoute() {
   const params = useParams();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
+  const appData = useAppData();
   const { t } = useTranslation();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -143,7 +147,16 @@ export default function ContractRoute() {
         ]}
       ></Breadcrumb>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8">
-        {data.item ? <ContractDetails item={data.item} employees={data.employees} /> : <div>{t("shared.notFound")}</div>}
+        {data.item ? (
+          <ContractDetails
+            item={data.item}
+            employees={data.employees}
+            canUpdate={appData.permissions.includes("app.entity.contract.update")}
+            canDelete={appData.permissions.includes("app.entity.contract.delete")}
+          />
+        ) : (
+          <div>{t("shared.notFound")}</div>
+        )}
         <ErrorModal ref={errorModal} />
       </div>
     </div>

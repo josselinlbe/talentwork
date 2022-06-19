@@ -1,182 +1,139 @@
-import { forwardRef, Fragment, Ref, useImperativeHandle, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-
-export interface RefRoleForm {
-  create: (order: number) => void;
-  update: (idx: number, item: any) => void;
-  close: () => void;
-}
+import InputText from "~/components/ui/input/InputText";
+import { useTranslation } from "react-i18next";
+import { RoleWithPermissions } from "~/utils/db/permissions/roles.db.server";
+import { PermissionWithRoles } from "~/utils/db/permissions/permissions.db.server";
+import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
+import InputCheckboxWithDescription from "~/components/ui/input/InputCheckboxWithDescription";
+import { useEffect, useState } from "react";
+import FormGroup from "~/components/ui/forms/FormGroup";
+import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
+import InputRadioGroup from "~/components/ui/input/InputRadioGroup";
+import InputSearch from "~/components/ui/input/InputSearch";
 
 interface Props {
-  onCreated: (item: any) => void;
-  onUpdated: (idx: number, item: any) => void;
+  item?: RoleWithPermissions;
+  permissions: PermissionWithRoles[];
+  onCancel: () => void;
+  canUpdate?: boolean;
+  canDelete?: boolean;
 }
 
-const RoleForm = ({ onCreated, onUpdated }: Props, ref: Ref<RefRoleForm>) => {
-  useImperativeHandle(ref, () => ({ create, update, close }));
+export default function RoleForm({ item, permissions, onCancel, canUpdate = true, canDelete }: Props) {
+  const { t } = useTranslation();
 
-  const [open, setOpen] = useState(false);
+  const [rolePermissions, setRolePermissions] = useState<string[]>([]);
+  const [type, setType] = useState<string | number | undefined>(item?.type ?? "admin");
 
-  const [item, setItem] = useState<any | undefined>();
-  const [, setEditingIndex] = useState(-1);
+  const [searchInput, setSearchInput] = useState("");
 
-  const [, setOrder] = useState<number>(0);
-  const [name, setName] = useState("");
-  const [, setUsers] = useState<any[]>([]);
-  // const [roleUsers, setRoleUsers] = useState<any[]>([]);
+  useEffect(() => {
+    setRolePermissions([]);
+  }, [type]);
 
-  // useEffect(() => {
-  //   const items: any[] = [];
-  //   users.forEach((user) => {
-  //     items.push({
-  //       id: undefined,
-  //       tenantId: undefined,
-  //       tenant: {} as TenantDto,
-  //       roleId: item?.id ?? "",
-  //       role: {} as any,
-  //       tenantUserId: user.id,
-  //       tenantUser: user,
-  //     });
-  //   });
-  //   setRoleUsers(items);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [users]);
+  useEffect(() => {
+    const rolePermissions: string[] = [];
+    if (item) {
+      item?.permissions.forEach((item) => {
+        rolePermissions.push(item.permission.name);
+      });
+    }
+    setRolePermissions(rolePermissions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  function create(order: number) {
-    setItem(undefined);
-
-    setOrder(order);
-    setName("");
-    setUsers([]);
-
-    setOpen(true);
+  function hasPermission(permission: PermissionWithRoles) {
+    return rolePermissions.includes(permission.name);
   }
 
-  function update(idx: number, item: any) {
-    setEditingIndex(idx);
-
-    setItem(item);
-
-    setOrder(item.order);
-    setName(item.name);
-    // setUsers(item.users);
-
-    setOpen(true);
+  function setPermission(permission: PermissionWithRoles, add: any) {
+    if (add) {
+      setRolePermissions([...rolePermissions, permission.name]);
+    } else {
+      setRolePermissions(rolePermissions.filter((f) => f !== permission.name));
+    }
   }
 
-  function close() {
-    setOpen(false);
-  }
-
-  // function save(e) {
-  //   e?.preventDefault();
-  //   const saved: any = {
-  //     id: undefined,
-  //     order,
-  //     name,
-  //     users,
-  //   };
-  //   console.log(saved);
-  //   if (!item) {
-  //     services.roles.create(saved).then((response) => {
-  //       onCreated(response);
-  //       setOpen(false);
-  //     });
-  //   } else {
-  //     update(editingIndex, saved);
-  //     services.roles.update(item.id, saved).then((response) => {
-  //       onUpdated(editingIndex, response);
-  //       setOpen(false);
-  //     });
-  //   }
-  // }
-
-  // function selectedUsers(e: TenantUserDto) {
-  //   const item = users.find((f) => f.id === e.id);
-  //   if (item) {
-  //     setUsers([...users.filter((f) => f !== item)]);
-  //   } else {
-  //     setUsers([...users, e]);
-  //   }
-  // }
+  const filteredItems = () => {
+    if (!permissions.filter((f) => f.type === type)) {
+      return [];
+    }
+    return permissions
+      .filter((f) => f.type === type)
+      .filter(
+        (f) =>
+          f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) || f.description?.toString().toUpperCase().includes(searchInput.toUpperCase())
+      );
+  };
 
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={setOpen}>
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-          </Transition.Child>
+    <FormGroup canDelete={!item?.isDefault && canDelete} editing={canUpdate} id={item?.id} className="px-4 pb-4 space-y-3" onCancel={onCancel}>
+      <div className="text-lg font-bold text-gray-900">Role Details</div>
 
-          {/* This element is to trick the browser into centering the modal contents. */}
-          <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-            &#8203;
-          </span>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enterTo="opacity-100 translate-y-0 sm:scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <form className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm w-full sm:p-6">
-              <div>
-                <div className="mt-3 sm:mt-5">
-                  <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                    {item ? "Update role" : "Create role"}
-                  </Dialog.Title>
-                  <div className="mt-4 space-y-3">
-                    <div className="w-full">
-                      <label htmlFor="role-name" className="block text-xs font-medium text-gray-700">
-                        Name
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          required
-                          type="text"
-                          name="role-name"
-                          id="role-name"
-                          value={name}
-                          onChange={(e) => setName(e.currentTarget.value)}
-                          className="capitalize shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                        />
-                      </div>
-                    </div>
-                    {/* <div className="w-full">
-                      <label htmlFor="role-users" className="block text-xs font-medium text-gray-700">
-                        Users
-                      </label>
-                      <div className="mt-1">
-                        <UserMultiSelector selected={users} onSelected={selectedUsers} />
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 sm:mt-6 border-t border-gray-200 pt-3">
-                <div className="flex items-center space-x-2 justify-end">
-                  <ButtonSecondary onClick={close}>Cancel</ButtonSecondary>
-                  <ButtonPrimary type="submit">Save</ButtonPrimary>
-                </div>
-              </div>
-            </form>
-          </Transition.Child>
+      <InputText disabled={!canUpdate} required name="name" title={t("models.role.name")} value={item?.name} />
+      <InputText disabled={!canUpdate} required name="description" title={t("models.role.description")} value={item?.description} />
+      <InputCheckboxInline
+        disabled={!canUpdate}
+        description={<span className="pl-1 text-gray-500 font-light"> - Every new user will have this role</span>}
+        name="assign-to-new-users"
+        title={t("models.role.assignToNewUsers")}
+        value={item?.assignToNewUsers}
+      />
+      <InputRadioGroup
+        name="type"
+        title={t("models.role.type")}
+        value={type}
+        setValue={setType}
+        options={[
+          {
+            name: "Admin Role",
+            value: "admin",
+          },
+          {
+            name: "App Role",
+            value: "app",
+          },
+        ]}
+      />
+
+      <div>
+        <label className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
+          <div className=" flex space-x-1 items-center justify-between">
+            <div className="text-lg font-bold text-gray-900">{t("models.role.permissions")}</div>
+          </div>
+          <div>
+            {filteredItems().filter((f) => f.type === type).length === rolePermissions.length ? (
+              <ButtonTertiary disabled={!canUpdate} onClick={() => setRolePermissions([])}>
+                Clear
+              </ButtonTertiary>
+            ) : (
+              <ButtonTertiary disabled={!canUpdate} onClick={() => setRolePermissions(filteredItems().map((f) => f.name))}>
+                Select all
+              </ButtonTertiary>
+            )}
+          </div>
+        </label>
+        <InputSearch value={searchInput} setValue={setSearchInput} />
+        <div className="mt-1">
+          {rolePermissions.map((permission) => {
+            return <input key={permission} type="hidden" name="permissions[]" value={permission} />;
+          })}
+          {filteredItems().map((permission, idx) => {
+            return (
+              <InputCheckboxWithDescription
+                disabled={!canUpdate}
+                name={permission.order + " " + permission.name}
+                title={permission.description}
+                description={permission.name}
+                value={hasPermission(permission)}
+                setValue={(e) => setPermission(permission, e)}
+                key={idx}
+              />
+            );
+          })}
         </div>
-      </Dialog>
-    </Transition.Root>
-  );
-};
+      </div>
 
-export default forwardRef(RoleForm);
+      <div className="flex-shrink-0 border-t border-gray-200 px-4 py-2 sm:px-6"></div>
+    </FormGroup>
+  );
+}

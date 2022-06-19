@@ -17,7 +17,7 @@ export default function ButtonTertiary({ className = "", type = "button", onClic
   return (
     <span>
       {(() => {
-        if (!to) {
+        if (!to || disabled) {
           return (
             <button
               onClick={onClick}

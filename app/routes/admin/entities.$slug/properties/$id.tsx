@@ -123,7 +123,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await deleteProperty(id);
     return redirect(`/admin/entities/${params.slug}/properties`);
   }
-  return badRequest(t("shared.invalidForm"));
+  return badRequest({ error: t("shared.invalidForm") });
 };
 
 export default function EditEntityPropertyRoute() {

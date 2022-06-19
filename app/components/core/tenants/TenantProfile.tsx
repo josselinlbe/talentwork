@@ -36,7 +36,7 @@ export default function TenantProfile({ tenant }: Props) {
     //   });
   }
   function successModalDeletedClosed() {
-    navigate("/admin/tenants");
+    navigate("/admin/accounts");
   }
   function dateMonthDayYear(value: Date | undefined) {
     return DateUtils.dateMonthDayYear(value);

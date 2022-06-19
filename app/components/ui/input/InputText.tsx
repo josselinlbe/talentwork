@@ -31,6 +31,7 @@ interface Props {
   lowercase?: boolean;
   uppercase?: boolean;
   type?: string;
+  darkMode?: boolean;
 }
 const InputText = (
   {
@@ -57,6 +58,7 @@ const InputText = (
     lowercase,
     uppercase,
     type = "text",
+    darkMode,
   }: Props,
   ref: Ref<RefInputText>
 ) => {
@@ -86,7 +88,7 @@ const InputText = (
   }
 
   return (
-    <div className={className}>
+    <div className={clsx(className, !darkMode && "text-gray-800")}>
       {withLabel && (
         <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
           <div className=" flex space-x-1 items-center">

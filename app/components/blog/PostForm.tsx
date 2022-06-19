@@ -7,7 +7,6 @@ import InputSelector from "../ui/input/InputSelector";
 import { BlogAuthor, BlogCategory, BlogTag } from "@prisma/client";
 import UrlUtils from "~/utils/app/UrlUtils";
 import LoadingButton from "../ui/buttons/LoadingButton";
-import clsx from "clsx";
 import ConfirmModal, { RefConfirmModal } from "../ui/modals/ConfirmModal";
 import ButtonSecondary from "../ui/buttons/ButtonSecondary";
 import ButtonTertiary from "../ui/buttons/ButtonTertiary";
@@ -25,8 +24,10 @@ interface Props {
   authors: BlogAuthor[];
   categories: BlogCategory[];
   tags: BlogTag[];
+  canUpdate?: boolean;
+  canDelete?: boolean;
 }
-export default function PostForm({ item, authors, categories, tags }: Props) {
+export default function PostForm({ item, authors, categories, tags, canUpdate = true, canDelete }: Props) {
   const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "submitting";
@@ -44,8 +45,8 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
 
   const [title, setTitle] = useState(item?.title ?? "");
   const [slug, setSlug] = useState(item?.slug ?? "");
-  const [author, setAuthor] = useState<string | undefined>("");
-  const [category, setCategory] = useState<string | undefined>("");
+  const [author, setAuthor] = useState<string | number | undefined>("");
+  const [category, setCategory] = useState<string | number | undefined>("");
   const [postTags, setPostTags] = useState("");
   const [date, setDate] = useState<Date | undefined>(item?.date ?? new Date());
   const [description, setDescription] = useState(item?.description ?? "");
@@ -134,11 +135,21 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
       <input type="hidden" readOnly name="action" value={item ? "edit" : "create"} />
       <InputGroup title="SEO">
         <div className="grid grid-cols-12 gap-3">
-          <InputText ref={inputTitle} className="col-span-12" name="title" title={t("models.post.title")} value={title} setValue={setTitle} required />
+          <InputText
+            disabled={!canUpdate}
+            ref={inputTitle}
+            className="col-span-12"
+            name="title"
+            title={t("models.post.title")}
+            value={title}
+            setValue={setTitle}
+            required
+          />
 
-          <InputText className="col-span-12" name="slug" title={t("models.post.slug")} value={slug} setValue={setSlug} required />
+          <InputText disabled={!canUpdate} className="col-span-12" name="slug" title={t("models.post.slug")} value={slug} setValue={setSlug} required />
 
           <InputText
+            disabled={!canUpdate}
             className="col-span-12"
             rows={2}
             name="description"
@@ -152,6 +163,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
           {!image.startsWith("data:image") && (
             <>
               <InputText
+                disabled={!canUpdate}
                 className="col-span-12"
                 name="image"
                 title={t("models.post.image")}
@@ -170,6 +182,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
 
           {showUploadImage && (
             <UploadDocument
+              disabled={!canUpdate}
               className="col-span-12"
               accept="image/png, image/jpg, image/jpeg"
               description={t("models.post.image")}
@@ -180,7 +193,9 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
           {image && (
             <div className="col-span-12">
               <img className="xl:border-b xl:border-gray-200 rounded-lg shadow-xl overflow-hidden" src={image} alt={t("models.post.image")} />
-              <ButtonTertiary onClick={() => setImage("")}>{t("shared.delete")}</ButtonTertiary>
+              <ButtonTertiary disabled={!canUpdate} onClick={() => setImage("")}>
+                {t("shared.delete")}
+              </ButtonTertiary>
             </div>
           )}
         </div>
@@ -189,6 +204,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
       <InputGroup title="Details">
         <div className="grid grid-cols-12 gap-3 bg-white rounded-md">
           <InputSelector
+            disabled={!canUpdate}
             className="col-span-6 md:col-span-4"
             name="author"
             title={t("models.post.author")}
@@ -203,6 +219,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
             required
           />
           <InputSelector
+            disabled={!canUpdate}
             className="col-span-6 md:col-span-4"
             name="category"
             title={t("models.post.category")}
@@ -217,6 +234,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
             required
           />
           <InputText
+            disabled={!canUpdate}
             className="col-span-6 md:col-span-4"
             name="tags"
             title={t("models.post.tags")}
@@ -224,9 +242,18 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
             setValue={(e) => changedTags(e.toString())}
             hint={<div className="text-xs italic text-gray-400 font-light">Separated by comma</div>}
           />
-          <InputDate className="col-span-6 md:col-span-4" name="date" title={t("models.post.date")} value={date} onChange={setDate} required />
+          <InputDate
+            disabled={!canUpdate}
+            className="col-span-6 md:col-span-4"
+            name="date"
+            title={t("models.post.date")}
+            value={date}
+            onChange={setDate}
+            required
+          />
 
           <InputText
+            disabled={!canUpdate}
             className="col-span-6 md:col-span-4"
             name="reading-time"
             title={t("models.post.readingTime")}
@@ -234,13 +261,21 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
             setValue={setReadingTime}
             maxLength={10}
           />
-          <InputCheckbox className="col-span-6 md:col-span-4" name="published" title={t("models.post.published")} value={published} setValue={setPublished} />
+          <InputCheckbox
+            disabled={!canUpdate}
+            className="col-span-6 md:col-span-4"
+            name="published"
+            title={t("models.post.published")}
+            value={published}
+            setValue={setPublished}
+          />
         </div>
       </InputGroup>
 
       <InputGroup title="Content">
         <div className="grid grid-cols-12 gap-3 bg-white rounded-md">
           <InputText
+            disabled={!canUpdate}
             className="col-span-12"
             rows={6}
             name="content"
@@ -259,17 +294,9 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
       <div className="flex justify-between space-x-2">
         <div>
           {item && (
-            <button
-              disabled={loading}
-              className={clsx(
-                "inline-flex items-center px-3 py-2 border space-x-2 border-gray-300 shadow-sm sm:text-sm font-medium sm:rounded-md text-red-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                loading && "bg-gray-100 cursor-not-allowed"
-              )}
-              type="button"
-              onClick={remove}
-            >
+            <ButtonSecondary destructive={true} disabled={loading || !canDelete} onClick={remove}>
               <div>{t("shared.delete")}</div>
-            </button>
+            </ButtonSecondary>
           )}
         </div>
 
@@ -280,7 +307,7 @@ export default function PostForm({ item, authors, categories, tags }: Props) {
           {/* <ButtonSecondary onClick={preview} disabled={loading}>
             {t("shared.preview")}
           </ButtonSecondary> */}
-          <LoadingButton type="submit" disabled={loading}>
+          <LoadingButton type="submit" disabled={loading || !canUpdate}>
             {t("shared.save")}
           </LoadingButton>
         </div>

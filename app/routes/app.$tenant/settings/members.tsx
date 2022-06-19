@@ -9,8 +9,9 @@ import MemberInvitationsListAndTable from "~/components/core/settings/members/Me
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
 import InputSearch from "~/components/ui/input/InputSearch";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAppData } from "~/utils/data/useAppData";
 
 type LoaderData = {
   title: string;
@@ -19,9 +20,9 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  await requireOwnerOrAdminRole(request, params);
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.members.view", tenantUrl.tenantId);
 
   const users = await getTenantUsers(tenantUrl.tenantId);
   const pendingInvitations = await getUserInvitations(tenantUrl.tenantId);
@@ -61,6 +62,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function MembersRoute() {
   const params = useParams();
   const data = useLoaderData<LoaderData>();
+  const appData = useAppData();
   const navigate = useNavigate();
 
   const errorModal = useRef<RefErrorModal>(null);
@@ -102,11 +104,17 @@ export default function MembersRoute() {
       <div className="py-4 space-y-2 mx-auto max-w-5xl xl:max-w-7xl px-4 sm:px-6 lg:px-8">
         <div>
           <div className="space-y-2">
-            <InputSearch value={searchInput} setValue={setSearchInput} onNew={() => navigate(UrlUtils.currentTenantUrl(params, "settings/members/new"))} />
+            <InputSearch
+              value={searchInput}
+              setValue={setSearchInput}
+              onNewRoute={!appData.permissions.includes("app.settings.members.create") ? "" : UrlUtils.currentTenantUrl(params, "settings/members/new")}
+            />
             <div>
               <MembersListAndTable items={sortedItems()} />
 
-              {data.pendingInvitations.length > 0 && <MemberInvitationsListAndTable items={data.pendingInvitations} />}
+              {data.pendingInvitations.length > 0 && (
+                <MemberInvitationsListAndTable items={data.pendingInvitations} canDelete={appData.permissions.includes("app.settings.members.delete")} />
+              )}
             </div>
           </div>
         </div>

@@ -14,6 +14,7 @@ import { createTenantUser } from "~/utils/db/tenants.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { TenantUserInvitation, Tenant, User } from "@prisma/client";
 import { Language } from "remix-i18next";
+import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
 
 type LoaderData = {
   title: string;
@@ -66,11 +67,15 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: "Could not create user" });
     }
     await updateUserInvitationPending(invitation.id);
-    await createTenantUser({
-      tenantId: invitation.tenantId,
-      userId: user.id,
-      type: invitation.type,
-    });
+    const roles = await getAllRoles("app");
+    await createTenantUser(
+      {
+        tenantId: invitation.tenantId,
+        userId: user.id,
+        type: invitation.type,
+      },
+      roles.filter((f) => f.assignToNewUsers)
+    );
 
     await sendEmail(invitation.email, "welcome", {
       action_url: process.env.SERVER_URL + `/login`,
@@ -89,11 +94,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   } else {
     // Existing user
     await updateUserInvitationPending(invitation.id);
-    await createTenantUser({
-      tenantId: invitation.tenantId,
-      userId: existingUser.id,
-      type: invitation.type,
-    });
+    const roles = await getAllRoles("app");
+    await createTenantUser(
+      {
+        tenantId: invitation.tenantId,
+        userId: existingUser.id,
+        type: invitation.type,
+      },
+      roles.filter((f) => f.assignToNewUsers)
+    );
 
     const userSession = await setLoggedUser(existingUser);
     return createUserSession(

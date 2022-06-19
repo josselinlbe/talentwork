@@ -22,11 +22,11 @@ export default function InputSearchWithURL({ onNew, onNewRoute }: Props) {
   }, []);
 
   useEffect(() => {
-    searchParams.set("page", "1");
+    // searchParams.set("page", "1");
     if (value.length > 0) {
       searchParams.set("q", value);
     } else {
-      // searchParams.delete("q");
+      searchParams.delete("q");
     }
     setSearchParams(searchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,6 +52,7 @@ export default function InputSearchWithURL({ onNew, onNewRoute }: Props) {
           placeholder={t("shared.searchDot")}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          autoComplete="off"
         />
       </div>
       {onNew && <ButtonPrimary onClick={onNew}>{t("shared.new")}</ButtonPrimary>}

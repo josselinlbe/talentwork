@@ -112,7 +112,7 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
         actions={[
           {
             title: t("admin.tenants.overview"),
-            onClickRoute: (_, item) => `/admin/tenants/${item.id}`,
+            onClickRoute: (_, item) => `/admin/accounts/${item.id}`,
           },
         ]}
       />

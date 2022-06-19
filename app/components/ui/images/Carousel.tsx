@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "remix";
 
 interface Props {
   images: { group: string; title: string; route?: string; src: string }[];

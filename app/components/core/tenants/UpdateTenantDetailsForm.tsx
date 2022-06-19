@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
+import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
+import InputText from "~/components/ui/input/InputText";
 
 type ActionData = {
   updateDetailsError?: string;
@@ -13,9 +15,10 @@ type ActionData = {
 interface Props {
   tenant: Tenant;
   actionData: ActionData | undefined;
+  disabled: boolean;
 }
 
-export default function UpdateTenantDetailsForm({ tenant, actionData }: Props) {
+export default function UpdateTenantDetailsForm({ tenant, actionData, disabled }: Props) {
   const { t } = useTranslation();
 
   const [icon, setIcon] = useState<string | undefined>(tenant?.icon ?? "");
@@ -25,36 +28,18 @@ export default function UpdateTenantDetailsForm({ tenant, actionData }: Props) {
   }
   return (
     <Form method="post">
-      <input type="hidden" name="action" value="update-tenant-details" />
+      <input type="hidden" name="action" value="edit" />
       <div className="shadow overflow-hidden sm:rounded-sm">
         <div className="px-4 py-5 bg-white sm:p-6">
           <div className="grid grid-cols-6 gap-2">
             <div className="col-span-6 sm:col-span-6">
-              <label htmlFor="name" className="block text-sm font-medium leading-5 text-gray-700">
-                {t("shared.name")}
-              </label>
-              <input
-                required
-                id="name"
-                name="name"
-                defaultValue={tenant?.name}
-                className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              />
+              <InputText disabled={disabled} required name="name" title={t("shared.name")} value={tenant?.name} />
             </div>
             <div className="col-span-6 sm:col-span-6">
-              <label htmlFor="slug" className="block text-sm font-medium leading-5 text-gray-700">
-                {t("shared.slug")}
-              </label>
-              <input
-                required
-                id="slug"
-                name="slug"
-                defaultValue={tenant?.slug}
-                className="lowercase mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              />
+              <InputText disabled={disabled} required name="slug" title={t("shared.slug")} value={tenant?.slug} />
             </div>
             <div className="col-span-6 sm:col-span-6">
-              <label htmlFor="icon" className="block text-sm leading-5 font-medium text-gray-700">
+              <label htmlFor="icon" className="block text-xs leading-5 font-medium text-gray-600">
                 {t("shared.icon")}
               </label>
               <div className="mt-2 flex items-center space-x-3">
@@ -74,11 +59,11 @@ export default function UpdateTenantDetailsForm({ tenant, actionData }: Props) {
                 </div>
 
                 {icon ? (
-                  <ButtonTertiary destructive={true} onClick={() => loadedImage("")} type="button">
+                  <ButtonTertiary disabled={disabled} destructive={true} onClick={() => loadedImage("")} type="button">
                     {t("shared.delete")}
                   </ButtonTertiary>
                 ) : (
-                  <UploadDocuments accept="image/png, image/jpg, image/jpeg" onDropped={loadedImage} />
+                  <UploadDocuments disabled={disabled} accept="image/png, image/jpg, image/jpeg" onDropped={loadedImage} />
                 )}
               </div>
             </div>
@@ -101,12 +86,9 @@ export default function UpdateTenantDetailsForm({ tenant, actionData }: Props) {
                 </>
               ) : null}
             </div>
-            <button
-              type="submit"
-              className="inline-flex space-x-2 items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500"
-            >
+            <ButtonPrimary disabled={disabled} type="submit">
               {t("shared.save")}
-            </button>
+            </ButtonPrimary>
           </div>
         </div>
       </div>

@@ -5,7 +5,9 @@ import { ActionFunction, json, LoaderFunction, redirect, useLoaderData, useParam
 import PostForm from "~/components/blog/PostForm";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { useAdminData } from "~/utils/data/useAdminData";
 import { BlogPostWithDetails, deleteBlogPost, getAllAuthors, getAllCategories, getAllTags, getBlogPost, updateBlogPost } from "~/utils/db/blog.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   item: BlogPostWithDetails;
@@ -39,6 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const action = form.get("action")?.toString() ?? "";
   const content = form.get("content")?.toString() ?? "";
   if (action === "edit") {
+    await verifyUserHasPermission(request, "admin.blog.update");
     const title = form.get("title")?.toString() ?? "";
     const slug = form.get("slug")?.toString() ?? "";
     const description = form.get("description")?.toString() ?? "";
@@ -71,6 +74,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: JSON.stringify(e) });
     }
   } else if (action === "delete") {
+    await verifyUserHasPermission(request, "admin.blog.delete");
     try {
       await deleteBlogPost(params.id ?? "");
       return redirect("/admin/blog");
@@ -78,7 +82,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: JSON.stringify(e) });
     }
   } else {
-    return badRequest(t("shared.invalidForm"));
+    return badRequest({ error: t("shared.invalidForm") });
   }
 };
 
@@ -86,6 +90,7 @@ export default function NewBlog() {
   const { t } = useTranslation();
   const params = useParams();
   const data = useLoaderData<LoaderData>();
+  const adminData = useAdminData();
   return (
     <div>
       <Breadcrumb
@@ -102,7 +107,14 @@ export default function NewBlog() {
         </div>
       </div>
       <div className="py-6 space-y-2 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <PostForm item={data.item} authors={data.authors} categories={data.categories} tags={data.tags} />
+        <PostForm
+          item={data.item}
+          authors={data.authors}
+          categories={data.categories}
+          tags={data.tags}
+          canUpdate={adminData.permissions.includes("admin.blog.update")}
+          canDelete={adminData.permissions.includes("admin.blog.delete")}
+        />
       </div>
     </div>
   );

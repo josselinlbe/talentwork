@@ -15,7 +15,9 @@ import clsx from "clsx";
 import { useAppData } from "~/utils/data/useAppData";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { requireOwnerOrAdminRole } from "~/utils/loaders.middleware";
+import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
+import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
+import InputText from "~/components/ui/input/InputText";
 
 type LoaderData = {
   title: string;
@@ -81,7 +83,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     return redirect(UrlUtils.currentTenantUrl(params, "settings/members"));
   } else if (action === "delete") {
-    await requireOwnerOrAdminRole(request, params);
     try {
       await deleteTenantUser(id);
     } catch (e: any) {
@@ -103,9 +104,9 @@ interface Props {
 
 export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
   const params = useParams();
-  const appData = useAppData();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
+  const appData = useAppData();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const submit = useSubmit();
@@ -251,69 +252,39 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                           <input hidden type="text" name="action" value="edit" readOnly />
                           <div className="grid grid-cols-2 gap-2">
                             {/*Email */}
-                            <div className="col-span-2">
-                              <label htmlFor="email" className="block text-xs font-medium text-gray-700 truncate">
-                                {t("models.user.email")}
-                              </label>
-                              <div className="mt-1 flex rounded-md shadow-sm w-full">
-                                <input
-                                  type="email"
-                                  id="email"
-                                  name="email"
-                                  autoComplete="off"
-                                  readOnly
-                                  defaultValue={data.member?.user.email || actionData?.fields?.email}
-                                  className={clsx(
-                                    "w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
-                                    true && "bg-gray-100 cursor-not-allowed"
-                                  )}
-                                />
-                              </div>
-                            </div>
+                            <InputText
+                              className="col-span-2"
+                              disabled={!appData.permissions.includes("app.settings.members.update")}
+                              name="email"
+                              title={t("models.user.email")}
+                              autoComplete="off"
+                              readOnly
+                              value={data.member?.user.email || actionData?.fields?.email}
+                            />
                             {/*Email: End */}
 
                             {/*User First Name */}
-                            <div>
-                              <label htmlFor="first-name" className="block text-xs font-medium text-gray-700 truncate">
-                                {t("models.user.firstName")}
-                              </label>
-                              <div className="mt-1 flex rounded-md shadow-sm w-full">
-                                <input
-                                  type="text"
-                                  id="first-name"
-                                  name="first-name"
-                                  autoComplete="off"
-                                  readOnly
-                                  defaultValue={data.member?.user.firstName || actionData?.fields?.firstName}
-                                  className={clsx(
-                                    "w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
-                                    true && "bg-gray-100 cursor-not-allowed"
-                                  )}
-                                />
-                              </div>
-                            </div>
+                            <InputText
+                              type="text"
+                              disabled={!appData.permissions.includes("app.settings.members.update")}
+                              name="first-name"
+                              title={t("models.user.firstName")}
+                              autoComplete="off"
+                              readOnly
+                              value={data.member?.user.firstName || actionData?.fields?.firstName}
+                            />
                             {/*User First Name: End */}
 
                             {/*User Last Name */}
-                            <div>
-                              <label htmlFor="last-name" className="block text-xs font-medium text-gray-700 truncate">
-                                {t("models.user.lastName")}
-                              </label>
-                              <div className="mt-1 flex rounded-md shadow-sm w-full">
-                                <input
-                                  type="text"
-                                  id="last-name"
-                                  name="last-name"
-                                  autoComplete="off"
-                                  readOnly
-                                  defaultValue={data.member?.user.lastName || actionData?.fields?.lastName}
-                                  className={clsx(
-                                    "w-full flex-1 focus:ring-theme-500 focus:border-theme-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
-                                    true && "bg-gray-100 cursor-not-allowed"
-                                  )}
-                                />
-                              </div>
-                            </div>
+                            <InputText
+                              disabled={!appData.permissions.includes("app.settings.members.update")}
+                              type="text"
+                              title={t("models.user.lastName")}
+                              name="last-name"
+                              autoComplete="off"
+                              readOnly
+                              value={data.member?.user.lastName || actionData?.fields?.lastName}
+                            />
                             {/*User Last Name: End */}
 
                             {/*User Role */}
@@ -338,6 +309,7 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                                           )}
                                         >
                                           <input
+                                            disabled={!appData.permissions.includes("app.settings.members.update")}
                                             type="radio"
                                             name="tenant-user-type"
                                             className="h-4 w-4 mt-3 cursor-pointer text-theme-600 border-gray-300 focus:ring-theme-500"
@@ -391,24 +363,20 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                               } else {
                                 return (
                                   <div>
-                                    <button
-                                      disabled={loading}
-                                      className={clsx(
-                                        "inline-flex items-center px-3 py-2 border space-x-2 border-gray-300 shadow-sm sm:text-sm font-medium sm:rounded-md text-red-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                                        loading && "bg-gray-100 cursor-not-allowed"
-                                      )}
-                                      type="button"
+                                    <ButtonSecondary
+                                      destructive
+                                      disabled={loading || !appData.permissions.includes("app.settings.members.delete")}
                                       onClick={remove}
                                     >
                                       <div>{t("shared.delete")}</div>
-                                    </button>
+                                    </ButtonSecondary>
                                   </div>
                                 );
                               }
                             })()}
 
                             <div className="flex items-center space-x-2">
-                              <button
+                              <ButtonSecondary
                                 disabled={loading}
                                 className={clsx(
                                   "inline-flex items-center px-3 py-2 border space-x-2 border-gray-300 shadow-sm sm:text-sm font-medium sm:rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
@@ -418,17 +386,10 @@ export default function EditMemberRoute({ maxSize = "sm:max-w-lg" }: Props) {
                                 onClick={close}
                               >
                                 <div>{t("shared.cancel")}</div>
-                              </button>
-                              <button
-                                disabled={loading}
-                                className={clsx(
-                                  "inline-flex items-center px-3 py-2 border space-x-2 border-transparent shadow-sm sm:text-sm font-medium sm:rounded-md text-white bg-theme-600 hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500",
-                                  loading && "opacity-50 cursor-not-allowed"
-                                )}
-                                type="submit"
-                              >
+                              </ButtonSecondary>
+                              <ButtonPrimary disabled={loading || !appData.permissions.includes("app.settings.members.update")} type="submit">
                                 <div>{t("shared.save")}</div>
-                              </button>
+                              </ButtonPrimary>
                             </div>
                           </div>
                         </Form>

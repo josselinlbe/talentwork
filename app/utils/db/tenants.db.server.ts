@@ -1,8 +1,9 @@
-import { AdminUser, Tenant, TenantUser, User } from "@prisma/client";
+import { AdminUser, Role, Tenant, TenantUser, User } from "@prisma/client";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
 import { getAvailableTenantSlug } from "../services/emailService";
+import { createUserRole } from "./permissions/userRoles.db.server";
 import { TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
 import { createTenantSubscription } from "./tenantSubscriptions.db.server";
 
@@ -224,14 +225,22 @@ export async function createTenant(name: string, subscriptionCustomerId: string,
   return tenant;
 }
 
-export async function createTenantUser(data: { tenantId: string; userId: string; type: number }) {
-  return await db.tenantUser.create({
+export async function createTenantUser(data: { tenantId: string; userId: string; type: number }, roles: Role[]) {
+  const tenantUser = await db.tenantUser.create({
     data: {
       ...data,
       joined: TenantUserJoined.JOINED_BY_INVITATION,
       status: TenantUserStatus.ACTIVE,
     },
   });
+
+  await Promise.all(
+    roles.map(async (role) => {
+      return await createUserRole(tenantUser.userId, role.id, tenantUser.tenantId);
+    })
+  );
+
+  return tenantUser;
 }
 
 export async function deleteTenantUser(id: string) {
@@ -246,6 +255,18 @@ export async function deleteTenant(id: string) {
   return await db.tenant.delete({
     where: {
       id,
+    },
+    include: {
+      subscription: true,
+      users: true,
+      invitations: true,
+      rows: true,
+      logs: true,
+      apiKeys: true,
+      createdLinkedAccounts: true,
+      asProviderLinkedAccounts: true,
+      asClientLinkedAccounts: true,
+      userRoles: true,
     },
   });
 }

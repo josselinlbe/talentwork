@@ -8,6 +8,7 @@ import { seedBlog } from "./seedBlog";
 import { seedSampleEntities } from "./seedSampleEntities";
 import { createLinkedAccount } from "~/utils/db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
+import { seedRolesAndPermissions } from "./seedRolesAndPermissions";
 const db = new PrismaClient();
 
 async function seed() {
@@ -46,6 +47,7 @@ async function seed() {
 
   // Sample Entities
   await seedSampleEntities(tenant1And2Relationship, user1);
+  await seedRolesAndPermissions();
 }
 
 async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserType) {

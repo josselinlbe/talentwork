@@ -13,8 +13,9 @@ import StringUtils from "~/utils/shared/StringUtils";
 
 interface Props {
   item?: Entity | null;
+  canDelete?: boolean;
 }
-export default function EntityForm({ item }: Props) {
+export default function EntityForm({ item, canDelete }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const adminData = useAdminData();
@@ -75,7 +76,7 @@ export default function EntityForm({ item }: Props) {
   }, [slug]);
 
   return (
-    <FormGroup id={item?.id} onCancel={() => navigate("/admin/entities")} editing={true}>
+    <FormGroup id={item?.id} onCancel={() => navigate("/admin/entities")} editing={true} canDelete={canDelete}>
       <InputGroup title="Entity Details">
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
           <InputText

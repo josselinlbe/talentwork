@@ -13,7 +13,7 @@ interface Props {
 }
 export default function InputSelect({ name, title, withLabel = true, value, options, setValue, className, required, disabled }: Props) {
   return (
-    <div className={clsx(className, "flex-grow w-full")}>
+    <div className={clsx(className, "flex-grow w-full text-gray-800")}>
       {withLabel && (
         <label htmlFor={name} className="block text-xs font-medium text-gray-700 truncate">
           <div>

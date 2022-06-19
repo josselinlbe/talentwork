@@ -15,6 +15,7 @@ import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatur
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
 import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
 import { getLinksWithMembers, LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
+import { getEntityPermission, verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -31,6 +32,8 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!entity) {
     return redirect("/app/" + tenantUrl.tenantId);
   }
+  await verifyUserHasPermission(request, getEntityPermission(entity, "create"), tenantUrl.tenantId);
+
   const relatedEntities = await getRelatedRows(entity.properties, tenantUrl.tenantId);
   const featureUsageEntity = await getPlanFeatureUsage(tenantUrl.tenantId, entity.name);
   const linkedAccounts = await getLinksWithMembers(tenantUrl.tenantId);

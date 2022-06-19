@@ -15,8 +15,8 @@ const featureImages = [
   },
   {
     group: "Admin Portal",
-    title: "Tenants",
-    route: "/admin/tenants",
+    title: "Accounts",
+    route: "/admin/accounts",
     src: "https://yahooder.sirv.com/saasrock/features/admin-portal/tenants.png",
   },
   {
@@ -360,6 +360,72 @@ const featureImages = [
     title: "API Logs",
     route: "/app/acme-corp-1/settings/api/logs",
     src: "https://yahooder.sirv.com/saasrock/features/api/logs.png",
+  },
+  {
+    group: "Roles & Permissions",
+    title: "Roles",
+    route: "/admin/roles-and-permissions/roles",
+    src: "https://user-images.githubusercontent.com/8606530/174460485-0c17e2bb-1eb7-490b-8e6e-1546770401d7.png",
+  },
+  {
+    group: "Roles & Permissions",
+    title: "Permissions",
+    route: "/admin/roles-and-permissions/permissions",
+    src: "https://user-images.githubusercontent.com/8606530/174460558-589ac602-2061-4fe6-a9a0-e734f75269b4.png",
+  },
+  {
+    group: "Roles & Permissions",
+    title: "Set Admin Roles",
+    route: "/admin/roles-and-permissions/admin-users",
+    src: "https://user-images.githubusercontent.com/8606530/174461740-65b264ce-38f4-4e82-a6a9-77bd123a0deb.png",
+  },
+  {
+    group: "Roles & Permissions",
+    title: "Set Account User Roles",
+    route: "/admin/roles-and-permissions/account-users",
+    src: "https://user-images.githubusercontent.com/8606530/174460587-ef90a695-1fcd-4ddb-af9b-641c27a73481.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Groups",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460615-a20dbedc-bdbf-4248-91dc-f86002aac812.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Row visibility - Private (only you)",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460688-7069d654-ce39-4b55-8777-69e17a69c315.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Row visibility - Share to Account Members",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460695-4de0bf14-7e95-46e0-9852-9cacb92f55fa.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Row visibility - Share to Specific Groups",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460699-9a149df9-7406-4fe6-923d-9cb04560395d.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Row visibility - Share to Specific Users",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460705-ec683416-2ac1-4efb-91da-4de152e88459.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Row visibility - Set Public",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460711-ac9beeca-6af9-4a6e-959d-5b03a744b9ee.png",
+  },
+  {
+    group: "Row-level Visibility & Permissions",
+    title: "Public row view",
+    route: "",
+    src: "https://user-images.githubusercontent.com/8606530/174460727-d2a10e3e-70a1-46c1-b5f2-e558ee6e840a.png",
   },
 ];
 export default function FeatureImages() {

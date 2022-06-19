@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -31,6 +31,10 @@ model User {
   createdLinkedAccounts    LinkedAccount[]
   createdRows              Row[]
   createdApiKeys           ApiKey[]
+  createdGroups            Group[]
+  roles                    UserRole[]
+  groups                   GroupUser[]
+  rowPermissions           RowPermission[]
 }
 
 model AdminUser {
@@ -56,6 +60,9 @@ model Tenant {
   createdLinkedAccounts    LinkedAccount[]        @relation("createdByTenant")
   asProviderLinkedAccounts LinkedAccount[]        @relation("providerTenant")
   asClientLinkedAccounts   LinkedAccount[]        @relation("clientTenant")
+  userRoles                UserRole[]
+  groups                   Group[]
+  rowPermissions           RowPermission[]
 }
 
 model TenantSubscription {
@@ -79,6 +86,75 @@ model TenantUser {
   joined    Int
   status    Int
   roles     TenantUserRole[]
+}
+
+model Role {
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String           @unique
+  description      String
+  type             String
+  assignToNewUsers Boolean
+  isDefault        Boolean
+  order            Int
+  permissions      RolePermission[]
+  users            UserRole[]
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  name        String           @unique
+  description String
+  type        String
+  isDefault   Boolean
+  order       Int
+  inRoles     RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId, tenantId])
+}
+
+model Group {
+  id              String          @id @default(cuid())
+  createdAt       DateTime        @default(now())
+  createdByUserId String
+  createdByUser   User            @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenantId        String
+  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name            String
+  description     String
+  color           Int
+  users           GroupUser[]
+  rows            RowPermission[]
+}
+
+model GroupUser {
+  id      String @id @default(cuid())
+  groupId String
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model TenantUserRole {
@@ -353,6 +429,11 @@ model Row {
   logs              Log[]
   values            RowValue[]
   relatedRows       RowValue[]         @relation(name: "relatedRow")
+  permissions       RowPermission[]
+  visibility        String             @default("private")
+  canComment        Boolean            @default(true)
+  canUpdate         Boolean            @default(true)
+  canDelete         Boolean            @default(true)
 
   parentRowId String?
   parentRow   Row?    @relation(name: "parentRowId", fields: [parentRowId], references: [id], onDelete: Cascade)
@@ -373,6 +454,18 @@ model RowValue {
   dateValue    DateTime?
   booleanValue Boolean?
   media        Media[]
+}
+
+model RowPermission {
+  id       String  @id @default(cuid())
+  rowId    String
+  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  tenantId String?
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  groupId  String?
+  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String?
+  user     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Media {

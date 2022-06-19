@@ -5,11 +5,12 @@ import UrlUtils from "~/utils/app/UrlUtils";
 import LinkedAccountsTable from "~/components/app/linkedAccounts/LinkedAccountsTable";
 import { getLinkedAccounts, getLinkedAccount, updateLinkedAccount, deleteLinkedAccount, LinkedAccountWithDetails } from "~/utils/db/linkedAccounts.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
-import { loadAppData } from "~/utils/data/useAppData";
+import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { getUser } from "~/utils/db/users.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { sendEmail } from "~/utils/email.server";
 import InputSearch from "~/components/ui/input/InputSearch";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 type LoaderData = {
   title: string;
   items: LinkedAccountWithDetails[];
@@ -18,6 +19,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.linkedAccounts.view", tenantUrl.tenantId);
 
   const items = await getLinkedAccounts(tenantUrl.tenantId);
   const data: LoaderData = {
@@ -97,6 +99,7 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function LinkedAccountsRoute() {
   const data = useLoaderData<LoaderData>();
+  const appData = useAppData();
 
   const [searchInput, setSearchInput] = useState("");
 
@@ -116,8 +119,12 @@ export default function LinkedAccountsRoute() {
       <div>
         <div>
           <div className="space-y-2">
-            <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute="new" />
-            <LinkedAccountsTable items={filteredItems()} />
+            <InputSearch
+              value={searchInput}
+              setValue={setSearchInput}
+              onNewRoute={appData.permissions.includes("app.settings.linkedAccounts.create") ? "new" : ""}
+            />
+            <LinkedAccountsTable items={filteredItems()} canDelete={appData.permissions.includes("app.settings.linkedAccounts.delete")} />
           </div>
         </div>
       </div>

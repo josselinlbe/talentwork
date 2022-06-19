@@ -24,7 +24,13 @@ export default function AdminApiKeysRoute() {
   const appData = useAppData();
   return (
     <>
-      <ApiKeysTable entities={appData.entities} items={data.apiKeys} logs={data.apiKeyLogs} withTenant={false} />
+      <ApiKeysTable
+        entities={appData.entities}
+        items={data.apiKeys}
+        logs={data.apiKeyLogs}
+        withTenant={false}
+        canCreate={appData.permissions.includes("app.settings.apiKeys.create")}
+      />
       <Outlet />
     </>
   );

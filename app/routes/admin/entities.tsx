@@ -6,7 +6,9 @@ import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import Loading from "~/components/ui/loaders/Loading";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { useAdminData } from "~/utils/data/useAdminData";
 import { EntityWithCount, getAllEntitiesWithRowCount } from "~/utils/db/entities/entities.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 type LoaderData = {
   title: string;
@@ -14,6 +16,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.entities.view");
   const { t } = await i18nHelper(request);
   const items = await getAllEntitiesWithRowCount();
 
@@ -31,6 +34,7 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function Events() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
+  const adminData = useAdminData();
   const transition = useTransition();
   const loading = transition.state === "loading";
 
@@ -42,7 +46,7 @@ export default function Events() {
           <ButtonSecondary to=".">
             <span>{t("shared.reload")}</span>
           </ButtonSecondary>
-          <ButtonPrimary to="/admin/entities/new">
+          <ButtonPrimary disabled={!adminData.permissions.includes("admin.entities.create")} to="/admin/entities/new">
             <span>{t("shared.new")}</span>
           </ButtonPrimary>
         </>

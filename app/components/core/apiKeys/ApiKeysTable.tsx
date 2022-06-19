@@ -13,12 +13,13 @@ interface Props {
   items: ApiKeyWithDetails[];
   logs: ApiKeyLogWithDetails[];
   withTenant?: boolean;
+  canCreate?: boolean;
 }
 type Header = {
   name?: string;
   title: string;
 };
-export default function ApiKeysTable({ entities, items, logs, withTenant }: Props) {
+export default function ApiKeysTable({ entities, items, logs, withTenant, canCreate }: Props) {
   const { t } = useTranslation();
 
   const [searchInput, setSearchInput] = useState("");
@@ -101,7 +102,7 @@ export default function ApiKeysTable({ entities, items, logs, withTenant }: Prop
 
   return (
     <div className="space-y-2">
-      <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute="new" />
+      <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute={canCreate ? "new" : ""} />
       {(() => {
         if (filteredItems().length === 0) {
           return (

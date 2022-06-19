@@ -1,10 +1,18 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, redirect } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "remix";
 import EntityForm from "~/components/entities/EntityForm";
 import NewPageLayout from "~/components/ui/layouts/NewPageLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { createEntity } from "~/utils/db/entities/entities.db.server";
+import { createPermissions } from "~/utils/db/permissions/permissions.db.server";
+import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
+import { getEntityPermissions, verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+
+export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.entities.create");
+  return json({});
+};
 
 type ActionData = {
   error?: string;
@@ -46,6 +54,18 @@ export const action: ActionFunction = async ({ request }) => {
         requiresLinkedAccounts,
         icon,
         active,
+      });
+
+      const allUserRoles = await getAllRoles();
+      const assignToAllUserRoles = allUserRoles.filter((f) => f.assignToNewUsers);
+      (await getEntityPermissions(entity)).map(async (permission, idx) => {
+        const entityPermission = {
+          inRoles: assignToAllUserRoles.map((f) => f.name),
+          name: permission.name,
+          description: permission.description,
+          type: "app",
+        };
+        return await createPermissions([entityPermission], allUserRoles.length + idx + 1);
       });
 
       if (entity) {

@@ -98,6 +98,7 @@ export function getNewPaginationUrl(request: Request, page: number, sortedBy: { 
 export async function getRowsWithPagination(
   entityId: string,
   tenantId: string,
+  userId: string,
   pageSize: number,
   page: number,
   sortedBy?: SortedByDto,
@@ -111,8 +112,8 @@ export async function getRowsWithPagination(
     orderBy = { [sortedBy?.name]: sortedBy?.direction };
   }
 
-  const items = await getRows(entityId, tenantId, pageSize, pageSize * (page - 1), orderBy, query);
-  const totalItems = await countRows(entityId, tenantId, query);
+  const items = await getRows(entityId, tenantId, userId, pageSize, pageSize * (page - 1), orderBy, query);
+  const totalItems = await countRows(entityId, tenantId, userId, query);
   const totalPages = Math.round(totalItems / pageSize);
 
   return {

@@ -11,6 +11,9 @@ import RowsList from "~/components/entities/rows/RowsList";
 import { getPaginationFromCurrentUrl, getNewPaginationUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
 import Constants from "~/application/Constants";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
+import { getEntityPermission, verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAppData } from "~/utils/data/useAppData";
+import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
   title: string;
@@ -21,16 +24,18 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
-
+  const userInfo = await getUserInfo(request);
   const entity = await getEntityBySlug(params.entity ?? "");
   if (!entity) {
     return redirect("/app/" + tenantUrl.tenantId);
   }
+  await verifyUserHasPermission(request, getEntityPermission(entity, "view"), tenantUrl.tenantId);
 
   const currentPagination = getPaginationFromCurrentUrl(request);
   const { items, pagination } = await getRowsWithPagination(
     entity.id,
     tenantUrl.tenantId,
+    userInfo.userId,
     Constants.DEFAULT_PAGE_SIZE,
     currentPagination.page,
     currentPagination.sortedBy,
@@ -86,6 +91,7 @@ export default function RowsListRoute() {
   const params = useParams();
   const data = useLoaderData<LoaderData>();
   const actionData = useActionData<ActionData>();
+  const appData = useAppData();
   const { t } = useTranslation();
 
   return (
@@ -94,7 +100,10 @@ export default function RowsListRoute() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t(data.entity.titlePlural)}</h1>
           <div className="flex items-center space-x-2">
-            <ButtonPrimary to={`${UrlUtils.currentTenantUrl(params, data.entity.slug + "/new")}`}>
+            <ButtonPrimary
+              disabled={!appData.permissions.includes(getEntityPermission(data.entity, "create"))}
+              to={`${UrlUtils.currentTenantUrl(params, data.entity.slug + "/new")}`}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
@@ -107,7 +116,7 @@ export default function RowsListRoute() {
       <div className="py-4 space-y-2 mx-auto max-w-5xl xl:max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* <pre>{JSON.stringify(actionData?.items)}</pre>
         <pre>{JSON.stringify(data.items)}</pre> */}
-        <RowsList entity={data.entity} items={actionData?.items ?? data.items} pagination={actionData?.pagination ?? data.pagination} />
+        <RowsList view="table" entity={data.entity} items={actionData?.items ?? data.items} pagination={actionData?.pagination ?? data.pagination} />
       </div>
     </div>
   );

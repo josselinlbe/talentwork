@@ -17,7 +17,7 @@ export default function ButtonPrimary({ className = "", type = "button", onClick
   return (
     <span>
       {(() => {
-        if (!to) {
+        if (!to || disabled) {
           return (
             <button
               onClick={onClick}
@@ -39,7 +39,7 @@ export default function ButtonPrimary({ className = "", type = "button", onClick
         } else {
           return (
             <Link
-              to={to}
+              to={disabled ? "" : to}
               target={target}
               className={clsx(
                 className,

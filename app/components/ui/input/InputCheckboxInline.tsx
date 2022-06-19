@@ -32,7 +32,7 @@ const InputCheckboxInline = (
             type="checkbox"
             id={name}
             name={name}
-            checked={value}
+            defaultChecked={value}
             onChange={(e) => {
               setValue?.(e.target.checked);
             }}

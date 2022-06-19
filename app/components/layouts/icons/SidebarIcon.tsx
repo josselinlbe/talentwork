@@ -26,6 +26,7 @@ import { SideBarItem } from "~/application/sidebar/SidebarItem";
 import EntityIcon from "./EntityIcon";
 import IconKeys from "./IconKeys";
 import IconDocs from "./IconDocs";
+import IconRoles from "./IconRoles";
 // import IconEntities from "./IconEntities";
 
 interface Props {
@@ -40,6 +41,7 @@ export default function SidebarIcon({ className, item }: Props) {
       {item.icon === SvgIcon.ADMIN && <IconAdmin className={className} />}
       {item.icon === SvgIcon.TENANTS && <IconTenants className={className} />}
       {item.icon === SvgIcon.USERS && <IconUsers className={className} />}
+      {item.icon === SvgIcon.ROLES && <IconRoles className={className} />}
       {item.icon === SvgIcon.PRICING && <IconPricing className={className} />}
       {item.icon === SvgIcon.EMAILS && <IconEmails className={className} />}
       {item.icon === SvgIcon.NAVIGATION && <IconNavigation className={className} />}

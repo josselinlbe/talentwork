@@ -3,11 +3,13 @@ import ContractsList from "~/modules/contracts/components/contracts/ContractsLis
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import Tabs from "~/components/ui/tabs/Tabs";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, redirect, useLoaderData, useParams } from "remix";
+import { json, LoaderFunction, MetaFunction, redirect, useLoaderData, useParams } from "remix";
 import { getContracts } from "~/modules/contracts/db/contracts.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { getTenantUrl } from "~/utils/services/urlService";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { useAppData } from "~/utils/data/useAppData";
 
 type LoaderData = {
   title: string;
@@ -16,6 +18,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.entity.contract.view", tenantUrl.tenantId);
 
   const url = new URL(request.url);
   const filterString = url.searchParams.get("status");
@@ -45,6 +48,7 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function ContractsRoute() {
   const data = useLoaderData<LoaderData>();
+  const appData = useAppData();
   const params = useParams();
   const { t } = useTranslation();
 
@@ -73,7 +77,7 @@ export default function ContractsRoute() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("models.contract.plural")}</h1>
           <div className="flex items-center">
-            <ButtonPrimary to={UrlUtils.currentTenantUrl(params, "contracts/new")}>
+            <ButtonPrimary disabled={!appData.permissions.includes("app.entity.contract.create")} to={UrlUtils.currentTenantUrl(params, "contracts/new")}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
               </svg>

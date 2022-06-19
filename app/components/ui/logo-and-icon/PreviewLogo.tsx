@@ -6,13 +6,13 @@ export default function PreviewLogo() {
     <div id="logo" className="space-y-3 lg:grid lg:grid-cols-2 lg:space-y-0 w-full">
       <div className="bg-white p-6 border-dashed border-gray-300 border">
         <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">
-          <img className="dark:hidden w-auto mx-auto h-10" src={LogoLight} alt="Logo" />
+          <img className="w-auto mx-auto h-10" src={LogoLight} alt="Logo" />
         </div>
       </div>
 
       <div className="bg-gray-900 p-6 border-dashed border-gray-500 border">
         <div className="max-w-3xl mx-auto space-y-4 flex flex-col items-center justify-center sm:space-y-0 sm:space-x-4 sm:flex-row sm:items-end sm:justify-center">
-          <img className="dark:hidden w-auto mx-auto h-10" src={LogoDark} alt="Logo" />
+          <img className="w-auto mx-auto h-10" src={LogoDark} alt="Logo" />
         </div>
       </div>
     </div>

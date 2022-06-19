@@ -6,12 +6,14 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { createApiKey } from "~/utils/db/apiKeys.db.server";
 import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
   tenants: Tenant[];
 };
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader: LoaderFunction = async ({ request }) => {
+  await verifyUserHasPermission(request, "admin.apiKeys.create");
   const tenants = await adminGetAllTenants();
   const data: LoaderData = {
     tenants,
@@ -47,7 +49,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
     return redirect(`/admin/api/keys`);
   } else {
-    return badRequest(t("shared.invalidForm"));
+    return badRequest({ error: t("shared.invalidForm") });
   }
 };
 

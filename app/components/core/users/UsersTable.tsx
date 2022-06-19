@@ -1,4 +1,4 @@
-import { Tenant, TenantUser, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSubmit } from "remix";
@@ -8,15 +8,16 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import InputSearch from "~/components/ui/input/InputSearch";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { UsersActionType } from "~/routes/admin/users";
-import { useAdminData } from "~/utils/data/useAdminData";
-import { adminGetAllUsers } from "~/utils/db/users.db.server";
+import { UserWithDetails } from "~/utils/db/users.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
-  items: Awaited<ReturnType<typeof adminGetAllUsers>>;
+  items: UserWithDetails[];
+  canImpersonate: boolean;
+  canChangePassword: boolean;
+  canDelete: boolean;
 }
-export default function UsersTable({ items }: Props) {
-  const adminData = useAdminData();
+export default function UsersTable({ items, canImpersonate, canChangePassword, canDelete }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
 
@@ -52,7 +53,7 @@ export default function UsersTable({ items }: Props) {
     });
   };
 
-  function impersonate(user: User) {
+  function impersonate(user: UserWithDetails) {
     const form = new FormData();
     form.set("action", UsersActionType.Impersonate);
     form.set("user-id", user.id);
@@ -61,7 +62,7 @@ export default function UsersTable({ items }: Props) {
       method: "post",
     });
   }
-  function changePassword(user: User) {
+  function changePassword(user: UserWithDetails) {
     const password = prompt(t("settings.profile.changePassword") + " - " + user.email);
     if (password && confirm("[ADMINISTRATOR] Update password for user " + user.email + "?")) {
       const form = new FormData();
@@ -74,10 +75,10 @@ export default function UsersTable({ items }: Props) {
       });
     }
   }
-  function getUserTenants(user: User & { tenants: (TenantUser & { tenant: Tenant })[] }) {
+  function getUserTenants(user: UserWithDetails) {
     return user.tenants.map((f) => `${f.tenant?.name} (${t("settings.profile.types." + TenantUserType[f.type])})`).join(", ");
   }
-  function deleteUser(item: User) {
+  function deleteUser(item: UserWithDetails) {
     if (confirmDelete.current) {
       confirmDelete.current.setValue(item);
       confirmDelete.current.show(t("shared.delete"), t("shared.delete"), t("shared.cancel"), t("admin.users.deleteWarning"));
@@ -91,18 +92,6 @@ export default function UsersTable({ items }: Props) {
       action: "/admin/users",
       method: "post",
     });
-  }
-  function adminHasPermission(action: "impersonate" | "change-password" | "delete-user") {
-    switch (action) {
-      case "impersonate":
-        return adminData.user.admin?.role === TenantUserType.OWNER;
-      case "change-password":
-        return adminData.user.admin?.role === TenantUserType.OWNER;
-      case "delete-user":
-        return adminData.user.admin?.role === TenantUserType.OWNER;
-      default:
-        return false;
-    }
   }
 
   return (
@@ -177,13 +166,13 @@ export default function UsersTable({ items }: Props) {
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <div className="flex items-center space-x-2">
-                                      <ButtonTertiary disabled={!adminHasPermission("impersonate")} onClick={() => impersonate(item)}>
+                                      <ButtonTertiary disabled={!canImpersonate} onClick={() => impersonate(item)}>
                                         {t("models.user.impersonate")}
                                       </ButtonTertiary>
-                                      <ButtonTertiary disabled={!adminHasPermission("change-password")} onClick={() => changePassword(item)}>
+                                      <ButtonTertiary disabled={!canChangePassword} onClick={() => changePassword(item)}>
                                         {t("settings.profile.changePassword")}
                                       </ButtonTertiary>
-                                      <ButtonTertiary disabled={!adminHasPermission("delete-user")} onClick={() => deleteUser(item)} destructive={true}>
+                                      <ButtonTertiary disabled={!canDelete} onClick={() => deleteUser(item)} destructive={true}>
                                         {t("shared.delete")}
                                       </ButtonTertiary>
                                     </div>

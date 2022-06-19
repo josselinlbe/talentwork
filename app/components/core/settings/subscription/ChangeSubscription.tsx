@@ -19,8 +19,9 @@ interface Props {
   items: Awaited<ReturnType<typeof getAllSubscriptionProducts>>;
   billingPeriod: SubscriptionBillingPeriod;
   currency: string;
+  canSubscribe: boolean;
 }
-export default function ChangeSubscription({ items, current, billingPeriod, currency }: Props) {
+export default function ChangeSubscription({ items, current, billingPeriod, currency, canSubscribe }: Props) {
   const { t } = useTranslation();
   const transition = useTransition();
   const loading = transition.state === "submitting";
@@ -220,14 +221,16 @@ export default function ChangeSubscription({ items, current, billingPeriod, curr
                           {/* Button */}
                           <div className="flex-shrink-0 pt-4 space-y-2">
                             <button
-                              disabled={loading || isCurrent(plan) || !getPrice(plan)?.stripeId}
+                              disabled={loading || isCurrent(plan) || !getPrice(plan)?.stripeId || !canSubscribe}
                               type="button"
                               onClick={() => selectPrice(plan)}
                               className={clsx(
                                 "inline-flex items-center justify-center w-full px-4 py-2 transition-colors border rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm",
-                                loading || isCurrent(plan) || !getPrice(plan)?.stripeId ? "opacity-80" : "hover:bg-gray-100 border-slate-800",
-                                isUpgrade(plan) && "hover:text-teal-600",
-                                isDowngrade(plan) && "hover:text-red-600"
+                                loading || isCurrent(plan) || !getPrice(plan)?.stripeId || !canSubscribe
+                                  ? "opacity-80 cursor-not-allowed"
+                                  : "hover:bg-gray-100 border-slate-800",
+                                isUpgrade(plan) && canSubscribe && "hover:text-teal-600",
+                                isDowngrade(plan) && canSubscribe && "hover:text-red-600"
                               )}
                             >
                               {getButtonTitle(plan)}

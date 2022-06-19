@@ -6,6 +6,7 @@ import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import TenantNew from "~/components/core/settings/tenant/TenantNew";
 import Logo from "~/components/front/Logo";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
 import { createTenant, createTenantUser, getMyTenants } from "~/utils/db/tenants.db.server";
 import { getUser, updateUserDefaultTenantId } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
@@ -50,11 +51,15 @@ export const action: ActionFunction = async ({ request }) => {
     return badRequest({ error: "Could not create Stripe customer" });
   }
   const tenant = await createTenant(name, stripeCustomer.id, "");
-  await createTenantUser({
-    tenantId: tenant.id,
-    userId: user.id,
-    type: TenantUserType.OWNER,
-  });
+  const roles = await getAllRoles("app");
+  await createTenantUser(
+    {
+      tenantId: tenant.id,
+      userId: user.id,
+      type: TenantUserType.OWNER,
+    },
+    roles
+  );
 
   await updateUserDefaultTenantId({ defaultTenantId: tenant.id }, user.id);
 

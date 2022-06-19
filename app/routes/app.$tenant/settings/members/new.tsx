@@ -9,6 +9,7 @@ import NewMember from "~/components/core/settings/members/NewMember";
 import { getTenantUrl } from "~/utils/services/urlService";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
 export type NewMemberLoaderData = {
   title: string;
@@ -18,6 +19,7 @@ export type NewMemberLoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  await verifyUserHasPermission(request, "app.settings.members.create", tenantUrl.tenantId);
   const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "user");
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
@@ -44,6 +46,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const appData = await loadAppData(request, params);
 
   const form = await request.formData();
+
   const email = form.get("email")?.toString().toLowerCase().trim() ?? "";
   const firstName = form.get("first-name")?.toString() ?? "";
   const lastName = form.get("last-name")?.toString() ?? "";

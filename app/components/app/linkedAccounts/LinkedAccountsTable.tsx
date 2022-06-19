@@ -16,9 +16,10 @@ import { useSubmit } from "remix";
 
 interface Props {
   items: LinkedAccountWithDetails[];
+  canDelete: boolean;
 }
 
-export default function LinkedAccountsTable({ items }: Props) {
+export default function LinkedAccountsTable({ items, canDelete }: Props) {
   const appData = useAppData();
   const { t } = useTranslation();
   const params = useParams();
@@ -75,7 +76,7 @@ export default function LinkedAccountsTable({ items }: Props) {
     if (!column || column === "") {
       return items;
     }
-    return items.slice().sort((x, y) => {
+    return items.slice().sort((x: any, y: any) => {
       if (x[column] && y[column]) {
         if (sortDirection === -1) {
           return (x[column] > y[column] ? 1 : -1) ?? 1;
@@ -278,7 +279,7 @@ export default function LinkedAccountsTable({ items }: Props) {
                                       <ButtonTertiary to={UrlUtils.currentTenantUrl(params, `contracts/new?l=${link.id}`)}>
                                         <div>{t("app.contracts.new.title")}</div>
                                       </ButtonTertiary>
-                                      <ButtonTertiary className="text-gray-600 hover:text-gray-800" onClick={() => deleteLinkedAccount(link)}>
+                                      <ButtonTertiary disabled={!canDelete} onClick={() => deleteLinkedAccount(link)}>
                                         <div>{t("shared.delete")}</div>
                                       </ButtonTertiary>
                                     </>

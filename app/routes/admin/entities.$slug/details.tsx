@@ -2,6 +2,7 @@ import { Entity } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import EntityForm from "~/components/entities/EntityForm";
 import { i18nHelper } from "~/locale/i18n.utils";
+import { useAdminData } from "~/utils/data/useAdminData";
 import { updateEntity, deleteEntity, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 
@@ -81,11 +82,12 @@ export const action: ActionFunction = async ({ request, params }) => {
       return badRequest({ error: JSON.stringify(e) });
     }
   } else {
-    return badRequest(t("shared.invalidForm"));
+    return badRequest({ error: t("shared.invalidForm") });
   }
 };
 
 export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
-  return <EntityForm item={data.item} />;
+  const adminData = useAdminData();
+  return <EntityForm canDelete={adminData.permissions.includes("admin.entities.delete")} item={data.item} />;
 }

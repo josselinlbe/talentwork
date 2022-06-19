@@ -77,7 +77,7 @@ export default function QuickActionsButton({ entities, className }: Props) {
                   </li>
                 );
               })}
-              {appData.isOwnerOrAdmin && (
+              {appData.permissions.includes("app.settings.linkedAccounts.create") && (
                 <>
                   <li className="text-gray-900 cursor-default select-none relative text-sm" id="listbox-option-2">
                     <Link

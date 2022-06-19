@@ -6,7 +6,6 @@ import PostsList from "~/components/blog/PostsList";
 import { useTranslation } from "react-i18next";
 import { BlogPostWithDetails, getAllBlogPosts } from "~/utils/db/blog.db.server";
 import { Language } from "remix-i18next";
-import Tabs from "~/components/ui/tabs/Tabs";
 
 type LoaderData = {
   title: string;

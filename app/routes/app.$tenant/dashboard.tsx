@@ -43,9 +43,14 @@ export default function DashboardRoute() {
       </div>
 
       <div className="px-4 sm:px-8 max-w-5xl mx-auto py-5 grid gap-5">
-        <div className="space-y-5">
-          <DashboardStats items={data.stats} />
-        </div>
+        {appData.permissions.includes("app.dashboard.view") ? (
+          <div className="space-y-5">
+            <DashboardStats items={data.stats} />
+          </div>
+        ) : (
+          <div className="font-medium">You don't have permission to view the dashboard.</div>
+        )}
+
         {/* <div className="mt-2 grid sm:grid-cols-1 gap-5">
           <div className="space-y-5">
             <MySubscriptionProducts withCurrentPlan={true} cols="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-4" />

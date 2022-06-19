@@ -13,6 +13,8 @@ import { EntityWithDetails, getAllEntities } from "../db/entities/entities.db.se
 import { Tenant } from "@prisma/client";
 import { Language } from "remix-i18next";
 import { Params } from "react-router";
+import { getUserRoles, UserRoleWithPermission } from "../db/permissions/userRoles.db.server";
+import { getMyGroups, GroupWithDetails } from "../db/permissions/groups.db.server";
 
 export type AppLoaderData = {
   i18n: Record<string, Language>;
@@ -21,9 +23,11 @@ export type AppLoaderData = {
   currentTenant: Tenant;
   mySubscription: TenantSubscriptionWithDetails | null;
   currentRole: TenantUserType;
-  isOwnerOrAdmin: boolean;
   pendingInvitations: number;
   entities: EntityWithDetails[];
+  roles: UserRoleWithPermission[];
+  permissions: string[];
+  myGroups: GroupWithDetails[];
 };
 
 export function useAppData(): AppLoaderData {
@@ -59,12 +63,19 @@ export async function loadAppData(request: Request, params: Params) {
   if (user.admin) {
     currentRole = TenantUserType.ADMIN;
   }
-  const isOwnerOrAdmin = currentRole == TenantUserType.OWNER || currentRole == TenantUserType.ADMIN;
-
   const pendingInvitations = await getLinkedAccountsCount(tenantUrl.tenantId, [LinkedAccountStatus.PENDING]);
 
   const mySubscription = await getTenantSubscription(tenantUrl.tenantId);
 
+  const roles = await getUserRoles(userInfo.userId, tenantUrl.tenantId);
+  const permissions: string[] = [];
+  roles.forEach((role) => {
+    role.role.permissions.forEach((permission) => {
+      if (!permissions.includes(permission.permission.name)) {
+        permissions.push(permission.permission.name);
+      }
+    });
+  });
   const data: AppLoaderData = {
     i18n: translations,
     user,
@@ -72,9 +83,11 @@ export async function loadAppData(request: Request, params: Params) {
     currentTenant,
     currentRole,
     mySubscription,
-    isOwnerOrAdmin,
     pendingInvitations,
     entities: await getAllEntities(true),
+    roles,
+    permissions,
+    myGroups: await getMyGroups(user.id),
   };
   return data;
 }

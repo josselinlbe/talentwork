@@ -9,20 +9,25 @@ interface Props {
   children?: ReactNode;
   className?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }
 
-export default function DropdownWithClick({ button, options, right, onClick, className }: Props) {
+export default function DropdownWithClick({ button, options, right, onClick, className, disabled }: Props) {
   return (
     <span className={clsx(className, "relative z-0 inline-flex shadow-sm rounded-md")}>
       <button
         onClick={onClick}
+        disabled={disabled}
         type="button"
-        className="-mr-1 relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500"
+        className={clsx(
+          "-mr-1 relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 focus:z-10 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500",
+          disabled ? "cursor-not-allowed opacity-80" : "hover:bg-gray-50"
+        )}
       >
         {button}
       </button>
       <Menu as="span" className="-ml-px relative block">
-        <Menu.Button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500">
+        <Menu.Button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white hover:bg-gray-50 text-sm font-medium text-gray-500 focus:z-10 focus:outline-none focus:ring-1 focus:ring-theme-500 focus:border-theme-500">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path
               fillRule="evenodd"

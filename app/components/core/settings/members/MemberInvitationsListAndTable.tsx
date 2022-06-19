@@ -4,11 +4,13 @@ import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserInvitation } from "@prisma/client";
 import { useSubmit } from "remix";
+import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 interface Props {
   items: TenantUserInvitation[];
+  canDelete: boolean;
 }
-export default function MemberInvitationsListAndTable({ items }: Props) {
+export default function MemberInvitationsListAndTable({ items, canDelete }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
 
@@ -33,7 +35,7 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
     return t("settings.profile.types." + TenantUserType[item.type]);
   }
   function getUserRoleClass(item: TenantUserInvitation) {
-    switch (item.role as TenantUserType) {
+    switch (item.type as TenantUserType) {
       case TenantUserType.OWNER:
         return "bg-slate-50 text-gray-800 border border-slate-300";
       case TenantUserType.ADMIN:
@@ -129,13 +131,9 @@ export default function MemberInvitationsListAndTable({ items }: Props) {
 
                         <td className="w-20 px-2 py-2 whitespace-nowrap text-sm text-gray-600">
                           <div className="flex items-center space-x-2">
-                            <button
-                              type="button"
-                              onClick={() => deleteUserInvitation(item)}
-                              className="flex items-center space-x-2 text-red-600 hover:text-red-900"
-                            >
+                            <ButtonTertiary destructive disabled={!canDelete} type="button" onClick={() => deleteUserInvitation(item)}>
                               {t("shared.delete")}
-                            </button>
+                            </ButtonTertiary>
                           </div>
                         </td>
                       </tr>

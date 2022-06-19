@@ -11,6 +11,7 @@ import { getMyTenants, MyTenant } from "~/utils/db/tenants.db.server";
 import { getUser } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { Language } from "remix-i18next";
+import { useEffect } from "react";
 
 type LoaderData = {
   myTenants: MyTenant[];
@@ -35,6 +36,15 @@ export let loader: LoaderFunction = async ({ request }) => {
 export default function AppRoute() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
+
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      $crisp.push(["do", "chat:hide"]);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   return (
     <div>

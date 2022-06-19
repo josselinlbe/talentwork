@@ -1,10 +1,11 @@
 import clsx from "clsx";
+import { ReactNode } from "react";
 import HintTooltip from "../tooltips/HintTooltip";
 
 interface Props {
   name: string;
-  title: string;
-  description: string;
+  title: string | ReactNode;
+  description: string | ReactNode;
   value?: boolean;
   setValue?: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;

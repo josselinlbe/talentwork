@@ -1,6 +1,32 @@
 import clsx from "clsx";
 import { Colors } from "~/application/enums/shared/Colors";
 
+export function getColors() {
+  return [
+    Colors.SLATE,
+    Colors.GRAY,
+    Colors.NEUTRAL,
+    Colors.STONE,
+    Colors.RED,
+    Colors.ORANGE,
+    Colors.AMBER,
+    Colors.YELLOW,
+    Colors.LIME,
+    Colors.GREEN,
+    Colors.EMERALD,
+    Colors.TEAL,
+    Colors.CYAN,
+    Colors.SKY,
+    Colors.BLUE,
+    Colors.INDIGO,
+    Colors.VIOLET,
+    Colors.PURPLE,
+    Colors.FUCHSIA,
+    Colors.PINK,
+    Colors.ROSE,
+  ];
+}
+
 export function getTailwindColor(itemColor: Colors): string {
   switch (itemColor) {
     case Colors.UNDEFINED:

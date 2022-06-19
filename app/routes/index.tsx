@@ -17,6 +17,8 @@ import Testimonials from "~/components/front/Testimonials";
 import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 import { getTestimonials } from "~/utils/services/marketingService";
 import Newsletter from "~/components/front/Newsletter";
+import { useRootData } from "~/utils/data/useRootData";
+import { useEffect } from "react";
 
 export type IndexLoaderData = {
   title: string;
@@ -60,8 +62,27 @@ export const meta: MetaFunction = ({ data }) => ({
 export default function IndexRoute() {
   const { t } = useTranslation();
   const data = useLoaderData<IndexLoaderData>();
+  const { chatWebsiteId } = useRootData();
+
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      $crisp.push(["do", "chat:show"]);
+    } catch {
+      // ignore
+    }
+  }, []);
+
   return (
     <div>
+      {chatWebsiteId && (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: `<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="${chatWebsiteId}";(function(){d = document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>`,
+          }}
+        ></div>
+      )}
+
       <TopBanner
         message={t("front.hero.prelaunch")}
         cta={{

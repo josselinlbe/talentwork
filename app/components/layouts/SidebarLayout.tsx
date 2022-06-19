@@ -1,7 +1,6 @@
 import { Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useRef, useState } from "react";
 import SidebarMenu from "./SidebarMenu";
-import ChatSupportButton from "./buttons/ChatSupportButton";
 import PendingInvitationsButton from "./buttons/PendingInvitationsButton";
 import ProfileButton from "./buttons/ProfileButton";
 import QuickActionsButton from "./buttons/QuickActionsButton";
@@ -75,14 +74,14 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                 </div>
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-3">
-                    {/* <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" /> */}
-                    {layout === "docs" && (
-                      <div className="flex flex-col space-y-2">
-                        <Link to={"/"}>
-                          <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
-                          {/* <BrandLogo className="h-8 mx-auto dark" /> */}
-                        </Link>
-                        {/* <InputSelect
+                    <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
+
+                    <div className="flex flex-col space-y-2">
+                      <Link to={"/"}>
+                        <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
+                        {/* <BrandLogo className="h-8 mx-auto dark" /> */}
+                      </Link>
+                      {/* <InputSelect
                           className="bg-gray-900 border-gray-700 text-gray-300 rounded-sm"
                           name="v"
                           title={""}
@@ -94,8 +93,7 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                             { name: "v0.0.1", value: "v0.0.1", disabled: true },
                           ]}
                         ></InputSelect> */}
-                      </div>
-                    )}
+                    </div>
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
                 </div>
@@ -122,14 +120,12 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                 {/* <div className=" ">
                   <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
                 </div> */}
-                {layout === "docs" && (
-                  <div className="flex flex-col space-y-2">
-                    <Link to={"/"}>
-                      {/* <BrandLogo className="h-8 mx-auto dark" /> */}
-                      <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
-                    </Link>
-                  </div>
-                )}
+                <div className="flex flex-col space-y-2">
+                  <Link to={"/"}>
+                    {/* <BrandLogo className="h-8 mx-auto dark" /> */}
+                    <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
+                  </Link>
+                </div>
                 <SidebarMenu layout={layout} />
               </nav>
             </div>
@@ -187,9 +183,9 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
             <div className="flex items-center md:ml-6 space-x-2">
               {/* {layout === "admin" && <LayoutSelector className="text-sm" />} */}
               {/* {layout === "admin" && <LocaleSelector className="text-sm" />} */}
-              {layout === "app" && <CurrentSubscriptionButton />}
-              {layout === "app" && appData.isOwnerOrAdmin && <PendingInvitationsButton />}
-              {layout === "app" && <ChatSupportButton />}
+              {layout === "app" && appData.permissions.includes("app.settings.subscription.update") && <CurrentSubscriptionButton />}
+              {layout === "app" && appData.permissions.includes("app.settings.linkedAccounts.view") && <PendingInvitationsButton />}
+              {/* {layout === "app" && <ChatSupportButton />} */}
               {layout === "app" && <QuickActionsButton entities={appData.entities} />}
               {(layout === "app" || layout === "admin") && <ProfileButton layout={layout} />}
               {layout === "docs" && (

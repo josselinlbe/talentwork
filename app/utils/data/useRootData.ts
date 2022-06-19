@@ -8,6 +8,7 @@ export type AppRootData = {
   authenticated: boolean;
   isAdmin: boolean;
   debug: boolean;
+  chatWebsiteId?: string;
 };
 
 export function useRootData(): AppRootData {
@@ -23,6 +24,7 @@ export async function loadRootData(request: Request) {
     isAdmin: user?.admin !== null,
     authenticated: userSession.userId?.length > 0,
     debug: process.env.NODE_ENV === "development",
+    chatWebsiteId: process.env.CRISP_CHAT_WEBSITE_ID?.toString(),
   };
   return json(data);
 }
