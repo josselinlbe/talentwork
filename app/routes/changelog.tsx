@@ -456,7 +456,7 @@ export default function ChangelogRoute() {
                               {item.releaseTag && (
                                 <span>
                                   -{" "}
-                                  <a className="text-gray-500" href={`https://github.com/AlexandroMtzG/remix-saas-kit/releases/tag/${item.releaseTag}`}>
+                                  <a className="text-gray-500" href={`https://github.com/AlexandroMtzG/saasrock/releases/tag/${item.releaseTag}`}>
                                     v{item.releaseTag}
                                   </a>
                                 </span>

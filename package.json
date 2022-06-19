@@ -1,9 +1,9 @@
 {
   "name": "saasrock",
-  "description": "The Remix SaaS boilerplate with everything you need to build your own SaaS: React, Tailwind CSS, TypeScript, Stripe, Postmark, Prisma, and Supabase.",
-  "homepage": "https://saasfrontends.com",
-  "repository": "https://github.com/AlexandroMtzG/remix-saas-kit",
-  "bugs": "https://github.com/AlexandroMtzG/remix-saas-kit/issues",
+  "description": "The Remix multi-tenant framework with out-of-the-box SaaS features.",
+  "homepage": "https://saasrock.com",
+  "repository": "https://github.com/AlexandroMtzG/saasrock",
+  "bugs": "https://github.com/AlexandroMtzG/saasrock/issues",
   "author": "Alexandro Martinez",
   "private": true,
   "license": "",

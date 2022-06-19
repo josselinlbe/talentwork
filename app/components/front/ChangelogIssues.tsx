@@ -41,7 +41,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
   function getIssueUrl(item: Issue) {
     const id = getIssueId(item);
     if (id > 0) {
-      return "https://github.com/AlexandroMtzG/remix-saas-kit/issues/" + id;
+      return "https://github.com/AlexandroMtzG/saasrock/issues/" + id;
     }
     return "";
   }
