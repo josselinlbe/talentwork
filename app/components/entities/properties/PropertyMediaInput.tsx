@@ -1,5 +1,6 @@
 import { Media } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import PreviewMediaModal from "~/components/ui/media/PreviewMediaModal";
@@ -17,6 +18,8 @@ interface Props {
   readOnly?: boolean;
 }
 export default function PropertyMediaInput({ initialMedia, property, disabled, onSelected, className, readOnly }: Props) {
+  const { t } = useTranslation();
+
   const [items, setItems] = useState<MediaDto[]>(initialMedia ?? []);
   const [selectedItem, setSelectedItem] = useState<MediaDto>();
 
@@ -57,7 +60,7 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
   return (
     <div className={className}>
       <label htmlFor="result" className="block text-xs font-medium text-gray-700">
-        {property.title}
+        {t(property.title)}
         {property.isRequired && <span className="ml-1 text-red-500">*</span>}
       </label>
       <div className="mt-1">

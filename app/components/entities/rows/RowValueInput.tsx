@@ -192,7 +192,7 @@ const RowValueInput = (
         <div>
           <InputSelector
             name={selected.name}
-            title={selected.title}
+            title={t(selected.title)}
             value={relatedRowId}
             setValue={(e) => onChange(e?.toString())}
             options={

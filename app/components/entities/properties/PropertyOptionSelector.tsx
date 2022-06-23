@@ -6,6 +6,7 @@ import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import CheckIcon from "~/components/ui/icons/CheckIcon";
 import SelectorIcon from "~/components/ui/icons/SelectorIcon";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   className?: string;
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const PropertyOptionSelector = ({ className, field, parent, disabled, initial, parentSelectedValue, onSelected }: Props) => {
+  const { t } = useTranslation();
+
   const button = useRef<HTMLButtonElement>(null);
 
   const [selected, setSelected] = useState<PropertyOption | undefined>(initial);
@@ -47,7 +50,7 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
     <div className="space-y-3">
       <div>
         <label htmlFor="result" className="block text-xs font-medium text-gray-700">
-          {field.title}
+          {t(field.title)}
           {field.isRequired && <span className="ml-1 text-red-500">*</span>}
         </label>
         <div className="mt-1">
@@ -69,7 +72,7 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
                         <>{selected.value}</>
                       ) : (
                         <div className="text-gray-500">
-                          Select <span className="lowercase">{field.title}</span>...
+                          {t("shared.select")} <span className="lowercase">{t(field.title)}</span>...
                         </div>
                       )}
                     </div>
