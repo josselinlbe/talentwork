@@ -93,6 +93,14 @@ export default function IndexRoute() {
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
         <Hero />
         <LogoClouds />
+        <div className="aspect-w-16 aspect-h-5 mt-10 max-w-2xl mx-auto my-12">
+          <iframe
+            src="https://www.youtube.com/embed/gErrqmGv1tw"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          ></iframe>
+        </div>
         <FeatureImages />
         <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />
