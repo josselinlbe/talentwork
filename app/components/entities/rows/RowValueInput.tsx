@@ -1,4 +1,4 @@
-import { PropertyOption, Media } from "@prisma/client";
+import { PropertyOption, RowMedia } from "@prisma/client";
 import { Ref, useImperativeHandle, useRef, useState, useEffect, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
@@ -32,7 +32,7 @@ interface Props {
   dateValue: Date | undefined;
   booleanValue: boolean | undefined;
   relatedRowId?: string | undefined;
-  initialMedia?: Media[] | undefined;
+  initialMedia?: RowMedia[] | undefined;
   initialOption?: PropertyOption | undefined;
   parentSelectedValue: RowValueDto | undefined;
   onChange: (value: string | number | Date | boolean | undefined | null) => void;
@@ -148,7 +148,7 @@ const RowValueInput = (
           value={numberValue}
           setValue={(e) => onChange(Number(e).toString())}
           max={100000000}
-          disabled={selected.isDefault}
+          disabled={readOnly}
           className={className}
           readOnly={readOnly}
         />
@@ -231,7 +231,7 @@ const RowValueInput = (
             required={selected.isRequired}
             value={booleanValue}
             setValue={(e) => onChange(e as boolean)}
-            disabled={selected.isDefault}
+            disabled={readOnly}
             className={className}
             readOnly={readOnly}
           />

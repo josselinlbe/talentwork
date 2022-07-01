@@ -40,7 +40,7 @@ const InputCheckboxInline = (
             readOnly={readOnly}
             className={clsx(
               (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
-              "cursor-pointer focus:ring-accent-500 h-4 w-4 text-accent-600 border-gray-300 rounded"
+              "cursor-pointer focus:ring-theme-500 h-4 w-4 text-theme-600 border-gray-300 rounded"
             )}
           />
         </div>

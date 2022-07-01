@@ -7,7 +7,7 @@ import TenantHelper from "../helpers/TenantHelper";
 import DateUtils from "../shared/DateUtils";
 
 export async function getAppDashboardStats(tenantId: string, lastDays: number): Promise<Stat[]> {
-  const entities = await getAllEntities(true);
+  const entities = await getAllEntities(true, false);
   const stats: Stat[] = await Promise.all(
     entities.map(async (entity) => {
       return await getEntityStat(entity, tenantId, lastDays);

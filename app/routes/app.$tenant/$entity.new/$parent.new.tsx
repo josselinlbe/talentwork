@@ -11,6 +11,7 @@ import { createRowLog } from "~/utils/db/logs.db.server";
 import { getRelatedRows } from "~/utils/services/entitiesService";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 
 type LoaderData = {
   title: string;
@@ -60,7 +61,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       properties: rowValues.properties,
     });
     const item = await getRow(entity.id, created.id, tenantUrl.tenantId);
-    await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Created", entity, item });
+    await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: DefaultLogActions.Created, entity, item });
     return redirect(`/app/${params.tenant}/${params.entity}/new?${entity.name}=${created.id}`);
   } catch (e: any) {
     return badRequest({ error: e?.toString() });

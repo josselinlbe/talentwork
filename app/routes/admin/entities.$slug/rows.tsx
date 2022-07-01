@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ColumnDto } from "~/application/dtos/data/ColumnDto";
 import RowsList from "~/components/entities/rows/RowsList";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { RowWithDetails, getAllRows } from "~/utils/db/entities/rows.db.server";
+import RowColumnsHelper from "~/utils/helpers/RowColumnsHelper";
 
 type LoaderData = {
   entity: EntityWithDetails;
@@ -32,5 +35,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
-  return <RowsList view="table" entity={data.entity} items={data.items} withTenant />;
+  const [columns] = useState<ColumnDto[]>(RowColumnsHelper.getDefaultEntityColumns(data.entity));
+  return <RowsList view="table" entity={data.entity} items={data.items} columns={columns} />;
 }

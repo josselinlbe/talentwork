@@ -36,7 +36,7 @@ export default function UserRolesTable({ items, roles, className, onChange, tena
               <div>
                 <div className="flex flex-col">
                   <div className="overflow-x-auto">
-                    <div className="py-2 align-middle inline-block min-w-full">
+                    <div className="align-middle inline-block min-w-full">
                       <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
                         <table className="min-w-full divide-y divide-gray-200">
                           <thead className="bg-gray-50">

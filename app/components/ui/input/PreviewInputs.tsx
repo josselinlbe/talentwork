@@ -8,7 +8,7 @@ import InputSelector from "./InputSelector";
 import InputText from "./InputText";
 
 export default function PreviewInputs() {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>("");
+  const [selectedOption, setSelectedOption] = useState<string | number | undefined>("");
   return (
     <div id="inputs" className="space-y-6">
       <div className="space-y-1">

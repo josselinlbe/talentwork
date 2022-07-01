@@ -83,7 +83,7 @@ export default function PostsTable({ items }: Props) {
     }
     return filteredItems()
       .slice()
-      .sort((x, y) => {
+      .sort((x: any, y: any) => {
         if (x[column] && y[column]) {
           if (sortDirection === -1) {
             return (x[column] > y[column] ? 1 : -1) ?? 1;
@@ -116,7 +116,7 @@ export default function PostsTable({ items }: Props) {
             return (
               <div className="flex flex-col">
                 <div className="overflow-x-auto">
-                  <div className="py-2 align-middle inline-block min-w-full">
+                  <div className="align-middle inline-block min-w-full">
                     <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">

@@ -4,6 +4,8 @@ import { Listbox, Transition } from "@headlessui/react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useTranslation } from "react-i18next";
 import { Link } from "remix";
+import { Colors } from "~/application/enums/shared/Colors";
+import ColorBadge from "../badges/ColorBadge";
 
 export interface RefInputSelector {
   focus: () => void;
@@ -14,16 +16,34 @@ interface Props {
   title: string;
   value?: string | number | undefined;
   disabled?: boolean;
-  options: { name: string | ReactNode; value: string | number | undefined }[];
+  options: { name: string | ReactNode; value: string | number | undefined; color?: Colors }[];
   setValue?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   className?: string;
   withSearch?: boolean;
+  withLabel?: boolean;
+  withColors?: boolean;
+  selectPlaceholder?: string;
   onNew?: () => void;
   onNewRoute?: string;
   required?: boolean;
 }
 const InputSelector = (
-  { name, title, value, options, disabled, setValue, className, withSearch = true, onNew, required, onNewRoute }: Props,
+  {
+    name,
+    title,
+    value,
+    options,
+    disabled,
+    setValue,
+    className,
+    withSearch = true,
+    withLabel = true,
+    withColors = false,
+    selectPlaceholder,
+    onNew,
+    required,
+    onNewRoute,
+  }: Props,
   ref: Ref<RefInputSelector>
 ) => {
   const { t } = useTranslation();
@@ -31,7 +51,7 @@ const InputSelector = (
   const button = useRef<HTMLButtonElement>(null);
   const inputSearch = useRef<HTMLInputElement>(null);
 
-  const [selected, setSelected] = useState<{ name: string | ReactNode; value: string | number | undefined }>();
+  const [selected, setSelected] = useState<{ name: string | ReactNode; value: string | number | undefined; color?: Colors }>();
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
@@ -75,12 +95,14 @@ const InputSelector = (
     <Listbox value={selected} onChange={setSelected} disabled={disabled}>
       {({ open }) => (
         <div className={clsx(className, "text-gray-800")}>
-          <Listbox.Label htmlFor={name} className="block text-xs font-medium text-gray-600 truncate">
-            {title}
-            {required && <span className="ml-1 text-red-500">*</span>}
-          </Listbox.Label>
+          {withLabel && (
+            <Listbox.Label htmlFor={name} className="block text-xs font-medium text-gray-600 truncate">
+              {title}
+              {required && <span className="ml-1 text-red-500">*</span>}
+            </Listbox.Label>
+          )}
 
-          <div className="mt-1 relative">
+          <div className={clsx("relative", withLabel && "mt-1")}>
             <Listbox.Button
               type="button"
               ref={button}
@@ -90,9 +112,10 @@ const InputSelector = (
               )}
             >
               <input type="hidden" readOnly name={name} value={selected?.value ?? ""} />
-              <span className="w-full inline-flex truncate">
+              <span className="w-full inline-flex truncate space-x-1 items-center">
+                {withColors && selected && <ColorBadge color={selected?.color ?? Colors.UNDEFINED} />}
                 <span className="truncate">
-                  {selected ? <span>{selected?.name}</span> : <span className="text-sm text-gray-500">{t("shared.select")}...</span>}
+                  {selected ? <span>{selected?.name}</span> : <span className="text-sm text-gray-500">{selectPlaceholder ?? t("shared.select")}...</span>}
                 </span>
               </span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -166,7 +189,8 @@ const InputSelector = (
                   >
                     {({ selected, active }) => (
                       <>
-                        <div className="flex">
+                        <div className="flex items-center space-x-1">
+                          {item.color !== undefined && <ColorBadge color={item.color} />}
                           <span className={clsx(selected ? "font-semibold" : "font-normal", "truncate")}>{item.name}</span>
                         </div>
 

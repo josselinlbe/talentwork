@@ -106,12 +106,9 @@ export default function AdminRolesAndPermissionsAdminUsersRoute() {
   }
 
   return (
-    <div className={clsx("flex flex-col p-0.5 space-y-3")}>
+    <div className="space-y-2">
       <InputSearch value={searchInput} setValue={setSearchInput} />
-
       <UserRolesTable items={filteredItems()} roles={data.roles} onChange={onChange} disabled={!adminData.permissions.includes("admin.roles.set")} />
-
-      <Outlet />
     </div>
   );
 }

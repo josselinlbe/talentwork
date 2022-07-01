@@ -35,7 +35,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   return json(data);
 };
 
-export type ActionData = {
+type ActionData = {
   error?: string;
   success?: string;
 };

@@ -5,7 +5,7 @@ export type GroupWithDetails = Group & {
   users: (GroupUser & { user: User })[];
 };
 
-export async function getAllGroups(tenantId: string): Promise<GroupWithDetails[]> {
+export async function getAllGroups(tenantId: string | null): Promise<GroupWithDetails[]> {
   return await db.group.findMany({
     where: {
       tenantId,
@@ -25,7 +25,7 @@ export async function getAllGroups(tenantId: string): Promise<GroupWithDetails[]
   });
 }
 
-export async function getGroups(tenantId: string, ids: string[]): Promise<GroupWithDetails[]> {
+export async function getGroups(tenantId: string | null, ids: string[]): Promise<GroupWithDetails[]> {
   return await db.group.findMany({
     where: {
       tenantId,
@@ -48,9 +48,10 @@ export async function getGroups(tenantId: string, ids: string[]): Promise<GroupW
   });
 }
 
-export async function getMyGroups(userId: string): Promise<GroupWithDetails[]> {
+export async function getMyGroups(userId: string, tenantId: string | null): Promise<GroupWithDetails[]> {
   return await db.group.findMany({
     where: {
+      tenantId,
       OR: [
         {
           createdByUserId: userId,
@@ -94,7 +95,7 @@ export async function getGroup(id: string): Promise<GroupWithDetails | null> {
   });
 }
 
-export async function createGroup(data: { createdByUserId: string; tenantId: string; name: string; description: string; color: number }) {
+export async function createGroup(data: { createdByUserId: string; tenantId: string | null; name: string; description: string; color: number }) {
   return await db.group.create({
     data,
   });

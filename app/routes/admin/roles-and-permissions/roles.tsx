@@ -31,7 +31,11 @@ export default function AdminRolesRoute() {
 
   return (
     <div>
-      <RolesTable items={data.items} canCreate={adminData.permissions.includes("admin.roles.create")} />
+      <RolesTable
+        items={data.items}
+        canCreate={adminData.permissions.includes("admin.roles.create")}
+        canUpdate={adminData.permissions.includes("admin.roles.update")}
+      />
       <Outlet />
     </div>
   );

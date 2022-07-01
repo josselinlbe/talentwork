@@ -1,23 +1,50 @@
 const tenantCondition = (
-  tenantId: string
+  tenantId: string | null
 ): {
   OR: [
     {
       visibility: string;
     },
     {
-      tenantId: string;
+      tenantId: string | null;
     },
-    {
-      linkedAccount: {
-        OR: {
-          providerTenantId?: string;
-          clientTenantId?: string;
-        }[];
-      };
-    }
+    (
+      | {
+          linkedAccount: {
+            OR: {
+              providerTenantId?: string;
+              clientTenantId?: string;
+            }[];
+          };
+        }
+      | {}
+    )
   ];
 } => {
+  if (tenantId) {
+    return {
+      OR: [
+        {
+          visibility: "public",
+        },
+        {
+          tenantId,
+        },
+        {
+          linkedAccount: {
+            OR: [
+              {
+                providerTenantId: tenantId,
+              },
+              {
+                clientTenantId: tenantId,
+              },
+            ],
+          },
+        },
+      ],
+    };
+  }
   return {
     OR: [
       {
@@ -26,18 +53,7 @@ const tenantCondition = (
       {
         tenantId,
       },
-      {
-        linkedAccount: {
-          OR: [
-            {
-              providerTenantId: tenantId,
-            },
-            {
-              clientTenantId: tenantId,
-            },
-          ],
-        },
-      },
+      {},
     ],
   };
 };

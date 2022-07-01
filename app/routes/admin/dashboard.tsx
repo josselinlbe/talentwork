@@ -74,7 +74,7 @@ export default function AdminNavigationRoute() {
             <DashboardStats items={data.entitiesStats} />
           </div> */}
 
-            <div className=" overflow-x-auto">
+            <div className="overflow-x-auto space-y-4">
               <h3 className="leading-4 font-medium text-gray-900">Tenants</h3>
               <TenantsTable items={data.tenants} withSearch={false} />
             </div>

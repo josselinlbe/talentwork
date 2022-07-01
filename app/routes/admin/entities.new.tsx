@@ -36,6 +36,11 @@ export const action: ActionFunction = async ({ request }) => {
     const icon = form.get("icon")?.toString() ?? "";
     const active = Boolean(form.get("active"));
 
+    const hasTags = Boolean(form.get("has-tags"));
+    const hasComments = Boolean(form.get("has-comments"));
+    const hasTasks = Boolean(form.get("has-tasks"));
+    const hasWorkflow = Boolean(form.get("has-workflow"));
+
     const errors = await EntityHelper.validateEntity(name, slug, order, prefix);
     if (errors.length > 0) {
       return badRequest({ error: errors.join(", ") });
@@ -54,6 +59,11 @@ export const action: ActionFunction = async ({ request }) => {
         requiresLinkedAccounts,
         icon,
         active,
+        isDefault: false,
+        hasTags,
+        hasComments,
+        hasTasks,
+        hasWorkflow,
       });
 
       const allUserRoles = await getAllRoles();

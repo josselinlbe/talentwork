@@ -86,6 +86,41 @@ export async function getUsersById(ids: string[]): Promise<UserWithDetails[]> {
   });
 }
 
+export async function getUsersByTenant(tenantId: string | null): Promise<UserWithDetails[]> {
+  let where = {};
+  if (tenantId) {
+    where = {
+      tenants: {
+        some: {
+          tenantId,
+        },
+      },
+    };
+  } else {
+    where = {
+      admin: {
+        isNot: null,
+      },
+    };
+  }
+  return db.user.findMany({
+    where,
+    include: {
+      admin: true,
+      tenants: {
+        include: {
+          tenant: true,
+        },
+      },
+      roles: {
+        include: {
+          role: true,
+        },
+      },
+    },
+  });
+}
+
 export async function getUser(userId?: string): Promise<UserWithoutPassword | null> {
   if (!userId) {
     return null;

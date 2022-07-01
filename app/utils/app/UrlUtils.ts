@@ -1,3 +1,4 @@
+import { Entity } from "@prisma/client";
 import { Params } from "react-router";
 
 const stripTrailingSlash = (str: string) => {
@@ -12,6 +13,11 @@ const currentTenantUrl = (params: Params, path?: string) => {
     return `/app/${tenant}/${appPath}`;
   }
   return `/app/${tenant}/`;
+};
+
+const currentEntityUrl = (params: Params) => {
+  const currentTenant = stripTrailingSlash(currentTenantUrl(params));
+  return `${currentTenant}/${params.entity}`;
 };
 
 const replaceVariables = (params: Params, path?: string) => {
@@ -32,9 +38,17 @@ const slugify = (str: string, max: number = 25) => {
   return value.trim();
 };
 
+function getParentRoute(pathname: string) {
+  const url = stripTrailingSlash(pathname);
+  const parentRoute = url.substring(0, url.lastIndexOf("/"));
+  return parentRoute;
+}
+
 export default {
   currentTenantUrl,
+  currentEntityUrl,
   stripTrailingSlash,
   slugify,
   replaceVariables,
+  getParentRoute,
 };

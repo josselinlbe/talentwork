@@ -5,7 +5,6 @@ import { adminGetAllTenantUsers, adminGetAllUsers, getUser, UserWithDetails } fr
 import UserRolesTable from "~/components/core/roles/UserRolesTable";
 import { Role, Tenant } from "@prisma/client";
 import { useState } from "react";
-import clsx from "clsx";
 import InputSearch from "~/components/ui/input/InputSearch";
 import { createUserRole, deleteUserRole } from "~/utils/db/permissions/userRoles.db.server";
 import { getTenant } from "~/utils/db/tenants.db.server";
@@ -131,7 +130,7 @@ export default function AdminAccountUsersFromTenant() {
   }
 
   return (
-    <div className={clsx("flex flex-col p-0.5 space-y-3")}>
+    <div className="space-y-2">
       <BreadcrumbSimple
         home="/admin"
         menu={[
@@ -146,7 +145,6 @@ export default function AdminAccountUsersFromTenant() {
         ]}
       />
       <InputSearch value={searchInput} setValue={setSearchInput} />
-
       <UserRolesTable
         items={filteredItems()}
         roles={data.roles}

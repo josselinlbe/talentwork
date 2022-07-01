@@ -9,10 +9,11 @@ interface Props {
   }[];
   buttons?: ReactNode;
   children: ReactNode;
+  className?: string;
 }
-export default function NewPageLayout({ title, menu, buttons, children }: Props) {
+export default function NewPageLayout({ title, menu, buttons, children, className = "pt-3 pb-6 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3" }: Props) {
   return (
-    <div className="pt-3 pb-6 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+    <div className={className}>
       <div className="space-y-1">
         <div className="flex items-center justify-between space-x-2">
           <h1 className="flex-1 font-medium flex items-center truncate text-xl">{title}</h1>

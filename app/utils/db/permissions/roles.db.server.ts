@@ -70,6 +70,28 @@ export async function getAllRolesWithUsers(type?: "admin" | "app"): Promise<Role
   });
 }
 
+export async function getRoles(ids: string[]): Promise<RoleWithPermissionsAndUsers[]> {
+  return await db.role.findMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+    include: {
+      permissions: {
+        include: {
+          permission: true,
+        },
+      },
+      users: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+}
+
 export async function getRole(id: string): Promise<RoleWithPermissions | null> {
   return await db.role.findUnique({
     where: {

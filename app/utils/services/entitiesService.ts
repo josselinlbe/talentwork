@@ -30,7 +30,7 @@ export type EntityUsageAndLimit = {
 
 export async function getRelatedRows(
   properties: PropertyWithDetails[],
-  tenantId: string
+  tenantId: string | null
 ): Promise<{ propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[]> {
   const relatedEntities: { propertyId: string; entity: EntityWithDetails; rows: RowWithDetails[] }[] = [];
   await Promise.all(

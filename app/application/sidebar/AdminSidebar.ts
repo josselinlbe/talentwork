@@ -57,6 +57,16 @@ export const AdminSidebar: SideBarItem[] = [
         permission: "admin.auditTrails.view",
       },
       {
+        title: "CRM",
+        path: "/admin/crm",
+        icon: SvgIcon.CLIENTS,
+      },
+      {
+        title: "models.email.plural",
+        path: "/admin/email",
+        icon: SvgIcon.EMAILS,
+      },
+      {
         title: "Docs",
         path: "/docs",
         icon: SvgIcon.DOCS,

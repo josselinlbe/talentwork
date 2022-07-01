@@ -4,10 +4,10 @@ import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
-import { useAppData } from "~/utils/data/useAppData";
 import { useParams, useSubmit } from "remix";
 import UserUtils from "~/utils/app/UserUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
+import { useAppOrAdminData } from "~/utils/data/useAppOrAdminData";
 
 interface Props {
   layout: "app" | "admin" | "docs";
@@ -15,7 +15,7 @@ interface Props {
 
 export default function ProfileButton({ layout }: Props) {
   const params = useParams();
-  const data = useAppData();
+  const data = useAppOrAdminData();
   const { t } = useTranslation();
   const submit = useSubmit();
 
@@ -70,21 +70,18 @@ export default function ProfileButton({ layout }: Props) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <div
-          v-show="dropDownUser"
-          className="z-40 origin-top-right absolute right-0 mt-2 w-64 rounded-sm shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none"
-        >
+        <div className="z-40 origin-top-right absolute right-0 mt-2 w-64 rounded-sm shadow-lg overflow-hidden bg-white divide-y divide-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1 rounded-sm bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+            <div className="truncate group flex items-center px-4 py-2 text-sm text-gray-700 transition ease-in-out duration-150" role="menuitem">
+              <div className="flex flex-col space-y-1 truncate">
+                <div className="font-medium">{UserUtils.profileName(data.user)}</div>
+                <div className="font-bold truncate">{data.user?.email}</div>
+              </div>
+            </div>
+            <div className="border-t border-gray-200"></div>
+
             {layout === "app" ? (
               <>
-                <div className="truncate group flex items-center px-4 py-2 text-sm text-gray-700 transition ease-in-out duration-150" role="menuitem">
-                  <div className="flex flex-col space-y-1 truncate">
-                    <div className="font-medium">{UserUtils.profileName(data.user)}</div>
-                    <div className="font-bold truncate">{data.user?.email}</div>
-                  </div>
-                </div>
-                <div className="border-t border-gray-200"></div>
-
                 <Link
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition ease-in-out duration-150"
                   role="menuitem"

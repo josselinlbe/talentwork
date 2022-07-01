@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import InputSearch from "~/components/ui/input/InputSearch";
-import TableSimple, { Header } from "~/components/ui/tables/TableSimple";
+import TableSimple from "~/components/ui/tables/TableSimple";
 import { PermissionWithRoles } from "~/utils/db/permissions/permissions.db.server";
 import RoleBadge from "./RoleBadge";
 
@@ -18,7 +19,7 @@ export default function PermissionsTable({ items, className, canCreate, canUpdat
 
   const [searchInput, setSearchInput] = useState("");
   const [actions, setActions] = useState<any[]>([]);
-  const [headers, setHeaders] = useState<Header<PermissionWithRoles>[]>([]);
+  const [headers, setHeaders] = useState<RowHeaderDisplayDto<PermissionWithRoles>[]>([]);
 
   useEffect(() => {
     if (canUpdate) {
@@ -30,7 +31,7 @@ export default function PermissionsTable({ items, className, canCreate, canUpdat
       ]);
     }
 
-    const headers: Header<PermissionWithRoles>[] = [
+    const headers: RowHeaderDisplayDto<PermissionWithRoles>[] = [
       {
         name: "name",
         title: t("models.permission.name"),
@@ -79,7 +80,7 @@ export default function PermissionsTable({ items, className, canCreate, canUpdat
   };
 
   return (
-    <div>
+    <div className="space-y-2">
       <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute={canCreate ? "new" : undefined} />
       <TableSimple actions={actions} headers={headers} items={filteredItems()} />
     </div>

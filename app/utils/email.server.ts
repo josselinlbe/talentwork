@@ -4,6 +4,8 @@ var postmark = require("postmark");
 
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
 import { EmailTemplate } from "~/application/dtos/email/EmailTemplate";
+import { InboundEmailDetailsDto } from "~/application/dtos/email/InboundEmailDetailsDto";
+import { InboundEmailDto } from "~/application/dtos/email/InboundEmailDto";
 
 function getClient() {
   try {
@@ -90,4 +92,55 @@ export async function deletePostmarkTemplate(alias: string) {
     // throw Error("Undefined Postmark client");
   }
   return client.deleteTemplate(alias);
+}
+
+export async function getPostmarkInboundAddress() {
+  const client = getClient();
+  if (!client) {
+    return;
+  }
+  return await client.getMessageStream("inbound");
+}
+
+export async function getPostmarkInboundMessageStreams(): Promise<
+  {
+    ID: string;
+    ServerID: number;
+    Name: string;
+    Description: string;
+    MessageStreamType: string;
+    CreatedAt: string;
+    UpdatedAt?: string;
+    ArchivedAt?: string;
+    ExpectedPurgeDate?: string;
+    SubscriptionManagementConfiguration: any;
+  }[]
+> {
+  const client = getClient();
+  if (!client) {
+    return [];
+  }
+  return (
+    (
+      await client.getMessageStreams({
+        messageStreamType: "inbound",
+      })
+    ).MessageStreams ?? []
+  );
+}
+
+export async function getPostmarkInboundMessages(): Promise<InboundEmailDto[]> {
+  const client = getClient();
+  if (!client) {
+    return [];
+  }
+  return (await client.getInboundMessages()).InboundMessages ?? [];
+}
+
+export async function getPostmarkInboundMessage(messageId: string): Promise<InboundEmailDetailsDto | null> {
+  const client = getClient();
+  if (!client) {
+    return null;
+  }
+  return await client.getInboundMessageDetails(messageId);
 }

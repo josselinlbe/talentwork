@@ -51,7 +51,7 @@ export default function AdminRolesAndPermissionsAccountUsersRoute() {
   };
 
   return (
-    <div className={clsx("flex flex-col p-0.5 space-y-3")}>
+    <div className="space-y-2">
       <InputSearch value={searchInput} setValue={setSearchInput} />
       <TableSimple
         items={filteredItems()}

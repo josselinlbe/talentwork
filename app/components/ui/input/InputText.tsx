@@ -32,6 +32,7 @@ interface Props {
   uppercase?: boolean;
   type?: string;
   darkMode?: boolean;
+  onBlur?: () => void;
 }
 const InputText = (
   {
@@ -59,6 +60,7 @@ const InputText = (
     uppercase,
     type = "text",
     darkMode,
+    onBlur,
   }: Props,
   ref: Ref<RefInputText>
 ) => {
@@ -126,6 +128,7 @@ const InputText = (
               maxLength={maxLength}
               defaultValue={value ?? ""}
               onChange={onChange}
+              onBlur={onBlur}
               disabled={disabled}
               readOnly={readOnly}
               placeholder={placeholder}

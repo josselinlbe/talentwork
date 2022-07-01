@@ -1,25 +1,57 @@
-import { ActionFunction, json, LoaderFunction } from "remix";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { json, LoaderFunction, Outlet, redirect, useLocation, useNavigate, useParams } from "remix";
+import Tabs from "~/components/ui/tabs/Tabs";
 import { i18nHelper } from "~/locale/i18n.utils";
+import UrlUtils from "~/utils/app/UrlUtils";
+import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 
-type LoaderData = {};
-export let loader: LoaderFunction = async () => {
-  const data: LoaderData = {};
+type LoaderData = {
+  title: string;
+};
+export let loader: LoaderFunction = async ({ request, params }) => {
+  const { t } = await i18nHelper(request);
+  const entity = await getEntityBySlug(params.slug ?? "");
+  if (!entity) {
+    return redirect("/admin/entities");
+  }
+  const data: LoaderData = {
+    title: `${t(entity.title)} ${t("models.workflowState.plural")} | ${process.env.APP_NAME}`,
+  };
   return json(data);
 };
 
-type ActionData = {
-  error?: string;
-};
-const badRequest = (data: ActionData) => json(data, { status: 400 });
-export const action: ActionFunction = async ({ request }) => {
-  const { t } = await i18nHelper(request);
-  return badRequest({ error: t("shared.invalidForm") });
-};
+export default function EntityWorkflowRoute() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const params = useParams();
+  const location = useLocation();
 
-export default function EditEntityIndexRoute() {
+  useEffect(() => {
+    if (UrlUtils.stripTrailingSlash(location.pathname) === `/admin/entities/${params.slug}/workflow`) {
+      navigate(`/admin/entities/${params.slug}/workflow/states`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
   return (
     <div>
-      <div className="font-bold">Workflow: IN CONSTRUCTION</div>
+      <Tabs
+        breakpoint="sm"
+        tabs={[
+          {
+            name: t("models.workflowState.plural"),
+            routePath: "states",
+          },
+          {
+            name: t("models.workflowStep.plural"),
+            routePath: "steps",
+          },
+        ]}
+      />
+      <div className="pt-2">
+        <Outlet />
+      </div>
     </div>
   );
 }

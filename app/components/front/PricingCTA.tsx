@@ -27,8 +27,9 @@ const plans = [
         .filter((f) => f.type === MarketingFeatureType.Core)
         .map((i) => i.name + " (🚧)"),
     ],
-    enabled: true,
+    ctaButton: "Get early access",
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Core%20Features%20%F0%9F%AA%A8&wanted=true",
+    hint: "Up to 5 developers - Cancel anytime",
   },
   {
     title: "Enterprise Features 🚀",
@@ -48,8 +49,25 @@ const plans = [
         .filter((f) => f.type === MarketingFeatureType.Enterprise)
         .map((i) => i.name + " (🚧)"),
     ],
-    enabled: true,
+    ctaButton: "Get early access",
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Enterprise%20Features%20%F0%9F%9A%80&wanted=true",
+    hint: "Up to 5 developers - Cancel anytime",
+  },
+  {
+    title: "Founder's Edition 🦄",
+    description: (
+      <div>
+        <p>
+          Software development and consulting using <b>SaasRock</b>'s codebase.
+        </p>
+        <p className="italic text-gray-600 text-sm mt-1">NOTE: Any feature could be added to SaasRock's codebase.</p>
+      </div>
+    ),
+    monthlyPrice: "2,000",
+    features: ["All enterprise features", "1 project", "8 hrs of founders's time", "Dedicated GitHub repository", "Dedicated Discord channel"],
+    ctaButton: "Subscribe",
+    productUrl: "https://alexandromg.gumroad.com/l/SaasRockDevelopment",
+    hint: "Cancel anytime",
   },
 ];
 
@@ -64,7 +82,7 @@ export default function PricingCTA() {
     }
   }
   function getPrice(plan: any) {
-    if (billingPeriod === SubscriptionBillingPeriod.MONTHLY) {
+    if (billingPeriod === SubscriptionBillingPeriod.MONTHLY || !plan.yearlyPrice) {
       return plan.monthlyPrice;
     } else {
       return plan.yearlyPrice;
@@ -101,8 +119,8 @@ export default function PricingCTA() {
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div
                     className={clsx(
-                      "max-w-lg mx-auto rounded-lg shadow-lg overflow-hidden lg:max-w-none lg:flex border-4 border-gray-300 dark:border-gray-700 border-dotted",
-                      !plan.enabled && "bg-gray-100 opacity-50"
+                      "max-w-lg mx-auto rounded-lg shadow-lg overflow-hidden lg:max-w-none lg:flex border-4 border-gray-300 dark:border-gray-700 border-dotted"
+                      // !plan.enabled && "bg-gray-100 opacity-50"
                     )}
                   >
                     <div className="flex-1 bg-white dark:bg-gray-900 px-6 py-8 lg:p-12">
@@ -115,7 +133,7 @@ export default function PricingCTA() {
                           </h4>
                           <div className="flex-1 border-t-2 border-gray-200 dark:border-gray-700" />
                         </div>
-                        <ul className="mt-8 space-y-5 lg:space-y-0 lg:grid sm:grid sm:grid-cols-2 sm:space-y-0 sm:gap-3 lg:grid-cols-3 lg:gap-x-2 lg:gap-y-5">
+                        <ul className="mt-8 space-y-5 lg:space-y-0 lg:grid sm:grid sm:grid-cols-3 sm:space-y-0 sm:gap-3 lg:grid-cols-3 lg:gap-x-2 lg:gap-y-5">
                           {plan.features.map((feature) => (
                             <li key={feature} className="flex items-start lg:col-span-1">
                               <div className="flex-shrink-0">
@@ -133,18 +151,21 @@ export default function PricingCTA() {
                     </div>
                     <div className="py-8 px-6 text-center bg-gray-50 dark:bg-gray-900 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center lg:p-12">
                       <ToggleBillingPeriod
-                        disabled={!plan.enabled}
-                        className="mb-2 text-sm"
+                        disabled={!plan.yearlyPrice}
+                        className={clsx("mb-2 text-sm", !plan.yearlyPrice && "invisible")}
                         size="sm"
                         billingPeriod={billingPeriod}
                         toggleBillingPeriod={toggleBillingPeriod}
                         yearlyDiscount={"2 months free"}
                       />
+
                       {/* <p className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Subscribe</p> */}
 
                       {/* <ToggleBillingPeriod size="sm" billingPeriod={billingPeriod} toggleBillingPeriod={toggleBillingPeriod} yearlyDiscount={"-16%"} /> */}
                       <div className="mt-4 flex items-center justify-center text-5xl font-extrabold text-gray-900 dark:text-white">
-                        <span className="text-2xl line-through text-gray-700 dark:text-gray-400 font-medium">${getPreviousPrice(plan)}</span>
+                        {getPreviousPrice(plan) && (
+                          <span className="text-2xl line-through text-gray-700 dark:text-gray-400 font-medium">${getPreviousPrice(plan)}</span>
+                        )}
                         <span>${getPrice(plan)}</span>
                         <span className="ml-1 text-xl font-medium text-gray-700">USD</span>
                       </div>
@@ -153,19 +174,19 @@ export default function PricingCTA() {
                         <div className="rounded-md shadow">
                           <button
                             type="button"
-                            disabled={!plan.enabled}
+                            // disabled={!plan.enabled}
                             onClick={() => (location.href = plan.productUrl)}
                             className={clsx(
                               "flex items-center justify-center space-x-2 px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-theme-500 w-full",
-                              plan.enabled ? "hover:bg-theme-600" : " opacity-75 cursor-not-allowed"
+                              true ? "hover:bg-theme-600" : " opacity-75 cursor-not-allowed"
                             )}
                           >
-                            <div>{plan.enabled ? `Get early access` : `Under construction`}</div>
+                            <div>{plan.ctaButton}</div>
                           </button>
                         </div>
                       </div>
                       <div className="mt-4 text-sm">
-                        <span className="font-medium text-gray-900">Up to 5 developers - Cancel anytime</span>
+                        <span className="font-medium text-gray-900">{plan.hint}</span>
                       </div>
                     </div>
                   </div>

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSubmit } from "remix";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
-import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
+import { EntityWithDetails, PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 import ButtonTertiary from "../../ui/buttons/ButtonTertiary";
 import LockClosedIcon from "../../ui/icons/LockClosedIcon";
@@ -16,13 +16,13 @@ import ErrorModal, { RefErrorModal } from "../../ui/modals/ErrorModal";
 import PropertyBadge from "./PropertyBadge";
 
 interface Props {
-  entityId: string;
+  entity: EntityWithDetails;
   items: PropertyWithDetails[];
   className?: string;
   // onUpdated: (items: PropertyWithDetails[]) => void;
 }
 
-export default function PropertiesList({ entityId, items, className }: Props) {
+export default function PropertiesList({ entity, items, className }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
 
@@ -30,7 +30,7 @@ export default function PropertiesList({ entityId, items, className }: Props) {
   const confirmDelete = useRef<RefConfirmModal>(null);
   const errorModal = useRef<RefErrorModal>(null);
 
-  const [showDefaultFields, setShowDefaultFields] = useState(false);
+  const [showDefaultFields, setShowDefaultFields] = useState(!(entity.properties.filter((f) => !f.isDefault).length > 0));
 
   function deleteField(item: Property) {
     confirmDelete.current?.setValue(item);
@@ -101,6 +101,7 @@ export default function PropertiesList({ entityId, items, className }: Props) {
                       <div className="flex items-center space-x-2">
                         <div className=" flex items-center space-x-3">
                           <div className="  flex items-center space-x-2">
+                            <LockClosedIcon className="h-4 w-4 text-gray-300" />
                             <PropertyBadge type={item.type} className="text-gray-400 h-4 w-4" />
                             {/* <div className="truncate text-sm text-gray-400">{t("entities.fields." + PropertyType[item.type])}</div> */}
                           </div>
@@ -110,9 +111,26 @@ export default function PropertiesList({ entityId, items, className }: Props) {
                           </div>
                         </div>
                       </div>
-                      <button type="button" disabled className="flex items-center rounded-md border border-transparent p-2">
+                      <div className="flex space-x-1 flex-shrink-0">
+                        <div className="flex space-x-1 truncate p-1">
+                          {item.type === PropertyType.SELECT && item.parentId ? (
+                            <div className="p-4"></div>
+                          ) : (
+                            <>
+                              <Link
+                                to={item.id}
+                                className="flex items-center focus:outline-none hover:bg-gray-100 rounded-md border border-transparent p-2 focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 focus:bg-gray-100 group"
+                                // onClick={() => update(idx, item)}
+                              >
+                                <PencilIcon className="h-4 w-4 text-gray-300 group-hover:text-gray-500" />
+                              </Link>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      {/* <button type="button" disabled className="flex items-center rounded-md border border-transparent p-2">
                         <LockClosedIcon className="h-4 w-4 text-gray-300" />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 );
@@ -255,11 +273,11 @@ const PropertyTitle = ({ item }: { item: PropertyWithDetails }) => {
           {item.isRequired && <span className="text-red-500">*</span>}
         </div>
         <div className="text-gray-400 text-xs">({item.name})</div>
+        {item.type === PropertyType.FORMULA && <div className="text-gray-400 italic truncate">({item.formula})</div>}
+        {item.type === PropertyType.SELECT && (
+          <div className="text-gray-400 text-xs">[{item.options.length === 0 ? "No options" : item.options?.map((f) => f.value).join(", ")}]</div>
+        )}
       </div>
-      {item.type === PropertyType.FORMULA && <div className="text-gray-400 italic truncate">({item.formula})</div>}
-      {item.type === PropertyType.SELECT && (
-        <div className="text-gray-400 text-xs">[{item.options.length === 0 ? "No options" : item.options?.map((f) => f.value).join(", ")}]</div>
-      )}
     </>
   );
 };

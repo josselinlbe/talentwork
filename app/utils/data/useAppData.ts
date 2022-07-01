@@ -3,8 +3,8 @@ import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { getUserInfo } from "../session.server";
 import { getLinkedAccountsCount } from "../db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
-import { getMyTenants, getTenant, MyTenant } from "../db/tenants.db.server";
-import { getUser, UserWithoutPassword } from "../db/users.db.server";
+import { getMyTenants, getTenant } from "../db/tenants.db.server";
+import { getUser } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "../app/UrlUtils";
 import { getTenantUrl } from "../services/urlService";
@@ -13,21 +13,17 @@ import { EntityWithDetails, getAllEntities } from "../db/entities/entities.db.se
 import { Tenant } from "@prisma/client";
 import { Language } from "remix-i18next";
 import { Params } from "react-router";
-import { getUserRoles, UserRoleWithPermission } from "../db/permissions/userRoles.db.server";
+import { getUserRoles } from "../db/permissions/userRoles.db.server";
 import { getMyGroups, GroupWithDetails } from "../db/permissions/groups.db.server";
+import { getAllRoles } from "../db/permissions/roles.db.server";
+import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";
+import { AppOrAdminData } from "./useAppOrAdminData";
 
-export type AppLoaderData = {
-  i18n: Record<string, Language>;
-  user: UserWithoutPassword;
-  myTenants: MyTenant[];
+export type AppLoaderData = AppOrAdminData & {
   currentTenant: Tenant;
   mySubscription: TenantSubscriptionWithDetails | null;
   currentRole: TenantUserType;
   pendingInvitations: number;
-  entities: EntityWithDetails[];
-  roles: UserRoleWithPermission[];
-  permissions: string[];
-  myGroups: GroupWithDetails[];
 };
 
 export function useAppData(): AppLoaderData {
@@ -84,10 +80,12 @@ export async function loadAppData(request: Request, params: Params) {
     currentRole,
     mySubscription,
     pendingInvitations,
-    entities: await getAllEntities(true),
+    entities: await getAllEntities(true, false),
+    allRoles: await getAllRoles("app"),
     roles,
     permissions,
-    myGroups: await getMyGroups(user.id),
+    myGroups: await getMyGroups(user.id, currentTenant.id),
+    isSuperUser: roles.find((f) => f.role.name === DefaultAppRoles.SuperUser) !== undefined,
   };
   return data;
 }

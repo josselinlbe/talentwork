@@ -17,6 +17,7 @@ import { EmployeeDto } from "~/modules/contracts/dtos/EmployeeDto";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { useAppData } from "~/utils/data/useAppData";
+import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 
 type LoaderData = {
   title: string;
@@ -81,7 +82,13 @@ export const action: ActionFunction = async ({ request, params }) => {
     } else if (!file) {
       return badRequest({ error: "File required" });
     }
-    await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Updated", entity, item: existingRow });
+    await createRowLog(request, {
+      tenantId: tenantUrl.tenantId,
+      createdByUserId: userInfo.userId,
+      action: DefaultLogActions.Updated,
+      entity,
+      item: existingRow,
+    });
     await updateContract(params.id, userInfo.userId, {
       name,
       description,
@@ -91,7 +98,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     return json({ success: t("shared.updated") });
   } else if (action === "delete") {
-    await createRowLog(request, { tenantId: tenantUrl.tenantId, createdByUserId: userInfo.userId, action: "Deleted", entity, item: existingRow });
+    await createRowLog(request, {
+      tenantId: tenantUrl.tenantId,
+      createdByUserId: userInfo.userId,
+      action: DefaultLogActions.Deleted,
+      entity,
+      item: existingRow,
+    });
     await deleteRow(existing.rowId);
 
     return redirect(UrlUtils.currentTenantUrl(params, "contracts?status=all"));

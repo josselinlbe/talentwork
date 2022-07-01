@@ -1,11 +1,11 @@
 import { ActionFunction, json, LoaderFunction, Outlet, redirect, useActionData, useLoaderData } from "remix";
 import PropertiesList from "~/components/entities/properties/PropertiesList";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { PropertyWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { PropertyWithDetails, getEntityBySlug, EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 import { deleteProperty, getProperty } from "~/utils/db/entities/properties.db.server";
 
 type LoaderData = {
-  entityId: string;
+  entity: EntityWithDetails;
   properties: PropertyWithDetails[];
 };
 export let loader: LoaderFunction = async ({ params }) => {
@@ -14,7 +14,7 @@ export let loader: LoaderFunction = async ({ params }) => {
     return redirect("/admin/entities");
   }
   const data: LoaderData = {
-    entityId: entity.id,
+    entity,
     properties: entity.properties,
   };
   return success(data);
@@ -61,7 +61,7 @@ export default function EditEntityIndexRoute() {
   const actionData = useActionData<ActionData>();
   return (
     <>
-      <PropertiesList entityId={data.entityId} items={actionData?.properties ?? data.properties} />
+      <PropertiesList entity={data.entity} items={actionData?.properties ?? data.properties} />
       <Outlet />
     </>
   );

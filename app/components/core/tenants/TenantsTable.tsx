@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import DateUtils from "~/utils/shared/DateUtils";
 import InputSearch from "~/components/ui/input/InputSearch";
-import TableSimple, { Header } from "~/components/ui/tables/TableSimple";
+import TableSimple from "~/components/ui/tables/TableSimple";
 import { TenantWithUsage } from "~/utils/db/tenants.db.server";
+import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 
 interface Props {
   items: TenantWithUsage[];
@@ -14,10 +15,10 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
   const { t } = useTranslation();
 
   const [searchInput, setSearchInput] = useState("");
-  const [headers, setHeaders] = useState<Header<TenantWithUsage>[]>([]);
+  const [headers, setHeaders] = useState<RowHeaderDisplayDto<TenantWithUsage>[]>([]);
 
   useEffect(() => {
-    const headers: Header<TenantWithUsage>[] = [];
+    const headers: RowHeaderDisplayDto<TenantWithUsage>[] = [];
     headers.push({
       name: "tenant",
       title: t("models.tenant.object"),

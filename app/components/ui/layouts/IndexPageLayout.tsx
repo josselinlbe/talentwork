@@ -19,7 +19,7 @@ export default function IndexPageLayout({ title, buttons, children, tabs }: Prop
         </div>
       )}
       {tabs && (
-        <div className="bg-white border-b border-gray-300 w-full py-2">
+        <div className="w-full py-2">
           <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
             <Tabs tabs={tabs} className="flex-grow" />
           </div>

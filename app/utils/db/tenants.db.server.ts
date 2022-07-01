@@ -143,7 +143,7 @@ export async function getTenantUsersCount(tenantId: string) {
   });
 }
 
-export async function getTenantUsers(tenantId?: string): Promise<TenantUserWithUser[]> {
+export async function getTenantUsers(tenantId?: string | null): Promise<TenantUserWithUser[]> {
   if (!tenantId) {
     return [];
   }

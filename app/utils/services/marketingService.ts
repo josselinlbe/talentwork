@@ -138,12 +138,11 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
       description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
       platforms: [
         {
-          site: "https://firstkindsoftware.com/",
-          price: "$15/month",
+          site: "https://flagsmith.com/pricing/",
+          price: "$45/month",
         },
       ],
-
-      save: 15,
+      save: 45,
     },
     {
       status: MarketingFeatureStatus.Planned,
@@ -161,20 +160,6 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
     },
     {
       status: MarketingFeatureStatus.Planned,
-      name: "Advanced Blogging",
-      type: MarketingFeatureType.Core,
-      description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
-      platforms: [
-        {
-          site: "https://ghost.org/pricing/",
-          price: "$31/month",
-        },
-      ],
-
-      save: 31,
-    },
-    {
-      status: MarketingFeatureStatus.Planned,
       name: "CRM",
       type: MarketingFeatureType.Core,
       description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
@@ -186,6 +171,19 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
       ],
 
       save: 75,
+    },
+    {
+      status: MarketingFeatureStatus.Planned,
+      name: "Advanced Blogging",
+      type: MarketingFeatureType.Core,
+      description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+      platforms: [
+        {
+          site: "https://ghost.org/pricing/",
+          price: "$31/month",
+        },
+      ],
+      save: 31,
     },
     {
       status: MarketingFeatureStatus.Planned,

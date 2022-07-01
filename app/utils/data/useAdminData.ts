@@ -1,21 +1,17 @@
 import { redirect, useMatches } from "remix";
 import { getUserInfo } from "../session.server";
-import { getUser, UserWithoutPassword } from "../db/users.db.server";
+import { getUser } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "../app/UrlUtils";
-import { EntityWithDetails, getAllEntities } from "../db/entities/entities.db.server";
-import { getMyTenants, MyTenant } from "../db/tenants.db.server";
-import { Language } from "remix-i18next";
-import { getUserRoles, UserRoleWithPermission } from "../db/permissions/userRoles.db.server";
+import { getAllEntities } from "../db/entities/entities.db.server";
+import { getMyTenants } from "../db/tenants.db.server";
+import { getUserRoles } from "../db/permissions/userRoles.db.server";
+import { AppOrAdminData } from "./useAppOrAdminData";
+import { getAllRoles } from "../db/permissions/roles.db.server";
+import { DefaultAdminRoles } from "~/application/dtos/shared/DefaultAdminRoles";
+import { getMyGroups } from "../db/permissions/groups.db.server";
 
-export type AdminLoaderData = {
-  i18n: Record<string, Language>;
-  user: UserWithoutPassword;
-  myTenants: MyTenant[];
-  entities: EntityWithDetails[];
-  roles: UserRoleWithPermission[];
-  permissions: string[];
-};
+export type AdminLoaderData = AppOrAdminData;
 
 export function useAdminData(): AdminLoaderData {
   const paths: string[] = ["routes/admin"];
@@ -56,7 +52,10 @@ export async function loadAdminData(request: Request) {
     myTenants,
     entities: await getAllEntities(),
     roles,
+    allRoles: await getAllRoles("admin"),
     permissions,
+    isSuperUser: roles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) !== undefined,
+    myGroups: await getMyGroups(user.id, null),
   };
   return data;
 }

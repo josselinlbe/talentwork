@@ -1,5 +1,9 @@
+import { Property } from "@prisma/client";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { SortedByDto } from "~/application/dtos/data/SortedByDto";
+import { PropertyType } from "~/application/enums/entities/PropertyType";
+import { EntityWithDetails } from "../db/entities/entities.db.server";
 import { countRows, getRows, RowWithDetails } from "../db/entities/rows.db.server";
 
 export function getPaginationFromCurrentUrl(request: Request): { page: number; sortedBy: SortedByDto; query: string } {
@@ -8,6 +12,25 @@ export function getPaginationFromCurrentUrl(request: Request): { page: number; s
     sortedBy: getSortByFromCurrentUrl(request),
     query: getSearchQueryFromCurrentUrl(request),
   };
+}
+
+export function getFiltersFromCurrentUrl(customRow: boolean, entity: EntityWithDetails, request: Request): FiltersDto {
+  const tags: string[] = [];
+  const properties: { property: Property; value: string | null }[] = [];
+  const url = new URL(request.url);
+  entity.properties.forEach((property) => {
+    const param = url.searchParams.get(property.name);
+    properties.push({ property, value: param ?? null });
+  });
+
+  url.searchParams.getAll("tag").forEach((tag) => {
+    tags.push(tag);
+  });
+
+  const query = url.searchParams.get("q");
+
+  // console.log({ tags });
+  return { customRow, entity, properties, query, tags };
 }
 
 function getPageFromCurrentUrl(request: Request): number {
@@ -97,12 +120,12 @@ export function getNewPaginationUrl(request: Request, page: number, sortedBy: { 
 
 export async function getRowsWithPagination(
   entityId: string,
-  tenantId: string,
-  userId: string,
+  tenantId: string | null,
+  userId: string | undefined,
   pageSize: number,
   page: number,
   sortedBy?: SortedByDto,
-  query?: string
+  filters?: FiltersDto
 ): Promise<{
   items: RowWithDetails[];
   pagination: PaginationDto;
@@ -112,9 +135,9 @@ export async function getRowsWithPagination(
     orderBy = { [sortedBy?.name]: sortedBy?.direction };
   }
 
-  const items = await getRows(entityId, tenantId, userId, pageSize, pageSize * (page - 1), orderBy, query);
-  const totalItems = await countRows(entityId, tenantId, userId, query);
-  const totalPages = Math.round(totalItems / pageSize);
+  const items = await getRows(entityId, tenantId, userId, pageSize, pageSize * (page - 1), orderBy, filters);
+  const totalItems = await countRows(entityId, tenantId, userId, filters);
+  const totalPages = Math.ceil(totalItems / pageSize);
 
   return {
     items,

@@ -69,6 +69,8 @@
     "processing": "Procesando",
     "unauthorized": "No autorizado",
     "notSet": "Not set",
+    "setCustomProperties": "Establecer propiedades personalizadas",
+    "noCustomProperties": "Sin propiedades personalizadas",
     "warning": "Advertencia",
     "warningCannotUndo": "ADVERTENCIA: No puedes deshacer esta acción.",
     "note": "Nota",
@@ -76,7 +78,7 @@
     "unlimited": "Ilimitados",
     "file": "Archivo",
     "enter": "Entrar",
-    "commandPalette": "Buscar (CTRL/Cmd + K)",
+    "commandPalette": "Buscar todo...",
     "search": "Buscar",
     "searchDot": "Buscar...",
     "searching": "Buscando",
@@ -90,6 +92,7 @@
     "home": "Inicio",
     "createdBy": "Creado por",
     "createdAt": "Creado el",
+    "assignedTo": "Asignado a",
     "sandbox": "Sandbox",
     "path": "Ruta",
     "locales": {
@@ -130,7 +133,28 @@
     "setUserRoles": "Establecer roles",
     "share": "Compartir",
     "copy": "Copiar",
-    "anonymousUser": "Usuario anónimo"
+    "anonymousUser": "Usuario anónimo",
+    "order": "Orden",
+    "noTags": "No hay etiquetas",
+    "setTags": "Agregar etiquetas...",
+    "noComments": "No hay commentarios",
+    "noTasks": "No hay tareas",
+    "setTasks": "Agregar tareas...",
+    "value": "Valor",
+    "isDeleted": "Eliminado",
+    "reply": "Responder",
+    "comment": "Comentar",
+    "addComment": "Agrega un comentario",
+    "addTask": "Agregar tarea",
+    "apply": "Aplicar",
+    "clear": "Limpiar",
+    "filters": "Filtros",
+    "column": "Columna",
+    "columns": "Columnas",
+    "hide": "Ocultar",
+    "show": "Mostrar",
+    "private": "Privado",
+    "public": "Público"
   },
   "front": {
     "navbar": {
@@ -160,8 +184,8 @@
       "repo": "miembros del repositorio privado"
     },
     "pricing": {
-      "title": "Precios (demo)",
-      "headline": "Planes diseñados para organizaciones de todos los tamaños."
+      "title": "DEMO: Precios",
+      "headline": "DEMO: Planes diseñados para organizaciones de todos los tamaños."
     },
     "newsletter": {
       "title": "Entérate de novedades",
@@ -345,20 +369,20 @@
     "demo": "PÁGINA DEMO - Personalizarías esta página",
     "custom": {
       "title": "Personalizado",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+      "description": "Este es un plan demo, no es un precio de SaasRock."
     },
     "products": {
       "plan1": {
         "title": "Gratis",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+        "description": "Este es un plan demo, no es un precio de SaasRock."
       },
       "plan2": {
         "title": "Estándar",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+        "description": "Este es un plan demo, no es un precio de SaasRock."
       },
       "plan3": {
         "title": "Empresarial",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+        "description": "Este es un plan demo, no es un precio de SaasRock."
       }
     },
     "features": {
@@ -894,6 +918,10 @@
       "icon": "Ícono",
       "requiresLinkedAccounts": "Require enlace entre cuentas",
       "active": "Activo",
+      "hasTags": "Etiquetas habilitadas",
+      "hasComments": "Comentarios habilitados",
+      "hasTasks": "Tareas habilitadas",
+      "hasWorkflow": "Flujo habilitado",
       "rows": "Renglones",
       "limits": "Límites",
       "permissions": "Permisos",
@@ -918,8 +946,49 @@
       "children": "Children",
       "values": "Valores"
     },
+    "workflow": {
+      "object": "Flujo",
+      "plural": "Flujos"
+    },
+    "workflowState": {
+      "object": "Estado",
+      "plural": "Estados",
+      "order": "Orden",
+      "name": "Nombre",
+      "title": "Título",
+      "status": "Estatus interno",
+      "color": "Color",
+      "canUpdate": "Puede editarse",
+      "canDelete": "Puede eliminarse",
+      "emailSubject": "Asunto en correo",
+      "emailBody": "Cuerpo en correo"
+    },
+    "workflowStep": {
+      "object": "Paso",
+      "plural": "Pasos",
+      "action": "Acción",
+      "fromState": "De estado",
+      "toState": "A estado",
+      "assignTo": "Asignar a",
+      "creator": "Creator"
+    },
     "row": {
       "folio": "Folio"
+    },
+    "rowComment": {
+      "object": "Comentario",
+      "plural": "Comentario",
+      "parentCommentId": "De comentario",
+      "reply": "Respuesta",
+      "replies": "Respuestas"
+    },
+    "rowTask": {
+      "object": "Tarea",
+      "plural": "Tareas"
+    },
+    "tag": {
+      "object": "Etiqueta",
+      "plural": "Etiquetas"
     },
     "post": {
       "object": "Publicación",
@@ -1037,6 +1106,44 @@
       "name": "Nombre",
       "type": "Tipo",
       "value": "Valor"
+    },
+    "email": {
+      "object": "Correo",
+      "plural": "Correos",
+      "messageId": "ID",
+      "type": "Tipo",
+      "date": "Fecha",
+      "subject": "Asunto",
+      "from": "De",
+      "fromEmail": "De correo",
+      "fromName": "De nombre",
+      "to": "Para",
+      "toEmail": "Para correo",
+      "toName": "Para nombre",
+      "textBody": "Cuerpo",
+      "htmlBody": "Cuerpo en HTML",
+      "cc": "CC",
+      "attachments": "Adjuntos"
+    },
+    "contact": {
+      "object": "Contacto",
+      "plural": "Contactos",
+      "status": "Estatus",
+      "email": "Correo",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "phone": "Teléfono",
+      "company": "Empresa",
+      "title": "Puesto"
+    },
+    "deal": {
+      "object": "Negocio",
+      "plural": "Negocios",
+      "contact": "Contacto",
+      "name": "Nombre",
+      "status": "Estatus",
+      "value": "Valor",
+      "subscriptionPrice": "Precio de suscripción"
     },
     "contract": {
       "object": "Contrato",

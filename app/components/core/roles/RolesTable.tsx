@@ -5,7 +5,8 @@ import CheckIcon from "~/components/ui/icons/CheckIcon";
 import XIcon from "~/components/ui/icons/XIcon";
 import InputSearch from "~/components/ui/input/InputSearch";
 import Modal from "~/components/ui/modals/Modal";
-import TableSimple, { Header } from "~/components/ui/tables/TableSimple";
+import TableSimple from "~/components/ui/tables/TableSimple";
+import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import { RoleWithPermissionsAndUsers } from "~/utils/db/permissions/roles.db.server";
 import RoleBadge from "./RoleBadge";
 
@@ -22,7 +23,7 @@ export default function RolesTable({ items, className, canCreate, canUpdate = tr
 
   const [searchInput, setSearchInput] = useState("");
   const [actions, setActions] = useState<any[]>([]);
-  const [headers, setHeaders] = useState<Header<RoleWithPermissionsAndUsers>[]>([]);
+  const [headers, setHeaders] = useState<RowHeaderDisplayDto<RoleWithPermissionsAndUsers>[]>([]);
 
   const [permissionsModalOpen, setPermissionsModalOpen] = useState(false);
   const [selectedRole, setSelectedRow] = useState<RoleWithPermissionsAndUsers>();
@@ -37,7 +38,7 @@ export default function RolesTable({ items, className, canCreate, canUpdate = tr
       ]);
     }
 
-    const headers: Header<RoleWithPermissionsAndUsers>[] = [
+    const headers: RowHeaderDisplayDto<RoleWithPermissionsAndUsers>[] = [
       {
         name: "name",
         title: t("models.role.name"),
@@ -115,7 +116,7 @@ export default function RolesTable({ items, className, canCreate, canUpdate = tr
   };
 
   return (
-    <div>
+    <div className="space-y-2">
       <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute={canCreate ? "new" : undefined} />
       <TableSimple actions={actions} headers={headers} items={filteredItems()} />
 

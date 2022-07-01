@@ -2,13 +2,18 @@ import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { Ref, useImperativeHandle, useRef, useState, Fragment, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
+import { Colors } from "~/application/enums/shared/Colors";
+import ColorBadge from "~/components/ui/badges/ColorBadge";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import TrashIcon from "~/components/ui/icons/TrashIcon";
+import InputSelector from "~/components/ui/input/InputSelector";
+import InputText, { RefInputText } from "~/components/ui/input/InputText";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
+import { getColors } from "~/utils/shared/ColorUtils";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
-export type OptionValue = { id: string | null; parentId: string | null; order: number; value: string; options?: OptionValue[] };
+export type OptionValue = { id: string | null; parentId: string | null; order: number; value: string; color?: Colors; options?: OptionValue[] };
 export interface RefPropertyOptionsForm {
   set: (options: OptionValue[]) => void;
 }
@@ -25,7 +30,7 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
 
   const errorModal = useRef<RefErrorModal>(null);
 
-  const inputOption = useRef<HTMLInputElement>(null);
+  const inputOption = useRef<RefInputText>(null);
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<OptionValue[]>([]);
 
@@ -53,19 +58,21 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
   }
 
   function addOption() {
+    const maxOrder = items.length === 0 ? 1 : Math.max(...items.map((o) => o.order));
     setItems([
       ...items,
       {
         id: null,
         parentId: null,
-        order: items.length + 1,
+        order: maxOrder + 1,
         value: "Option " + (items.length + 1).toString(),
+        color: Colors.UNDEFINED,
         options: [],
       },
     ]);
 
     setTimeout(() => {
-      inputOption.current?.focus();
+      inputOption.current?.input.current?.focus();
     }, 1);
   }
 
@@ -102,7 +109,7 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
               <div>
                 <div className="mt-3 sm:mt-5">
                   <Dialog.Title as="h3" className=" capitalize text-lg leading-6 font-medium text-gray-900">
-                    {title} Dropdown options
+                    {t(title)} Dropdown options
                   </Dialog.Title>
                   <div className="mt-4 space-y-3">
                     <div className="w-full">
@@ -112,33 +119,51 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
                       <div className="mt-1 space-y-2">
                         {items.map((option, idx) => {
                           return (
-                            <div key={idx} className="mt-1 flex rounded-md shadow-sm">
-                              <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                                <input
-                                  ref={inputOption}
-                                  type="text"
-                                  name={"select-option-" + idx}
-                                  id={"select-option-" + idx}
-                                  value={option.value}
-                                  onChange={(e) =>
-                                    updateItemByIdx(items, setItems, idx, {
-                                      value: e.currentTarget.value,
-                                    })
-                                  }
-                                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
-                                />
-                              </div>
-                              <button
+                            <div key={option.order} className="mt-1 flex items-center space-x-1 rounded-md">
+                              <InputText
+                                ref={inputOption}
+                                type="text"
+                                title=""
+                                withLabel={false}
+                                name={"select-option-" + idx}
+                                value={option.value}
+                                setValue={(e) =>
+                                  updateItemByIdx(items, setItems, idx, {
+                                    value: e,
+                                  })
+                                }
+                              />
+
+                              <InputSelector
+                                name="color"
+                                title={t("models.group.color")}
+                                withSearch={false}
+                                value={option.color ?? Colors.UNDEFINED}
+                                withLabel={false}
+                                setValue={(e) =>
+                                  updateItemByIdx(items, setItems, idx, {
+                                    color: Number(e),
+                                  })
+                                }
+                                selectPlaceholder={""}
+                                className="w-20"
+                                options={
+                                  getColors().map((color) => {
+                                    return {
+                                      name: <ColorBadge color={color} />,
+                                      value: color,
+                                    };
+                                  }) ?? []
+                                }
+                              ></InputSelector>
+
+                              <ButtonSecondary
                                 disabled={items.length === 1}
                                 type="button"
-                                onClick={() => setItems([...items.filter((f, index) => index !== idx)])}
-                                className={clsx(
-                                  "-ml-px relative inline-flex items-center space-x-2 px-3 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                                  items.length === 1 ? " bg-gray-100 cursor-not-allowed" : "hover:bg-gray-100"
-                                )}
+                                onClick={() => setItems([...items.filter((_, index) => index !== idx)])}
                               >
-                                <TrashIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
-                              </button>
+                                <TrashIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                              </ButtonSecondary>
                             </div>
                           );
                         })}

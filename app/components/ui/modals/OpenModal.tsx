@@ -6,8 +6,9 @@ interface Props {
   children: ReactNode;
   onClose: () => void;
   className?: string;
+  classNameOpacity?: string;
 }
-export default function OpenModal({ children, onClose, className = "sm:max-w-3xl" }: Props) {
+export default function OpenModal({ children, onClose, className = "sm:max-w-3xl", classNameOpacity = "bg-opacity-75" }: Props) {
   return (
     <Transition.Root show={true} as={Fragment}>
       <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={onClose}>
@@ -21,7 +22,7 @@ export default function OpenModal({ children, onClose, className = "sm:max-w-3xl
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className={clsx("fixed inset-0 bg-gray-500 transition-opacity", classNameOpacity)} />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}

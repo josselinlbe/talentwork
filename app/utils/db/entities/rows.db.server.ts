@@ -1,20 +1,29 @@
-import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, Media } from "@prisma/client";
+import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, RowMedia, RowTag, Contact, Deal, EntityWorkflowState } from "@prisma/client";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import { getRowPermissionsCondition } from "~/utils/helpers/PermissionsHelper";
+import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import TenantHelper from "~/utils/helpers/TenantHelper";
+import { setRowInitialWorkflowState } from "~/utils/services/WorkflowService";
 import { db } from "../../db.server";
+import { RowTagWithDetails } from "./rowTags.db.server";
 
 export type RowValueWithDetails = RowValue & {
-  media: Media[];
+  media: RowMedia[];
 };
 export type RowWithValues = Row & { values: RowValueWithDetails[] };
+export type RowWithCreatedBy = Row & {
+  createdByUser: User | null;
+  createdByApiKey: ApiKey | null;
+  workflowState: EntityWorkflowState | null;
+};
 export type RowWithDetails = Row & {
   // entity: Entity;
   createdByUser: User | null;
   createdByApiKey: ApiKey | null;
-  tenant: Tenant;
+  tenant: Tenant | null;
   linkedAccount:
     | (LinkedAccount & {
         createdByTenant: Tenant;
@@ -24,6 +33,9 @@ export type RowWithDetails = Row & {
     | null;
   values: RowValueWithDetails[];
   details: RowWithValues[];
+  tags: RowTagWithDetails[];
+  contact: Contact | null;
+  deal: Deal | null;
   contract: Contract | null;
 };
 
@@ -38,7 +50,6 @@ export const includeRowDetails = {
       clientTenant: true,
     },
   },
-  contract: true,
   values: {
     include: {
       relatedRow: {
@@ -64,6 +75,38 @@ export const includeRowDetails = {
       },
     },
   },
+  tags: {
+    include: {
+      tag: true,
+    },
+  },
+  contract: true,
+  contact: true,
+  deal: {
+    include: {
+      contact: {
+        include: {
+          row: {
+            include: {
+              entity: true,
+            },
+          },
+        },
+      },
+      row: {
+        include: {
+          entity: true,
+          createdByUser: true,
+          createdByApiKey: true,
+        },
+      },
+      subscriptionPrice: {
+        include: {
+          subscriptionProduct: true,
+        },
+      },
+    },
+  },
 };
 
 export async function getAllRows(entityId: string): Promise<RowWithDetails[]> {
@@ -76,56 +119,59 @@ export async function getAllRows(entityId: string): Promise<RowWithDetails[]> {
   });
 }
 
-function getSearchCondition(query?: string) {
-  let searchInValues:
-    | {
-        OR: {
-          values: {
-            some: {
-              textValue: {
-                contains: string;
-              };
-            };
-          };
-        }[];
-      }
-    | {} = {};
-  if (query) {
-    searchInValues = {
-      OR: [
-        {
-          values: {
-            some: {
-              textValue: {
-                contains: query,
-              },
-            },
-          },
-        },
-      ],
-    };
-  }
-  return searchInValues;
-}
+// function getSearchCondition(query?: string | null) {
+//   let searchInValues:
+//     | {
+//         OR: {
+//           values: {
+//             some: {
+//               textValue: {
+//                 contains: string;
+//               };
+//             };
+//           };
+//         }[];
+//       }
+//     | {} = {};
+//   if (query) {
+//     searchInValues = {
+//       OR: [
+//         {
+//           values: {
+//             some: {
+//               textValue: {
+//                 contains: query,
+//               },
+//             },
+//           },
+//         },
+//       ],
+//     };
+//   }
+//   return searchInValues;
+// }
+
 export async function getRows(
   entityId: string,
-  tenantId: string,
-  userId: string,
+  tenantId: string | null,
+  userId?: string,
   take?: number,
   skip?: number,
   orderBy?: any,
-  query?: string
+  filters?: FiltersDto
 ): Promise<RowWithDetails[]> {
+  const whereFilters = RowFiltersHelper.getWhereQueryHelper(filters);
   return await db.row.findMany({
     take,
     skip,
     where: {
       AND: [
+        whereFilters,
         {
           entityId,
           ...TenantHelper.tenantCondition(tenantId),
           parentRowId: null,
-          ...getSearchCondition(query),
+          // ...getSearchCondition(filters?.query),
         },
         await getRowPermissionsCondition(tenantId, userId),
       ],
@@ -148,15 +194,17 @@ export async function getRowsInIds(tenantId: string, ids: string[]): Promise<Row
   });
 }
 
-export async function countRows(entityId: string, tenantId: string, userId: string, query?: string): Promise<number> {
+export async function countRows(entityId: string, tenantId: string | null, userId: string | undefined, filters?: FiltersDto): Promise<number> {
+  const whereFilters = RowFiltersHelper.getWhereQueryHelper(filters);
   return await db.row.count({
     where: {
       AND: [
+        whereFilters,
         {
           entityId,
           ...TenantHelper.tenantCondition(tenantId),
           parentRowId: null,
-          ...getSearchCondition(query),
+          // ...getSearchCondition(filters?.query),
         },
         await getRowPermissionsCondition(tenantId, userId),
       ],
@@ -164,7 +212,7 @@ export async function countRows(entityId: string, tenantId: string, userId: stri
   });
 }
 
-export async function getRow(entityId: string, id: string, tenantId: string): Promise<RowWithDetails | null> {
+export async function getRow(entityId: string, id: string, tenantId: string | null): Promise<RowWithDetails | null> {
   return await db.row.findFirst({
     where: {
       id,
@@ -178,7 +226,7 @@ export async function getRow(entityId: string, id: string, tenantId: string): Pr
   });
 }
 
-export async function getMaxRowFolio(tenantId: string, entityId: string, parentRowId: string | undefined) {
+export async function getMaxRowFolio(tenantId: string | null, entityId: string, parentRowId: string | undefined = undefined) {
   let where: any = {};
   if (parentRowId) {
     where = {
@@ -204,7 +252,7 @@ export async function getMaxRowFolio(tenantId: string, entityId: string, parentR
 export async function createRow(
   data: {
     entityId: string;
-    tenantId: string;
+    tenantId: string | null;
     createdByUserId?: string | null;
     createdByApiKeyId?: string | null;
     linkedAccountId: string | null;
@@ -274,6 +322,8 @@ export async function createRow(
     await addDetailRows(row, data.dynamicRows);
   }
 
+  await setRowInitialWorkflowState(data.entityId, row.id);
+
   return row;
 }
 
@@ -325,7 +375,7 @@ export async function updateRow(
     dynamicRows: { id?: string | null; values: RowValueDto[] }[] | null;
   }
 ) {
-  await db.media.deleteMany({
+  await db.rowMedia.deleteMany({
     where: {
       rowValue: {
         rowId: id,

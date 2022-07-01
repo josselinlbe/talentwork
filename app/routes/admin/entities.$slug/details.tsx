@@ -49,6 +49,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     const icon = form.get("icon")?.toString() ?? "";
     const active = Boolean(form.get("active"));
 
+    const hasTags = Boolean(form.get("has-tags"));
+    const hasComments = Boolean(form.get("has-comments"));
+    const hasTasks = Boolean(form.get("has-tasks"));
+    const hasWorkflow = Boolean(form.get("has-workflow"));
+
     const errors = await EntityHelper.validateEntity(name, slug, order, prefix, item);
     if (errors.length > 0) {
       return badRequest({ error: errors.join(", ") });
@@ -68,6 +73,11 @@ export const action: ActionFunction = async ({ request, params }) => {
         requiresLinkedAccounts,
         icon,
         active,
+        isDefault: item.isDefault,
+        hasTags,
+        hasComments,
+        hasTasks,
+        hasWorkflow,
       });
 
       return redirect("/admin/entities");
@@ -76,6 +86,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   } else if (action === "delete") {
     try {
+      if (item.isDefault) {
+        return badRequest({ error: "Default entities cannot be deleted" });
+      }
       await deleteEntity(item.id ?? "");
       return redirect("/admin/entities");
     } catch (e) {
@@ -89,5 +102,5 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
-  return <EntityForm canDelete={adminData.permissions.includes("admin.entities.delete")} item={data.item} />;
+  return <EntityForm canDelete={!data.item.isDefault && adminData.permissions.includes("admin.entities.delete")} item={data.item} />;
 }

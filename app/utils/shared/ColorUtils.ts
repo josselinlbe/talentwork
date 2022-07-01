@@ -1,7 +1,26 @@
 import clsx from "clsx";
 import { Colors } from "~/application/enums/shared/Colors";
 
-export function getColors() {
+export function getColors(main?: boolean) {
+  if (main) {
+    return [
+      Colors.GRAY,
+      Colors.RED,
+      Colors.ORANGE,
+      Colors.YELLOW,
+      Colors.GREEN,
+      Colors.TEAL,
+      Colors.CYAN,
+      Colors.SKY,
+      Colors.BLUE,
+      Colors.INDIGO,
+      Colors.VIOLET,
+      Colors.PURPLE,
+      Colors.FUCHSIA,
+      Colors.PINK,
+      Colors.ROSE,
+    ];
+  }
   return [
     Colors.SLATE,
     Colors.GRAY,
@@ -199,6 +218,56 @@ export function getBadgeColor(itemColor: Colors, strong?: boolean): string {
       return clsx("bg-pink-50 border border-pink-200 text-pink-600", strong && "bg-pink-400 border-pink-900 text-pink-900");
     case Colors.ROSE:
       return clsx("bg-rose-50 border border-rose-200 text-rose-600", strong && "bg-rose-400 border-rose-900 text-rose-900");
+  }
+  return "";
+}
+
+export function getBackgroundColor(itemColor: Colors): string {
+  switch (itemColor) {
+    case Colors.UNDEFINED:
+      return "bg-gray-500";
+    case Colors.SLATE:
+      return "bg-slate-500";
+    case Colors.GRAY:
+      return "bg-gray-500";
+    case Colors.NEUTRAL:
+      return "bg-neutral-500";
+    case Colors.STONE:
+      return "bg-stone-500";
+    case Colors.RED:
+      return "bg-red-500";
+    case Colors.ORANGE:
+      return "bg-orange-500";
+    case Colors.AMBER:
+      return "bg-amber-500";
+    case Colors.YELLOW:
+      return "bg-yellow-500";
+    case Colors.LIME:
+      return "bg-lime-500";
+    case Colors.GREEN:
+      return "bg-green-500";
+    case Colors.EMERALD:
+      return "bg-emerald-500";
+    case Colors.TEAL:
+      return "bg-teal-500";
+    case Colors.CYAN:
+      return "bg-cyan-500";
+    case Colors.SKY:
+      return "bg-sky-500";
+    case Colors.BLUE:
+      return "bg-blue-500";
+    case Colors.INDIGO:
+      return "bg-indigo-500";
+    case Colors.VIOLET:
+      return "bg-violet-500";
+    case Colors.PURPLE:
+      return "bg-purple-500";
+    case Colors.FUCHSIA:
+      return "bg-fuchsia-500";
+    case Colors.PINK:
+      return "bg-pink-500";
+    case Colors.ROSE:
+      return "bg-rose-500";
   }
   return "";
 }

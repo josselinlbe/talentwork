@@ -1,5 +1,6 @@
 import { Tenant, User, Log, ApiKey } from "@prisma/client";
 import { getClientIPAddress } from "remix-utils";
+import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { db } from "../db.server";
 import ApiHelper from "../helpers/ApiHelper";
 import RowHelper from "../helpers/RowHelper";
@@ -7,18 +8,43 @@ import { TenantUrl } from "../services/urlService";
 import { getUserInfo } from "../session.server";
 import { EntityWithDetails } from "./entities/entities.db.server";
 import { callEntityWebhooks } from "./entities/entityWebhooks.db.server";
+import { RowCommentWithDetails } from "./entities/rowComments.db.server";
 import { RowWithDetails } from "./entities/rows.db.server";
+import { RowWorkflowTransitionWithDetails } from "./workflows/rowWorkflowTransitions.db.server";
 
 export type LogWithDetails = Log & {
   user: User | null;
   apiKey: ApiKey | null;
   tenant?: Tenant | null;
+  comment?: RowCommentWithDetails | null;
+  workflowTransition?: RowWorkflowTransitionWithDetails | null;
 };
 
 const include = {
   user: true,
   tenant: true,
   apiKey: true,
+  comment: {
+    include: {
+      createdByUser: true,
+      reactions: {
+        include: {
+          createdByUser: true,
+        },
+      },
+    },
+  },
+  workflowTransition: {
+    include: {
+      createdByUser: true,
+      workflowStep: {
+        include: {
+          fromState: true,
+          toState: true,
+        },
+      },
+    },
+  },
 };
 
 export async function getAllLogs(): Promise<LogWithDetails[]> {
@@ -47,7 +73,7 @@ export async function getAllRowLogs(entityId: string): Promise<LogWithDetails[]>
   });
 }
 
-export async function getRowLogs(tenantId: string, rowId: string): Promise<LogWithDetails[]> {
+export async function getRowLogs(tenantId: string | null, rowId: string): Promise<LogWithDetails[]> {
   return await db.log.findMany({
     where: {
       tenantId,
@@ -73,15 +99,29 @@ export async function createLog(request: Request, tenantUrl: TenantUrl, action: 
   });
 }
 
+export async function createManualLog(userId: string, tenantId: string | null, pathname: string, action: string, details: string) {
+  await db.log.create({
+    data: {
+      tenantId,
+      userId,
+      url: pathname,
+      action,
+      details,
+    },
+  });
+}
+
 export async function createRowLog(
   request: Request,
   data: {
-    tenantId: string;
+    tenantId: string | null;
     createdByUserId?: string | null;
     createdByApiKey?: string | null;
     action: string;
     entity: EntityWithDetails;
     item: RowWithDetails | null;
+    commentId?: string | null;
+    details?: string;
   }
 ) {
   const log = await db.log.create({
@@ -92,7 +132,38 @@ export async function createRowLog(
       url: new URL(request.url).pathname,
       rowId: data.item?.id ?? null,
       action: data.action,
-      details: data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null,
+      details: data.details ?? (data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null),
+      commentId: data.commentId ?? null,
+    },
+  });
+  const apiFormat = ApiHelper.getApiFormat(data.entity, data.item);
+  await callEntityWebhooks(log.id, data.entity.id, data.action, apiFormat);
+  return log;
+}
+
+export async function createManualRowLog(data: {
+  tenantId: string | null;
+  createdByUserId?: string | null;
+  createdByApiKey?: string | null;
+  action: string;
+  entity: EntityWithDetails;
+  item: RowWithDetails | null;
+  workflowTransition?: RowWorkflowTransitionWithDetails | null;
+}) {
+  let details = data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null;
+  if (data.workflowTransition) {
+    details = `From ${data.workflowTransition.workflowStep.fromState.title} to ${data.workflowTransition.workflowStep.toState.title}`;
+  }
+  const log = await db.log.create({
+    data: {
+      tenantId: data.tenantId,
+      userId: data.createdByUserId ?? null,
+      apiKeyId: data.createdByApiKey ?? null,
+      url: "",
+      rowId: data.item?.id ?? null,
+      action: data.action,
+      details,
+      workflowTransitionId: data.workflowTransition?.id ?? null,
     },
   });
   const apiFormat = ApiHelper.getApiFormat(data.entity, data.item);
@@ -116,7 +187,7 @@ export async function createLogLogin(request: Request, user: User) {
     data: {
       userId: user.id,
       url: "",
-      action: "Login",
+      action: DefaultLogActions.Login,
       details: "",
     },
   });

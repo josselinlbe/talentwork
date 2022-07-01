@@ -135,7 +135,7 @@ export default function LoginRoute() {
             <div className="mt-2 border-t pt-1 border-accent-300 w-full text-xs">
               {/* {t("account.login.useTestAccount")} */}
               <p className="mt-1">
-                <span className="font-bold">Email</span>:{" "}
+                <span className="font-bold">App Users</span>:{" "}
                 <button
                   type="button"
                   onClick={() => setDemoAccount("luna.davis@company.com")}
@@ -144,9 +144,25 @@ export default function LoginRoute() {
                   luna.davis@company.com
                 </button>{" "}
                 or{" "}
-                <button type="button" onClick={() => setDemoAccount("demo@admin.com")} className="border-b border-dashed hover:border-dotted border-accent-300">
-                  demo@admin.com
+                <button
+                  type="button"
+                  onClick={() => setDemoAccount("john.doe@company.com")}
+                  className="border-b border-dashed hover:border-dotted border-accent-300"
+                >
+                  john.doe@company.com
                 </button>
+              </p>
+              <p>
+                <p className="mt-1">
+                  <span className="font-bold">Admin User</span>:{" "}
+                  <button
+                    type="button"
+                    onClick={() => setDemoAccount("demo@admin.com")}
+                    className="border-b border-dashed hover:border-dotted border-accent-300"
+                  >
+                    demo@admin.com
+                  </button>
+                </p>
               </p>
               <p>
                 <span className="font-bold select-all">Password</span>: password

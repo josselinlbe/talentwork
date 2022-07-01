@@ -135,7 +135,10 @@ export async function getProviderLinks(tenantId: string): Promise<LinkedAccountW
   });
 }
 
-export async function getLinksWithMembers(tenantId: string): Promise<LinkedAccountWithDetailsAndMembers[]> {
+export async function getLinksWithMembers(tenantId: string | null): Promise<LinkedAccountWithDetailsAndMembers[]> {
+  if (!tenantId) {
+    return [];
+  }
   return await db.linkedAccount.findMany({
     where: {
       status: LinkedAccountStatus.LINKED,

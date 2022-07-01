@@ -6,35 +6,43 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                       String                @id @default(cuid())
-  createdAt                DateTime              @default(now())
-  updatedAt                DateTime              @updatedAt
-  email                    String                @unique
-  passwordHash             String
-  firstName                String
-  lastName                 String
-  avatar                   String?
-  phone                    String?
-  defaultTenantId          String?
-  verifyToken              String?
-  admin                    AdminUser?
-  tenants                  TenantUser[]
-  invitation               TenantUserInvitation?
-  logs                     Log[]
-  contracts                ContractMember[]
-  createdContractActivites ContractActivity[]
-  createdLinkedAccounts    LinkedAccount[]
-  createdRows              Row[]
-  createdApiKeys           ApiKey[]
-  createdGroups            Group[]
-  roles                    UserRole[]
-  groups                   GroupUser[]
-  rowPermissions           RowPermission[]
+  id                         String                       @id @default(cuid())
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  email                      String                       @unique
+  passwordHash               String
+  firstName                  String
+  lastName                   String
+  avatar                     String?
+  phone                      String?
+  defaultTenantId            String?
+  verifyToken                String?
+  admin                      AdminUser?
+  tenants                    TenantUser[]
+  invitation                 TenantUserInvitation?
+  logs                       Log[]
+  contracts                  ContractMember[]
+  createdContractActivites   ContractActivity[]
+  createdLinkedAccounts      LinkedAccount[]
+  createdRows                Row[]
+  createdApiKeys             ApiKey[]
+  createdGroups              Group[]
+  createdRowComments         RowComment[]
+  createdRowCommentReactions RowCommentReaction[]
+  createdRowTasks            RowTask[]                    @relation(name: "createdByUser")
+  roles                      UserRole[]
+  groups                     GroupUser[]
+  rowPermissions             RowPermission[]
+  contacts                   Contact[]
+  assignedTasks              RowTask[]                    @relation(name: "assignedToUser")
+  completedTasks             RowTask[]                    @relation(name: "completedByUser")
+  workflowSteps              EntityWorkflowStepAssignee[]
+  workflowTransitions        RowWorkflowTransition[]
 }
 
 model AdminUser {
@@ -44,10 +52,10 @@ model AdminUser {
 }
 
 model Tenant {
-  id                       String                 @id @default(cuid())
-  createdAt                DateTime               @default(now())
-  updatedAt                DateTime               @updatedAt
-  slug                     String                 @unique
+  id                       String                       @id @default(cuid())
+  createdAt                DateTime                     @default(now())
+  updatedAt                DateTime                     @updatedAt
+  slug                     String                       @unique
   name                     String
   icon                     String?
   subscriptionId           String?
@@ -57,12 +65,13 @@ model Tenant {
   rows                     Row[]
   logs                     Log[]
   apiKeys                  ApiKey[]
-  createdLinkedAccounts    LinkedAccount[]        @relation("createdByTenant")
-  asProviderLinkedAccounts LinkedAccount[]        @relation("providerTenant")
-  asClientLinkedAccounts   LinkedAccount[]        @relation("clientTenant")
+  createdLinkedAccounts    LinkedAccount[]              @relation("createdByTenant")
+  asProviderLinkedAccounts LinkedAccount[]              @relation("providerTenant")
+  asClientLinkedAccounts   LinkedAccount[]              @relation("clientTenant")
   userRoles                UserRole[]
   groups                   Group[]
   rowPermissions           RowPermission[]
+  workflowSteps            EntityWorkflowStepAssignee[]
 }
 
 model TenantSubscription {
@@ -89,10 +98,10 @@ model TenantUser {
 }
 
 model Role {
-  id               String           @id @default(cuid())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String           @unique
+  id               String                       @id @default(cuid())
+  createdAt        DateTime                     @default(now())
+  updatedAt        DateTime                     @updatedAt
+  name             String                       @unique
   description      String
   type             String
   assignToNewUsers Boolean
@@ -100,6 +109,8 @@ model Role {
   order            Int
   permissions      RolePermission[]
   users            UserRole[]
+  rowPermissions   RowPermission[]
+  workflowSteps    EntityWorkflowStepAssignee[]
 }
 
 model Permission {
@@ -136,17 +147,18 @@ model UserRole {
 }
 
 model Group {
-  id              String          @id @default(cuid())
-  createdAt       DateTime        @default(now())
+  id              String                       @id @default(cuid())
+  createdAt       DateTime                     @default(now())
   createdByUserId String
-  createdByUser   User            @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  tenantId        String
-  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdByUser   User                         @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenantId        String?
+  tenant          Tenant?                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   name            String
   description     String
   color           Int
   users           GroupUser[]
-  rows            RowPermission[]
+  rowPermissions  RowPermission[]
+  workflowSteps   EntityWorkflowStepAssignee[]
 }
 
 model GroupUser {
@@ -226,20 +238,24 @@ model ApiKeyEntity {
 }
 
 model Log {
-  id          String             @id @default(cuid())
-  createdAt   DateTime           @default(now())
-  tenantId    String?
-  tenant      Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  userId      String?
-  user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKeyId    String?
-  apiKey      ApiKey?            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  rowId       String?
-  row         Row?               @relation(fields: [rowId], references: [id])
-  url         String
-  action      String
-  details     String?
-  webhookLogs EntityWebhookLog[]
+  id                   String                 @id @default(cuid())
+  createdAt            DateTime               @default(now())
+  tenantId             String?
+  tenant               Tenant?                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId               String?
+  user                 User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKeyId             String?
+  apiKey               ApiKey?                @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  rowId                String?
+  row                  Row?                   @relation(fields: [rowId], references: [id])
+  url                  String
+  action               String
+  details              String?
+  commentId            String?
+  comment              RowComment?            @relation(fields: [commentId], references: [id])
+  workflowTransitionId String?
+  workflowTransition   RowWorkflowTransition? @relation(fields: [workflowTransitionId], references: [id])
+  webhookLogs          EntityWebhookLog[]
 }
 
 model ApiKeyLog {
@@ -282,6 +298,7 @@ model SubscriptionPrice {
   trialDays             Int
   active                Boolean
   tenantSubscriptions   TenantSubscription[]
+  deals                 Deal[]
 }
 
 model SubscriptionFeature {
@@ -360,15 +377,23 @@ model Entity {
   titlePlural            String //  i18n key, eg: models.contract.plural
   isFeature              Boolean
   isAutogenerated        Boolean
+  isDefault              Boolean
   hasApi                 Boolean
   requiresLinkedAccounts Boolean
   icon                   String
   active                 Boolean
+  hasTags                Boolean                      @default(true)
+  hasComments            Boolean                      @default(true)
+  hasTasks               Boolean                      @default(true)
+  hasWorkflow            Boolean                      @default(false)
   properties             Property[]
   rows                   Row[]
   permissions            EntityTenantUserPermission[]
   apiKeys                ApiKeyEntity[]
   webhooks               EntityWebhook[]
+  tags                   EntityTag[]
+  workflowStates         EntityWorkflowState[]
+  workflowSteps          EntityWorkflowStep[]
 }
 
 model Property {
@@ -405,77 +430,17 @@ model PropertyOption {
   parent     PropertyOption?  @relation(name: "parentOption", fields: [parentId], references: [id], onDelete: Cascade)
   order      Int
   value      String
+  color      Int              @default(0)
   options    PropertyOption[] @relation(name: "parentOption")
 }
 
-model Row {
-  id                String             @id @default(cuid())
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  entityId          String
-  entity            Entity             @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  tenantId          String
-  tenant            Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  folio             Int
-  createdByUserId   String?
-  createdByUser     User?              @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  createdByApiKeyId String?
-  createdByApiKey   ApiKey?            @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
-  linkedAccountId   String?
-  linkedAccount     LinkedAccount?     @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
-  contractId        String?
-  contract          Contract?
-  contractEmployees ContractEmployee[]
-  logs              Log[]
-  values            RowValue[]
-  relatedRows       RowValue[]         @relation(name: "relatedRow")
-  permissions       RowPermission[]
-  visibility        String             @default("private")
-  canComment        Boolean            @default(true)
-  canUpdate         Boolean            @default(true)
-  canDelete         Boolean            @default(true)
-
-  parentRowId String?
-  parentRow   Row?    @relation(name: "parentRowId", fields: [parentRowId], references: [id], onDelete: Cascade)
-  details     Row[]   @relation(name: "parentRowId")
-}
-
-model RowValue {
-  id           String    @id @default(cuid())
-  rowId        String
-  row          Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
-  propertyId   String
-  property     Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  relatedRowId String?
-  relatedRow   Row?      @relation(name: "relatedRow", fields: [relatedRowId], references: [id], onDelete: Cascade)
-  idValue      String?
-  textValue    String?
-  numberValue  Decimal?
-  dateValue    DateTime?
-  booleanValue Boolean?
-  media        Media[]
-}
-
-model RowPermission {
-  id       String  @id @default(cuid())
-  rowId    String
-  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
-  tenantId String?
-  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  groupId  String?
-  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  userId   String?
-  user     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Media {
-  id         String   @id @default(cuid())
-  rowValueId String
-  rowValue   RowValue @relation(fields: [rowValueId], references: [id], onDelete: Cascade)
-  title      String
-  name       String
-  file       String
-  type       String
+model EntityTag {
+  id       String   @id @default(cuid())
+  entityId String
+  entity   Entity   @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  value    String
+  color    Int
+  rowTags  RowTag[]
 }
 
 model EntityTenantUserPermission {
@@ -505,15 +470,269 @@ model EntityWebhookLog {
   error     String?
 }
 
-// model EntityLog {
-//   id        String   @id @default(cuid())
-//   createdAt DateTime @default(now())
-//   logId     String
-//   log       Log      @relation(fields: [logId], references: [id], onDelete: Cascade)
-//   url       String
-//   action    String
-//   details   String
-// }
+model EntityWorkflowState {
+  id           String               @id @default(cuid())
+  entityId     String
+  entity       Entity               @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  order        Int
+  name         String
+  title        String
+  color        Int
+  canUpdate    Boolean
+  canDelete    Boolean
+  emailSubject String
+  emailBody    String
+  fromStates   EntityWorkflowStep[] @relation(name: "fromState")
+  toStates     EntityWorkflowStep[] @relation(name: "toState")
+  rows         Row[]
+}
+
+model EntityWorkflowStep {
+  id          String                       @id @default(cuid())
+  entityId    String
+  entity      Entity                       @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  action      String
+  fromStateId String
+  fromState   EntityWorkflowState          @relation(name: "fromState", fields: [fromStateId], references: [id], onDelete: Cascade)
+  toStateId   String
+  toState     EntityWorkflowState          @relation(name: "toState", fields: [toStateId], references: [id], onDelete: Cascade)
+  assignTo    String                       @default("private") // Visibility
+  assignees   EntityWorkflowStepAssignee[]
+  transitions RowWorkflowTransition[]
+}
+
+model EntityWorkflowStepAssignee {
+  id       String             @id @default(cuid())
+  stepId   String
+  step     EntityWorkflowStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  tenantId String?
+  tenant   Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  roleId   String?
+  role     Role?              @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  groupId  String?
+  group    Group?             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String?
+  user     User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Row {
+  id                String          @id @default(cuid())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  entityId          String
+  entity            Entity          @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  tenantId          String?
+  tenant            Tenant?         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  folio             Int
+  createdByUserId   String?
+  createdByUser     User?           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByApiKeyId String?
+  createdByApiKey   ApiKey?         @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
+  linkedAccountId   String?
+  linkedAccount     LinkedAccount?  @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
+  logs              Log[]
+  values            RowValue[]
+  relatedRows       RowValue[]      @relation(name: "relatedRow")
+  permissions       RowPermission[]
+  visibility        String          @default("private") // Visibility
+  canComment        Boolean         @default(true)
+  canUpdate         Boolean         @default(true)
+  canDelete         Boolean         @default(true)
+
+  workflowStateId String?
+  workflowState   EntityWorkflowState?    @relation(fields: [workflowStateId], references: [id], onDelete: Cascade)
+  transitions     RowWorkflowTransition[]
+
+  parentRowId String?
+  parentRow   Row?         @relation(name: "parentRowId", fields: [parentRowId], references: [id], onDelete: Cascade)
+  details     Row[]        @relation(name: "parentRowId")
+  tags        RowTag[]
+  comments    RowComment[]
+  tasks       RowTask[]
+
+  // Admin Entities
+  contactId String?
+  contact   Contact?
+  dealId    String?
+  deal      Deal?
+
+  // Demo Entities
+  contractId        String?
+  contract          Contract?
+  contractEmployees ContractEmployee[]
+}
+
+model RowValue {
+  id           String     @id @default(cuid())
+  rowId        String
+  row          Row        @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  propertyId   String
+  property     Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  relatedRowId String?
+  relatedRow   Row?       @relation(name: "relatedRow", fields: [relatedRowId], references: [id], onDelete: Cascade)
+  idValue      String?
+  textValue    String?
+  numberValue  Decimal?
+  dateValue    DateTime?
+  booleanValue Boolean?
+  media        RowMedia[]
+}
+
+model RowPermission {
+  id       String  @id @default(cuid())
+  rowId    String
+  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  tenantId String?
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  roleId   String?
+  role     Role?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  groupId  String?
+  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String?
+  user     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RowMedia {
+  id         String   @id @default(cuid())
+  rowValueId String
+  rowValue   RowValue @relation(fields: [rowValueId], references: [id], onDelete: Cascade)
+  title      String
+  name       String
+  file       String
+  type       String
+}
+
+model RowTag {
+  id    String    @id @default(cuid())
+  rowId String
+  row   Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  tagId String
+  tag   EntityTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+}
+
+model RowComment {
+  id              String               @id @default(cuid())
+  createdAt       DateTime             @default(now())
+  createdByUserId String
+  createdByUser   User                 @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  rowId           String
+  row             Row                  @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  value           String
+  isDeleted       Boolean?
+  // parentCommentId String?
+  // parentComment   RowComment?  @relation(name: "replies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  // replies         RowComment[] @relation(name: "replies")
+  logs            Log[]
+  reactions       RowCommentReaction[]
+}
+
+model RowCommentReaction {
+  id              String     @id @default(cuid())
+  createdAt       DateTime   @default(now())
+  createdByUserId String
+  createdByUser   User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  rowCommentId    String
+  rowComment      RowComment @relation(fields: [rowCommentId], references: [id], onDelete: Cascade)
+  reaction        String
+}
+
+model RowTask {
+  id                String    @id @default(cuid())
+  createdAt         DateTime  @default(now())
+  createdByUserId   String
+  createdByUser     User      @relation(name: "createdByUser", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  rowId             String
+  row               Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  title             String
+  description       String
+  completed         Boolean
+  completedAt       DateTime?
+  completedByUserId String?
+  completedByUser   User?     @relation(name: "completedByUser", fields: [completedByUserId], references: [id], onDelete: Cascade)
+  assignedToUserId  String?
+  assignedToUser    User?     @relation(name: "assignedToUser", fields: [assignedToUserId], references: [id], onDelete: Cascade)
+  deadline          DateTime?
+}
+
+model RowWorkflowTransition {
+  id              String             @id @default(cuid())
+  createdAt       DateTime           @default(now())
+  createdByUserId String
+  createdByUser   User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  rowId           String
+  row             Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  workflowStepId  String
+  workflowStep    EntityWorkflowStep @relation(fields: [workflowStepId], references: [id], onDelete: Cascade)
+  logs            Log[]
+}
+
+model Email {
+  id          String            @id @default(cuid())
+  messageId   String            @unique
+  type        String // inbound, outbound
+  date        DateTime
+  subject     String
+  fromEmail   String
+  fromName    String?
+  toEmail     String
+  toName      String?
+  textBody    String
+  htmlBody    String
+  cc          EmailCc[]
+  attachments EmailAttachment[]
+}
+
+model EmailCc {
+  id      String  @id @default(cuid())
+  emailId String
+  email   Email   @relation(fields: [emailId], references: [id], onDelete: Cascade)
+  toEmail String
+  toName  String?
+}
+
+model EmailAttachment {
+  id      String @id @default(cuid())
+  emailId String
+  email   Email  @relation(fields: [emailId], references: [id], onDelete: Cascade)
+  name    String
+  content String
+  type    String
+  length  Int
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rowId     String   @unique
+  row       Row      @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  ownerId   String?
+  owner     User?    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status    String
+  email     String
+  firstName String
+  lastName  String
+  phone     String?
+  company   String?
+  title     String?
+  deals     Deal[]
+}
+
+model Deal {
+  id                  String             @id @default(cuid())
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  rowId               String             @unique
+  row                 Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  contactId           String
+  contact             Contact            @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  name                String
+  value               Decimal
+  subscriptionPriceId String?
+  subscriptionPrice   SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id], onDelete: Cascade)
+}
+
+// Demo Models
 
 model Contract {
   id          String             @id @default(cuid())

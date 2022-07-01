@@ -3,30 +3,17 @@ import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "remix";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
+import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import { InputType } from "~/application/enums/shared/InputType";
+import RowDisplayValueHelper from "~/utils/helpers/RowDisplayValueHelper";
 import ButtonTertiary from "../buttons/ButtonTertiary";
 import InputNumber from "../input/InputNumber";
 import InputSelect from "../input/InputSelect";
 import InputText from "../input/InputText";
 import TablePagination from "./TablePagination";
 
-export type Header<T> = {
-  title: string;
-  name: string;
-  type?: InputType;
-  value: (item: T) => any;
-  href?: (item: T) => any | undefined;
-  formattedValue?: (item: T) => string | ReactNode;
-  options?: { name: string; value: number | string; disabled?: boolean }[];
-  setValue?: (value: any, idx: number) => void;
-  editable?: (item: T) => boolean;
-  className?: string;
-  sortable?: boolean;
-  breakpoint?: "sm" | "md" | "lg" | "xl" | "2xl";
-};
-
 interface Props<T> {
-  headers: Header<T>[];
+  headers: RowHeaderDisplayDto<T>[];
   items: T[];
   actions?: { title: string; onClick?: (idx: number, item: T) => void; onClickRoute?: (idx: number, item: T) => string; disabled?: boolean }[];
   updatesUrl?: boolean;
@@ -37,7 +24,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  function onSortBy(header: Header<T>) {
+  function onSortBy(header: RowHeaderDisplayDto<T>) {
     let sort = header.name.toString();
     let direction = "-";
     if (pagination?.sortedBy?.name === header.name) {
@@ -49,10 +36,10 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
     setSearchParams(searchParams);
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col shadow border border-gray-200 sm:rounded-md overflow-hidden">
       <div className="overflow-x-auto">
-        <div className="py-2 align-middle inline-block min-w-full">
-          <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
+        <div className="align-middle inline-block min-w-full">
+          <div className="overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -74,7 +61,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                         )}
                       >
                         <div className={clsx("flex items-center space-x-1 text-gray-500", header.className)}>
-                          <div>{header.title}</div>
+                          <div>{t(header.title)}</div>
                           <div className={clsx((!header.name || pagination?.sortedBy?.name !== header.name) && "invisible")}>
                             {(() => {
                               if (pagination?.sortedBy?.direction === "asc") {
@@ -112,7 +99,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
               <tbody className="bg-white divide-y divide-gray-200">
                 {items.length === 0 ? (
                   <tr>
-                    <td colSpan={headers.length} className="text-center">
+                    <td colSpan={headers.length + actions.length} className="text-center">
                       <div className="p-3 text-gray-500 text-sm">{t("shared.noRecords")}</div>
                     </td>
                   </tr>
@@ -135,69 +122,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                                 header.breakpoint === "2xl" && "hidden 2xl:table-cell"
                               )}
                             >
-                              {!header.setValue ? (
-                                <>
-                                  {header.href !== undefined ? (
-                                    <Link
-                                      to={header.href(item)}
-                                      className="p-2 hover:bg-gray-50 border border-transparent hover:border-gray-300 rounded-md focus:bg-gray-100"
-                                    >
-                                      <span>{header.formattedValue ? header.formattedValue(item) : header.value(item)}</span>
-                                    </Link>
-                                  ) : (
-                                    <span>{header.formattedValue ? header.formattedValue(item) : header.value(item)}</span>
-                                  )}
-                                </>
-                              ) : (
-                                <>
-                                  {header.type === undefined || header.type === InputType.TEXT ? (
-                                    <InputText
-                                      withLabel={false}
-                                      name={header.name}
-                                      title={header.title}
-                                      value={header.value(item)}
-                                      disabled={header.editable && !header.editable(item)}
-                                      setValue={(e) => {
-                                        if (header.setValue) {
-                                          header.setValue(e, idxRow);
-                                        }
-                                      }}
-                                      required
-                                    />
-                                  ) : header.type === InputType.NUMBER ? (
-                                    <InputNumber
-                                      withLabel={false}
-                                      name={header.name}
-                                      title={header.title}
-                                      value={header.value(item)}
-                                      disabled={header.editable && !header.editable(item)}
-                                      setValue={(e) => {
-                                        if (header.setValue) {
-                                          header.setValue(e, idxRow);
-                                        }
-                                      }}
-                                      required
-                                    />
-                                  ) : header.type === InputType.SELECT ? (
-                                    <InputSelect
-                                      withLabel={false}
-                                      name={header.name}
-                                      title={header.title}
-                                      value={header.value(item)}
-                                      setValue={(e) => {
-                                        if (header.setValue) {
-                                          header.setValue(Number(e), idxRow);
-                                        }
-                                      }}
-                                      options={header.options ?? []}
-                                      required
-                                      disabled={header.editable && !header.editable(item)}
-                                    />
-                                  ) : (
-                                    <td></td>
-                                  )}
-                                </>
-                              )}
+                              {RowDisplayValueHelper.displayRowValue(t, header, item, idxRow)}
                             </td>
                           );
                         })}
@@ -208,7 +133,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                                 return (
                                   <ButtonTertiary
                                     disabled={action.disabled}
-                                    key={action.title}
+                                    key={t(action.title)}
                                     onClick={() => {
                                       if (action.onClick) {
                                         action.onClick(idxRow, item);
@@ -216,7 +141,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                                     }}
                                     to={action.onClickRoute && action.onClickRoute(idxRow, item)}
                                   >
-                                    {action.title}
+                                    {t(action.title)}
                                   </ButtonTertiary>
                                 );
                               })}
@@ -237,13 +162,12 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                 ))} */}
               </tbody>
             </table>
-            {/* {JSON.stringify(pagination)} */}
-            {updatesUrl && pagination && (
-              <TablePagination totalItems={pagination.totalItems} totalPages={pagination.totalPages} page={pagination.page} pageSize={pagination.pageSize} />
-            )}
           </div>
         </div>
       </div>
+      {pagination && (
+        <TablePagination totalItems={pagination.totalItems} totalPages={pagination.totalPages} page={pagination.page} pageSize={pagination.pageSize} />
+      )}
     </div>
   );
 }

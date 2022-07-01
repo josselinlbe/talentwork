@@ -28,6 +28,17 @@ export async function getRowPermissionByGroups(rowId: string, groups: string[]) 
   });
 }
 
+export async function getRowPermissionByRoles(rowId: string, roles: string[]) {
+  return await db.rowPermission.findFirst({
+    where: {
+      rowId,
+      roleId: {
+        in: roles,
+      },
+    },
+  });
+}
+
 export async function getRowPermissionByUsers(rowId: string, users: string[]) {
   return await db.rowPermission.findFirst({
     where: {
@@ -39,7 +50,7 @@ export async function getRowPermissionByUsers(rowId: string, users: string[]) {
   });
 }
 
-export async function createRowPermission(data: { rowId: string; tenantId?: string; groupId?: string; userId?: string }) {
+export async function createRowPermission(data: { rowId: string; tenantId?: string | null; roleId?: string; groupId?: string; userId?: string }) {
   return await db.rowPermission.create({
     data,
   });

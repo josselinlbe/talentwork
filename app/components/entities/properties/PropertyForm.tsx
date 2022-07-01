@@ -231,7 +231,7 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                   {item ? "Update property" : "Create property"}
                 </Dialog.Title>
 
-                <FormGroup id={item?.id} editing={true}>
+                <FormGroup id={item?.id} editing={true} canDelete={!item?.isDefault}>
                   {/* <input type="hidden" name="order" value={order} /> */}
 
                   <div className="mt-4 space-y-3">

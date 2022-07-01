@@ -29,7 +29,7 @@ export default function RowLogs({ items }: Props) {
         <h3 className="text-sm leading-3 font-medium text-gray-800">
           <div className="flex space-x-1 items-center">
             <div>
-              <span className=" italic font-light"></span> {t("models.contract.activity")}
+              <span className=" italic font-light"></span> {t("app.shared.activity.title")}
             </div>
           </div>
         </h3>

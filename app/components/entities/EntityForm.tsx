@@ -38,6 +38,11 @@ export default function EntityForm({ item, canDelete }: Props) {
   const [requiresLinkedAccounts, setRequiresLinkedAccounts] = useState(item?.requiresLinkedAccounts ?? false);
   const [active, setActive] = useState(item?.active ?? true);
 
+  const [hasTags, setHasTags] = useState(item?.hasTags ?? true);
+  const [hasComments, setHasComments] = useState(item?.hasComments ?? true);
+  const [hasTasks, setHasTasks] = useState(item?.hasTasks ?? true);
+  const [hasWorkflow, setHasWorkflow] = useState(item?.hasWorkflow ?? false);
+
   useEffect(() => {
     setTimeout(() => {
       inputName.current?.input.current?.focus();
@@ -216,6 +221,39 @@ export default function EntityForm({ item, canDelete }: Props) {
               value={requiresLinkedAccounts}
               setValue={setRequiresLinkedAccounts}
               description="A linked account must be set (eg: A contract requires a Provider and a Client accounts to be linked at /app/:tenant/settings/linked-accounts)."
+            />
+
+            <InputCheckboxWithDescription
+              className="col-span-12"
+              name="has-tags"
+              title={t("models.entity.hasTags")}
+              value={hasTags}
+              setValue={setHasTags}
+              description="Tags enabled"
+            />
+            <InputCheckboxWithDescription
+              className="col-span-12"
+              name="has-comments"
+              title={t("models.entity.hasComments")}
+              value={hasComments}
+              setValue={setHasComments}
+              description="Comments enabled"
+            />
+            <InputCheckboxWithDescription
+              className="col-span-12"
+              name="has-tasks"
+              title={t("models.entity.hasTasks")}
+              value={hasTasks}
+              setValue={setHasTasks}
+              description="Tasks enabled"
+            />
+            <InputCheckboxWithDescription
+              className="col-span-12"
+              name="has-workflow"
+              title={t("models.entity.hasWorkflow")}
+              value={hasWorkflow}
+              setValue={setHasWorkflow}
+              description="Workflow enabled"
             />
           </div>
         </div>

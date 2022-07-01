@@ -10,6 +10,7 @@ import OpenModal from "~/components/ui/modals/OpenModal";
 import InputText from "~/components/ui/input/InputText";
 import { getUser } from "~/utils/db/users.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
+import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 
 type LoaderData = {
   title: string;
@@ -76,7 +77,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       properties: rowValues.properties,
     });
     const item = await getRow(entity.id, created.id, tenantId);
-    await createRowLog(request, { tenantId: tenantId, createdByUserId: userInfo.userId, action: "Created", entity, item });
+    await createRowLog(request, { tenantId: tenantId, createdByUserId: userInfo.userId, action: DefaultLogActions.Created, entity, item });
 
     return redirect(`/roadmap`);
   } catch (e: any) {

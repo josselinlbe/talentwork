@@ -7,6 +7,7 @@ import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import CheckIcon from "~/components/ui/icons/CheckIcon";
 import SelectorIcon from "~/components/ui/icons/SelectorIcon";
 import { useTranslation } from "react-i18next";
+import ColorBadge from "~/components/ui/badges/ColorBadge";
 
 interface Props {
   className?: string;
@@ -46,6 +47,10 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parent?.id]);
 
+  function hasColors() {
+    return field.options.find((f) => f.color);
+  }
+
   return (
     <div className="space-y-3">
       <div>
@@ -69,7 +74,10 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
                   >
                     <div className="flex items-center space-x-2">
                       {selected ? (
-                        <>{selected.value}</>
+                        <>
+                          {hasColors() && <ColorBadge color={selected.color} />}
+                          <div>{selected.value}</div>
+                        </>
                       ) : (
                         <div className="text-gray-500">
                           {t("shared.select")} <span className="lowercase">{t(field.title)}</span>...
@@ -104,7 +112,10 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
                           >
                             {({ selected, active }) => (
                               <>
-                                <div className="">{item.value}</div>
+                                <div className="flex items-center space-x-2">
+                                  {hasColors() && <ColorBadge color={item.color} />}
+                                  <div>{item.value}</div>
+                                </div>
 
                                 {selected ? (
                                   <span className={clsx(active ? "text-white" : "text-accent-600", "absolute inset-y-0 right-0 flex items-center pr-4")}>

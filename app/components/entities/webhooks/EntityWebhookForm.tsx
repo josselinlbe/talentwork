@@ -1,5 +1,6 @@
 import { EntityWebhook } from "@prisma/client";
 import { useState } from "react";
+import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputSelect from "~/components/ui/input/InputSelect";
 import InputText from "~/components/ui/input/InputText";
@@ -23,16 +24,16 @@ export default function EntityWebhookForm({ item }: Props) {
         setValue={(e) => setAction(e?.toString() ?? "")}
         options={[
           {
-            name: "Created",
-            value: "Created",
+            name: DefaultLogActions.Created,
+            value: DefaultLogActions.Created,
           },
           {
-            name: "Updated",
-            value: "Updated",
+            name: DefaultLogActions.Updated,
+            value: DefaultLogActions.Updated,
           },
           {
-            name: "Deleted",
-            value: "Deleted",
+            name: DefaultLogActions.Deleted,
+            value: DefaultLogActions.Deleted,
           },
         ]}
         required

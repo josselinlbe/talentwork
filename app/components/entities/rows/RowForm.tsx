@@ -4,7 +4,7 @@ import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
-import { useLocation, useSubmit } from "remix";
+import { useLocation, useSearchParams, useSubmit } from "remix";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputGroup from "~/components/ui/forms/InputGroup";
@@ -38,6 +38,7 @@ const RowForm = (
 ) => {
   const location = useLocation();
   const submit = useSubmit();
+  const [searchParams] = useSearchParams();
 
   const rowValueInput = useRef<RefRowValueInput>(null);
 
@@ -61,10 +62,11 @@ const RowForm = (
       ?.filter((f) => !f.isHidden && ((isDetail && f.isDetail) || (!isDetail && !f.isDetail)))
       .forEach((property) => {
         const existing = item?.values?.find((f) => f.propertyId === property.id);
-        const selectedOption = property.options?.find((f) => f.value === existing?.textValue);
-
         const search = location.search;
         const preselected = new URLSearchParams(search).get(property.name);
+
+        const selectedOption = property.options?.find((f) => f.value === (existing?.textValue ?? preselected));
+
         let dateValue = existing?.dateValue ?? undefined;
         if (property.type === PropertyType.DATE && !dateValue) {
           dateValue = new Date();
@@ -73,7 +75,7 @@ const RowForm = (
           propertyId: property.id,
           property: property,
           idValue: existing?.idValue ?? undefined,
-          textValue: existing?.textValue ?? undefined,
+          textValue: existing?.textValue ?? preselected ?? undefined,
           numberValue: existing?.numberValue ? Number(existing?.numberValue) : undefined,
           dateValue,
           booleanValue: existing?.booleanValue ? Boolean(existing?.booleanValue) : undefined,

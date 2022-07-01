@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, useLoaderData, useTransition } from "remix";
+import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import PostsTable from "~/components/blog/PostsTable";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import Loading from "~/components/ui/loaders/Loading";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { BlogPostWithDetails, getAllBlogPosts } from "~/utils/db/blog.db.server";
@@ -34,8 +33,6 @@ export default function Events() {
   const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
-  const transition = useTransition();
-  const loading = transition.state === "loading";
 
   return (
     <div>
@@ -43,7 +40,7 @@ export default function Events() {
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
           <h1 className="flex-1 font-bold flex items-center truncate">{t("models.post.plural")}</h1>
           <div className="flex items-center space-x-2">
-            <ButtonSecondary disabled={loading} to="/blog" target="_blank">
+            <ButtonSecondary to="/blog" target="_blank">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path
@@ -64,7 +61,9 @@ export default function Events() {
           </div>
         </div>
       </div>
-      <div className="pt-2 space-y-2 max-w-5xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{loading ? <Loading /> : <PostsTable items={data.items} />}</div>
+      <div className="pt-2 space-y-2 max-w-5xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <PostsTable items={data.items} />
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities
 
 type LoaderData = {
   entity: EntityWithDetails;
+  serverUrl: string;
 };
 export let loader: LoaderFunction = async ({ params }) => {
   const entity = await getEntityBySlug(params.slug ?? "");
@@ -16,6 +17,7 @@ export let loader: LoaderFunction = async ({ params }) => {
   }
   const data: LoaderData = {
     entity,
+    serverUrl: process.env.SERVER_URL?.toString() ?? "",
   };
   return json(data);
 };
@@ -45,7 +47,7 @@ export default function EditEntityIndexRoute() {
           dangerouslySetInnerHTML={{
             __html: marked(`
   ${"```shell"}
-  curl http://localhost:3000/api/${data.entity.slug} \\
+  curl ${data.serverUrl}/api/${data.entity.slug} \\
   -H "X-Api-Key: YOUR_API_KEY" \\
   -G
   ${"```"}`),
@@ -61,7 +63,7 @@ export default function EditEntityIndexRoute() {
           dangerouslySetInnerHTML={{
             __html: marked(`
   ${"```shell"}
-  curl http://localhost:3000/api/${data.entity.slug}/:id \\
+  curl ${data.serverUrl}/api/${data.entity.slug}/:id \\
   -H "X-Api-Key: YOUR_API_KEY" \\
   -G
   ${"```"}`),

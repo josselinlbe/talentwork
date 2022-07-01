@@ -1,4 +1,4 @@
-import { Entity, Property, Row, RowValue, Media } from "@prisma/client";
+import { Entity, Property, Row, RowMedia, RowValue } from "@prisma/client";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
@@ -47,7 +47,7 @@ const getProperties = (entity: EntityWithDetails, item: RowWithDetails) => {
   return customProperties;
 };
 
-function getDynamicPropertyValue(item: RowValue & { media: Media[] }, type: PropertyType) {
+function getDynamicPropertyValue(item: RowValue & { media: RowMedia[] }, type: PropertyType) {
   switch (type) {
     case PropertyType.NUMBER:
       return Number(item.numberValue);
@@ -111,7 +111,7 @@ function getFormattedValue(value: any, type: PropertyType): string {
       if (!relatedRow) {
         return "";
       }
-      if (relatedRow?.values.length === 0) {
+      if (!relatedRow?.values || relatedRow?.values.length === 0) {
         return getRowFolio(relatedRow.entity, relatedRow);
       }
       const firstValue = relatedRow.values[0];
@@ -145,7 +145,7 @@ function getFormattedValue(value: any, type: PropertyType): string {
 // };
 
 const getRowFolio = (entity: Entity, item: Row) => {
-  return `${entity.prefix}-${NumberUtils.pad(item?.folio ?? 0, 4)}`.toUpperCase();
+  return `${entity?.prefix}-${NumberUtils.pad(item?.folio ?? 0, 4)}`.toUpperCase();
 };
 
 const getRowDescription = (entity: EntityWithDetails, item: RowWithDetails) => {

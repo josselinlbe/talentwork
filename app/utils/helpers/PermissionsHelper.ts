@@ -1,9 +1,16 @@
 import { Entity, Permission, Row } from "@prisma/client";
 import { redirect } from "remix";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
+import { DefaultAdminRoles } from "~/application/dtos/shared/DefaultAdminRoles";
+import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";
 import { getMyGroups } from "../db/permissions/groups.db.server";
 import { getPermissionByName } from "../db/permissions/permissions.db.server";
-import { getRowPermissionByGroups, getRowPermissionByTenant, getRowPermissionByUsers } from "../db/permissions/rowPermissions.db.server";
+import {
+  getRowPermissionByGroups,
+  getRowPermissionByRoles,
+  getRowPermissionByTenant,
+  getRowPermissionByUsers,
+} from "../db/permissions/rowPermissions.db.server";
 import { getUserRoles } from "../db/permissions/userRoles.db.server";
 import { getUserInfo } from "../session.server";
 
@@ -18,7 +25,7 @@ export async function getEntityPermissions(entity: Entity): Promise<{ name: stri
 }
 
 export function getEntityPermission(entity: Entity, permission: "view" | "read" | "create" | "update" | "delete") {
-  return `app.entity.${entity.name}.${permission}`;
+  return `${entity.isDefault ? "admin" : "app"}.entity.${entity.name}.${permission}`;
 }
 
 export async function getUserPermission(request: Request, permissionName: string, tenantId: string | null = null) {
@@ -47,7 +54,7 @@ export async function verifyUserHasPermission(request: Request, permissionName: 
   }
 }
 
-export async function getUserRowPermission(row: Row, tenantId?: string, userId?: string) {
+export async function getUserRowPermission(row: Row, tenantId?: string | null, userId?: string) {
   const permissions: RowPermissionsDto = {
     visibility: row.visibility,
     canRead: false,
@@ -55,8 +62,13 @@ export async function getUserRowPermission(row: Row, tenantId?: string, userId?:
     canUpdate: false,
     canDelete: false,
   };
-  const userRoles = await getUserRoles(userId ?? "");
-  if (row.createdByUserId === userId || userRoles.find((f) => f.role.name === "SuperAdmin")) {
+  const userRoles = await getUserRoles(userId ?? "", tenantId);
+  // console.log({ tenantId, userRoles: userRoles.map((f) => f.role.name) });
+  if (
+    row.createdByUserId === userId ||
+    userRoles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) ||
+    (tenantId && userRoles.find((f) => f.role.name === DefaultAppRoles.SuperUser))
+  ) {
     permissions.canRead = permissions.canComment = permissions.canUpdate = permissions.canDelete = true;
     return permissions;
   } else if (row.visibility === "private") {
@@ -76,8 +88,19 @@ export async function getUserRowPermission(row: Row, tenantId?: string, userId?:
       permissions.canUpdate = row.canUpdate;
       permissions.canDelete = row.canDelete;
     }
+  } else if (row.visibility === "roles" && userId) {
+    const rolePermission = await getRowPermissionByRoles(
+      row.id,
+      userRoles.map((f) => f.role.id)
+    );
+    if (rolePermission) {
+      permissions.canRead = true;
+      permissions.canComment = row.canComment;
+      permissions.canUpdate = row.canUpdate;
+      permissions.canDelete = row.canDelete;
+    }
   } else if (row.visibility === "groups" && userId) {
-    const userGroups = await getMyGroups(userId ?? "");
+    const userGroups = await getMyGroups(userId ?? "", tenantId ?? null);
     const groupPermission = await getRowPermissionByGroups(
       row.id,
       userGroups.map((f) => f.id)
@@ -101,13 +124,16 @@ export async function getUserRowPermission(row: Row, tenantId?: string, userId?:
   return permissions;
 }
 
-export async function getRowPermissionsCondition(tenantId: string, userId: string) {
-  const userRoles = await getUserRoles(userId);
-  if (userRoles.find((f) => f.role.name === "SuperAdmin")) {
+export async function getRowPermissionsCondition(tenantId: string | null, userId?: string) {
+  if (!userId) {
+    return {};
+  }
+  const userRoles = await getUserRoles(userId, tenantId);
+  if (userRoles.find((f) => f.role.name === DefaultAppRoles.SuperUser)) {
     return {};
   }
 
-  const userGroups = await getMyGroups(userId ?? "");
+  const userGroups = await getMyGroups(userId ?? "", tenantId ?? null);
   const where = {
     OR: [
       {
@@ -125,6 +151,15 @@ export async function getRowPermissionsCondition(tenantId: string, userId: strin
         permissions: {
           some: {
             tenantId,
+          },
+        },
+      },
+      {
+        permissions: {
+          some: {
+            roleId: {
+              in: userRoles.map((f) => f.role.id),
+            },
           },
         },
       },

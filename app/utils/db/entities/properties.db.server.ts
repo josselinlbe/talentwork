@@ -1,4 +1,5 @@
 import { PropertyType } from "~/application/enums/entities/PropertyType";
+import { Colors } from "~/application/enums/shared/Colors";
 import { db } from "../../db.server";
 
 // export async function getPropertiesBySlug(slug: string) {
@@ -20,7 +21,11 @@ export async function getProperty(id: string) {
       id,
     },
     include: {
-      options: true,
+      options: {
+        orderBy: {
+          order: "asc",
+        },
+      },
     },
   });
 }
@@ -80,7 +85,7 @@ export async function updateProperty(
   return property;
 }
 
-export async function updatePropertyOptions(id: string, options: { order: number; value: string }[]) {
+export async function updatePropertyOptions(id: string, options: { order: number; value: string; color?: Colors }[]) {
   await db.propertyOption.deleteMany({
     where: { propertyId: id },
   });
@@ -91,6 +96,7 @@ export async function updatePropertyOptions(id: string, options: { order: number
           propertyId: id,
           order: option.order,
           value: option.value,
+          color: option.color,
         },
       });
     })

@@ -13,7 +13,7 @@ import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/Sub
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
-export type LoaderData = {
+type LoaderData = {
   title: string;
   plans: SubscriptionProductDto[];
 };

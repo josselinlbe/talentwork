@@ -6,9 +6,10 @@ interface Props {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   onNew?: () => void;
   onNewRoute?: string;
+  placeholder?: string;
 }
 
-export default function InputSearch({ value, setValue, onNew, onNewRoute }: Props) {
+export default function InputSearch({ value, setValue, onNew, onNewRoute, placeholder }: Props) {
   const { t } = useTranslation();
   return (
     <div className="flex space-x-2 justify-between">
@@ -27,7 +28,7 @@ export default function InputSearch({ value, setValue, onNew, onNewRoute }: Prop
           name="search"
           id="search"
           className="w-full focus:ring-theme-500 focus:border-theme-500 block rounded-md pl-10 sm:text-sm border-gray-300"
-          placeholder={t("shared.searchDot")}
+          placeholder={placeholder ?? t("shared.searchDot")}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           autoComplete="off"

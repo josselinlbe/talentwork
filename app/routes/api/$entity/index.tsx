@@ -1,23 +1,40 @@
 import { ActionFunction, json, LoaderFunction } from "remix";
+import Constants from "~/application/Constants";
+import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { createRow, getRow, getRows } from "~/utils/db/entities/rows.db.server";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
+import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
 import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
-    const items = await getRows(entity.id, tenant.id);
+    const currentPagination = getPaginationFromCurrentUrl(request);
+    const filters = getFiltersFromCurrentUrl(true, entity, request);
+    const { items, pagination } = await getRowsWithPagination(
+      entity.id,
+      tenant.id,
+      undefined,
+      Constants.DEFAULT_PAGE_SIZE,
+      currentPagination.page,
+      currentPagination.sortedBy,
+      filters
+    );
     await setApiKeyLogStatus(apiKeyLog.id, {
       status: 200,
     });
-    return json(
-      items.map((item) => {
+    return json({
+      pagination: {
+        count: items.length,
+        ...pagination,
+      },
+      items: items.map((item) => {
         return ApiHelper.getApiFormat(entity, item);
-      })
-    );
+      }),
+    });
   } catch (e: any) {
     await setApiKeyLogStatus(apiKeyLog.id, {
       error: JSON.stringify(e),
@@ -47,7 +64,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await createRowLog(request, {
       tenantId: tenant.id,
       createdByApiKey: apiKeyLog.apiKeyId,
-      action: "Created",
+      action: DefaultLogActions.Created,
       entity,
       item,
     });

@@ -1,10 +1,11 @@
 import { RadioGroup } from "@headlessui/react";
+import { ReactNode } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 
 interface Props {
   name: string;
   title: string;
-  options: { name: string; value: string | number | undefined; disabled?: boolean }[];
+  options: { name: string | ReactNode; value: string | number | undefined; disabled?: boolean }[];
   value?: string | number | undefined;
   setValue?: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   className?: string;

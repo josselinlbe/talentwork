@@ -69,6 +69,8 @@
     "processing": "Processing",
     "unauthorized": "Unauthorized",
     "notSet": "Not set",
+    "setCustomProperties": "Set custom properties",
+    "noCustomProperties": "No custom properties",
     "note": "Note",
     "warning": "Warning",
     "warningCannotUndo": "WARNING: You cannot undo this action.",
@@ -76,7 +78,7 @@
     "unlimited": "Unlimited",
     "file": "File",
     "enter": "Enter",
-    "commandPalette": "Search anything...",
+    "commandPalette": "Search everywhere...",
     "search": "Search",
     "searchDot": "Search...",
     "searching": "Searching",
@@ -90,6 +92,7 @@
     "home": "Home",
     "createdBy": "Created by",
     "createdAt": "Created at",
+    "assignedTo": "Assigned to",
     "sandbox": "Sandbox",
     "path": "Path",
     "locales": {
@@ -131,7 +134,28 @@
     "setUserRoles": "Set user roles",
     "share": "Share",
     "copy": "Copy",
-    "anonymousUser": "Anonymous user"
+    "anonymousUser": "Anonymous user",
+    "order": "Order",
+    "noTags": "No tags",
+    "setTags": "Set tags",
+    "noComments": "No comments",
+    "noTasks": "No tasks",
+    "setTasks": "Set tasks",
+    "value": "Value",
+    "isDeleted": "Is deleted",
+    "reply": "Reply",
+    "comment": "Comment",
+    "addComment": "Add a comment",
+    "addTask": "Add task",
+    "apply": "Apply",
+    "clear": "Clear",
+    "filters": "Filters",
+    "column": "Column",
+    "columns": "Columns",
+    "hide": "Hide",
+    "show": "Show",
+    "private": "Private",
+    "public": "Public"
   },
   "front": {
     "navbar": {
@@ -161,8 +185,8 @@
       "repo": "private repository members"
     },
     "pricing": {
-      "title": "Pricing (demo)",
-      "headline": "Plans designed for organizations of all sizes."
+      "title": "DEMO: Pricing",
+      "headline": "DEMO: Plans designed for organizations of all sizes."
     },
     "newsletter": {
       "title": "Stay up to date",
@@ -346,20 +370,20 @@
     "demo": "DEMO PAGE - You'd customize this page",
     "custom": {
       "title": "Custom Plan",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+      "description": "This is a demo plan, this is not SaasRock's pricing plan."
     },
     "products": {
       "plan1": {
         "title": "Free",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+        "description": "This is a demo plan, this is not SaasRock's pricing plan."
       },
       "plan2": {
         "title": "Standard",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+        "description": "This is a demo plan, this is not SaasRock's pricing plan."
       },
       "plan3": {
         "title": "Enterprise",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
+        "description": "This is a demo plan, this is not SaasRock's pricing plan."
       }
     },
     "features": {
@@ -896,6 +920,10 @@
       "requiresLinkedAccounts": "Requires linked accounts",
       "icon": "Icon",
       "active": "Active",
+      "hasTags": "Has tags",
+      "hasComments": "Has comments",
+      "hasTasks": "Has tasks",
+      "hasWorkflow": "Has workflow",
       "rows": "Rows",
       "limits": "Limits",
       "permissions": "Permissions",
@@ -920,8 +948,49 @@
       "children": "Children",
       "values": "Values"
     },
+    "workflow": {
+      "object": "Workflow",
+      "plural": "Workflows"
+    },
+    "workflowState": {
+      "object": "State",
+      "plural": "States",
+      "order": "Order",
+      "name": "Name",
+      "title": "Title",
+      "status": "Internal status",
+      "color": "Color",
+      "canUpdate": "Can be updated",
+      "canDelete": "Can be deleted",
+      "emailSubject": "Email subject",
+      "emailBody": "Email body"
+    },
+    "workflowStep": {
+      "object": "Step",
+      "plural": "Steps",
+      "action": "Action",
+      "fromState": "From state",
+      "toState": "To state",
+      "assignTo": "Assign to",
+      "creator": "Creator"
+    },
     "row": {
       "folio": "Folio"
+    },
+    "rowComment": {
+      "object": "Comment",
+      "plural": "Comments",
+      "parentCommentId": "Parent comment",
+      "reply": "Reply",
+      "replies": "Replies"
+    },
+    "rowTask": {
+      "object": "Task",
+      "plural": "Tasks"
+    },
+    "tag": {
+      "object": "Tag",
+      "plural": "Tags"
     },
     "post": {
       "object": "Blog Post",
@@ -1041,6 +1110,44 @@
       "name": "Name",
       "type": "Type",
       "value": "Value"
+    },
+    "email": {
+      "object": "Email",
+      "plural": "Emails",
+      "messageId": "ID",
+      "type": "Type",
+      "date": "Date",
+      "subject": "Subject",
+      "from": "From",
+      "fromEmail": "From email",
+      "fromName": "From name",
+      "to": "To",
+      "toEmail": "To email",
+      "toName": "toName",
+      "textBody": "Text body",
+      "htmlBody": "HTML body",
+      "cc": "CC",
+      "attachments": "Attachments"
+    },
+    "contact": {
+      "object": "Contact",
+      "plural": "Contacts",
+      "status": "Status",
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone",
+      "company": "Company",
+      "title": "Title"
+    },
+    "deal": {
+      "object": "Deal",
+      "plural": "Deals",
+      "contact": "Contact",
+      "name": "Name",
+      "status": "Status",
+      "value": "Value",
+      "subscriptionPrice": "Subscription price"
     },
     "contract": {
       "object": "Contract",
@@ -1197,7 +1304,7 @@
       "ROLE": "Role",
       "ENTITY": "Entity",
       "ID": "ID",
-      "SELECT": "Select",
+      "SELECT": "Single Select",
       "FORMULA": "Formula",
       "MEDIA": "Media",
       "BOOLEAN": "Boolean"

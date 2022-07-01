@@ -17,7 +17,7 @@ interface Props {
   breakpoint?: "sm" | "md" | "lg" | "xl" | "2xl";
 }
 
-export default function Tabs({ className = "", breakpoint = "lg", tabs = [], asLinks = true, onSelected }: Props) {
+export default function Tabs({ className = "", breakpoint = "md", tabs = [], asLinks = true, onSelected }: Props) {
   const { t } = useTranslation();
 
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ export default function Tabs({ className = "", breakpoint = "lg", tabs = [], asL
         <select
           id="tabs"
           name="tabs"
-          className="block w-full focus:ring-theme-500 focus:border-theme-500 border-gray-300 rounded-md"
+          className="block w-full focus:ring-accent-500 focus:border-accent-500 border-gray-300 rounded-md"
           onChange={(e) => selectTab(Number(e.target.value))}
           value={selected}
         >
@@ -100,7 +100,7 @@ export default function Tabs({ className = "", breakpoint = "lg", tabs = [], asL
                         to={tab.routePath ?? ""}
                         className={clsx(
                           "truncate border",
-                          isCurrent(idx) ? "bg-theme-100 text-theme-700 border border-theme-200" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50",
+                          isCurrent(idx) ? "bg-accent-100 text-accent-700 border border-accent-300" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50",
                           "px-3 py-2 font-medium text-sm rounded-sm border-transparent"
                         )}
                         aria-current={isCurrent(idx) ? "page" : undefined}
@@ -122,7 +122,7 @@ export default function Tabs({ className = "", breakpoint = "lg", tabs = [], asL
                       onClick={() => selectTab(idx)}
                       className={clsx(
                         "truncate border",
-                        isCurrent(idx) ? "bg-theme-100 text-theme-700 border border-theme-200" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50",
+                        isCurrent(idx) ? "bg-accent-100 text-accent-700 border border-accent-300" : "text-gray-500 hover:text-gray-700 hover:bg-gray-50",
                         "px-3 py-2 font-medium text-sm rounded-sm border-transparent"
                       )}
                     >

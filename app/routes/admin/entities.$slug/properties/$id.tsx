@@ -1,5 +1,6 @@
 import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
+import { Colors } from "~/application/enums/shared/Colors";
 import PropertyForm from "~/components/entities/properties/PropertyForm";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
@@ -57,7 +58,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   const type = Number(form.get("type")) as PropertyType;
   const isDynamic = Boolean(form.get("is-dynamic"));
   const order = Number(form.get("order"));
-  const isDefault = Boolean(form.get("is-default"));
   const isRequired = Boolean(form.get("is-required"));
   const isHidden = Boolean(form.get("is-hidden"));
   const isDetail = Boolean(form.get("is-detail"));
@@ -77,7 +77,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   }
 
-  const options: { order: number; value: string }[] = form.getAll("options[]").map((f: FormDataEntryValue) => {
+  const options: { order: number; value: string; color?: Colors }[] = form.getAll("options[]").map((f: FormDataEntryValue) => {
     return JSON.parse(f.toString());
   });
 
@@ -102,7 +102,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         type,
         isDynamic,
         order,
-        isDefault,
+        isDefault: existing?.isDefault ?? false,
         isRequired,
         isHidden,
         isDetail,
