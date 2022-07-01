@@ -1,8 +1,7 @@
-import { Contact, Deal, Row, User } from "@prisma/client";
+import { Contact, Deal } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { db } from "~/utils/db.server";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
-import RowHelper from "~/utils/helpers/RowHelper";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
 
@@ -13,7 +12,6 @@ export type ContactWithDetails = Contact & {
 
 export function getAllContacts(filters?: FiltersDto): Promise<ContactWithDetails[]> {
   const where = RowFiltersHelper.getWhereQueryHelper(filters);
-  console.log({ where });
   return db.contact.findMany({
     where,
     include: {
@@ -22,6 +20,7 @@ export function getAllContacts(filters?: FiltersDto): Promise<ContactWithDetails
         include: {
           createdByUser: true,
           createdByApiKey: true,
+          workflowState: true,
         },
       },
     },
@@ -39,6 +38,7 @@ export function getContact(id: string): Promise<ContactWithDetails | null> {
         include: {
           createdByUser: true,
           createdByApiKey: true,
+          workflowState: true,
         },
       },
     },
@@ -56,6 +56,7 @@ export function getContactByEmail(email: string): Promise<ContactWithDetails | n
         include: {
           createdByUser: true,
           createdByApiKey: true,
+          workflowState: true,
         },
       },
     },

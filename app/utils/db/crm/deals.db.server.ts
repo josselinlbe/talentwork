@@ -1,7 +1,6 @@
 import { Deal, Contact } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { db } from "~/utils/db.server";
-import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
 import { SubscriptionPriceWithProduct } from "../subscriptionProducts.db.server";

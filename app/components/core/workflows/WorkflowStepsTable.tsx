@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { EntityWorkflowStepWithDetails } from "~/utils/db/workflows/workflowSteps.db.server";
-import WorkflowInternalStatusBadge from "./WorkflowInternalStatusBadge";
 import WorkflowStateBadge from "./WorkflowStateBadge";
 import WorkflowStepAssignTo from "./WorkflowStepAssignTo";
 

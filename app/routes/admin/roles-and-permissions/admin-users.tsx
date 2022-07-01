@@ -1,11 +1,10 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useLoaderData, useSubmit } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData, useSubmit } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getAllRoles, getRole } from "~/utils/db/permissions/roles.db.server";
 import { adminGetAllUsers, getUser, UserWithDetails } from "~/utils/db/users.db.server";
 import UserRolesTable from "~/components/core/roles/UserRolesTable";
 import { Role } from "@prisma/client";
 import { useState } from "react";
-import clsx from "clsx";
 import InputSearch from "~/components/ui/input/InputSearch";
 import { createUserRole, deleteUserRole } from "~/utils/db/permissions/userRoles.db.server";
 import { createAdminLog } from "~/utils/db/logs.db.server";

@@ -5,7 +5,6 @@ import CheckIcon from "~/components/ui/icons/CheckIcon";
 import XIcon from "~/components/ui/icons/XIcon";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { EntityWorkflowStateWithSteps } from "~/utils/db/workflows/workflowStates.db.server";
-import WorkflowInternalStatusBadge from "./WorkflowInternalStatusBadge";
 import WorkflowStateBadge from "./WorkflowStateBadge";
 
 interface Props {

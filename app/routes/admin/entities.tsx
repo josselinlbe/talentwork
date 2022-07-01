@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, useLoaderData, useTransition } from "remix";
 import EntitiesTable from "~/components/entities/EntitiesTable";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import InputSearch from "~/components/ui/input/InputSearch";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import Loading from "~/components/ui/loaders/Loading";

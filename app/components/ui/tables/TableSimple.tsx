@@ -1,15 +1,10 @@
 import clsx from "clsx";
-import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useSearchParams } from "remix";
+import { useSearchParams } from "remix";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
-import { InputType } from "~/application/enums/shared/InputType";
 import RowDisplayValueHelper from "~/utils/helpers/RowDisplayValueHelper";
 import ButtonTertiary from "../buttons/ButtonTertiary";
-import InputNumber from "../input/InputNumber";
-import InputSelect from "../input/InputSelect";
-import InputText from "../input/InputText";
 import TablePagination from "./TablePagination";
 
 interface Props<T> {

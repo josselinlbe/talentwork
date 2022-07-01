@@ -1,7 +1,7 @@
 import { Entity } from "@prisma/client";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { Link, useLoaderData, useParams } from "remix";
+import { Link, useLoaderData } from "remix";
 import PlusIcon from "~/components/ui/icons/PlusIcon";
 import TagFilledIcon from "~/components/ui/icons/TagFilledIcon";
 import XIcon from "~/components/ui/icons/XIcon";
@@ -16,7 +16,6 @@ interface Props {
 }
 
 export default function RowTags({ entity, items, withLink = true, onRemove }: Props) {
-  const params = useParams();
   const { t } = useTranslation();
   const data = useLoaderData<{ entityRowsRoute: string }>();
 

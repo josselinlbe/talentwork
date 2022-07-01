@@ -1,11 +1,10 @@
-import { json, ActionFunction, redirect } from "remix";
+import { json, redirect } from "remix";
 import { Colors } from "~/application/enums/shared/Colors";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { createEntityTag, deleteEntityTag, getEntityTag, updateEntityTag } from "~/utils/db/entities/entityTags.db.server";
 import { getRow } from "~/utils/db/entities/rows.db.server";
-import { createRowTag, deleteRowTag, deleteRowTags, getRowTag } from "~/utils/db/entities/rowTags.db.server";
-import { getTenantUrl } from "~/utils/services/urlService";
+import { createRowTag, deleteRowTags, getRowTag } from "~/utils/db/entities/rowTags.db.server";
 import { Params } from "react-router";
 import UrlUtils from "~/utils/app/UrlUtils";
 

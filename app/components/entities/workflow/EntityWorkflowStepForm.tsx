@@ -1,13 +1,8 @@
 import { EntityWorkflowState } from "@prisma/client";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Visibility } from "~/application/dtos/shared/Visibility";
-import { WorkflowInternalState } from "~/application/dtos/workflows/WorkflowInternalState";
-import WorkflowInternalStatusBadge from "~/components/core/workflows/WorkflowInternalStatusBadge";
 import WorkflowStateBadge from "~/components/core/workflows/WorkflowStateBadge";
 import FormGroup from "~/components/ui/forms/FormGroup";
-import InputCheckboxWithDescription from "~/components/ui/input/InputCheckboxWithDescription";
-import InputColorSelector from "~/components/ui/input/InputColorSelector";
 import InputSelector from "~/components/ui/input/InputSelector";
 import InputText from "~/components/ui/input/InputText";
 import { EntityWorkflowStepWithDetails } from "~/utils/db/workflows/workflowSteps.db.server";

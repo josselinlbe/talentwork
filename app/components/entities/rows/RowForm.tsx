@@ -4,7 +4,7 @@ import { forwardRef, Ref, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
-import { useLocation, useSearchParams, useSubmit } from "remix";
+import { useLocation, useSubmit } from "remix";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputGroup from "~/components/ui/forms/InputGroup";
@@ -38,7 +38,6 @@ const RowForm = (
 ) => {
   const location = useLocation();
   const submit = useSubmit();
-  const [searchParams] = useSearchParams();
 
   const rowValueInput = useRef<RefRowValueInput>(null);
 

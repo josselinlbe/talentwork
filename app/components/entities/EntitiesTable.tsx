@@ -3,7 +3,6 @@ import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "../ui/buttons/ButtonTertiary";
 import { Link } from "remix";
-import { useAdminData } from "~/utils/data/useAdminData";
 import CheckIcon from "../ui/icons/CheckIcon";
 import XIcon from "../ui/icons/XIcon";
 import { EntityWithCount } from "~/utils/db/entities/entities.db.server";
@@ -23,7 +22,6 @@ type Header = {
 
 export default function EntitiesTable({ items }: Props) {
   const { t } = useTranslation();
-  const adminData = useAdminData();
 
   const headers: Header[] = [
     {
@@ -47,13 +45,6 @@ export default function EntitiesTable({ items }: Props) {
       title: t("shared.actions"),
     },
   ];
-
-  function getEntitySlug(item: EntityWithCount) {
-    if (adminData.myTenants.length > 0) {
-      return `/app/${adminData.myTenants[0].tenant.slug}/${item.slug}`;
-    }
-    return "";
-  }
 
   return (
     <div className="space-y-2">

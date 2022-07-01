@@ -2,7 +2,7 @@ import { ActionFunction, json, LoaderFunction } from "remix";
 import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
-import { createRow, getRow, getRows } from "~/utils/db/entities/rows.db.server";
+import { createRow, getRow } from "~/utils/db/entities/rows.db.server";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
 import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";

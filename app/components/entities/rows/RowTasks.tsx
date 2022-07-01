@@ -7,7 +7,7 @@ import CheckEmptyCircle from "~/components/ui/icons/CheckEmptyCircleIcon";
 import CheckFilledCircleIcon from "~/components/ui/icons/CheckFilledCircleIcon";
 import PlusIcon from "~/components/ui/icons/PlusIcon";
 import TrashIcon from "~/components/ui/icons/TrashIcon";
-import InputText, { RefInputText } from "~/components/ui/input/InputText";
+import InputText from "~/components/ui/input/InputText";
 import { useAppOrAdminData } from "~/utils/data/useAppOrAdminData";
 import { RowTaskWithDetails } from "~/utils/db/entities/rowTasks.db.server";
 

@@ -1,4 +1,3 @@
-import { Entity } from "@prisma/client";
 import { Params } from "react-router";
 
 const stripTrailingSlash = (str: string) => {

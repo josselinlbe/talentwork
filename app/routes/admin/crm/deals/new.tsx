@@ -2,7 +2,6 @@ import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useLoader
 import DealsForm from "~/components/core/crm/DealsForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { actionRowNew } from "~/modules/rows/actions/row-new";
 import { LoaderDataRowNew, loaderRowNew } from "~/modules/rows/loaders/row-new";
 import { ContactWithDetails, getAllContacts } from "~/utils/db/crm/contacts.db.server";
 import { createDeal } from "~/utils/db/crm/deals.db.server";

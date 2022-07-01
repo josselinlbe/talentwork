@@ -1,6 +1,5 @@
 import { ActionFunction, json, LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
 import WorkflowStatesTable from "~/components/core/workflows/WorkflowStatesTable";
-import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { EntityWorkflowStateWithSteps, getWorkflowStates, updateWorkflowState } from "~/utils/db/workflows/workflowStates.db.server";
 
@@ -19,13 +18,7 @@ export let loader: LoaderFunction = async ({ params }) => {
   return json(data);
 };
 
-type ActionData = {
-  error?: string;
-};
-const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
-  const { t } = await i18nHelper(request);
-
   const item = await getEntityBySlug(params.slug ?? "");
   if (!item) {
     return redirect("/admin/entities");

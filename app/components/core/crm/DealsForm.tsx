@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "remix";
-import { DealStatus } from "~/application/dtos/crm/DealStatus";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputNumber from "~/components/ui/input/InputNumber";
 import InputSelector from "~/components/ui/input/InputSelector";
@@ -20,7 +18,6 @@ interface Props {
 }
 export default function DealsForm({ contacts, subscriptionPrices, item, canUpdate = true, canDelete }: Props) {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
 
   const [contactId, setContactId] = useState<string | number | undefined>(item?.contactId ?? undefined);
   const [name, setName] = useState<string>(item?.name ?? "");

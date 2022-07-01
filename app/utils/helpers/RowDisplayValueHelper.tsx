@@ -1,5 +1,4 @@
 import { Link } from "remix";
-import { ColumnDto } from "~/application/dtos/data/ColumnDto";
 import { TFunction } from "i18next";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import { InputType } from "~/application/enums/shared/InputType";

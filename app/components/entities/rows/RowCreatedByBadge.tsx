@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { RowWithCreatedBy, RowWithDetails } from "~/utils/db/entities/rows.db.server";
+import { RowWithCreatedBy } from "~/utils/db/entities/rows.db.server";
 
 interface Props {
   row: RowWithCreatedBy;

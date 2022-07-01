@@ -1,4 +1,4 @@
-import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, RowMedia, RowTag, Contact, Deal, EntityWorkflowState } from "@prisma/client";
+import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, RowMedia, Contact, Deal, EntityWorkflowState } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";

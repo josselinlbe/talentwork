@@ -1,5 +1,4 @@
 import { Dialog, Transition } from "@headlessui/react";
-import clsx from "clsx";
 import { Ref, useImperativeHandle, useRef, useState, Fragment, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Colors } from "~/application/enums/shared/Colors";

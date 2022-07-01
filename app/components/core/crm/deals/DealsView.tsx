@@ -1,11 +1,8 @@
 import { EntityWorkflowState } from "@prisma/client";
 import { t } from "i18next";
-import { Link, useSearchParams } from "remix";
-import { DealStatus } from "~/application/dtos/crm/DealStatus";
+import { Link } from "remix";
 import { Colors } from "~/application/enums/shared/Colors";
 import RowCreatedBadge from "~/components/entities/rows/RowCreatedBadge";
-import ColorBadge from "~/components/ui/badges/ColorBadge";
-import SimpleBadge from "~/components/ui/badges/SimpleBadge";
 import KanbanSimple from "~/components/ui/lists/KanbanSimple";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { DealWithDetails } from "~/utils/db/crm/deals.db.server";

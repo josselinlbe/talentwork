@@ -2,7 +2,6 @@ import { Property } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { SortedByDto } from "~/application/dtos/data/SortedByDto";
-import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { EntityWithDetails } from "../db/entities/entities.db.server";
 import { countRows, getRows, RowWithDetails } from "../db/entities/rows.db.server";
 

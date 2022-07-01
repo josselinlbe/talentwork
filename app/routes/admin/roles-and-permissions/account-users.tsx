@@ -1,6 +1,5 @@
 import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
 import { i18nHelper } from "~/locale/i18n.utils";
-import clsx from "clsx";
 import { adminGetAllTenants, TenantWithDetails } from "~/utils/db/tenants.db.server";
 import { useTranslation } from "react-i18next";
 import TableSimple from "~/components/ui/tables/TableSimple";

@@ -1,16 +1,11 @@
-import { WorkflowState } from "@prisma/client";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { DealStatus } from "~/application/dtos/crm/DealStatus";
 import { Visibility } from "~/application/dtos/shared/Visibility";
-import { Colors } from "~/application/enums/shared/Colors";
-import ColorBadge from "~/components/ui/badges/ColorBadge";
-import { WorkflowStateWithSteps } from "~/utils/db/workflows/workflowStates.db.server";
-import { WorkflowStepWithDetails } from "~/utils/db/workflows/workflowSteps.db.server";
+import { EntityWorkflowStepWithDetails } from "~/utils/db/workflows/workflowSteps.db.server";
 import WorkflowHelper from "~/utils/helpers/WorkflowHelper";
 
 interface Props {
-  step: WorkflowStepWithDetails;
+  step: EntityWorkflowStepWithDetails;
 }
 export default function WorkflowStepAssignTo({ step }: Props) {
   const { t } = useTranslation();
