@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { json, LoaderFunction, Outlet, useNavigate } from "remix";
+import { json, LoaderFunction } from "@remix-run/node";
+import { Outlet, useNavigate } from "@remix-run/react";
 import AppLayout from "~/components/app/AppLayout";
 import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { updateUserDefaultTenantId } from "~/utils/db/users.db.server";

@@ -1,4 +1,4 @@
-import { json, LoaderFunction, MetaFunction } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { i18nHelper } from "~/locale/i18n.utils";
 import AllComponentsList from "~/components/ui/AllComponentsList";
 import SidebarNavigation from "~/components/layouts/sidebar/SidebarNavigation";

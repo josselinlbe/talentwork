@@ -2,7 +2,7 @@ import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Form } from "remix";
+import { Form } from "@remix-run/react";
 import { ColumnDto } from "~/application/dtos/data/ColumnDto";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";

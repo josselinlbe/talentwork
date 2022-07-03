@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
-import InputSearch from "~/components/ui/input/InputSearch";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { PermissionWithRoles } from "~/utils/db/permissions/permissions.db.server";
 import RoleBadge from "./RoleBadge";

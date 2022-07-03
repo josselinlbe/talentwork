@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import WarningBanner from "~/components/ui/banners/WarningBanner";
 import UrlUtils from "~/utils/app/UrlUtils";
@@ -11,7 +10,6 @@ interface Props {
   hideContent?: boolean;
 }
 export default function CheckPlanFeatureLimit({ item, children, hideContent = true }: Props) {
-  const { t } = useTranslation();
   const params = useParams();
   return (
     <div>

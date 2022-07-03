@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useLoaderData, Form, useSubmit, useTransition } from "remix";
+import { Form, useLoaderData, useNavigate, useSubmit, useTransition } from "@remix-run/react";
 import { Colors } from "~/application/enums/shared/Colors";
 import ColorBadge from "~/components/ui/badges/ColorBadge";
 import EmptyState from "~/components/ui/emptyState/EmptyState";

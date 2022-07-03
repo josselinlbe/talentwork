@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, useLoaderData, useTransition } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData, useTransition } from "@remix-run/react";
 import EntitiesTable from "~/components/entities/EntitiesTable";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import InputSearch from "~/components/ui/input/InputSearch";

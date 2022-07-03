@@ -1,4 +1,4 @@
-import { json, redirect } from "remix";
+import { json, redirect } from "@remix-run/node";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { getRow, setRowPermissions } from "~/utils/db/entities/rows.db.server";

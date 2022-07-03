@@ -4,7 +4,7 @@ import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
-import { useParams, useSubmit } from "remix";
+import { useParams, useSubmit } from "@remix-run/react";
 import UserUtils from "~/utils/app/UserUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useAppOrAdminData } from "~/utils/data/useAppOrAdminData";

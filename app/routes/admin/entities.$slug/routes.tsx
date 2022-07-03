@@ -1,4 +1,4 @@
-import { ActionFunction, json, LoaderFunction } from "remix";
+import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
 import { i18nHelper } from "~/locale/i18n.utils";
 
 type LoaderData = {};

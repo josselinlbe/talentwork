@@ -1,5 +1,5 @@
 import { Entity, Permission, Row } from "@prisma/client";
-import { redirect } from "remix";
+import { redirect } from "@remix-run/node";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { DefaultAdminRoles } from "~/application/dtos/shared/DefaultAdminRoles";
 import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";

@@ -3,7 +3,17 @@ import { EntityWorkflowStep } from "@prisma/client";
 import clsx from "clsx";
 import { useState, useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useLoaderData, useActionData, Link, Outlet, useSubmit, useTransition } from "remix";
+
+import {
+  Link,
+  Outlet,
+  useActionData,
+  useLoaderData,
+  useParams,
+  useSubmit,
+  useTransition,
+} from "@remix-run/react";
+
 import WorkflowStateBadge from "~/components/core/workflows/WorkflowStateBadge";
 import RowActivity from "~/components/entities/rows/RowActivity";
 import RowForm from "~/components/entities/rows/RowForm";

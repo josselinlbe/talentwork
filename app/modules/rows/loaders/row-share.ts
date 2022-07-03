@@ -1,5 +1,5 @@
 import { RowPermission } from "@prisma/client";
-import { redirect } from "remix";
+import { redirect } from "@remix-run/node";
 import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";

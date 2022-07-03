@@ -7,7 +7,7 @@ import { PropertyType } from "~/application/enums/entities/PropertyType";
 import RowHelper from "~/utils/helpers/RowHelper";
 import clsx from "clsx";
 import { Property } from "@prisma/client";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 
 interface Props {
   entity: EntityWithDetails;

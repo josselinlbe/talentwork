@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import Header from "./Header";
 
 export default function Hero() {

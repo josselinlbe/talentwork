@@ -4,7 +4,7 @@ import { Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 

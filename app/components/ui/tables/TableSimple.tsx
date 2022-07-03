@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "remix";
+import { useSearchParams } from "@remix-run/react";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import RowDisplayValueHelper from "~/utils/helpers/RowDisplayValueHelper";

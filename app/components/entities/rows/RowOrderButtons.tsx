@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useSubmit, useTransition } from "remix";
+import { useSubmit, useTransition } from "@remix-run/react";
 
 interface OrderType {
   id: string;

@@ -1,4 +1,4 @@
-import { useLocation } from "remix";
+import { useLocation } from "@remix-run/react";
 import UrlUtils from "../app/UrlUtils";
 
 export default function useRouteUtils() {

@@ -1,7 +1,8 @@
 import { BlogAuthor, BlogCategory, BlogTag } from "@prisma/client";
 import { marked } from "marked";
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import PostForm from "~/components/blog/PostForm";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import { i18nHelper } from "~/locale/i18n.utils";

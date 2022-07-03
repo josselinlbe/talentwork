@@ -2,7 +2,7 @@ import { Property } from "@prisma/client";
 import clsx from "clsx";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useSubmit } from "remix";
+import { Link, useSubmit } from "@remix-run/react";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { EntityWithDetails, PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";

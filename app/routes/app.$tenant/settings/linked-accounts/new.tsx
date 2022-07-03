@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";

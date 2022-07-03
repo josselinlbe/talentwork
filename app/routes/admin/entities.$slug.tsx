@@ -1,6 +1,7 @@
 import { Entity } from "@prisma/client";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, Outlet, redirect, useLoaderData, useParams } from "remix";
+import { json, LoaderFunction, redirect } from "@remix-run/node";
+import { Outlet, useLoaderData, useParams } from "@remix-run/react";
 import EditPageLayout from "~/components/ui/layouts/EditPageLayout";
 import TabsVertical from "~/components/ui/tabs/TabsVertical";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";

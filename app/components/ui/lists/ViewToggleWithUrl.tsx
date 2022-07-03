@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "remix";
+import { useSearchParams } from "@remix-run/react";
 import TableIcon from "../icons/TableIcon";
 import ViewBoardsIcon from "../icons/ViewBoardsIcon";
 

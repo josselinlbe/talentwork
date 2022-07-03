@@ -3,7 +3,7 @@ import { Property } from "@prisma/client";
 import clsx from "clsx";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "remix";
+import { useNavigate, useParams } from "@remix-run/react";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import FormGroup from "~/components/ui/forms/FormGroup";

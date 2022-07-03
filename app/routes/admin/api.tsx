@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, Outlet, redirect, useLocation, useNavigate } from "remix";
+import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";

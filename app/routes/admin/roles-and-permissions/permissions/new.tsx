@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useLoaderData, useNavigate } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import PermissionForm from "~/components/core/roles/PermissionForm";
 import SlideOverFormLayout from "~/components/ui/slideOvers/SlideOverFormLayout";
 import { i18nHelper } from "~/locale/i18n.utils";

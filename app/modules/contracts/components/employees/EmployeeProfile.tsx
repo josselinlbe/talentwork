@@ -7,7 +7,7 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useRef, useState, useEffect, FormEvent } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import { useParams, useSubmit, useTransition } from "remix";
+import { useParams, useSubmit, useTransition } from "@remix-run/react";
 import { EmployeeWithCreatedByUser } from "~/modules/contracts/db/employees.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
 

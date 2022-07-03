@@ -7,7 +7,7 @@ import QuickActionsButton from "./buttons/QuickActionsButton";
 import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
 import TenantSelect from "./selectors/TenantSelect";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import InputSelect from "../ui/input/InputSelect";
 import { useElementScrollRestoration } from "~/utils/app/scroll-restoration";
 import LogoDark from "~/assets/img/logo-dark.png";

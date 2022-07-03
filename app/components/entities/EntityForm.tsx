@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "remix";
+import { useNavigate } from "@remix-run/react";
 import InputText, { RefInputText } from "../ui/input/InputText";
 import { useTranslation } from "react-i18next";
 import InputGroup from "../ui/forms/InputGroup";

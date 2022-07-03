@@ -1,5 +1,5 @@
 import { EntityTag, RowPermission } from "@prisma/client";
-import { redirect } from "remix";
+import { redirect } from "@remix-run/node";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { getEntityTags } from "~/utils/db/entities/entityTags.db.server";

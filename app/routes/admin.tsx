@@ -1,6 +1,7 @@
 import { useCatch } from "@remix-run/react";
 import { useEffect } from "react";
-import { json, LoaderFunction, Outlet, useLocation, useNavigate } from "remix";
+import { json, LoaderFunction } from "@remix-run/node";
+import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import AppLayout from "~/components/app/AppLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { loadAdminData } from "~/utils/data/useAdminData";

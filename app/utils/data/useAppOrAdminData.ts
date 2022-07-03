@@ -1,4 +1,4 @@
-import { useMatches } from "remix";
+import { useMatches } from "@remix-run/react";
 import { MyTenant } from "../db/tenants.db.server";
 import { UserWithoutPassword } from "../db/users.db.server";
 import { Role } from "@prisma/client";

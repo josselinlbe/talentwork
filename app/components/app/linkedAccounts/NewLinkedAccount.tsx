@@ -4,7 +4,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import clsx from "~/utils/shared/ClassesUtils";
-import { useActionData, useNavigate, useParams, useSubmit } from "remix";
+import { useActionData, useNavigate, useParams, useSubmit } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { NewLinkedAccountActionData } from "~/routes/app.$tenant/settings/linked-accounts/new";
 import OpenModal from "~/components/ui/modals/OpenModal";

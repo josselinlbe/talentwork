@@ -8,7 +8,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import SidebarIcon from "./icons/SidebarIcon";
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { DocsSidebar } from "~/application/sidebar/DocsSidebar";
 import { useRootData } from "~/utils/data/useRootData";

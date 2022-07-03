@@ -1,4 +1,4 @@
-import { LoaderFunction, ActionFunction, MetaFunction, json } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { actionRowTags } from "~/modules/rows/actions/row-tags";
 import { loaderRowTags } from "~/modules/rows/loaders/row-tags";
 import RowTagsRoute from "~/modules/rows/routes/RowTagsRoute";

@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useSubmit } from "remix";
+import { useSubmit } from "@remix-run/react";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
@@ -9,7 +9,6 @@ import TableSimple from "~/components/ui/tables/TableSimple";
 import { UsersActionType } from "~/routes/admin/users";
 import { UserWithDetails } from "~/utils/db/users.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
-import UserAvatarBadge from "./UserAvatarBadge";
 import UserBadge from "./UserBadge";
 
 interface Props {

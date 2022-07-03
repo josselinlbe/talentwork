@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useLoaderData, Outlet } from "remix";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
 import RowForm from "~/components/entities/rows/RowForm";
 import NewPageLayout from "~/components/ui/layouts/NewPageLayout";

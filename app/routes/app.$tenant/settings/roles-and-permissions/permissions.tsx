@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getAllPermissions, PermissionWithRoles } from "~/utils/db/permissions/permissions.db.server";
 import PermissionsTable from "~/components/core/roles/PermissionsTable";

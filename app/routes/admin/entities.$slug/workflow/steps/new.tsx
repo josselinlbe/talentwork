@@ -1,5 +1,6 @@
 import { EntityWorkflowState } from "@prisma/client";
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData, useNavigate, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import EntityWorkflowStepForm from "~/components/entities/workflow/EntityWorkflowStepForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";

@@ -1,4 +1,4 @@
-import { ActionFunction, json } from "remix";
+import { ActionFunction, json } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { createEmail } from "~/utils/db/email/emails.db.server";
 

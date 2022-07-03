@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { ColumnDto } from "~/application/dtos/data/ColumnDto";
 import RowsList from "~/components/entities/rows/RowsList";
 import { i18nHelper } from "~/locale/i18n.utils";

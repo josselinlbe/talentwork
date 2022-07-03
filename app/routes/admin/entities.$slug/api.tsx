@@ -1,6 +1,7 @@
 import { marked } from "marked";
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { Colors } from "~/application/enums/shared/Colors";
 import SimpleBadge from "~/components/ui/badges/SimpleBadge";
 import { i18nHelper } from "~/locale/i18n.utils";

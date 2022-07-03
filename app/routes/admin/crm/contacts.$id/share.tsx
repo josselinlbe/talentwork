@@ -1,4 +1,4 @@
-import { LoaderFunction, ActionFunction, MetaFunction, json } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { actionRowShare } from "~/modules/rows/actions/row-share";
 import { loaderRowShare } from "~/modules/rows/loaders/row-share";
 import RowShareRoute from "~/modules/rows/routes/RowShareRoute";

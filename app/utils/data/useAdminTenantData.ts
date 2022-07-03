@@ -1,5 +1,6 @@
 import { Tenant, TenantUser } from "@prisma/client";
-import { json, useMatches } from "remix";
+import { json } from "@remix-run/node";
+import { useMatches } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenantWithUsers } from "../db/tenants.db.server";
 

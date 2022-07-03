@@ -1,6 +1,6 @@
 import Header from "~/components/front/Header";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { i18nHelper } from "~/locale/i18n.utils";
 import Footer from "~/components/front/Footer";
 

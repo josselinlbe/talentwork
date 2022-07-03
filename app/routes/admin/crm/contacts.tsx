@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, Outlet } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 import Tabs from "~/components/ui/tabs/Tabs";
 import RowsViewRoute from "~/routes/app.$tenant/$entity";
 import { loaderRowsView } from "~/modules/rows/loaders/rows-view";

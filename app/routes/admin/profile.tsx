@@ -6,7 +6,8 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import UploadImage from "~/components/ui/uploaders/UploadImage";
-import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData, useSubmit, useTransition } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Form, useActionData, useSubmit, useTransition } from "@remix-run/react";
 import { updateUserPassword, updateUserProfile } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";

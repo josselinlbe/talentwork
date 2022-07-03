@@ -2,7 +2,7 @@ import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useDashboardData } from "~/utils/data/useDashboardData";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 
 export default function EmployeesUsage() {
   const params = useParams();

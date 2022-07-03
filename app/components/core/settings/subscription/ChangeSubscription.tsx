@@ -2,7 +2,7 @@ import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/Sub
 import clsx from "~/utils/shared/ClassesUtils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSubmit, useTransition } from "remix";
+import { useSubmit, useTransition } from "@remix-run/react";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { getAllSubscriptionProducts } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionProductDto } from "~/application/dtos/subscriptions/SubscriptionProductDto";

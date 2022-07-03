@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction } from "remix";
+import { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { createLogLogout } from "~/utils/db/logs.db.server";
 
 import { getUserInfo, logout } from "~/utils/session.server";

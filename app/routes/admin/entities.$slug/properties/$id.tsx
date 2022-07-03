@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import PropertyForm from "~/components/entities/properties/PropertyForm";

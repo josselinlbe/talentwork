@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { badRequest } from "remix-utils";
 import DealsForm from "~/components/core/crm/DealsForm";
 import InputGroup from "~/components/ui/forms/InputGroup";

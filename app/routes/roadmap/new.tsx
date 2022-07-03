@@ -1,5 +1,5 @@
-import { ActionFunction, Form, LoaderFunction, MetaFunction, redirect, useActionData, useNavigate } from "remix";
-import { json, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { Form, useActionData, useLoaderData, useNavigate } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { getUserInfo } from "~/utils/session.server";

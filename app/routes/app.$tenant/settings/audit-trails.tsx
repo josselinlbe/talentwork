@@ -1,4 +1,5 @@
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import LogsTable from "~/components/app/events/LogsTable";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import { getLogs, LogWithDetails } from "~/utils/db/logs.db.server";

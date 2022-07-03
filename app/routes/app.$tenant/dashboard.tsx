@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, useCatch, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useCatch, useLoaderData } from "@remix-run/react";
 import { useAppData } from "~/utils/data/useAppData";
 import { DashboardLoaderData, loadDashboardData } from "~/utils/data/useDashboardData";
 import { i18nHelper } from "~/locale/i18n.utils";

@@ -1,4 +1,4 @@
-import { json, LoaderFunction, MetaFunction } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Language } from "remix-i18next";
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";

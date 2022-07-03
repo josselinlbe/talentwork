@@ -1,4 +1,4 @@
-import { redirect } from "remix";
+import { redirect } from "@remix-run/node";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities.db.server";

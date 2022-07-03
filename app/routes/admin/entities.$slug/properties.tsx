@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, Outlet, redirect, useActionData, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { Outlet, useActionData, useLoaderData } from "@remix-run/react";
 import PropertiesList from "~/components/entities/properties/PropertiesList";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { PropertyWithDetails, getEntityBySlug, EntityWithDetails } from "~/utils/db/entities/entities.db.server";

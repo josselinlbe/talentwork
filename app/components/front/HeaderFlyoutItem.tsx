@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { NavbarItemDto } from "~/application/dtos/marketing/NavbarItemDto";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import ChevronDownIcon from "../ui/icons/ChevronDownIcon";
 
 interface Props {

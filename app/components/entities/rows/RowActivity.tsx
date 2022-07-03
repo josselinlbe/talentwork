@@ -1,7 +1,7 @@
 import { Entity } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Form, useTransition } from "remix";
+import { Form, useTransition } from "@remix-run/react";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import UserAvatarBadge from "~/components/core/users/UserAvatarBadge";
 import UserBadge from "~/components/core/users/UserBadge";

@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useNavigate } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData, useNavigate } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";

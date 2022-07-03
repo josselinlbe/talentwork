@@ -1,4 +1,5 @@
-import { redirect, useMatches } from "remix";
+import { redirect } from "@remix-run/node";
+import { useMatches } from "@remix-run/react";
 import { getUserInfo } from "../session.server";
 import { getUser } from "../db/users.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";

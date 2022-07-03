@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, redirect, useActionData, useNavigate } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useActionData, useNavigate } from "@remix-run/react";
 import { Language } from "remix-i18next";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import TenantNew from "~/components/core/settings/tenant/TenantNew";

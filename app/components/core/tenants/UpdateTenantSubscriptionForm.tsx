@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { FormEvent, useRef, useState } from "react";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
-import { Form, useSubmit, useTransition } from "remix";
+import { Form, useSubmit, useTransition } from "@remix-run/react";
 import InputSelect from "~/components/ui/input/InputSelect";
 import { SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";

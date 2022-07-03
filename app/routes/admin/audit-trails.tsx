@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import LogsTable from "~/components/app/events/LogsTable";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";

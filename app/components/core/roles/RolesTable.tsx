@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import CheckIcon from "~/components/ui/icons/CheckIcon";
 import XIcon from "~/components/ui/icons/XIcon";
-import InputSearch from "~/components/ui/input/InputSearch";
 import Modal from "~/components/ui/modals/Modal";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";

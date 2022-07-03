@@ -1,4 +1,4 @@
-import { useNavigate } from "remix";
+import { useNavigate } from "@remix-run/react";
 import Footer from "../front/Footer";
 import Logo from "../front/Logo";
 

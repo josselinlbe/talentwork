@@ -13,7 +13,7 @@ import ContractEmployees from "./ContractEmployees";
 import ContractActivities from "./ContractActivities";
 import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
 import { useRef, useState } from "react";
-import { Link, useSubmit, useTransition } from "remix";
+import { Link, useSubmit, useTransition } from "@remix-run/react";
 import { ContractWithDetails } from "~/modules/contracts/db/contracts.db.server";
 import IconContract from "../../icons/IconContract";
 import { EmployeeDto } from "../../dtos/EmployeeDto";

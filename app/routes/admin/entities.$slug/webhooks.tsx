@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
+import { json, LoaderFunction, redirect } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";

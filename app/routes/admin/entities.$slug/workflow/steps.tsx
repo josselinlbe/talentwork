@@ -1,4 +1,5 @@
-import { json, LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
+import { json, LoaderFunction, redirect } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import WorkflowStepsTable from "~/components/core/workflows/WorkflowStepsTable";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { getWorkflowSteps, WorkflowStepWithDetails } from "~/utils/db/workflows/workflowSteps.db.server";

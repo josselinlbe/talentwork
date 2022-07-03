@@ -1,4 +1,4 @@
-import { useLocation, useSubmit } from "remix";
+import { useLocation, useSubmit } from "@remix-run/react";
 import { useRootData } from "~/utils/data/useRootData";
 import clsx from "~/utils/shared/ClassesUtils";
 

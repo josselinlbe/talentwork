@@ -1,5 +1,5 @@
 import { Params } from "react-router";
-import { useMatches } from "remix";
+import { useMatches } from "@remix-run/react";
 import UrlUtils from "../app/UrlUtils";
 import { TenantUserWithUser } from "../db/tenants.db.server";
 

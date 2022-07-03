@@ -8,7 +8,6 @@ import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import { TenantUser } from "@prisma/client";
 import DateUtils from "~/utils/shared/DateUtils";
-import UserAvatarBadge from "../../users/UserAvatarBadge";
 import UserBadge from "../../users/UserBadge";
 
 interface Props {

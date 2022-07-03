@@ -1,6 +1,7 @@
 import { Permission } from "@prisma/client";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, redirect, useLoaderData, useLocation, useNavigate } from "remix";
+import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useLoaderData, useLocation, useNavigate } from "@remix-run/react";
 import { Language } from "remix-i18next";
 import Footer from "~/components/front/Footer";
 import Logo from "~/components/front/Logo";

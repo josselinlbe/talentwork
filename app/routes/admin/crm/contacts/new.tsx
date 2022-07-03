@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData, useNavigate } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { actionRowNew } from "~/modules/rows/actions/row-new";
 import { LoaderDataRowNew, loaderRowNew } from "~/modules/rows/loaders/row-new";

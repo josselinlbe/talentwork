@@ -1,9 +1,9 @@
 import { SideBarItem } from "./SidebarItem";
 import { SvgIcon } from "../enums/shared/SvgIcon";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { Params } from "react-router";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 import { getEntityPermission } from "~/utils/helpers/PermissionsHelper";
+import { Params } from "@remix-run/react";
 
 export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebugMode?: boolean): SideBarItem[] => {
   const currentTenantUrl = UrlUtils.stripTrailingSlash(UrlUtils.currentTenantUrl(params));

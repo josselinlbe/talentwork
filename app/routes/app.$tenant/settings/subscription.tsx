@@ -4,7 +4,8 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import { useRef, useEffect, useState } from "react";
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useSubmit } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData, useSubmit } from "@remix-run/react";
 import { getAllSubscriptionProducts, getSubscriptionPrice, getSubscriptionPriceByStripeId } from "~/utils/db/subscriptionProducts.db.server";
 import {
   cancelStripeSubscription,

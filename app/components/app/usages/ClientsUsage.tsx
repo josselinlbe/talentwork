@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useDashboardData } from "~/utils/data/useDashboardData";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 
 export default function ClientsUsage() {

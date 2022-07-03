@@ -2,7 +2,7 @@ import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { FormEvent, Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Form, useSearchParams } from "remix";
+import { Form, useSearchParams } from "@remix-run/react";
 import { Colors } from "~/application/enums/shared/Colors";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";

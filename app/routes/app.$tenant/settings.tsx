@@ -1,7 +1,8 @@
 import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import Tabs, { TabItem } from "~/components/ui/tabs/Tabs";
-import { json, LoaderFunction, MetaFunction, useParams } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useParams } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useEffect } from "react";

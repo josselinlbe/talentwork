@@ -1,4 +1,4 @@
-import { ActionFunction, redirect } from "remix";
+import { ActionFunction, redirect } from "@remix-run/node";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { RowWithDetails } from "~/utils/db/entities/rows.db.server";

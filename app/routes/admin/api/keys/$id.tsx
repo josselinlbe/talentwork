@@ -1,5 +1,6 @@
 import { Tenant } from "@prisma/client";
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData, useNavigate } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import ApiKeyForm from "~/components/core/apiKeys/ApiKeyForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";

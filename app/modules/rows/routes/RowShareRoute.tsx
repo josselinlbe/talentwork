@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 import { t } from "i18next";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, useLoaderData, Form } from "remix";
+import { Form, useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { Visibility } from "~/application/dtos/shared/Visibility";
 import UserBadge from "~/components/core/users/UserBadge";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";

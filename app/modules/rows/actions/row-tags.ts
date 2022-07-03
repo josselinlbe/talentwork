@@ -1,4 +1,4 @@
-import { json, redirect } from "remix";
+import { json, redirect } from "@remix-run/node";
 import { Colors } from "~/application/enums/shared/Colors";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";

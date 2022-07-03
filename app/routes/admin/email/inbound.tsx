@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, Form, json, LoaderFunction, MetaFunction, useActionData, useLoaderData, useTransition } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Form, useActionData, useLoaderData, useTransition } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { createEmail, EmailWithSimpleDetails, getAllEmails, getEmailByMessageId } from "~/utils/db/email/emails.db.server";
 import TableSimple from "~/components/ui/tables/TableSimple";

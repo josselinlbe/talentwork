@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLoaderData, useActionData, useSearchParams } from "remix";
+import { useActionData, useLoaderData, useSearchParams } from "@remix-run/react";
 import { ColumnDto } from "~/application/dtos/data/ColumnDto";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import RowsList from "~/components/entities/rows/RowsList";

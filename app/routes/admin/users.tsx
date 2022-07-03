@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { adminGetAllUsers, getUser, updateUserPassword, UserWithDetails } from "~/utils/db/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";

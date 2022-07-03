@@ -1,6 +1,6 @@
 import { EntityTag } from "@prisma/client";
 import { Params } from "react-router";
-import { redirect } from "remix";
+import { redirect } from "@remix-run/node";
 import Constants from "~/application/Constants";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { i18nHelper } from "~/locale/i18n.utils";

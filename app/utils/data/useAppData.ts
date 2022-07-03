@@ -1,4 +1,5 @@
-import { redirect, useMatches } from "remix";
+import { redirect } from "@remix-run/node";
+import { useMatches } from "@remix-run/react";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { getUserInfo } from "../session.server";
 import { getLinkedAccountsCount } from "../db/linkedAccounts.db.server";

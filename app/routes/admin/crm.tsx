@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, Outlet, useLocation, useNavigate } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useEffect } from "react";
 

@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import ContractDetails from "~/modules/contracts/components/contracts/ContractDetails";
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData, useParams } from "@remix-run/react";
 import { ContractWithDetails, getContract, updateContract } from "~/modules/contracts/db/contracts.db.server";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserInfo } from "~/utils/session.server";

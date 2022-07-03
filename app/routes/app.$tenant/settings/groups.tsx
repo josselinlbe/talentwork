@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, Outlet, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getUserPermission } from "~/utils/helpers/PermissionsHelper";
 import { getTenantUrl } from "~/utils/services/urlService";

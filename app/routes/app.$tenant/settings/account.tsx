@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useSubmit } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData, useSubmit } from "@remix-run/react";
 import { useAppData } from "~/utils/data/useAppData";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";

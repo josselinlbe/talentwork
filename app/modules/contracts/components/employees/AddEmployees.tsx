@@ -8,7 +8,7 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 import UploadDocument from "~/components/ui/uploaders/UploadDocument";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { useParams, useSubmit, useTransition } from "remix";
+import { useParams, useSubmit, useTransition } from "@remix-run/react";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
 import UrlUtils from "~/utils/app/UrlUtils";

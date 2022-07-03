@@ -6,7 +6,7 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useState, useEffect } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 import { Employee } from ".prisma/client";
 
 interface Props {

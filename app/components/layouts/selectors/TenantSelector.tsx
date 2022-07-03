@@ -5,7 +5,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { Tenant } from "@prisma/client";
 import { getMyTenants } from "~/utils/db/tenants.db.server";
-import { useLoaderData, useLocation, useSubmit } from "remix";
+import { useLoaderData, useLocation, useSubmit } from "@remix-run/react";
 
 interface Props {
   className?: string;

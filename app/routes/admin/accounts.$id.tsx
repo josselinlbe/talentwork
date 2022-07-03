@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, MetaFunction, redirect, useActionData, useLoaderData, useParams, useSubmit } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData, useParams, useSubmit } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";

@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, useLoaderData, useNavigate, useParams } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { getLinkedAccounts, LinkedAccountWithDetails } from "~/utils/db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { useState } from "react";

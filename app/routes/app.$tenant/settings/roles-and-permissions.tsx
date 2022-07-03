@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, Outlet, redirect, useLocation, useNavigate, useParams } from "remix";
+import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { Outlet, useLocation, useNavigate, useParams } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useEffect } from "react";
 import { getTenantUrl } from "~/utils/services/urlService";

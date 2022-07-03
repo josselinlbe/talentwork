@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, redirect } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import EntityForm from "~/components/entities/EntityForm";
 import NewPageLayout from "~/components/ui/layouts/NewPageLayout";
 import { i18nHelper } from "~/locale/i18n.utils";

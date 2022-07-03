@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionFunction, json, LoaderFunction, MetaFunction } from "remix";
-import { Form, useActionData, useTransition } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Form, useActionData, useTransition } from "@remix-run/react";
 import { Language } from "remix-i18next";
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";

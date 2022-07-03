@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
-import { Link, useParams } from "remix";
+import { Link, useParams } from "@remix-run/react";
 import clsx from "~/utils/shared/ClassesUtils";
 import UrlUtils from "~/utils/app/UrlUtils";
 

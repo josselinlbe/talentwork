@@ -1,6 +1,6 @@
 import { EntityWorkflowState } from "@prisma/client";
 import { t } from "i18next";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import { Colors } from "~/application/enums/shared/Colors";
 import RowCreatedBadge from "~/components/entities/rows/RowCreatedBadge";
 import KanbanSimple from "~/components/ui/lists/KanbanSimple";

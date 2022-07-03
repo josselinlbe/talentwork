@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, Outlet, redirect, useLocation, useNavigate, useParams } from "remix";
+import { json, LoaderFunction, redirect } from "@remix-run/node";
+import { Outlet, useLocation, useNavigate, useParams } from "@remix-run/react";
 import Tabs from "~/components/ui/tabs/Tabs";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";

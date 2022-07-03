@@ -1,4 +1,4 @@
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 
 interface Props {
   items: { name: string; title: string; type?: ModelPropertyType; customType?: { name: string; route?: string }; description?: string; required: boolean }[];

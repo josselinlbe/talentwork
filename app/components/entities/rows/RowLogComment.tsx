@@ -1,4 +1,4 @@
-import { useSubmit, useTransition } from "remix";
+import { useSubmit, useTransition } from "@remix-run/react";
 import ApiKeyBadge from "~/components/core/users/ApiKeyBadge";
 import UserAvatarBadge from "~/components/core/users/UserAvatarBadge";
 import UserBadge from "~/components/core/users/UserBadge";

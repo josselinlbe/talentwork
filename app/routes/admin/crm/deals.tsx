@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { json, LoaderFunction, MetaFunction, Outlet, useLoaderData, useSearchParams } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { DealWithDetails, getAllDeals } from "~/utils/db/crm/deals.db.server";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";

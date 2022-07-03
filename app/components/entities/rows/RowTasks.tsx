@@ -2,7 +2,7 @@ import { Entity } from "@prisma/client";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Form, useSubmit, useTransition } from "remix";
+import { Form, useSubmit, useTransition } from "@remix-run/react";
 import CheckEmptyCircle from "~/components/ui/icons/CheckEmptyCircleIcon";
 import CheckFilledCircleIcon from "~/components/ui/icons/CheckFilledCircleIcon";
 import PlusIcon from "~/components/ui/icons/PlusIcon";

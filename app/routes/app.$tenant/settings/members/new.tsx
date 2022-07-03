@@ -1,5 +1,6 @@
 import { loadAppData } from "~/utils/data/useAppData";
-import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getTenantMember } from "~/utils/db/tenants.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";

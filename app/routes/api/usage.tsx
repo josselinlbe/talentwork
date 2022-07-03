@@ -1,4 +1,4 @@
-import { json, LoaderFunction } from "remix";
+import { json, LoaderFunction } from "@remix-run/node";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { validateApiKey } from "~/utils/services/apiService";
 

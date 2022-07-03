@@ -1,4 +1,5 @@
-import { json, LoaderFunction, Outlet, useLoaderData } from "remix";
+import { json, LoaderFunction } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { DefaultFeatures } from "~/application/dtos/shared/DefaultFeatures";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import ApiKeysTable from "~/components/core/apiKeys/ApiKeysTable";

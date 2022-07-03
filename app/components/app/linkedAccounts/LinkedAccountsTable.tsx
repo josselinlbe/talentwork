@@ -5,14 +5,13 @@ import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import { LinkedAccountWithDetails } from "~/utils/db/linkedAccounts.db.server";
 import { useAppData } from "~/utils/data/useAppData";
-import { useParams } from "remix";
+import { useParams, useSubmit } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { LinkedAccount } from ".prisma/client";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
-import { useSubmit } from "remix";
 
 interface Props {
   items: LinkedAccountWithDetails[];

@@ -3,7 +3,7 @@ import { Transition } from "@headlessui/react";
 import { forwardRef, Fragment, KeyboardEvent, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useOuterClick } from "~/utils/shared/KeypressUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { Link, useParams } from "remix";
+import { Link, useParams } from "@remix-run/react";
 import { LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
 import UrlUtils from "~/utils/app/UrlUtils";
 import clsx from "clsx";

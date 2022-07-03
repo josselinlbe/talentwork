@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect, useNavigate, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useNavigate, useParams } from "@remix-run/react";
 import EntityWebhookForm from "~/components/entities/webhooks/EntityWebhookForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";

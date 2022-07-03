@@ -1,4 +1,4 @@
-import { useMatches } from "remix";
+import { useMatches } from "@remix-run/react";
 
 export function useTitleData(): string {
   try {

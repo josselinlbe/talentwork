@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import { Colors } from "~/application/enums/shared/Colors";
 import ColorBadge from "../badges/ColorBadge";
 import PlusIcon from "../icons/PlusIcon";

@@ -1,5 +1,5 @@
 import { Params } from "react-router";
-import { json } from "remix";
+import { json } from "@remix-run/node";
 import { DefaultFeatures } from "~/application/dtos/shared/DefaultFeatures";
 import { createApiKeyLog, getApiKey, setApiKeyLogStatus } from "../db/apiKeys.db.server";
 import { getEntityBySlug } from "../db/entities/entities.db.server";

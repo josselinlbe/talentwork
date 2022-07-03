@@ -1,4 +1,5 @@
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import ApiKeyLogsTable from "~/components/core/apiKeys/ApiKeyLogsTable";
 import { ApiKeyLogWithDetails, getAllApiKeyLogs } from "~/utils/db/apiKeys.db.server";
 

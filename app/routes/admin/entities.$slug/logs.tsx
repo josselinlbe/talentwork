@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import LogsTable from "~/components/app/events/LogsTable";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";

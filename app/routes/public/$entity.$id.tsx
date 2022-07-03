@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { ActionFunction, LoaderFunction, MetaFunction, Outlet } from "remix";
-import { json, useLoaderData } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import RowHelper from "~/utils/helpers/RowHelper";
 import { createUserSession, getUserInfo } from "~/utils/session.server";

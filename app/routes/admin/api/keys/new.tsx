@@ -1,5 +1,6 @@
 import { Tenant } from "@prisma/client";
-import { ActionFunction, json, LoaderFunction, redirect, useActionData, useLoaderData, useNavigate } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useActionData, useLoaderData, useNavigate } from "@remix-run/react";
 import ApiKeyCreatedModal from "~/components/core/apiKeys/ApiKeyCreatedModal";
 import ApiKeyForm from "~/components/core/apiKeys/ApiKeyForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
@@ -8,7 +9,6 @@ import { useAdminData } from "~/utils/data/useAdminData";
 import { createApiKey, getApiKeyByAlias } from "~/utils/db/apiKeys.db.server";
 import { createAdminLog } from "~/utils/db/logs.db.server";
 import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
-import ApiHelper from "~/utils/helpers/ApiHelper";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { getUserInfo } from "~/utils/session.server";
 
@@ -31,7 +31,6 @@ type ActionData = {
     alias: string;
   };
 };
-const success = (data: ActionData) => json(data, { status: 200 });
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);

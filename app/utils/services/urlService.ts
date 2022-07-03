@@ -1,4 +1,4 @@
-import { redirect } from "remix";
+import { redirect } from "@remix-run/node";
 import { db } from "../db.server";
 import { Params } from "react-router";
 

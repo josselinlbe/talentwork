@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useEffect, useRef, useState } from "react";
 import LoadingButton from "~/components/ui/buttons/LoadingButton";
-import { Form, useActionData, useSubmit } from "remix";
+import { Form, useActionData, useSubmit } from "@remix-run/react";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
 
 export default function TenantNew() {

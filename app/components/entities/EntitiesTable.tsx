@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import clsx from "~/utils/shared/ClassesUtils";
 import ButtonTertiary from "../ui/buttons/ButtonTertiary";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import CheckIcon from "../ui/icons/CheckIcon";
 import XIcon from "../ui/icons/XIcon";
 import { EntityWithCount } from "~/utils/db/entities/entities.db.server";

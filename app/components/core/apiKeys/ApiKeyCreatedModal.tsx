@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "remix";
+import { useNavigate } from "@remix-run/react";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import ClipboardIcon from "~/components/ui/icons/ClipboardIcon";
 import InputText from "~/components/ui/input/InputText";
 import OpenModal from "~/components/ui/modals/OpenModal";
 

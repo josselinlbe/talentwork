@@ -1,7 +1,7 @@
 import { Entity } from "@prisma/client";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { Link, useLoaderData } from "remix";
+import { Link, useLoaderData } from "@remix-run/react";
 import PlusIcon from "~/components/ui/icons/PlusIcon";
 import TagFilledIcon from "~/components/ui/icons/TagFilledIcon";
 import XIcon from "~/components/ui/icons/XIcon";

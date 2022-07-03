@@ -1,4 +1,5 @@
-import { ActionFunction, Form, json, Link, LoaderFunction, MetaFunction, redirect, useActionData, useSearchParams } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import bcrypt from "bcryptjs";
 import Logo from "~/components/front/Logo";

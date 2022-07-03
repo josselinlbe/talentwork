@@ -1,4 +1,4 @@
-import { json, redirect } from "remix";
+import { json, redirect } from "@remix-run/node";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { createRow, getRow } from "~/utils/db/entities/rows.db.server";

@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction, Outlet, useLoaderData } from "remix";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
 import RolesTable from "~/components/core/roles/RolesTable";
 import { getAllRolesWithUsers, RoleWithPermissionsAndUsers } from "~/utils/db/permissions/roles.db.server";
@@ -9,7 +10,6 @@ import InputFilters from "~/components/ui/input/InputFilters";
 import InputSearchWithURL from "~/components/ui/input/InputSearchWithURL";
 import { getAllPermissions } from "~/utils/db/permissions/permissions.db.server";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
-import { useTranslation } from "react-i18next";
 
 type LoaderData = {
   title: string;
@@ -51,7 +51,6 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function AdminRolesRoute() {
-  const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
 

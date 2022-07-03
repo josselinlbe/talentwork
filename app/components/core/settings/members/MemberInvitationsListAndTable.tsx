@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import clsx from "~/utils/shared/ClassesUtils";
 import { TenantUserInvitation } from "@prisma/client";
-import { useSubmit } from "remix";
+import { useSubmit } from "@remix-run/react";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 interface Props {

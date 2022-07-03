@@ -3,7 +3,8 @@ import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmMod
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { useRef, useState } from "react";
 import { getTenantUsers, TenantUserWithUser } from "~/utils/db/tenants.db.server";
-import { ActionFunction, json, LoaderFunction, MetaFunction, Outlet, useLoaderData, useNavigate, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { Outlet, useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { deleteUserInvitation, getUserInvitation, getUserInvitations } from "~/utils/db/tenantUserInvitations.db.server";
 import MemberInvitationsListAndTable from "~/components/core/settings/members/MemberInvitationsListAndTable";
 import { i18nHelper } from "~/locale/i18n.utils";

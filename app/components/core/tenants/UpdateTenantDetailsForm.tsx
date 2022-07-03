@@ -1,4 +1,4 @@
-import { Form } from "remix";
+import { Form } from "@remix-run/react";
 import { Tenant } from "@prisma/client";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

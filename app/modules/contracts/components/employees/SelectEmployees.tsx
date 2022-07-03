@@ -7,7 +7,7 @@ import clsx from "~/utils/shared/ClassesUtils";
 import IconWorkers from "~/modules/contracts/icons/IconWorkers";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import UrlUtils from "~/utils/app/UrlUtils";
-import { useParams } from "remix";
+import { useParams } from "@remix-run/react";
 
 export interface RefSelectEmployees {
   show: (selected: string[]) => void;

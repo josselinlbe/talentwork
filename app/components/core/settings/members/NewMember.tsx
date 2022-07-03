@@ -2,7 +2,7 @@ import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useActionData, useNavigate, useTransition, Form, useLocation, useParams } from "remix";
+import { Form, useActionData, useLocation, useNavigate, useParams, useTransition } from "@remix-run/react";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";

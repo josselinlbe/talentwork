@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect, useLoaderData, useNavigate, useParams } from "remix";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import EntityWorkflowStateForm from "~/components/entities/workflow/EntityWorkflowStateForm";
 import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";

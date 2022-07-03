@@ -1,4 +1,4 @@
-import { json, redirect } from "remix";
+import { json, redirect } from "@remix-run/node";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";

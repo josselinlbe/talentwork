@@ -11,7 +11,7 @@ import ProfileButton from "./buttons/ProfileButton";
 import SidebarMenu from "./SidebarMenu";
 import LogoLight from "~/assets/img/logo-light.png";
 import { useAppData } from "~/utils/data/useAppData";
-import { useParams, useSubmit } from "remix";
+import { useParams, useSubmit } from "@remix-run/react";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useRootData } from "~/utils/data/useRootData";
 
