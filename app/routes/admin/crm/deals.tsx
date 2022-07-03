@@ -9,7 +9,7 @@ import ViewToggleWithUrl from "~/components/ui/lists/ViewToggleWithUrl";
 import DealsView from "~/components/core/crm/deals/DealsView";
 import { Contact, EntityWorkflowState } from "@prisma/client";
 import { getAllContacts } from "~/utils/db/crm/contacts.db.server";
-import { getFiltersFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
+import { getEntityFiltersFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 import { EntityWithDetails, getEntityByName } from "~/utils/db/entities/entities.db.server";
 import { getWorkflowStates } from "~/utils/db/workflows/workflowStates.db.server";
 
@@ -28,7 +28,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   if (!entity) {
     throw new Error("Entity required: deal");
   }
-  const filters = getFiltersFromCurrentUrl(false, entity, request);
+  const filters = getEntityFiltersFromCurrentUrl(false, entity, request);
   const items = await getAllDeals(filters);
 
   const data: LoaderData = {

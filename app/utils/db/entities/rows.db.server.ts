@@ -1,5 +1,5 @@
 import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, RowMedia, Contact, Deal, EntityWorkflowState } from "@prisma/client";
-import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
@@ -158,9 +158,9 @@ export async function getRows(
   take?: number,
   skip?: number,
   orderBy?: any,
-  filters?: FiltersDto
+  filters?: RowFiltersDto
 ): Promise<RowWithDetails[]> {
-  const whereFilters = RowFiltersHelper.getWhereQueryHelper(filters);
+  const whereFilters = RowFiltersHelper.getRowFiltersCondition(filters);
   return await db.row.findMany({
     take,
     skip,
@@ -194,8 +194,8 @@ export async function getRowsInIds(tenantId: string, ids: string[]): Promise<Row
   });
 }
 
-export async function countRows(entityId: string, tenantId: string | null, userId: string | undefined, filters?: FiltersDto): Promise<number> {
-  const whereFilters = RowFiltersHelper.getWhereQueryHelper(filters);
+export async function countRows(entityId: string, tenantId: string | null, userId: string | undefined, filters?: RowFiltersDto): Promise<number> {
+  const whereFilters = RowFiltersHelper.getRowFiltersCondition(filters);
   return await db.row.count({
     where: {
       AND: [

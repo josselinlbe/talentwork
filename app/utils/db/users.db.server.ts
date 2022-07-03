@@ -1,6 +1,8 @@
 import { AdminUser, Role, Tenant, TenantUser, UserRole } from ".prisma/client";
 import bcrypt from "bcryptjs";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { db } from "~/utils/db.server";
+import RowFiltersHelper from "../helpers/RowFiltersHelper";
 
 export type UserWithoutPassword = {
   id: string;
@@ -45,8 +47,16 @@ export async function adminGetAllTenantUsers(tenantId: string): Promise<UserWith
   });
 }
 
-export async function adminGetAllUsers(): Promise<UserWithDetails[]> {
+export async function adminGetAllUsers(filters?: FiltersDto): Promise<UserWithDetails[]> {
+  let where = RowFiltersHelper.getFiltersCondition(filters);
+  const tenantId = filters?.properties.find((f) => f.name === "tenantId")?.value ?? filters?.query ?? "";
+  if (tenantId) {
+    where = {
+      OR: [where, { tenants: { some: { tenantId } } }],
+    };
+  }
   return db.user.findMany({
+    where,
     include: {
       admin: true,
       tenants: {

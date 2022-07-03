@@ -1,35 +1,51 @@
 import { useTranslation } from "react-i18next";
-import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
 import { ActionFunction, json, LoaderFunction, MetaFunction, useLoaderData } from "remix";
-import { adminGetAllTenantUsers, adminGetAllUsers, getUser, updateUserPassword, UserWithDetails } from "~/utils/db/users.db.server";
+import { adminGetAllUsers, getUser, updateUserPassword, UserWithDetails } from "~/utils/db/users.db.server";
 import { createUserSession, getUserInfo, setLoggedUser } from "~/utils/session.server";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { Tenant } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { getTenant } from "~/utils/db/tenants.db.server";
-import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import UsersTable from "~/components/core/users/UsersTable";
 import { deleteUserWithItsTenants } from "~/utils/services/userService";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { useAdminData } from "~/utils/data/useAdminData";
+import InputFilters from "~/components/ui/input/InputFilters";
+import { getFiltersFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
+import { FilterablePropertyDto } from "~/application/dtos/data/FilterablePropertyDto";
+import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
 
 type LoaderData = {
   title: string;
   items: UserWithDetails[];
-  tenant: Tenant | null;
+  filterableProperties: FilterablePropertyDto[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   await verifyUserHasPermission(request, "admin.users.view");
   let { t } = await i18nHelper(request);
 
-  const tenantId = new URL(request.url).searchParams.get("tenant");
-  const items = tenantId ? await adminGetAllTenantUsers(tenantId) : await adminGetAllUsers();
+  const filterableProperties: FilterablePropertyDto[] = [
+    { name: "email", title: "models.user.email" },
+    { name: "firstName", title: "models.user.firstName" },
+    { name: "lastName", title: "models.user.lastName" },
+    {
+      name: "tenantId",
+      title: "models.tenant.object",
+      manual: true,
+      options: (await adminGetAllTenants()).map((tenant) => {
+        return {
+          value: tenant.id,
+          name: tenant.name,
+        };
+      }),
+    },
+  ];
+  const filters = getFiltersFromCurrentUrl(request, filterableProperties);
+  const items = await adminGetAllUsers(filters);
 
   const data: LoaderData = {
     title: `${t("models.user.plural")} | ${process.env.APP_NAME}`,
     items,
-    tenant: tenantId ? await getTenant(tenantId) : null,
+    filterableProperties,
   };
   return json(data);
 };
@@ -114,31 +130,11 @@ export default function AdminUsersRoute() {
 
   return (
     <div>
-      {data.tenant && (
-        <Breadcrumb
-          className="w-full"
-          home="/admin/dashboard"
-          menu={[
-            { title: t("models.tenant.plural"), routePath: "/admin/accounts" },
-            { title: data.tenant.name, routePath: `/admin/tenant/${data.tenant.id}/profile` },
-            { title: t("models.user.plural"), routePath: "" },
-          ]}
-        />
-      )}
       <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
         <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
-          <h1 className="flex-1 font-bold flex items-center truncate">
-            {t("models.user.plural")}
-            {/* {!loading && (
-              <span className="ml-2 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-gray-50 text-gray-800 border border-gray-300">
-                {filteredItems().length}
-              </span>
-            )} */}
-          </h1>
+          <h1 className="flex-1 font-bold flex items-center truncate">{t("models.user.plural")}</h1>
           <div className="flex items-center space-x-2 h-9">
-            <ButtonSecondary to="." type="button">
-              {t("shared.reload")}
-            </ButtonSecondary>
+            <InputFilters filters={data.filterableProperties} />
           </div>
         </div>
       </div>

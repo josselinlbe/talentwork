@@ -33,6 +33,7 @@ export default function ApiKeyLogsTable({ withTenant, items }: Props) {
         DateUtils.dateYMDHMS(f.createdAt)?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.apiKey?.tenant.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.method?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.endpoint?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.params?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.error?.toString().toUpperCase().includes(searchInput.toUpperCase())
     );

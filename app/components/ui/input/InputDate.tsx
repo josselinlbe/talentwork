@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { forwardRef, Ref, RefObject, useImperativeHandle, useRef } from "react";
+import { forwardRef, ReactNode, Ref, RefObject, useImperativeHandle, useRef } from "react";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
 
 export interface RefInputDate {
@@ -9,6 +9,7 @@ export interface RefInputDate {
 interface Props {
   name: string;
   title: string;
+  defaultValue?: Date;
   value?: Date;
   onChange?: (date: Date) => void;
   className?: string;
@@ -16,8 +17,12 @@ interface Props {
   disabled?: boolean;
   readOnly?: boolean;
   required?: boolean;
+  hint?: ReactNode;
 }
-const InputDate = ({ name, title, value, onChange, className, help, disabled = false, readOnly = false, required = false }: Props, ref: Ref<RefInputDate>) => {
+const InputDate = (
+  { name, title, value, defaultValue, onChange, className, help, disabled = false, readOnly = false, required = false, hint }: Props,
+  ref: Ref<RefInputDate>
+) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
 
@@ -32,6 +37,7 @@ const InputDate = ({ name, title, value, onChange, className, help, disabled = f
 
           {help && <HintTooltip text={help} />}
         </div>
+        {hint}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm w-full">
         <input
@@ -40,7 +46,8 @@ const InputDate = ({ name, title, value, onChange, className, help, disabled = f
           id={name}
           name={name}
           required={required}
-          defaultValue={value ? new Date(value).toISOString().split("T")[0] : ""}
+          defaultValue={defaultValue ? new Date(defaultValue).toISOString().split("T")[0] : ""}
+          value={value ? new Date(value).toISOString().split("T")[0] : ""}
           onChange={(e) => (onChange ? onChange(e.target.valueAsDate || new Date()) : {})}
           disabled={disabled}
           readOnly={readOnly}

@@ -5,8 +5,24 @@ import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { EntityWithDetails, PropertyWithDetails } from "../db/entities/entities.db.server";
 import { RowWithDetails } from "../db/entities/rows.db.server";
 import RowHelper from "./RowHelper";
+import { v4 as uuid } from "uuid";
+import bcrypt from "bcryptjs";
+import { TFunction } from "react-i18next";
 
-const getRowPropertiesFromJson = (entity: EntityWithDetails, jsonObject: any, existing?: RowWithDetails) => {
+const generateKey = () => {
+  const id: string = uuid();
+  return id;
+};
+
+const hashKey = async (key: string) => {
+  return await bcrypt.hash(key, 10);
+};
+
+const validateKey = async (key: string, hashedKey: string) => {
+  return await bcrypt.compare(key, hashedKey);
+};
+
+const getRowPropertiesFromJson = (t: TFunction, entity: EntityWithDetails, jsonObject: any, existing?: RowWithDetails) => {
   const dynamicProperties: RowValueDto[] = [];
   let dynamicRows: RowDetailDto[] | null = [];
   const properties: any = {};
@@ -38,7 +54,7 @@ const getRowPropertiesFromJson = (entity: EntityWithDetails, jsonObject: any, ex
   entity.properties
     .filter((f) => !f.isHidden && !f.isDetail)
     .forEach((property) => {
-      const propertyValue = getPropertyValueFromJson(property, jsonObject, existing);
+      const propertyValue = getPropertyValueFromJson(t, property, jsonObject, existing);
       if (propertyValue?.rowValue) {
         dynamicProperties.push(propertyValue?.rowValue);
       } else if (propertyValue?.jsonValue) {
@@ -56,7 +72,7 @@ const getRowPropertiesFromJson = (entity: EntityWithDetails, jsonObject: any, ex
       entity.properties
         .filter((f) => !f.isHidden && f.isDetail)
         .forEach((property) => {
-          const propertyValue = getPropertyValueFromJson(property, f, existing);
+          const propertyValue = getPropertyValueFromJson(t, property, f, existing);
           if (propertyValue?.rowValue) {
             row.values.push(propertyValue?.rowValue);
           }
@@ -81,7 +97,7 @@ const getRowPropertiesFromJson = (entity: EntityWithDetails, jsonObject: any, ex
   };
 };
 
-function getPropertyValueFromJson(property: PropertyWithDetails, object: any, existing?: RowWithDetails) {
+function getPropertyValueFromJson(t: TFunction, property: PropertyWithDetails, object: any, existing?: RowWithDetails) {
   let jsonValue: any | null = null;
   let media: MediaDto[] = [];
   let name = property.name;
@@ -97,7 +113,7 @@ function getPropertyValueFromJson(property: PropertyWithDetails, object: any, ex
       if (existing && !object[name]) {
         return null;
       }
-      throw Error(`${property.title} is required`);
+      throw Error(`${t(property.title)} (${property.name}) is required`);
     }
   } else {
     jsonValue = object[name];
@@ -105,7 +121,7 @@ function getPropertyValueFromJson(property: PropertyWithDetails, object: any, ex
       if (existing && !object.hasOwnProperty(name)) {
         return null;
       }
-      throw Error(`${property.title} is required`);
+      throw Error(`${t(property.title)} (${property.name}) is required`);
     }
   }
   const value = RowHelper.getValueFromType(property.type, jsonValue);
@@ -141,7 +157,6 @@ const getApiFormat = (entity: EntityWithDetails, item: RowWithDetails | null) =>
       : null,
     createdByApiKey: item.createdByApiKey
       ? {
-          key: item.createdByApiKey.key,
           alias: item.createdByApiKey.alias,
         }
       : null,
@@ -151,6 +166,9 @@ const getApiFormat = (entity: EntityWithDetails, item: RowWithDetails | null) =>
 };
 
 export default {
+  generateKey,
+  hashKey,
+  validateKey,
   getRowPropertiesFromJson,
   getApiFormat,
 };

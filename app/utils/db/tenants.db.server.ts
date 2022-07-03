@@ -1,7 +1,9 @@
 import { AdminUser, Role, Tenant, TenantUser, User } from "@prisma/client";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
+import RowFiltersHelper from "../helpers/RowFiltersHelper";
 import { getAvailableTenantSlug } from "../services/emailService";
 import { createUserRole } from "./permissions/userRoles.db.server";
 import { TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
@@ -62,8 +64,16 @@ export async function adminGetAllTenants(): Promise<TenantWithDetails[]> {
   });
 }
 
-export async function adminGetAllTenantsWithUsage(): Promise<TenantWithUsage[]> {
+export async function adminGetAllTenantsWithUsage(filters?: FiltersDto): Promise<TenantWithUsage[]> {
+  let where = RowFiltersHelper.getFiltersCondition(filters);
+  const userId = filters?.properties.find((f) => f.name === "userId")?.value ?? filters?.query ?? "";
+  if (userId) {
+    where = {
+      OR: [where, { users: { some: { userId } } }],
+    };
+  }
   return await db.tenant.findMany({
+    where,
     include: {
       users: {
         include: {
@@ -95,6 +105,17 @@ export async function getTenant(id?: string) {
   return await db.tenant.findUnique({
     where: {
       id,
+    },
+    include: {
+      subscription: true,
+    },
+  });
+}
+
+export async function getTenantByIdOrSlug(id: string) {
+  return await db.tenant.findFirst({
+    where: {
+      OR: [{ id }, { slug: id }],
     },
     include: {
       subscription: true,

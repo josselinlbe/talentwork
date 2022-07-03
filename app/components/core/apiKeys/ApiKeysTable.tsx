@@ -33,9 +33,11 @@ export default function ApiKeysTable({ entities, items, logs, withTenant, canCre
     headers.push({ name: "key", title: t("models.apiKey.key") });
     headers.push({ name: "alias", title: t("models.apiKey.alias") });
     headers.push({ name: "usage", title: t("models.apiKey.usage") });
-    entities.forEach((entity) => {
-      headers.push({ name: "entityId", title: t(entity.titlePlural) });
-    });
+    entities
+      .filter((f) => !f.isDefault)
+      .forEach((entity) => {
+        headers.push({ name: "entityId", title: t(entity.titlePlural) });
+      });
     headers.push({ name: "expires", title: t("models.apiKey.expires") });
     headers.push({ name: "createdAt", title: t("shared.createdAt") });
     headers.push({ name: "createdByUser", title: t("shared.createdBy") });
@@ -160,24 +162,36 @@ export default function ApiKeysTable({ entities, items, logs, withTenant, canCre
                                     )}
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{item.alias}</td>
-                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                    {getApiKeyLogs(item)}/{item.max}
-                                  </td>
-                                  {entities.map((entity) => {
-                                    return (
-                                      <td key={entity.id} className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                                        <div className="flex items-center">
-                                          <span className={clsx(getEntityPermissions(item, entity, "C") ? " text-gray-800 font-bold" : "text-red-400")}>C</span>
-                                          <span className={clsx(getEntityPermissions(item, entity, "R") ? " text-gray-800 font-bold" : "text-red-400")}>R</span>
-                                          <span className={clsx(getEntityPermissions(item, entity, "U") ? " text-gray-800 font-bold" : "text-red-400")}>U</span>
-                                          <span className={clsx(getEntityPermissions(item, entity, "D") ? " text-gray-800 font-bold" : "text-red-400")}>D</span>
-                                        </div>
-                                      </td>
-                                    );
-                                  })}
+                                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">{getApiKeyLogs(item)} calls</td>
+                                  {entities
+                                    .filter((f) => !f.isDefault)
+                                    .map((entity) => {
+                                      return (
+                                        <td key={entity.id} className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                                          <div className="flex items-center">
+                                            <span className={clsx(getEntityPermissions(item, entity, "C") ? " text-gray-800 font-bold" : "text-red-400")}>
+                                              C
+                                            </span>
+                                            <span className={clsx(getEntityPermissions(item, entity, "R") ? " text-gray-800 font-bold" : "text-red-400")}>
+                                              R
+                                            </span>
+                                            <span className={clsx(getEntityPermissions(item, entity, "U") ? " text-gray-800 font-bold" : "text-red-400")}>
+                                              U
+                                            </span>
+                                            <span className={clsx(getEntityPermissions(item, entity, "D") ? " text-gray-800 font-bold" : "text-red-400")}>
+                                              D
+                                            </span>
+                                          </div>
+                                        </td>
+                                      );
+                                    })}
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                                     <time dateTime={DateUtils.dateYMDHMS(item.expires)} title={DateUtils.dateYMDHMS(item.expires)}>
-                                      <span className={clsx(hasExpired(item) ? "" : "")}>{DateUtils.dateAgo(item.expires)}</span>
+                                      {item.expires === null ? (
+                                        <span>-</span>
+                                      ) : (
+                                        <span className={clsx(hasExpired(item) ? "" : "")}>{DateUtils.dateAgo(item.expires)}</span>
+                                      )}
                                     </time>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">

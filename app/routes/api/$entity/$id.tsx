@@ -1,4 +1,5 @@
 import { ActionFunction, json, LoaderFunction } from "remix";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { deleteRow, getRow, updateRow } from "~/utils/db/entities/rows.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
@@ -26,6 +27,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 // PUT or DELETE
 export const action: ActionFunction = async ({ request, params }) => {
+  const { t } = await i18nHelper(request);
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     let item = await getRow(entity.id, params.id ?? "", tenant.id);
@@ -35,7 +37,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     if (request.method === "PUT") {
       const jsonBody = await request.json();
-      const rowValues = ApiHelper.getRowPropertiesFromJson(entity, jsonBody, item);
+      const rowValues = ApiHelper.getRowPropertiesFromJson(t, entity, jsonBody, item);
       await updateRow(params.id ?? "", {
         dynamicProperties: rowValues.dynamicProperties,
         dynamicRows: rowValues.dynamicRows,

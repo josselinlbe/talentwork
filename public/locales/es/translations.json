@@ -9,6 +9,7 @@
     "close": "Cerrar",
     "success": "Éxito",
     "error": "Error",
+    "acceptAndContinue": "Aceptar y Continuar",
     "invalidForm": "Forma no subida correctamente",
     "new": "Nuevo",
     "name": "Nombre",
@@ -1009,7 +1010,9 @@
     "tenant": {
       "object": "Cuenta",
       "plural": "Cuentas",
-      "subscription": "Subscripción"
+      "subscription": "Subscripción",
+      "name": "Nombre",
+      "slug": "URL"
     },
     "apiKey": {
       "object": "Llave API",

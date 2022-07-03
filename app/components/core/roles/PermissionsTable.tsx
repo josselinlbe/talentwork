@@ -17,7 +17,6 @@ interface Props {
 export default function PermissionsTable({ items, className, canCreate, canUpdate = true, tenantId }: Props) {
   const { t } = useTranslation();
 
-  const [searchInput, setSearchInput] = useState("");
   const [actions, setActions] = useState<any[]>([]);
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<PermissionWithRoles>[]>([]);
 
@@ -67,22 +66,9 @@ export default function PermissionsTable({ items, className, canCreate, canUpdat
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canUpdate]);
 
-  const filteredItems = () => {
-    if (!items) {
-      return [];
-    }
-    return items.filter(
-      (f) =>
-        f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.description?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.inRoles.find((f) => f.role.name.toUpperCase().includes(searchInput.toUpperCase()))
-    );
-  };
-
   return (
-    <div className="space-y-2">
-      <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute={canCreate ? "new" : undefined} />
-      <TableSimple actions={actions} headers={headers} items={filteredItems()} />
+    <div>
+      <TableSimple actions={actions} headers={headers} items={items} />
     </div>
   );
 }

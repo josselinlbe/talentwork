@@ -30,6 +30,7 @@ export default function LogsTable({ withTenant, items }: Props) {
       (f) =>
         DateUtils.dateYMDHMS(f.createdAt)?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.action?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
+        f.url?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.details?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.tenant?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
         f.user?.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||

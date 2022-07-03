@@ -1,9 +1,11 @@
 import { Property } from "@prisma/client";
-import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { SortedByDto } from "~/application/dtos/data/SortedByDto";
 import { EntityWithDetails } from "../db/entities/entities.db.server";
 import { countRows, getRows, RowWithDetails } from "../db/entities/rows.db.server";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { FilterablePropertyDto } from "~/application/dtos/data/FilterablePropertyDto";
 
 export function getPaginationFromCurrentUrl(request: Request): { page: number; sortedBy: SortedByDto; query: string } {
   return {
@@ -13,7 +15,19 @@ export function getPaginationFromCurrentUrl(request: Request): { page: number; s
   };
 }
 
-export function getFiltersFromCurrentUrl(customRow: boolean, entity: EntityWithDetails, request: Request): FiltersDto {
+export function getFiltersFromCurrentUrl(request: Request, properties: FilterablePropertyDto[]): FiltersDto {
+  const url = new URL(request.url);
+  properties.forEach((property) => {
+    const params = url.searchParams.get(property.name);
+    property.value = params ?? null;
+  });
+
+  const query = url.searchParams.get("q") ?? undefined;
+
+  return { query, properties };
+}
+
+export function getEntityFiltersFromCurrentUrl(customRow: boolean, entity: EntityWithDetails, request: Request): RowFiltersDto {
   const tags: string[] = [];
   const properties: { property: Property; value: string | null }[] = [];
   const url = new URL(request.url);
@@ -124,7 +138,7 @@ export async function getRowsWithPagination(
   pageSize: number,
   page: number,
   sortedBy?: SortedByDto,
-  filters?: FiltersDto
+  filters?: RowFiltersDto
 ): Promise<{
   items: RowWithDetails[];
   pagination: PaginationDto;

@@ -158,7 +158,7 @@ const RowValueInput = (
           required={selected.isRequired}
           name={selected.name}
           title={t(selected.title)}
-          value={dateValue}
+          defaultValue={dateValue}
           onChange={(e) => onChange(e)}
           className={className}
           readOnly={readOnly}

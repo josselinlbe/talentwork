@@ -18,6 +18,7 @@ import PricingFeaturesTable from "./PricingFeaturesTable";
 import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import InputRadioGroup from "~/components/ui/input/InputRadioGroup";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
+import { DefaultFeatures } from "~/application/dtos/shared/DefaultFeatures";
 
 interface Props {
   plans?: SubscriptionProductDto[];
@@ -80,7 +81,7 @@ export default function PricingPlanForm({ plans, item, canUpdate = true, canDele
       features.push({
         order: features.length + 1,
         title: "Priority support",
-        name: "priority-support",
+        name: DefaultFeatures.PrioritySupport,
         type: SubscriptionFeatureLimitType.NOT_INCLUDED,
         value: 0,
       });

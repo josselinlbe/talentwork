@@ -2,16 +2,24 @@ import { db } from "../../db.server";
 import { Permission, Role, RolePermission } from "@prisma/client";
 import { getRoleByName } from "./roles.db.server";
 import { createRolePermission } from "./rolePermissions.db.server";
+import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 
 export type PermissionWithRoles = Permission & {
   inRoles: (RolePermission & { role: Role })[];
 };
 
-export async function getAllPermissions(type?: string): Promise<PermissionWithRoles[]> {
-  let where = {};
+export async function getAllPermissions(type?: string, filters?: FiltersDto): Promise<PermissionWithRoles[]> {
+  let where = RowFiltersHelper.getFiltersCondition(filters);
+  const roleId = filters?.properties.find((f) => f.name === "roleId")?.value;
+  if (roleId) {
+    where = {
+      OR: [where, { inRoles: { some: { roleId } } }],
+    };
+  }
   if (type !== undefined) {
     where = {
-      type,
+      AND: [type, where],
     };
   }
 

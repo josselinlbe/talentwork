@@ -54,6 +54,7 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
       name: "users",
       title: t("models.user.plural"),
       value: (i) => i._count.users,
+      href: (i) => `/admin/users?tenantId=${i.id}`,
     });
     headers.push({
       name: "rows",

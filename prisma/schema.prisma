@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -212,11 +212,10 @@ model ApiKey {
   createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   tenantId        String
   tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  key             String         @default(uuid())
+  key             String         @unique @default(uuid())
   alias           String
-  max             Int
-  expires         DateTime
   active          Boolean
+  expires         DateTime?
   entities        ApiKeyEntity[]
   apiKeyLogs      ApiKeyLog[]
   logs            Log[]
@@ -525,11 +524,11 @@ model Row {
   tenant            Tenant?         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   folio             Int
   createdByUserId   String?
-  createdByUser     User?           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByUser     User?           @relation(fields: [createdByUserId], references: [id])
   createdByApiKeyId String?
-  createdByApiKey   ApiKey?         @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
+  createdByApiKey   ApiKey?         @relation(fields: [createdByApiKeyId], references: [id])
   linkedAccountId   String?
-  linkedAccount     LinkedAccount?  @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
+  linkedAccount     LinkedAccount?  @relation(fields: [linkedAccountId], references: [id])
   logs              Log[]
   values            RowValue[]
   relatedRows       RowValue[]      @relation(name: "relatedRow")

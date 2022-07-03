@@ -96,9 +96,16 @@ export async function getApiKeyById(id: string): Promise<ApiKeyWithDetails | nul
   });
 }
 
-export async function getApiKeyByKey(key: string): Promise<ApiKeyWithDetails | null> {
-  return await db.apiKey.findFirst({
+export async function getApiKey(key: string): Promise<ApiKeyWithDetails | null> {
+  return await db.apiKey.findUnique({
     where: { key },
+    include,
+  });
+}
+
+export async function getApiKeyByAlias(tenantId: string, alias: string): Promise<ApiKeyWithDetails | null> {
+  return await db.apiKey.findFirst({
+    where: { tenantId, alias },
     include,
   });
 }
@@ -126,8 +133,7 @@ export async function createApiKey(
     tenantId: string;
     createdByUserId: string;
     alias: string;
-    max: number;
-    expires: Date;
+    expires: Date | null;
     active: boolean;
   },
   entities: {
@@ -197,10 +203,10 @@ export async function setApiKeyLogStatus(
 export async function updateApiKey(
   id: string,
   data: {
+    tenantId: string;
     alias: string;
-    expires: Date;
+    expires: Date | null;
     active: boolean;
-    max?: number;
   },
   entities: {
     entityId: string;

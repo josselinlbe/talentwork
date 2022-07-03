@@ -1,8 +1,9 @@
 import { Property } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 
-const getWhereQueryHelper = (filters?: FiltersDto) => {
+const getRowFiltersCondition = (filters?: RowFiltersDto) => {
   let where = {};
   if (!filters) {
     return {};
@@ -78,7 +79,7 @@ const getWhereQueryHelper = (filters?: FiltersDto) => {
   return where;
 };
 
-function getFilterByHardCodedProperty(filters: FiltersDto, property: Property, value: string | null) {
+function getFilterByHardCodedProperty(filters: RowFiltersDto, property: Property, value: string | null) {
   if (value === null) {
     return {};
   }
@@ -113,4 +114,64 @@ function isPropertyFilterable(property: Property) {
   return property.type === PropertyType.TEXT || property.type === PropertyType.SELECT;
 }
 
-export default { getWhereQueryHelper, isPropertyFilterable };
+const getFiltersCondition = (filters?: FiltersDto) => {
+  let where = {};
+  if (!filters) {
+    return {};
+  }
+  const queryConditions: any[] = [];
+  const filterConditions: any[] = [];
+
+  filters.properties
+    ?.filter((f) => !f.manual)
+    .forEach((field) => {
+      if (filters.query) {
+        queryConditions.push(getPropertyFilter(field.name, filters.query));
+      }
+    });
+
+  filters.properties
+    ?.filter((f) => !f.manual)
+    .forEach((field) => {
+      if (field.value) {
+        filterConditions.push(getPropertyFilter(field.name, field.value));
+      }
+    });
+
+  let whereQuery = {};
+  let whereFilters = {};
+  if (queryConditions.length > 0) {
+    whereQuery = {
+      OR: [...queryConditions],
+    };
+  }
+  if (filterConditions.length > 0) {
+    whereFilters = {
+      AND: [...filterConditions],
+    };
+  }
+
+  const andConditions: any[] = [];
+  if (queryConditions.length > 0) {
+    andConditions.push(whereQuery);
+  }
+  if (filterConditions.length > 0) {
+    andConditions.push(whereFilters);
+  }
+  if (andConditions.length > 0) {
+    where = {
+      AND: andConditions,
+    };
+  }
+  return where;
+};
+
+function getPropertyFilter(name: string, value: string) {
+  return { [name]: { contains: value } };
+}
+
+export default {
+  getRowFiltersCondition,
+  getFiltersCondition,
+  isPropertyFilterable,
+};

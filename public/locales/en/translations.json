@@ -9,6 +9,7 @@
     "close": "Close",
     "success": "Success",
     "error": "Error",
+    "acceptAndContinue": "Accept and Continue",
     "invalidForm": "Form not submitted correctly",
     "new": "New",
     "name": "Name",
@@ -1011,7 +1012,9 @@
     "tenant": {
       "object": "Account",
       "plural": "Accounts",
-      "subscription": "Subscription"
+      "subscription": "Subscription",
+      "name": "Name",
+      "slug": "Slug"
     },
     "apiKey": {
       "object": "API Key",

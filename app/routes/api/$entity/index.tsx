@@ -1,19 +1,20 @@
 import { ActionFunction, json, LoaderFunction } from "remix";
 import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
 import { createRow, getRow } from "~/utils/db/entities/rows.db.server";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
-import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
+import { getEntityFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
 import { getEntityApiKeyFromRequest } from "~/utils/services/apiService";
 
 // GET
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
+  const { entity, tenant, apiKeyLog, usage } = await getEntityApiKeyFromRequest(request, params);
   try {
     const currentPagination = getPaginationFromCurrentUrl(request);
-    const filters = getFiltersFromCurrentUrl(true, entity, request);
+    const filters = getEntityFiltersFromCurrentUrl(true, entity, request);
     const { items, pagination } = await getRowsWithPagination(
       entity.id,
       tenant.id,
@@ -27,11 +28,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       status: 200,
     });
     return json({
-      pagination: {
-        count: items.length,
-        ...pagination,
+      usage: {
+        plan: usage?.title,
+        remaining: usage?.remaining,
       },
-      items: items.map((item) => {
+      page: pagination.page,
+      total_pages: pagination.totalPages,
+      total_results: pagination.totalItems,
+      results: items.length,
+      data: items.map((item) => {
         return ApiHelper.getApiFormat(entity, item);
       }),
     });
@@ -46,10 +51,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 // POST
 export const action: ActionFunction = async ({ request, params }) => {
+  const { t } = await i18nHelper(request);
   const { entity, tenant, apiKeyLog } = await getEntityApiKeyFromRequest(request, params);
   try {
     const jsonBody = await request.json();
-    const rowValues = ApiHelper.getRowPropertiesFromJson(entity, jsonBody);
+    const rowValues = ApiHelper.getRowPropertiesFromJson(t, entity, jsonBody);
     const created = await createRow({
       entityId: entity.id,
       tenantId: tenant.id,

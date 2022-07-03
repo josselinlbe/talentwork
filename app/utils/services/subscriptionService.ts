@@ -1,3 +1,4 @@
+import { DefaultFeatures } from "~/application/dtos/shared/DefaultFeatures";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { SubscriptionFeatureDto } from "~/application/dtos/subscriptions/SubscriptionFeatureDto";
 import { SubscriptionFeatureLimitType } from "~/application/enums/subscriptions/SubscriptionFeatureLimitType";
@@ -67,6 +68,8 @@ export async function getPlanFeaturesUsage(tenantId: string): Promise<PlanFeatur
             usage.message = `You've reached the limit this month (${usage.value}) for ${feature.name}`;
             usage.enabled = false;
           }
+        } else if (feature.type === SubscriptionFeatureLimitType.UNLIMITED) {
+          usage.remaining = 10000000;
         }
       }
       myUsage.push(usage);
@@ -88,7 +91,7 @@ async function getUsed(tenantId: string, feature: SubscriptionFeatureDto): Promi
   const firstDay = new Date(y, m, 1, 0, 0, 1);
   var lastDay = new Date(y, m + 1, 0, 23, 59, 59);
 
-  if (feature.name === "user") {
+  if (feature.name === DefaultFeatures.Users) {
     if (feature.type === SubscriptionFeatureLimitType.MONTHLY) {
       return db.tenantUser.count({
         where: {
@@ -103,6 +106,30 @@ async function getUsed(tenantId: string, feature: SubscriptionFeatureDto): Promi
       return db.tenantUser.count({
         where: {
           tenantId,
+        },
+      });
+    }
+  } else if (feature.name === DefaultFeatures.API) {
+    if (feature.type === SubscriptionFeatureLimitType.MONTHLY) {
+      return db.apiKeyLog.count({
+        where: {
+          apiKey: {
+            tenantId,
+          },
+          status: { in: [200, 201] },
+          createdAt: {
+            gte: firstDay,
+            lt: lastDay,
+          },
+        },
+      });
+    } else if (feature.type === SubscriptionFeatureLimitType.MAX) {
+      return db.apiKeyLog.count({
+        where: {
+          apiKey: {
+            tenantId,
+          },
+          status: { in: [200, 201] },
         },
       });
     }

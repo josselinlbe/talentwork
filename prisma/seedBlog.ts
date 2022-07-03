@@ -23,6 +23,7 @@ export async function seedBlog() {
     { name: "entity-builder", color: Colors.GRAY },
     { name: "roles", color: Colors.GREEN },
     { name: "permissions", color: Colors.EMERALD },
+    { name: "crm", color: Colors.GREEN },
   ]);
 
   await seedAuthors([
@@ -95,6 +96,18 @@ export async function seedBlogPosts() {
       authorSlug: "alexandromtzg",
       categoryName: "Article",
       tagNames: ["remix", "roles", "permissions", "javascript"],
+      published: true,
+    },
+    {
+      slug: "creating-a-crm-from-scratch-using-the-entity-builder",
+      title: "Creating a CRM from scratch using SaasRock’s Entity Builder",
+      description: "I’ll write about the steps I take as I’m creating my own CRM for SaasRock’s core.",
+      date: new Date("2022-07-01T16:14:00.000Z"),
+      image: "https://miro.medium.com/max/1400/1*xxQyXe3hArR9bSibbR75fQ.png",
+      readingTime: "5 min",
+      authorSlug: "alexandromtzg",
+      categoryName: "Article",
+      tagNames: ["remix", "crm", "saas", "no-code"],
       published: true,
     },
   ];

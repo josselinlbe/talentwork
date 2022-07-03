@@ -8,7 +8,7 @@ import { EntityWithDetails, getEntityBySlug } from "~/utils/db/entities/entities
 import { getEntityTags } from "~/utils/db/entities/entityTags.db.server";
 import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { verifyUserHasPermission, getEntityPermission } from "~/utils/helpers/PermissionsHelper";
-import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
+import { getEntityFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
 import { getUserInfo } from "~/utils/session.server";
 
 export type LoaderDataRowsView = {
@@ -28,7 +28,7 @@ export let loaderRowsView = async (request: Request, params: Params, entitySlug:
   await verifyUserHasPermission(request, getEntityPermission(entity, "view"), tenantId);
 
   const currentPagination = getPaginationFromCurrentUrl(request);
-  const filters = getFiltersFromCurrentUrl(true, entity, request);
+  const filters = getEntityFiltersFromCurrentUrl(true, entity, request);
   const { items, pagination } = await getRowsWithPagination(
     entity.id,
     tenantId,

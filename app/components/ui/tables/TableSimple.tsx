@@ -10,7 +10,13 @@ import TablePagination from "./TablePagination";
 interface Props<T> {
   headers: RowHeaderDisplayDto<T>[];
   items: T[];
-  actions?: { title: string; onClick?: (idx: number, item: T) => void; onClickRoute?: (idx: number, item: T) => string; disabled?: boolean }[];
+  actions?: {
+    title: string;
+    onClick?: (idx: number, item: T) => void;
+    onClickRoute?: (idx: number, item: T) => string;
+    disabled?: boolean;
+    destructive?: boolean;
+  }[];
   updatesUrl?: boolean;
   pagination?: PaginationDto;
 }
@@ -129,6 +135,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                                   <ButtonTertiary
                                     disabled={action.disabled}
                                     key={t(action.title)}
+                                    destructive={action.destructive}
                                     onClick={() => {
                                       if (action.onClick) {
                                         action.onClick(idxRow, item);

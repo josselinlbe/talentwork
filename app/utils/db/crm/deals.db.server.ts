@@ -1,5 +1,5 @@
 import { Deal, Contact } from "@prisma/client";
-import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { db } from "~/utils/db.server";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
@@ -11,7 +11,7 @@ export type DealWithDetails = Deal & {
   row: RowWithCreatedBy;
 };
 
-export function getAllDeals(filters?: FiltersDto): Promise<DealWithDetails[]> {
+export function getAllDeals(filters?: RowFiltersDto): Promise<DealWithDetails[]> {
   return db.deal.findMany({
     where: {
       OR: [

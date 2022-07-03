@@ -13,15 +13,13 @@ import RoleBadge from "./RoleBadge";
 interface Props {
   items: RoleWithPermissionsAndUsers[];
   className?: string;
-  canCreate: boolean;
   canUpdate: boolean;
   tenantId?: string | null;
 }
 
-export default function RolesTable({ items, className, canCreate, canUpdate = true, tenantId = null }: Props) {
+export default function RolesTable({ items, canUpdate = true, tenantId = null }: Props) {
   const { t } = useTranslation();
 
-  const [searchInput, setSearchInput] = useState("");
   const [actions, setActions] = useState<any[]>([]);
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<RoleWithPermissionsAndUsers>[]>([]);
 
@@ -97,28 +95,9 @@ export default function RolesTable({ items, className, canCreate, canUpdate = tr
     }
   }, [permissionsModalOpen]);
 
-  const filteredItems = () => {
-    if (!items) {
-      return [];
-    }
-    return items.filter(
-      (f) =>
-        f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.description?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.permissions.find((f) => f.permission.name.toUpperCase().includes(searchInput.toUpperCase())) ||
-        f.users.find(
-          (f) =>
-            f.user.email.toUpperCase().includes(searchInput.toUpperCase()) ||
-            f.user.firstName.toUpperCase().includes(searchInput.toUpperCase()) ||
-            f.user.lastName.toUpperCase().includes(searchInput.toUpperCase())
-        )
-    );
-  };
-
   return (
-    <div className="space-y-2">
-      <InputSearch value={searchInput} setValue={setSearchInput} onNewRoute={canCreate ? "new" : undefined} />
-      <TableSimple actions={actions} headers={headers} items={filteredItems()} />
+    <div>
+      <TableSimple actions={actions} headers={headers} items={items} />
 
       <Modal open={permissionsModalOpen} setOpen={setPermissionsModalOpen}>
         <div className="flex items-baseline justify-between space-x-2">

@@ -1,5 +1,6 @@
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import { SubscriptionPriceType } from "~/application/enums/subscriptions/SubscriptionPriceType";
+import { DefaultFeatures } from "../dtos/shared/DefaultFeatures";
 import { SubscriptionProductDto } from "../dtos/subscriptions/SubscriptionProductDto";
 import { PricingModel } from "../enums/subscriptions/PricingModel";
 import { SubscriptionFeatureLimitType } from "../enums/subscriptions/SubscriptionFeatureLimitType";
@@ -39,7 +40,7 @@ const plans: SubscriptionProductDto[] = [
       {
         order: 1,
         title: "2 users",
-        name: "user",
+        name: DefaultFeatures.Users,
         value: 2,
         type: SubscriptionFeatureLimitType.MAX,
       },
@@ -52,8 +53,15 @@ const plans: SubscriptionProductDto[] = [
       },
       {
         order: 3,
+        title: "API calls",
+        name: DefaultFeatures.API,
+        value: 0,
+        type: SubscriptionFeatureLimitType.NOT_INCLUDED,
+      },
+      {
+        order: 4,
         title: "Priority support",
-        name: "priority-support",
+        name: DefaultFeatures.PrioritySupport,
         value: 0,
         type: SubscriptionFeatureLimitType.NOT_INCLUDED,
       },
@@ -94,7 +102,7 @@ const plans: SubscriptionProductDto[] = [
       {
         order: 1,
         title: "5 users",
-        name: "user",
+        name: DefaultFeatures.Users,
         value: 5,
         type: SubscriptionFeatureLimitType.MAX,
       },
@@ -107,8 +115,15 @@ const plans: SubscriptionProductDto[] = [
       },
       {
         order: 3,
+        title: "100 API calls/month",
+        name: DefaultFeatures.API,
+        value: 100,
+        type: SubscriptionFeatureLimitType.MONTHLY,
+      },
+      {
+        order: 4,
         title: "Priority support",
-        name: "priority-support",
+        name: DefaultFeatures.PrioritySupport,
         value: 0,
         type: SubscriptionFeatureLimitType.NOT_INCLUDED,
       },
@@ -149,7 +164,7 @@ const plans: SubscriptionProductDto[] = [
       {
         order: 1,
         title: "12 users",
-        name: "user",
+        name: DefaultFeatures.Users,
         value: 12,
         type: SubscriptionFeatureLimitType.MAX,
       },
@@ -162,8 +177,15 @@ const plans: SubscriptionProductDto[] = [
       },
       {
         order: 3,
+        title: "Unlimited API calls",
+        name: DefaultFeatures.API,
+        value: 0,
+        type: SubscriptionFeatureLimitType.UNLIMITED,
+      },
+      {
+        order: 4,
         title: "Priority support",
-        name: "priority-support",
+        name: DefaultFeatures.PrioritySupport,
         value: 0,
         type: SubscriptionFeatureLimitType.INCLUDED,
       },

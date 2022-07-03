@@ -10,6 +10,7 @@ import { getTenantUrl } from "~/utils/services/urlService";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { DefaultFeatures } from "~/application/dtos/shared/DefaultFeatures";
 
 export type NewMemberLoaderData = {
   title: string;
@@ -20,7 +21,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
   await verifyUserHasPermission(request, "app.settings.members.create", tenantUrl.tenantId);
-  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, "user");
+  const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, DefaultFeatures.Users);
   const data: NewMemberLoaderData = {
     title: `${t("settings.members.actions.new")} | ${process.env.APP_NAME}`,
     featurePlanUsage,

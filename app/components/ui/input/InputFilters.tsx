@@ -193,7 +193,7 @@ export default function InputFilters({ filters, withSearch = true }: Props) {
                   <div className="px-2 py-2 divide-y divide-gray-300">
                     <InputCheckboxInline
                       name={filter.name}
-                      title={filter.title}
+                      title={t(filter.title)}
                       value={filter.selected}
                       setValue={(e) => {
                         updateItemByIdx(items, setItems, idx, {
@@ -208,7 +208,7 @@ export default function InputFilters({ filters, withSearch = true }: Props) {
                         <div className="flex items-center space-x-2">
                           <InputSelector
                             name={filter.name}
-                            title="Tags"
+                            title={t("models.tag.plural")}
                             options={filter.options}
                             value={filter.value}
                             withLabel={false}

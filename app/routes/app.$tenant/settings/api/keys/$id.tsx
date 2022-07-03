@@ -4,7 +4,8 @@ import OpenModal from "~/components/ui/modals/OpenModal";
 import { i18nHelper } from "~/locale/i18n.utils";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { useAppData } from "~/utils/data/useAppData";
-import { ApiKeyWithDetails, deleteApiKey, getApiKeyById, updateApiKey } from "~/utils/db/apiKeys.db.server";
+import { ApiKeyWithDetails, deleteApiKey, getApiKeyById, getApiKeys, updateApiKey } from "~/utils/db/apiKeys.db.server";
+import { createLog } from "~/utils/db/logs.db.server";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { getTenantUrl } from "~/utils/services/urlService";
 
@@ -42,19 +43,33 @@ export const action: ActionFunction = async ({ request, params }) => {
       .map((f: FormDataEntryValue) => {
         return JSON.parse(f.toString());
       });
+    let expirationDate: Date | null = null;
+    let expires = form.get("expires")?.toString();
+    if (expires) {
+      expirationDate = new Date(expires);
+    }
+    const alias = form.get("alias")?.toString() ?? "";
+    const existingAlias = await getApiKeys(existing.tenantId);
+    if (existingAlias.filter((f) => f.id !== existing.id && f.alias === alias).length > 0) {
+      return badRequest({ error: "API key with this alias already exists: " + alias });
+    }
+    const active = Boolean(form.get("active"));
     await updateApiKey(
       params.id ?? "",
       {
-        alias: form.get("alias")?.toString() ?? "",
-        expires: new Date(form.get("expires")?.toString() ?? ""),
-        active: Boolean(form.get("active")),
+        tenantId: tenantUrl.tenantId,
+        alias,
+        expires: expirationDate,
+        active,
       },
       entities
     );
+    await createLog(request, tenantUrl, "API Key Updated", JSON.stringify({ tenantId: tenantUrl.tenantId, alias, expirationDate, active, entities }));
     return redirect(UrlUtils.currentTenantUrl(params, "settings/api/keys"));
   } else if (action === "delete") {
     await verifyUserHasPermission(request, "app.settings.apiKeys.delete", tenantUrl.tenantId);
     await deleteApiKey(params.id ?? "");
+    await createLog(request, tenantUrl, "API Key Deleted", "");
     return redirect(UrlUtils.currentTenantUrl(params, "settings/api/keys"));
   } else {
     return badRequest({ error: t("shared.invalidForm") });

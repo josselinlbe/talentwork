@@ -4,11 +4,9 @@ import { useTranslation } from "react-i18next";
 import FormGroup from "~/components/ui/forms/FormGroup";
 import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 import InputDate from "~/components/ui/input/InputDate";
-import InputNumber from "~/components/ui/input/InputNumber";
 import InputSelect from "~/components/ui/input/InputSelect";
 import InputText, { RefInputText } from "~/components/ui/input/InputText";
 import { ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
-import DateUtils from "~/utils/shared/DateUtils";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
 interface Props {
@@ -23,24 +21,26 @@ export default function ApiKeyForm({ entities, item, tenants, canUpdate = true, 
 
   const inputName = useRef<RefInputText>(null);
 
+  const [tenantId, setTenantId] = useState<string | number | undefined>(item?.tenantId ?? "");
   const [alias, setAlias] = useState(item?.alias ?? "");
-  const [expires, setExpires] = useState<Date | undefined>(item?.expires ?? DateUtils.daysFromDate(new Date(), 30));
+  const [expires, setExpires] = useState<Date | undefined>(item?.expires ?? undefined);
   const [active, setActive] = useState(item?.active ?? true);
-  const [max, setMax] = useState(item?.max ?? 100);
   const [permissions, setPermissions] = useState<{ entityId: string; create: boolean; read: boolean; update: boolean; delete: boolean }[]>([]);
 
   useEffect(() => {
     const permissions: { entityId: string; create: boolean; read: boolean; update: boolean; delete: boolean }[] = [];
-    entities.forEach((entity) => {
-      const existing = item?.entities.find((f) => f.entityId === entity.id);
-      permissions.push({
-        entityId: entity.id,
-        create: existing?.create ?? true,
-        read: existing?.read ?? true,
-        update: existing?.update ?? true,
-        delete: existing?.delete ?? true,
+    entities
+      .filter((f) => !f.isDefault)
+      .forEach((entity) => {
+        const existing = item?.entities.find((f) => f.entityId === entity.id);
+        permissions.push({
+          entityId: entity.id,
+          create: existing?.create ?? true,
+          read: existing?.read ?? true,
+          update: existing?.update ?? true,
+          delete: existing?.delete ?? true,
+        });
       });
-    });
     setPermissions(permissions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -62,6 +62,8 @@ export default function ApiKeyForm({ entities, item, tenants, canUpdate = true, 
               className="col-span-6"
               name="tenant-id"
               title={t("models.tenant.object")}
+              value={tenantId}
+              setValue={setTenantId}
               options={
                 tenants?.map((tenant) => {
                   return {
@@ -72,15 +74,6 @@ export default function ApiKeyForm({ entities, item, tenants, canUpdate = true, 
               }
               disabled={tenants === undefined || !canUpdate}
             ></InputSelect>
-            <InputNumber
-              disabled={!canUpdate}
-              className="col-span-6"
-              name="max"
-              title={t("models.apiKey.max")}
-              value={max}
-              setValue={setMax}
-              readOnly={tenants === undefined}
-            />
           </>
         )}
         <InputText
@@ -102,7 +95,15 @@ export default function ApiKeyForm({ entities, item, tenants, canUpdate = true, 
           title={t("models.apiKey.expires")}
           value={expires}
           onChange={setExpires}
-          required
+          hint={
+            <>
+              {expires && (
+                <button type="button" onClick={() => setExpires(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                  {t("shared.remove")}
+                </button>
+              )}
+            </>
+          }
         />
 
         <div className="flex flex-col col-span-12">
@@ -132,76 +133,78 @@ export default function ApiKeyForm({ entities, item, tenants, canUpdate = true, 
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {entities.map((item, idx) => {
-                      return (
-                        <tr key={idx}>
-                          <input
-                            type="hidden"
-                            name="entities[]"
-                            value={JSON.stringify({
-                              entityId: item.id,
-                              create: permissions.find((f) => f.entityId === item.id)?.create ?? false,
-                              read: permissions.find((f) => f.entityId === item.id)?.read ?? false,
-                              update: permissions.find((f) => f.entityId === item.id)?.update ?? false,
-                              delete: permissions.find((f) => f.entityId === item.id)?.delete ?? false,
-                            })}
-                          />
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">/{item.slug}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                            <InputCheckboxInline
-                              disabled={!canUpdate}
-                              name=""
-                              title=""
-                              value={permissions.find((f) => f.entityId === item.id)?.create ?? false}
-                              setValue={(e) =>
-                                updateItemByIdx(permissions, setPermissions, idx, {
-                                  create: e,
-                                })
-                              }
+                    {entities
+                      .filter((f) => !f.isDefault)
+                      .map((item, idx) => {
+                        return (
+                          <tr key={idx}>
+                            <input
+                              type="hidden"
+                              name="entities[]"
+                              value={JSON.stringify({
+                                entityId: item.id,
+                                create: permissions.find((f) => f.entityId === item.id)?.create ?? false,
+                                read: permissions.find((f) => f.entityId === item.id)?.read ?? false,
+                                update: permissions.find((f) => f.entityId === item.id)?.update ?? false,
+                                delete: permissions.find((f) => f.entityId === item.id)?.delete ?? false,
+                              })}
                             />
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                            <InputCheckboxInline
-                              disabled={!canUpdate}
-                              name=""
-                              title=""
-                              value={permissions.find((f) => f.entityId === item.id)?.read ?? false}
-                              setValue={(e) =>
-                                updateItemByIdx(permissions, setPermissions, idx, {
-                                  read: e,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                            <InputCheckboxInline
-                              disabled={!canUpdate}
-                              name=""
-                              title=""
-                              value={permissions.find((f) => f.entityId === item.id)?.update ?? false}
-                              setValue={(e) =>
-                                updateItemByIdx(permissions, setPermissions, idx, {
-                                  update: e,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                            <InputCheckboxInline
-                              disabled={!canUpdate}
-                              name=""
-                              title=""
-                              value={permissions.find((f) => f.entityId === item.id)?.delete ?? false}
-                              setValue={(e) =>
-                                updateItemByIdx(permissions, setPermissions, idx, {
-                                  delete: e,
-                                })
-                              }
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })}
+                            <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">/{item.slug}</td>
+                            <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                              <InputCheckboxInline
+                                disabled={!canUpdate}
+                                name=""
+                                title=""
+                                value={permissions.find((f) => f.entityId === item.id)?.create ?? false}
+                                setValue={(e) =>
+                                  updateItemByIdx(permissions, setPermissions, idx, {
+                                    create: e,
+                                  })
+                                }
+                              />
+                            </td>
+                            <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                              <InputCheckboxInline
+                                disabled={!canUpdate}
+                                name=""
+                                title=""
+                                value={permissions.find((f) => f.entityId === item.id)?.read ?? false}
+                                setValue={(e) =>
+                                  updateItemByIdx(permissions, setPermissions, idx, {
+                                    read: e,
+                                  })
+                                }
+                              />
+                            </td>
+                            <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                              <InputCheckboxInline
+                                disabled={!canUpdate}
+                                name=""
+                                title=""
+                                value={permissions.find((f) => f.entityId === item.id)?.update ?? false}
+                                setValue={(e) =>
+                                  updateItemByIdx(permissions, setPermissions, idx, {
+                                    update: e,
+                                  })
+                                }
+                              />
+                            </td>
+                            <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                              <InputCheckboxInline
+                                disabled={!canUpdate}
+                                name=""
+                                title=""
+                                value={permissions.find((f) => f.entityId === item.id)?.delete ?? false}
+                                setValue={(e) =>
+                                  updateItemByIdx(permissions, setPermissions, idx, {
+                                    delete: e,
+                                  })
+                                }
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
