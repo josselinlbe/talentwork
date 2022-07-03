@@ -62,7 +62,7 @@ export default function EditEntityIndexRoute() {
   const actionData = useActionData<ActionData>();
   return (
     <>
-      <PropertiesList entity={data.entity} items={actionData?.properties ?? data.properties} />
+      {(actionData?.properties ?? data.properties) && <PropertiesList entity={data.entity} items={actionData?.properties ?? data.properties} />}
       <Outlet />
     </>
   );

@@ -65,7 +65,7 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
       </label>
       <div className="mt-1">
         {/* <UploadDocuments onDropped={onDroppedFile} /> */}
-        {!readOnly && <UploadDocuments disabled={disabled} multiple={true} onDroppedFiles={onDroppedFiles} />}
+        {!readOnly && <UploadDocuments name={property.name} disabled={disabled} multiple={true} onDroppedFiles={onDroppedFiles} />}
 
         {items.map((item, idx) => {
           return <input key={idx} type="hidden" name={property.name + `[]`} value={JSON.stringify(item)} />;

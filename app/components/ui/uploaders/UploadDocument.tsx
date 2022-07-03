@@ -4,6 +4,7 @@ import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import { useTranslation } from "react-i18next";
 
 interface Props {
+  name?: string;
   title?: string;
   accept?: string;
   multiple?: boolean;
@@ -15,7 +16,18 @@ interface Props {
   onDroppedFiles?: (fileBase64: FileBase64[], files: any[]) => void;
 }
 
-export default function UploadDocuments({ className, title = "", accept, multiple, description, icon = "", disabled, onDropped, onDroppedFiles }: Props) {
+export default function UploadDocuments({
+  name = "uploadmyfile",
+  className,
+  title = "",
+  accept,
+  multiple,
+  description,
+  icon = "",
+  disabled,
+  onDropped,
+  onDroppedFiles,
+}: Props) {
   const { t } = useTranslation();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -82,7 +94,7 @@ export default function UploadDocuments({ className, title = "", accept, multipl
     setIsDragging(false);
   }
   function requestUploadFile() {
-    const src = document.querySelector("#uploadmyfile");
+    const src = document.querySelector("#" + name);
     drop({ dataTransfer: src });
   }
   function getBase64(file: File): Promise<string> {
@@ -122,19 +134,27 @@ export default function UploadDocuments({ className, title = "", accept, multipl
                   {icon}
                   <div className="flex text-sm text-gray-600">
                     <label
-                      htmlFor="uploadmyfile"
+                      htmlFor={name}
                       className={clsx(
                         "relative cursor-pointer rounded-md font-medium text-theme-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-theme-500",
                         !disabled && "hover:text-theme-500"
                       )}
                     >
                       <span></span>
-                      <label htmlFor="uploadmyfile">
+                      <label htmlFor={name}>
                         <p className={clsx("font-semibold text-sm underline", !disabled ? "hover:text-theme-500 cursor-pointer" : "cursor-not-allowed")}>
                           {t("app.shared.buttons.uploadDocument")}
                         </p>
                       </label>
-                      <input disabled={disabled} type="file" id="uploadmyfile" accept={accept} multiple={multiple} onChange={requestUploadFile} />
+                      <input
+                        className="uploadmyfile"
+                        disabled={disabled}
+                        type="file"
+                        id={name}
+                        accept={accept}
+                        multiple={multiple}
+                        onChange={requestUploadFile}
+                      />
                     </label>
                     <p className="pl-1 lowercase">
                       {t("shared.or")} {t("shared.dragAndDrop")}

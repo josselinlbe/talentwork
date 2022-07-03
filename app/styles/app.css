@@ -5235,7 +5235,7 @@ select {
   transition: background-color 0.2s ease-in-out;
 }
 
-#uploadmyfile {
+.uploadmyfile {
   display: none;
 }
 

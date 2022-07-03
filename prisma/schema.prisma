@@ -1,12 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -23,32 +20,32 @@ model User {
   defaultTenantId            String?
   verifyToken                String?
   admin                      AdminUser?
-  tenants                    TenantUser[]
-  invitation                 TenantUserInvitation?
-  logs                       Log[]
-  contracts                  ContractMember[]
-  createdContractActivites   ContractActivity[]
-  createdLinkedAccounts      LinkedAccount[]
-  createdRows                Row[]
   createdApiKeys             ApiKey[]
+  contacts                   Contact[]
+  createdContractActivites   ContractActivity[]
+  contracts                  ContractMember[]
+  workflowSteps              EntityWorkflowStepAssignee[]
   createdGroups              Group[]
+  groups                     GroupUser[]
+  createdLinkedAccounts      LinkedAccount[]
+  logs                       Log[]
+  createdRows                Row[]
   createdRowComments         RowComment[]
   createdRowCommentReactions RowCommentReaction[]
-  createdRowTasks            RowTask[]                    @relation(name: "createdByUser")
-  roles                      UserRole[]
-  groups                     GroupUser[]
   rowPermissions             RowPermission[]
-  contacts                   Contact[]
-  assignedTasks              RowTask[]                    @relation(name: "assignedToUser")
-  completedTasks             RowTask[]                    @relation(name: "completedByUser")
-  workflowSteps              EntityWorkflowStepAssignee[]
+  assignedTasks              RowTask[]                    @relation("assignedToUser")
+  completedTasks             RowTask[]                    @relation("completedByUser")
+  createdRowTasks            RowTask[]                    @relation("createdByUser")
   workflowTransitions        RowWorkflowTransition[]
+  tenants                    TenantUser[]
+  invitation                 TenantUserInvitation?
+  roles                      UserRole[]
 }
 
 model AdminUser {
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   role   Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Tenant {
@@ -59,41 +56,41 @@ model Tenant {
   name                     String
   icon                     String?
   subscriptionId           String?
+  apiKeys                  ApiKey[]
+  workflowSteps            EntityWorkflowStepAssignee[]
+  groups                   Group[]
+  asClientLinkedAccounts   LinkedAccount[]              @relation("clientTenant")
+  createdLinkedAccounts    LinkedAccount[]              @relation("createdByTenant")
+  asProviderLinkedAccounts LinkedAccount[]              @relation("providerTenant")
+  logs                     Log[]
+  rows                     Row[]
+  rowPermissions           RowPermission[]
   subscription             TenantSubscription?
   users                    TenantUser[]
   invitations              TenantUserInvitation[]
-  rows                     Row[]
-  logs                     Log[]
-  apiKeys                  ApiKey[]
-  createdLinkedAccounts    LinkedAccount[]              @relation("createdByTenant")
-  asProviderLinkedAccounts LinkedAccount[]              @relation("providerTenant")
-  asClientLinkedAccounts   LinkedAccount[]              @relation("clientTenant")
   userRoles                UserRole[]
-  groups                   Group[]
-  rowPermissions           RowPermission[]
-  workflowSteps            EntityWorkflowStepAssignee[]
 }
 
 model TenantSubscription {
   tenantId             String             @unique
-  tenant               Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   stripeCustomerId     String?
   stripeSubscriptionId String?
   subscriptionPriceId  String?
-  subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
   quantity             Int?
+  subscriptionPrice    SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id])
+  tenant               Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
 model TenantUser {
   id        String           @id @default(cuid())
   createdAt DateTime         @default(now())
   tenantId  String
-  tenant    Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   userId    String
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   type      Int
   joined    Int
   status    Int
+  tenant    Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   roles     TenantUserRole[]
 }
 
@@ -107,10 +104,10 @@ model Role {
   assignToNewUsers Boolean
   isDefault        Boolean
   order            Int
-  permissions      RolePermission[]
-  users            UserRole[]
-  rowPermissions   RowPermission[]
   workflowSteps    EntityWorkflowStepAssignee[]
+  permissions      RolePermission[]
+  rowPermissions   RowPermission[]
+  users            UserRole[]
 }
 
 model Permission {
@@ -128,20 +125,20 @@ model Permission {
 model RolePermission {
   id           String     @id @default(cuid())
   roleId       String
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permissionId String
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
 }
 
 model UserRole {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   roleId    String
-  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
   tenantId  String?
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
   tenant    Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, roleId, tenantId])
 }
@@ -150,37 +147,36 @@ model Group {
   id              String                       @id @default(cuid())
   createdAt       DateTime                     @default(now())
   createdByUserId String
-  createdByUser   User                         @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   tenantId        String?
-  tenant          Tenant?                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   name            String
   description     String
   color           Int
+  createdByUser   User                         @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenant          Tenant?                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflowSteps   EntityWorkflowStepAssignee[]
   users           GroupUser[]
   rowPermissions  RowPermission[]
-  workflowSteps   EntityWorkflowStepAssignee[]
 }
 
 model GroupUser {
   id      String @id @default(cuid())
   groupId String
-  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   userId  String
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model TenantUserRole {
   id           String     @id @default(cuid())
   tenantUserId String
-  tenantUser   TenantUser @relation(fields: [tenantUserId], references: [id], onDelete: Cascade)
   order        Int
   name         String
+  tenantUser   TenantUser @relation(fields: [tenantUserId], references: [id], onDelete: Cascade)
 }
 
 model TenantUserInvitation {
   id            String  @id @default(cuid())
   tenantId      String
-  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   email         String
   firstName     String
   lastName      String
@@ -188,20 +184,21 @@ model TenantUserInvitation {
   pending       Boolean
   createdUserId String? @unique
   user          User?   @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
 model LinkedAccount {
   id                String   @id @default(cuid())
   createdAt         DateTime @default(now())
   createdByUserId   String
-  createdByUser     User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByTenantId String
-  createdByTenant   Tenant   @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
   providerTenantId  String
-  providerTenant    Tenant   @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
   clientTenantId    String
-  clientTenant      Tenant   @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
   status            Int
+  clientTenant      Tenant   @relation("clientTenant", fields: [clientTenantId], references: [id], onDelete: Cascade)
+  createdByTenant   Tenant   @relation("createdByTenant", fields: [createdByTenantId], references: [id], onDelete: Cascade)
+  createdByUser     User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  providerTenant    Tenant   @relation("providerTenant", fields: [providerTenantId], references: [id], onDelete: Cascade)
   rows              Row[]
 }
 
@@ -209,13 +206,14 @@ model ApiKey {
   id              String         @id @default(cuid())
   createdAt       DateTime       @default(now())
   createdByUserId String
-  createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   tenantId        String
-  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  key             String         @unique @default(uuid())
+  key             String         @default(uuid())
   alias           String
+  max             Int
+  expires         DateTime
   active          Boolean
-  expires         DateTime?
+  createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   entities        ApiKeyEntity[]
   apiKeyLogs      ApiKeyLog[]
   logs            Log[]
@@ -227,32 +225,32 @@ model ApiKey {
 model ApiKeyEntity {
   id       String  @id @default(cuid())
   apiKeyId String
-  apiKey   ApiKey  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
   entityId String
-  entity   Entity  @relation(fields: [entityId], references: [id], onDelete: Cascade)
   create   Boolean
   read     Boolean
   update   Boolean
   delete   Boolean
+  apiKey   ApiKey  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  entity   Entity  @relation(fields: [entityId], references: [id], onDelete: Cascade)
 }
 
 model Log {
   id                   String                 @id @default(cuid())
   createdAt            DateTime               @default(now())
   tenantId             String?
-  tenant               Tenant?                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   userId               String?
-  user                 User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   apiKeyId             String?
-  apiKey               ApiKey?                @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
   rowId                String?
-  row                  Row?                   @relation(fields: [rowId], references: [id])
   url                  String
   action               String
   details              String?
   commentId            String?
-  comment              RowComment?            @relation(fields: [commentId], references: [id])
   workflowTransitionId String?
+  apiKey               ApiKey?                @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  comment              RowComment?            @relation(fields: [commentId], references: [id])
+  row                  Row?                   @relation(fields: [rowId], references: [id])
+  tenant               Tenant?                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user                 User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   workflowTransition   RowWorkflowTransition? @relation(fields: [workflowTransitionId], references: [id])
   webhookLogs          EntityWebhookLog[]
 }
@@ -261,14 +259,13 @@ model ApiKeyLog {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   apiKeyId  String?
-  apiKey    ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
   ip        String
   endpoint  String
   method    String
   params    String
-  // body      String
   status    Int?
   error     String?
+  apiKey    ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
 }
 
 model SubscriptionProduct {
@@ -277,38 +274,38 @@ model SubscriptionProduct {
   order       Int
   title       String
   active      Boolean
-  model       Int // 0 = FLAT_RATE, 1 = PER_SEAT, 2 = USAGE_BASED
+  model       Int
   public      Boolean
   description String?
   badge       String?
-  prices      SubscriptionPrice[]
   features    SubscriptionFeature[]
+  prices      SubscriptionPrice[]
 }
 
 model SubscriptionPrice {
   id                    String               @id @default(cuid())
   subscriptionProductId String
-  subscriptionProduct   SubscriptionProduct  @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   stripeId              String
-  type                  Int // 0 = ONE_TIME, 1 = RECURRING
-  billingPeriod         Int // 3 = MONTHLY, 4 = YEARLY
+  type                  Int
+  billingPeriod         Int
   price                 Int
   currency              String
   trialDays             Int
   active                Boolean
-  tenantSubscriptions   TenantSubscription[]
+  subscriptionProduct   SubscriptionProduct  @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   deals                 Deal[]
+  tenantSubscriptions   TenantSubscription[]
 }
 
 model SubscriptionFeature {
   id                    String              @id @default(cuid())
   subscriptionProductId String
-  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
   order                 Int
   title                 String
   name                  String
-  type                  Int // 0 = NOT_INCLUDED, 1 = INCLUDED, 2 = MONTHLY, 3 = MAX, 4 = UNLIMITED
+  type                  Int
   value                 Int
+  subscriptionProduct   SubscriptionProduct @relation(fields: [subscriptionProductId], references: [id], onDelete: Cascade)
 }
 
 model BlogAuthor {
@@ -341,8 +338,8 @@ model BlogTag {
 model BlogPostTag {
   id     String   @id @default(cuid())
   postId String
-  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   tagId  String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   tag    BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 }
 
@@ -358,8 +355,8 @@ model BlogPost {
   readingTime String
   published   Boolean
   authorId    String
-  author      BlogAuthor    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   categoryId  String
+  author      BlogAuthor    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   category    BlogCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   tags        BlogPostTag[]
 }
@@ -372,8 +369,8 @@ model Entity {
   slug                   String                       @unique
   order                  Int                          @unique
   prefix                 String                       @unique
-  title                  String // i18n key, eg: models.contract.object
-  titlePlural            String //  i18n key, eg: models.contract.plural
+  title                  String
+  titlePlural            String
   isFeature              Boolean
   isAutogenerated        Boolean
   isDefault              Boolean
@@ -385,35 +382,35 @@ model Entity {
   hasComments            Boolean                      @default(true)
   hasTasks               Boolean                      @default(true)
   hasWorkflow            Boolean                      @default(false)
-  properties             Property[]
-  rows                   Row[]
-  permissions            EntityTenantUserPermission[]
   apiKeys                ApiKeyEntity[]
-  webhooks               EntityWebhook[]
   tags                   EntityTag[]
+  permissions            EntityTenantUserPermission[]
+  webhooks               EntityWebhook[]
   workflowStates         EntityWorkflowState[]
   workflowSteps          EntityWorkflowStep[]
+  properties             Property[]
+  rows                   Row[]
 }
 
 model Property {
   id         String           @id @default(cuid())
   entityId   String
-  entity     Entity           @relation(fields: [entityId], references: [id], onDelete: Cascade)
   order      Int
   name       String
   title      String
   type       Int
   formula    String?
   parentId   String?
-  parent     Property?        @relation(name: "parentProperty", fields: [parentId], references: [id], onDelete: Cascade)
   isDynamic  Boolean
   isDefault  Boolean
   isRequired Boolean
   isHidden   Boolean
   isDetail   Boolean
   pattern    String?
+  entity     Entity           @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  parent     Property?        @relation("parentProperty", fields: [parentId], references: [id], onDelete: Cascade)
+  children   Property[]       @relation("parentProperty")
   options    PropertyOption[]
-  children   Property[]       @relation(name: "parentProperty")
   values     RowValue[]
 
   @@unique([entityId, order])
@@ -424,55 +421,54 @@ model Property {
 model PropertyOption {
   id         String           @id @default(cuid())
   propertyId String
-  property   Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   parentId   String?
-  parent     PropertyOption?  @relation(name: "parentOption", fields: [parentId], references: [id], onDelete: Cascade)
   order      Int
   value      String
   color      Int              @default(0)
-  options    PropertyOption[] @relation(name: "parentOption")
+  parent     PropertyOption?  @relation("parentOption", fields: [parentId], references: [id], onDelete: Cascade)
+  property   Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  options    PropertyOption[] @relation("parentOption")
 }
 
 model EntityTag {
   id       String   @id @default(cuid())
   entityId String
-  entity   Entity   @relation(fields: [entityId], references: [id], onDelete: Cascade)
   value    String
   color    Int
+  entity   Entity   @relation(fields: [entityId], references: [id], onDelete: Cascade)
   rowTags  RowTag[]
 }
 
 model EntityTenantUserPermission {
   id       String @id @default(cuid())
   entityId String
+  level    Int
   entity   Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  level    Int // 0 = Read, 1 = +Create, 2 = +Update, 3 = Delete
 }
 
 model EntityWebhook {
   id       String             @id @default(cuid())
   entityId String
-  entity   Entity             @relation(fields: [entityId], references: [id], onDelete: Cascade)
   action   String
   method   String
   endpoint String
+  entity   Entity             @relation(fields: [entityId], references: [id], onDelete: Cascade)
   logs     EntityWebhookLog[]
 }
 
 model EntityWebhookLog {
   id        String        @id @default(cuid())
   webhookId String
-  webhook   EntityWebhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
   logId     String
-  log       Log           @relation(fields: [logId], references: [id], onDelete: Cascade)
   status    Int
   error     String?
+  log       Log           @relation(fields: [logId], references: [id], onDelete: Cascade)
+  webhook   EntityWebhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
 }
 
 model EntityWorkflowState {
   id           String               @id @default(cuid())
   entityId     String
-  entity       Entity               @relation(fields: [entityId], references: [id], onDelete: Cascade)
   order        Int
   name         String
   title        String
@@ -481,21 +477,22 @@ model EntityWorkflowState {
   canDelete    Boolean
   emailSubject String
   emailBody    String
-  fromStates   EntityWorkflowStep[] @relation(name: "fromState")
-  toStates     EntityWorkflowStep[] @relation(name: "toState")
+  entity       Entity               @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  fromStates   EntityWorkflowStep[] @relation("fromState")
+  toStates     EntityWorkflowStep[] @relation("toState")
   rows         Row[]
 }
 
 model EntityWorkflowStep {
   id          String                       @id @default(cuid())
   entityId    String
-  entity      Entity                       @relation(fields: [entityId], references: [id], onDelete: Cascade)
   action      String
   fromStateId String
-  fromState   EntityWorkflowState          @relation(name: "fromState", fields: [fromStateId], references: [id], onDelete: Cascade)
   toStateId   String
-  toState     EntityWorkflowState          @relation(name: "toState", fields: [toStateId], references: [id], onDelete: Cascade)
-  assignTo    String                       @default("private") // Visibility
+  assignTo    String                       @default("private")
+  entity      Entity                       @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  fromState   EntityWorkflowState          @relation("fromState", fields: [fromStateId], references: [id], onDelete: Cascade)
+  toState     EntityWorkflowState          @relation("toState", fields: [toStateId], references: [id], onDelete: Cascade)
   assignees   EntityWorkflowStepAssignee[]
   transitions RowWorkflowTransition[]
 }
@@ -503,109 +500,103 @@ model EntityWorkflowStep {
 model EntityWorkflowStepAssignee {
   id       String             @id @default(cuid())
   stepId   String
-  step     EntityWorkflowStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
   tenantId String?
-  tenant   Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   roleId   String?
-  role     Role?              @relation(fields: [roleId], references: [id], onDelete: Cascade)
   groupId  String?
-  group    Group?             @relation(fields: [groupId], references: [id], onDelete: Cascade)
   userId   String?
+  group    Group?             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  role     Role?              @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  step     EntityWorkflowStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  tenant   Tenant?            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   user     User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Row {
-  id                String          @id @default(cuid())
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  id                String                  @id @default(cuid())
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
   entityId          String
-  entity            Entity          @relation(fields: [entityId], references: [id], onDelete: Cascade)
   tenantId          String?
-  tenant            Tenant?         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   folio             Int
   createdByUserId   String?
-  createdByUser     User?           @relation(fields: [createdByUserId], references: [id])
   createdByApiKeyId String?
-  createdByApiKey   ApiKey?         @relation(fields: [createdByApiKeyId], references: [id])
   linkedAccountId   String?
-  linkedAccount     LinkedAccount?  @relation(fields: [linkedAccountId], references: [id])
-  logs              Log[]
-  values            RowValue[]
-  relatedRows       RowValue[]      @relation(name: "relatedRow")
-  permissions       RowPermission[]
-  visibility        String          @default("private") // Visibility
-  canComment        Boolean         @default(true)
-  canUpdate         Boolean         @default(true)
-  canDelete         Boolean         @default(true)
-
-  workflowStateId String?
-  workflowState   EntityWorkflowState?    @relation(fields: [workflowStateId], references: [id], onDelete: Cascade)
-  transitions     RowWorkflowTransition[]
-
-  parentRowId String?
-  parentRow   Row?         @relation(name: "parentRowId", fields: [parentRowId], references: [id], onDelete: Cascade)
-  details     Row[]        @relation(name: "parentRowId")
-  tags        RowTag[]
-  comments    RowComment[]
-  tasks       RowTask[]
-
-  // Admin Entities
-  contactId String?
-  contact   Contact?
-  dealId    String?
-  deal      Deal?
-
-  // Demo Entities
+  visibility        String                  @default("private")
+  canComment        Boolean                 @default(true)
+  canUpdate         Boolean                 @default(true)
+  canDelete         Boolean                 @default(true)
+  workflowStateId   String?
+  parentRowId       String?
+  contactId         String?
+  dealId            String?
   contractId        String?
+  createdByApiKey   ApiKey?                 @relation(fields: [createdByApiKeyId], references: [id], onDelete: Cascade)
+  createdByUser     User?                   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  entity            Entity                  @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  linkedAccount     LinkedAccount?          @relation(fields: [linkedAccountId], references: [id], onDelete: Cascade)
+  parentRow         Row?                    @relation("parentRowId", fields: [parentRowId], references: [id], onDelete: Cascade)
+  tenant            Tenant?                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflowState     EntityWorkflowState?    @relation(fields: [workflowStateId], references: [id], onDelete: Cascade)
+  contact           Contact?
   contract          Contract?
   contractEmployees ContractEmployee[]
+  deal              Deal?
+  logs              Log[]
+  details           Row[]                   @relation("parentRowId")
+  comments          RowComment[]
+  permissions       RowPermission[]
+  tags              RowTag[]
+  tasks             RowTask[]
+  relatedRows       RowValue[]              @relation("relatedRow")
+  values            RowValue[]
+  transitions       RowWorkflowTransition[]
 }
 
 model RowValue {
   id           String     @id @default(cuid())
   rowId        String
-  row          Row        @relation(fields: [rowId], references: [id], onDelete: Cascade)
   propertyId   String
-  property     Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   relatedRowId String?
-  relatedRow   Row?       @relation(name: "relatedRow", fields: [relatedRowId], references: [id], onDelete: Cascade)
   idValue      String?
   textValue    String?
   numberValue  Decimal?
   dateValue    DateTime?
   booleanValue Boolean?
+  property     Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  relatedRow   Row?       @relation("relatedRow", fields: [relatedRowId], references: [id], onDelete: Cascade)
+  row          Row        @relation(fields: [rowId], references: [id], onDelete: Cascade)
   media        RowMedia[]
 }
 
 model RowPermission {
   id       String  @id @default(cuid())
   rowId    String
-  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
   tenantId String?
-  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   roleId   String?
-  role     Role?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
   groupId  String?
-  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   userId   String?
+  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  role     Role?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  row      Row     @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   user     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model RowMedia {
   id         String   @id @default(cuid())
   rowValueId String
-  rowValue   RowValue @relation(fields: [rowValueId], references: [id], onDelete: Cascade)
   title      String
   name       String
   file       String
   type       String
+  rowValue   RowValue @relation(fields: [rowValueId], references: [id], onDelete: Cascade)
 }
 
 model RowTag {
   id    String    @id @default(cuid())
   rowId String
-  row   Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
   tagId String
+  row   Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
   tag   EntityTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
 }
 
@@ -613,14 +604,11 @@ model RowComment {
   id              String               @id @default(cuid())
   createdAt       DateTime             @default(now())
   createdByUserId String
-  createdByUser   User                 @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   rowId           String
-  row             Row                  @relation(fields: [rowId], references: [id], onDelete: Cascade)
   value           String
   isDeleted       Boolean?
-  // parentCommentId String?
-  // parentComment   RowComment?  @relation(name: "replies", fields: [parentCommentId], references: [id], onDelete: Cascade)
-  // replies         RowComment[] @relation(name: "replies")
+  createdByUser   User                 @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  row             Row                  @relation(fields: [rowId], references: [id], onDelete: Cascade)
   logs            Log[]
   reactions       RowCommentReaction[]
 }
@@ -629,38 +617,38 @@ model RowCommentReaction {
   id              String     @id @default(cuid())
   createdAt       DateTime   @default(now())
   createdByUserId String
-  createdByUser   User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   rowCommentId    String
-  rowComment      RowComment @relation(fields: [rowCommentId], references: [id], onDelete: Cascade)
   reaction        String
+  createdByUser   User       @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  rowComment      RowComment @relation(fields: [rowCommentId], references: [id], onDelete: Cascade)
 }
 
 model RowTask {
   id                String    @id @default(cuid())
   createdAt         DateTime  @default(now())
   createdByUserId   String
-  createdByUser     User      @relation(name: "createdByUser", fields: [createdByUserId], references: [id], onDelete: Cascade)
   rowId             String
-  row               Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
   title             String
   description       String
   completed         Boolean
   completedAt       DateTime?
   completedByUserId String?
-  completedByUser   User?     @relation(name: "completedByUser", fields: [completedByUserId], references: [id], onDelete: Cascade)
   assignedToUserId  String?
-  assignedToUser    User?     @relation(name: "assignedToUser", fields: [assignedToUserId], references: [id], onDelete: Cascade)
   deadline          DateTime?
+  assignedToUser    User?     @relation("assignedToUser", fields: [assignedToUserId], references: [id], onDelete: Cascade)
+  completedByUser   User?     @relation("completedByUser", fields: [completedByUserId], references: [id], onDelete: Cascade)
+  createdByUser     User      @relation("createdByUser", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  row               Row       @relation(fields: [rowId], references: [id], onDelete: Cascade)
 }
 
 model RowWorkflowTransition {
   id              String             @id @default(cuid())
   createdAt       DateTime           @default(now())
   createdByUserId String
-  createdByUser   User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   rowId           String
-  row             Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   workflowStepId  String
+  createdByUser   User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  row             Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   workflowStep    EntityWorkflowStep @relation(fields: [workflowStepId], references: [id], onDelete: Cascade)
   logs            Log[]
 }
@@ -668,7 +656,7 @@ model RowWorkflowTransition {
 model Email {
   id          String            @id @default(cuid())
   messageId   String            @unique
-  type        String // inbound, outbound
+  type        String
   date        DateTime
   subject     String
   fromEmail   String
@@ -677,26 +665,26 @@ model Email {
   toName      String?
   textBody    String
   htmlBody    String
-  cc          EmailCc[]
   attachments EmailAttachment[]
+  cc          EmailCc[]
 }
 
 model EmailCc {
   id      String  @id @default(cuid())
   emailId String
-  email   Email   @relation(fields: [emailId], references: [id], onDelete: Cascade)
   toEmail String
   toName  String?
+  email   Email   @relation(fields: [emailId], references: [id], onDelete: Cascade)
 }
 
 model EmailAttachment {
   id      String @id @default(cuid())
   emailId String
-  email   Email  @relation(fields: [emailId], references: [id], onDelete: Cascade)
   name    String
   content String
   type    String
   length  Int
+  email   Email  @relation(fields: [emailId], references: [id], onDelete: Cascade)
 }
 
 model Contact {
@@ -704,9 +692,7 @@ model Contact {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   rowId     String   @unique
-  row       Row      @relation(fields: [rowId], references: [id], onDelete: Cascade)
   ownerId   String?
-  owner     User?    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   status    String
   email     String
   firstName String
@@ -714,6 +700,8 @@ model Contact {
   phone     String?
   company   String?
   title     String?
+  owner     User?    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  row       Row      @relation(fields: [rowId], references: [id], onDelete: Cascade)
   deals     Deal[]
 }
 
@@ -722,45 +710,43 @@ model Deal {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
   rowId               String             @unique
-  row                 Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   contactId           String
-  contact             Contact            @relation(fields: [contactId], references: [id], onDelete: Cascade)
   name                String
   value               Decimal
   subscriptionPriceId String?
+  contact             Contact            @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  row                 Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   subscriptionPrice   SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id], onDelete: Cascade)
 }
-
-// Demo Models
 
 model Contract {
   id          String             @id @default(cuid())
   rowId       String             @unique
-  row         Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   name        String
   description String
   file        String
   status      Int
-  members     ContractMember[]
+  row         Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   activity    ContractActivity[]
   employees   ContractEmployee[]
+  members     ContractMember[]
 }
 
 model ContractMember {
   id         String    @id @default(cuid())
   contractId String
-  contract   Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
   role       Int
   userId     String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   signDate   DateTime?
+  contract   Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ContractEmployee {
   id         String   @id @default(cuid())
   contractId String
-  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
   rowId      String
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
   row        Row      @relation(fields: [rowId], references: [id], onDelete: Cascade)
 }
 
@@ -768,8 +754,8 @@ model ContractActivity {
   id              String   @id @default(cuid())
   createdAt       DateTime @default(now())
   createdByUserId String
-  createdByUser   User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   contractId      String
-  contract        Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
   type            Int
+  contract        Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  createdByUser   User     @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
 }
