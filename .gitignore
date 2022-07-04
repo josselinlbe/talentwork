@@ -8,6 +8,8 @@ node_modules
 /build/
 /public/build
 /api/index.js
+/api/index.js.map
+/app/styles/app.css
 
 # Supabase
 **/supabase/.branches
@@ -19,5 +21,3 @@ prisma/dev.db
 .env.production
 
 .idea
-api/index.js.map
-app/styles/app.css
