@@ -36,7 +36,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
   ];
   const filters = getFiltersFromCurrentUrl(request, filterableProperties);
-  const items = await adminGetAllTenantsWithUsage(filters);
+  const items = (await adminGetAllTenantsWithUsage(filters)).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
 
   const data: LoaderData = {
     title: `${t("models.tenant.plural")} | ${process.env.APP_NAME}`,

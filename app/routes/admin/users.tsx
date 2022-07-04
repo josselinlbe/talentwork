@@ -41,7 +41,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
   ];
   const filters = getFiltersFromCurrentUrl(request, filterableProperties);
-  const items = await adminGetAllUsers(filters);
+  const items = (await adminGetAllUsers(filters)).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
 
   const data: LoaderData = {
     title: `${t("models.user.plural")} | ${process.env.APP_NAME}`,
