@@ -5,9 +5,9 @@ import { db } from "../db.server";
 import { createPostmarkTemplate, deletePostmarkTemplate, getPostmarkTemplates } from "../email.server";
 
 export async function getEmailTemplates(): Promise<EmailTemplate[]> {
-  let items: EmailTemplate[] = [];
+  const items: EmailTemplate[] = [];
   try {
-    items = await emailTemplates();
+    const items = await emailTemplates();
     const templates = await getPostmarkTemplates();
 
     items.forEach((item) => {
