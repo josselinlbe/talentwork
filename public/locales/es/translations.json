@@ -807,9 +807,9 @@
       "created": "Creado",
       "createAll": "Crear todos",
       "noEmails": "No hay plantillas de correo",
-      "noEmailsDescription": "Configuralas en la carpeta app/application/emails y establece la variable POSTMARK_SERVER_TOKEN.",
+      "noEmailsDescription": "Configuralas en la carpeta public/emails y establece la variable POSTMARK_SERVER_TOKEN.",
       "sendTest": "Enviar prueba",
-      "notSaved": "Estas plantillas de correo no están en la base de datos, están cargados desde: app/application/emails.",
+      "notSaved": "Estas plantillas de correo no están en la base de datos, están cargados desde: public/emails.",
       "generateFromFiles": "Clic aquí para generarlos"
     }
   },

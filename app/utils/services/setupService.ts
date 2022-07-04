@@ -22,7 +22,7 @@ async function getEmailStep(): Promise<SetupItem> {
       .then((items) => {
         resolve({
           title: "Emails",
-          description: "Add your email templates at /app/application/emails and generate them on your Email provider.",
+          description: "Add your email templates at /public/emails and generate them on your Email provider.",
           completed: items.length > 0,
           path: "/admin/setup/emails",
         });
@@ -30,7 +30,7 @@ async function getEmailStep(): Promise<SetupItem> {
       .catch(() => {
         resolve({
           title: "Emails",
-          description: "Add your email templates at /app/application/emails and generate them on your Email provider.",
+          description: "Add your email templates at /public/emails and generate them on your Email provider.",
           completed: false,
           path: "/admin/setup/emails",
         });

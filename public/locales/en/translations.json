@@ -809,9 +809,9 @@
       "created": "Created",
       "createAll": "Create all",
       "noEmails": "No email templates",
-      "noEmailsDescription": "Set them up at app/application/emails folder and set the POSTMARK_SERVER_TOKEN value.",
+      "noEmailsDescription": "Set them up at public/emails folder and set the POSTMARK_SERVER_TOKEN value.",
       "sendTest": "Send test",
-      "notSaved": "These email templates are not saved, they're loaded from: app/application/emails.",
+      "notSaved": "These email templates are not saved, they're loaded from: public/emails.",
       "generateFromFiles": "Click here to create them"
     }
   },
