@@ -5,14 +5,14 @@ import DealsForm from "~/components/core/crm/DealsForm";
 import InputGroup from "~/components/ui/forms/InputGroup";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { actionRowEdit } from "~/modules/rows/actions/row-edit";
-import { loaderRowEdit } from "~/modules/rows/loaders/row-edit";
+import { LoaderDataRowEdit, loaderRowEdit } from "~/modules/rows/loaders/row-edit";
 import RowEditRoute from "~/modules/rows/routes/RowEditRoute";
 import { ContactWithDetails, getAllContacts } from "~/utils/db/crm/contacts.db.server";
 import { DealWithDetails, deleteDeal, getDealByRowId, updateDeal } from "~/utils/db/crm/deals.db.server";
 import { getSubscriptionPrices, SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
-type LoaderData = {
+type LoaderData = LoaderDataRowEdit & {
   item: DealWithDetails;
   contacts: ContactWithDetails[];
   subscriptionPrices: SubscriptionPriceWithProduct[];
@@ -67,7 +67,13 @@ export default function AdminEditDealRoute() {
     <div>
       <RowEditRoute>
         <InputGroup title={"Details"}>
-          <DealsForm contacts={data.contacts} subscriptionPrices={data.subscriptionPrices} item={data.item} />
+          <DealsForm
+            contacts={data.contacts}
+            subscriptionPrices={data.subscriptionPrices}
+            item={data.item}
+            canUpdate={data.rowPermissions.canUpdate}
+            canDelete={data.rowPermissions.canDelete}
+          />
         </InputGroup>
       </RowEditRoute>
     </div>

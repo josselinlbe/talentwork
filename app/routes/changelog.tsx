@@ -16,6 +16,142 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const changelogItems: ChangelogItem[] = [
     {
+      date: "Jul 03, 2022",
+      releaseTag: "0.3.2",
+      title: "SaasRock v0.3.2 - Row Filters, Tags, Tasks, Comments, Workflows, Kanban Board and API limits",
+      description:
+        "The entity builder just got stronger with a lot of new features for every created Row. Plus a kanban board component and API limits based on the account's subscription.",
+      url: "https://alexandro.dev/saasrock-v0-3-2-row-filters-tags-tasks-comments-and-workflows",
+      added: [
+        {
+          title: "Admin should be able to manually change the plan for all accounts #104",
+        },
+        {
+          title: "Single Sign On #105",
+        },
+        {
+          title: "Missing the currency on the pricing #106",
+        },
+        {
+          title: "Improve Registration/Onboarding #109",
+        },
+        {
+          title: "Limit the users (anti-scraping) #111",
+        },
+        {
+          title: "Affiliate Management #113",
+        },
+        {
+          title: "Deploy with Docker #114",
+        },
+        {
+          title: "Use Supabase API for file storage (RowValueMedia) #115",
+        },
+        {
+          title: "Entities Import & Export CSV #116",
+        },
+      ],
+      closed: [
+        {
+          title: "Entity Row Filters by URL, Tags, Tasks, Comments, and Workflow #119",
+          img: [
+            { title: "Filters", img: "https://user-images.githubusercontent.com/8606530/177080781-969bcbdf-972d-4bc7-9ae0-fa143c900709.png" },
+            {
+              title: "Tags, Tasks, Comments, and Workflow",
+              img: "https://user-images.githubusercontent.com/8606530/177080814-9d22eb29-4cd4-4942-ae41-2821ad2f1ec5.png",
+            },
+          ],
+        },
+        {
+          title: "URL filters for /admin/accounts,users,roles,permissions #118",
+          img: [
+            { title: "Accounts", img: "https://user-images.githubusercontent.com/8606530/177056635-5967f467-fd2b-487e-b2c4-3ea5854f6fd7.png" },
+            { title: "Users", img: "https://user-images.githubusercontent.com/8606530/177056526-b44848ad-8681-4827-a803-99badc3edfc9.png" },
+            { title: "Roles", img: "https://user-images.githubusercontent.com/8606530/177056536-25dc094b-67e6-4726-9005-1d11c3c29f66.png" },
+            { title: "Permissions", img: "https://user-images.githubusercontent.com/8606530/177056545-0098015e-1c18-4f05-a423-66bd206948ec.png" },
+          ],
+        },
+        {
+          title: "Upgrade remix to 1.6 #117",
+        },
+        {
+          title: "No se pueden asignar imágenes a un campo de una entidad si hay varios campos de imágenes #110",
+          img: [
+            { title: "Multiple Media Properties", img: "https://user-images.githubusercontent.com/8606530/177079130-b10eb38e-fa03-4fb0-a6d1-90629cda7dce.png" },
+          ],
+        },
+        {
+          title: "Update Guide #107",
+        },
+        {
+          title: "API Key Limits should have configurable interval #101",
+          img: [
+            {
+              title: "API Key Limits should have configurable interval",
+              img: "https://user-images.githubusercontent.com/8606530/177079642-f6c76113-dab8-4484-9feb-6219b4e0b98f.png",
+            },
+          ],
+        },
+        {
+          title: "Enable no expiration for API Keys #93",
+          img: [
+            {
+              title: "Enable no expiration for API Keys",
+              img: "https://user-images.githubusercontent.com/8606530/177079468-e618e10c-e325-40f6-89d6-a86353eb4732.png",
+            },
+          ],
+        },
+        {
+          title: "Plan Limits for API Keys and Usage #92",
+          img: [
+            {
+              title: "Plan Limits for API Keys and Usage",
+              img: "https://user-images.githubusercontent.com/8606530/177079403-ae152b1b-798f-4a33-a963-d353df944caa.png",
+            },
+          ],
+        },
+        {
+          title: "Entity Details Views: Page (default) and Modal #91",
+          img: [
+            {
+              title: "Entity Details Views: Page (default) and Modal",
+              img: "https://user-images.githubusercontent.com/8606530/177080814-9d22eb29-4cd4-4942-ae41-2821ad2f1ec5.png",
+            },
+          ],
+        },
+        {
+          title: "Entity Form Views: Page (default) and Modal #90",
+          img: [
+            {
+              title: "Entity Form Views: Page (default) and Modal",
+              img: "https://user-images.githubusercontent.com/8606530/177079763-34d763aa-db63-43d9-a4b0-1b401d8a73a4.png",
+            },
+          ],
+        },
+        {
+          title: "Entity List Views: Table and Kanban board (with Pagination?, show/hide columns, default filters…) #89",
+          img: [
+            {
+              title: "Entity List Views: Table and Kanban board",
+              img: "https://user-images.githubusercontent.com/8606530/177079999-769bedd3-e7c1-4d72-b8bf-5d5a75711dfd.png",
+            },
+          ],
+        },
+        {
+          title: "Dashboard → Entity stat #78",
+        },
+        {
+          title: "Add Module: Workflows with Custom Forms and Custom Fields #11",
+          img: [
+            {
+              title: "Workflows",
+              img: "https://user-images.githubusercontent.com/8606530/177080103-c96ef433-c1cb-48eb-ba6f-72f57acfd195.png",
+            },
+          ],
+        },
+      ],
+    },
+    {
       date: "Jun 18, 2022",
       releaseTag: "0.2.7",
       title: "Roles, Permissions, Groups, and Row-level visibility",

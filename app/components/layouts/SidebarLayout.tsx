@@ -82,18 +82,6 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                         <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
                         {/* <BrandLogo className="h-8 mx-auto dark" /> */}
                       </Link>
-                      {/* <InputSelect
-                          className="bg-gray-900 border-gray-700 text-gray-300 rounded-sm"
-                          name="v"
-                          title={""}
-                          withLabel={false}
-                          value={"v0.2.6"}
-                          options={[
-                            { name: "v0.2.6 (current)", value: "v0.2.6" },
-                            { name: "v0.2.0", value: "v0.2.0", disabled: true },
-                            { name: "v0.0.1", value: "v0.0.1", disabled: true },
-                          ]}
-                        ></InputSelect> */}
                     </div>
                     <SidebarMenu layout={layout} onSelected={() => setSidebarOpen(!sidebarOpen)} />
                   </nav>
@@ -168,9 +156,10 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                   name="v"
                   title={""}
                   withLabel={false}
-                  value={"v0.2.6"}
+                  value={"v0.3.2"}
                   options={[
-                    { name: "v0.2.6 (current)", value: "v0.2.6" },
+                    { name: "v0.3.2 (current)", value: "v0.3.2" },
+                    { name: "v0.2.6", value: "v0.2.6" },
                     { name: "v0.2.0", value: "v0.2.0", disabled: true },
                     { name: "v0.0.1", value: "v0.0.1", disabled: true },
                   ]}

@@ -29,7 +29,7 @@ const plans = [
     ],
     ctaButton: "Get early access",
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Core%20Features%20%F0%9F%AA%A8&wanted=true",
-    hint: "Up to 5 developers - Cancel anytime",
+    hint: "Up to 5 developers - 1 project - Cancel anytime ",
   },
   {
     title: "Enterprise Features 🚀",
@@ -51,7 +51,7 @@ const plans = [
     ],
     ctaButton: "Get early access",
     productUrl: "https://alexandromg.gumroad.com/l/SaasRock?tier=Enterprise%20Features%20%F0%9F%9A%80&wanted=true",
-    hint: "Up to 5 developers - Cancel anytime",
+    hint: "Up to 5 developers - 1 project - Cancel anytime ",
   },
   {
     title: "Founder's Edition 🦄",
@@ -67,7 +67,7 @@ const plans = [
     features: ["All enterprise features", "1 project", "8 hrs of founders's time", "Dedicated GitHub repository", "Dedicated Discord channel"],
     ctaButton: "Subscribe",
     productUrl: "https://alexandromg.gumroad.com/l/SaasRockDevelopment",
-    hint: "Cancel anytime",
+    hint: "Unlimited developers - 1 project - Cancel anytime",
   },
 ];
 

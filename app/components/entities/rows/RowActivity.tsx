@@ -140,6 +140,7 @@ export default function RowActivity({ entity, items }: Props) {
                           {t("shared.comment")}
                         </label>
                         <textarea
+                          required
                           id="comment"
                           name="comment"
                           rows={3}

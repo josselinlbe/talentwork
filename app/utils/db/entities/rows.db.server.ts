@@ -161,6 +161,7 @@ export async function getRows(
   filters?: RowFiltersDto
 ): Promise<RowWithDetails[]> {
   const whereFilters = RowFiltersHelper.getRowFiltersCondition(filters);
+  console.log(JSON.stringify(whereFilters));
   return await db.row.findMany({
     take,
     skip,
