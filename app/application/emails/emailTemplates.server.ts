@@ -5,7 +5,7 @@ import path from "path";
 export default async function emailTemplates(): Promise<EmailTemplate[]> {
   const items: EmailTemplate[] = [];
 
-  const dir = "/emails";
+  const dir = path.join("./", "public/emails");
   const fileNames = fs.readdirSync(dir);
   fileNames.forEach((file) => {
     if (path.parse(file).ext === ".md") {

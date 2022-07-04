@@ -127,7 +127,7 @@ export default function AdminEmailsInboundRoute() {
   };
 
   return (
-    <div>
+    <div className="space-y-2">
       <InfoBanner title="Inbound Email Address" text="">
         <div>
           Send emails to: <span className="font-bold select-all">{data.inboundEmailAddress}</span>
