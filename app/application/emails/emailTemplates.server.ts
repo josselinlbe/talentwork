@@ -5,6 +5,15 @@ import path from "path";
 export default async function emailTemplates(): Promise<EmailTemplate[]> {
   const items: EmailTemplate[] = [];
 
+  if (process.env.NODE_ENV !== "development") {
+    // eslint-disable-next-line no-console
+    console.log("Loading email templates from disk");
+    fs.readdirSync(".").forEach((file) => {
+      // eslint-disable-next-line no-console
+      console.log(file);
+    });
+  }
+
   const dir = path.join("./", "public/emails");
   const fileNames = fs.readdirSync(dir);
   fileNames.forEach((file) => {
