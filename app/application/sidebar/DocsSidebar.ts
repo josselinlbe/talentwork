@@ -312,6 +312,10 @@ export const DocsSidebar: SideBarItem[] = [
         path: "/docs/guides",
         items: [
           {
+            title: "SaasRock releases",
+            path: "/docs/learning-center/guides/upgrade/saasrock-releases",
+          },
+          {
             title: "Customize Theme",
             path: "/docs/learning-center/guides/branding/theme",
           },
