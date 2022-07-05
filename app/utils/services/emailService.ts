@@ -35,13 +35,19 @@ export async function createEmailTemplates(templates: EmailTemplate[], alias?: s
     const template = templates.find((f) => f.alias === alias);
     if (template) {
       await createPostmarkTemplate(template, layoutTemplate?.alias);
+      await new Promise((res) => setTimeout(res, 100));
     }
   } else {
-    templates
-      .filter((f) => f.type === "standard")
-      .forEach(async (item) => {
-        await createPostmarkTemplate(item, layoutTemplate?.alias);
-      });
+    return await Promise.all(
+      templates
+        .filter((f) => f.type === "standard")
+        .map(async (item) => {
+          // eslint-disable-next-line no-console
+          console.log("Creating email with alias: " + item.alias);
+          await createPostmarkTemplate(item, layoutTemplate?.alias);
+          await new Promise((res) => setTimeout(res, 1));
+        })
+    );
   }
 }
 

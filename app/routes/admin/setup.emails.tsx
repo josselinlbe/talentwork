@@ -231,7 +231,7 @@ export default function EmailsRoute() {
             <ButtonPrimary
               type="button"
               onClick={createAllEmailTemplates}
-              disabled={loading || createdTemplates() > 0 || adminData.permissions.includes("admin.emails.create")}
+              disabled={loading || createdTemplates() > 0 || !adminData.permissions.includes("admin.emails.create")}
             >
               {t("admin.emails.createAll")}
             </ButtonPrimary>
