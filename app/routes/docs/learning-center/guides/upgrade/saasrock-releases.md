@@ -48,7 +48,7 @@ git remote add upstream https://github.com/AlexandroMtzG/saasrock.git
 💿 _(Optional)_ [Remove push to upstream](https://stackoverflow.com/a/10260389/5697060).
 
 ```shell
-git remote set-url --push origin no_push
+git remote set-url --push upstream no_push
 ```
 
 If you run git remote -v you should get something like this:
