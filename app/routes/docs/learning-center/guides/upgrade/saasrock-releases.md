@@ -23,7 +23,7 @@ routePath: "",
 {
 title: "SaasRock releases",
 routePath:
-"/docs/learning-center/guides/upgrade/stay-up-to-date-with-saasrock-releases",
+"/docs/learning-center/guides/upgrade/saasrock-releases",
 },
 ]}
 />
