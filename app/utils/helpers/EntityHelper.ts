@@ -7,7 +7,7 @@ const getEntityFromParams = async (params: Params) => {
   return await getEntityBySlug(params.entity ?? "");
 };
 
-const validateEntity = async (name: string, slug: string, order: number, prefix: string, entity?: Entity) => {
+const validateEntity = async (name: string, slug: string, order: number | null, prefix: string, entity?: Entity) => {
   const errors: string[] = [];
 
   if (!entity || entity?.name !== name) {
@@ -24,10 +24,12 @@ const validateEntity = async (name: string, slug: string, order: number, prefix:
     }
   }
 
-  if (!entity || entity?.order !== order) {
-    const existingOrder = await getEntityByOrder(order);
-    if (existingOrder) {
-      errors.push(`Existing entity with order '${order}':  ${existingOrder.slug}`);
+  if (order) {
+    if (!entity || entity?.order !== order) {
+      const existingOrder = await getEntityByOrder(order);
+      if (existingOrder) {
+        errors.push(`Existing entity with order '${order}':  ${existingOrder.slug}`);
+      }
     }
   }
 

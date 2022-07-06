@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (action === "create") {
     const name = form.get("name")?.toString() ?? "";
     const slug = form.get("slug")?.toString().toLowerCase() ?? "";
-    const order = Number(form.get("order"));
+    // const order = Number(form.get("order"));
     const prefix = form.get("prefix")?.toString() ?? "";
     const title = form.get("title")?.toString() ?? "";
     const titlePlural = form.get("title-plural")?.toString() ?? "";
@@ -44,7 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     const defaultVisibility = form.get("default-visibility")?.toString() ?? Visibility.Private;
 
-    const errors = await EntityHelper.validateEntity(name, slug, order, prefix);
+    const errors = await EntityHelper.validateEntity(name, slug, null, prefix);
     if (errors.length > 0) {
       return badRequest({ error: errors.join(", ") });
     }
@@ -52,7 +52,6 @@ export const action: ActionFunction = async ({ request }) => {
       const entity = await createEntity({
         name,
         slug,
-        order,
         prefix,
         title,
         titlePlural,

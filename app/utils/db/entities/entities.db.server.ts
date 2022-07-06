@@ -86,7 +86,7 @@ export async function getAllEntitiesWithRowCount(): Promise<EntityWithCount[]> {
     orderBy: [
       { isDefault: "desc" },
       {
-        name: "asc",
+        order: "asc",
       },
     ],
   });

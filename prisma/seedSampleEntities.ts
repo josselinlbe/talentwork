@@ -11,17 +11,14 @@ import { createEntity, getEntityByName, getEntityBySlug } from "~/utils/db/entit
 import { createProperties } from "~/utils/db/entities/properties.db.server";
 import { createRow, getMaxRowFolio, getRow } from "~/utils/db/entities/rows.db.server";
 import { createManualRowLog } from "~/utils/db/logs.db.server";
-import ApiHelper from "~/utils/helpers/ApiHelper";
 
 export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User) {
-  const { employeesEntity, employees } = await createSampleEntity_Employees(tenant1And2Relationship.providerTenantId, user1.id);
-  if (employeesEntity) {
-    await createSampleEntity_Contract(
-      tenant1And2Relationship,
-      user1.id,
-      employees.map((employee) => ApiHelper.getApiFormat(employeesEntity, employee))
-    );
-  }
+  await createSampleEntity_Contract(
+    tenant1And2Relationship,
+    user1.id,
+    [] // employees.map((employee) => ApiHelper.getApiFormat(employeesEntity, employee))
+  );
+  await createSampleEntity_Employees(tenant1And2Relationship.providerTenantId, user1.id);
 }
 
 async function createSampleEntity_Contract(linkedAccount: LinkedAccount, createdByUserId: string, employees: EmployeeDto[]) {
@@ -59,7 +56,6 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
         </g>
       </g>
     </svg>`,
-    order: 1,
     active: true,
     hasTags: true,
     hasComments: true,
@@ -155,7 +151,6 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
         </g>
       </g>
     </svg>`,
-    order: 2,
     active: true,
     hasTags: true,
     hasComments: true,

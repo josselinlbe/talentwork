@@ -93,7 +93,7 @@ export async function getNextPermissionsOrder(type?: string): Promise<number> {
 }
 
 export async function createPermissions(
-  permissions: { inRoles: string[]; name: string; description: string; type: string; entityId: string | null }[],
+  permissions: { inRoles: string[]; name: string; description: string; type: string; entityId?: string | null }[],
   fromOrder: number = 0
 ) {
   return Promise.all(
@@ -108,7 +108,7 @@ export async function createPermissions(
         description: data.description,
         type: data.type,
         isDefault: true,
-        entityId: data.entityId,
+        entityId: data.entityId ?? null,
       });
 
       data.inRoles.map(async (inRole) => {

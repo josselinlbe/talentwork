@@ -81,6 +81,7 @@ CREATE TABLE "Permission" (
     "type" TEXT NOT NULL,
     "isDefault" BOOLEAN NOT NULL,
     "order" INTEGER NOT NULL,
+    "entityId" TEXT,
 
     CONSTRAINT "Permission_pkey" PRIMARY KEY ("id")
 );
@@ -348,6 +349,7 @@ CREATE TABLE "Entity" (
     "hasComments" BOOLEAN NOT NULL DEFAULT true,
     "hasTasks" BOOLEAN NOT NULL DEFAULT true,
     "hasWorkflow" BOOLEAN NOT NULL DEFAULT false,
+    "defaultVisibility" TEXT NOT NULL DEFAULT 'private',
 
     CONSTRAINT "Entity_pkey" PRIMARY KEY ("id")
 );
@@ -480,10 +482,10 @@ CREATE TABLE "Row" (
     "entityId" TEXT NOT NULL,
     "tenantId" TEXT,
     "folio" INTEGER NOT NULL,
+    "visibility" TEXT NOT NULL,
     "createdByUserId" TEXT,
     "createdByApiKeyId" TEXT,
     "linkedAccountId" TEXT,
-    "visibility" TEXT NOT NULL DEFAULT 'private',
     "canComment" BOOLEAN NOT NULL DEFAULT true,
     "canUpdate" BOOLEAN NOT NULL DEFAULT true,
     "canDelete" BOOLEAN NOT NULL DEFAULT true,
@@ -795,6 +797,9 @@ ALTER TABLE "TenantUser" ADD CONSTRAINT "TenantUser_userId_fkey" FOREIGN KEY ("u
 
 -- AddForeignKey
 ALTER TABLE "TenantUser" ADD CONSTRAINT "TenantUser_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Permission" ADD CONSTRAINT "Permission_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "Entity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "RolePermission" ADD CONSTRAINT "RolePermission_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;

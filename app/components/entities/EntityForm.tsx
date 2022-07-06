@@ -145,6 +145,7 @@ export default function EntityForm({ item, canDelete }: Props) {
             title={t("models.entity.order")}
             value={order}
             setValue={setOrder}
+            disabled={!item}
             min={1}
             max={99}
             required
