@@ -71,24 +71,27 @@ export const action: ActionFunction = async ({ request }) => {
 
       const allUserRoles = await getAllRoles();
       const assignToAllUserRoles = allUserRoles.filter((f) => f.assignToNewUsers);
-      (await getEntityPermissions(entity)).map(async (permission, idx) => {
-        const entityPermission = {
-          inRoles: assignToAllUserRoles.map((f) => f.name),
-          name: permission.name,
-          description: permission.description,
-          type: "app",
-          entityId: entity.id,
-        };
-        return await createPermissions([entityPermission], allUserRoles.length + idx + 1);
-      });
+      const entityPermissions = await getEntityPermissions(entity);
+      await Promise.all(
+        entityPermissions.map(async (permission, idx) => {
+          const entityPermission = {
+            inRoles: assignToAllUserRoles.map((f) => f.name),
+            name: permission.name,
+            description: permission.description,
+            type: "app",
+            entityId: entity.id,
+          };
+          return await createPermissions([entityPermission], allUserRoles.length + idx + 1);
+        })
+      );
 
       if (entity) {
         return redirect(`/admin/entities/${slug}/properties`);
       } else {
         return badRequest({ error: "Could not create entity" });
       }
-    } catch (e) {
-      return badRequest({ error: JSON.stringify(e) });
+    } catch (e: any) {
+      return badRequest({ error: e.message });
     }
   } else {
     return badRequest({ error: t("shared.invalidForm") });
