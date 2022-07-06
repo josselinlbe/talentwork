@@ -67,9 +67,9 @@ const RowForm = (
         const selectedOption = property.options?.find((f) => f.value === (existing?.textValue ?? preselected));
 
         let dateValue = existing?.dateValue ?? undefined;
-        if (property.type === PropertyType.DATE && !dateValue) {
-          dateValue = new Date();
-        }
+        // if (property.type === PropertyType.DATE && !dateValue) {
+        //   dateValue = new Date();
+        // }
         initial.push({
           propertyId: property.id,
           property: property,

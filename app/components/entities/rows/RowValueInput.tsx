@@ -159,16 +159,18 @@ const RowValueInput = (
           step={selected.step ?? undefined}
         />
       ) : selected?.type === PropertyType.DATE ? (
-        <InputDate
-          ref={dateInput}
-          required={selected.isRequired}
-          name={selected.name}
-          title={t(selected.title)}
-          defaultValue={dateValue}
-          onChange={(e) => onChange(e)}
-          className={className}
-          readOnly={readOnly}
-        />
+        <>
+          <InputDate
+            ref={dateInput}
+            required={selected.isRequired}
+            name={selected.name}
+            title={t(selected.title)}
+            value={dateValue}
+            onChange={(e) => onChange(e)}
+            className={className}
+            readOnly={readOnly}
+          />
+        </>
       ) : selected?.type === PropertyType.ROLE ? (
         <div>
           <label htmlFor={"result-" + selected.name.toLowerCase().replace(" ", "")} className="block text-xs font-medium text-gray-700">
