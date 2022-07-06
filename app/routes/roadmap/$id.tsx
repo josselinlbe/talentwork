@@ -51,6 +51,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
+  const { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
 
   const entity = await getEntityBySlug("roadmap");
@@ -66,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   try {
     form.set("status", "Under Review");
-    const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
+    const rowValues = RowHelper.getRowPropertiesFromForm(t, entity, form);
     const created = await createRow({
       entityId: entity.id,
       tenantId: tenantId,

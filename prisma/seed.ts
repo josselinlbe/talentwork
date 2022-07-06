@@ -21,7 +21,7 @@ async function seed() {
     throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set");
   }
   const admin = await createUser("Admin", "User", adminEmail, adminPassword, TenantUserType.OWNER);
-  await createUser("Demo", "Admin", "demo@admin.com", "password", TenantUserType.MEMBER);
+  await createUser("Demo", "Admin", "guest@admin.com", "password", TenantUserType.MEMBER);
   const user1 = await createUser("John", "Doe", "john.doe@company.com", "password");
   const user2 = await createUser("Luna", "Davis", "luna.davis@company.com", "password");
 

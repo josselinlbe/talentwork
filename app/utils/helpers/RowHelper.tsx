@@ -9,6 +9,8 @@ import NumberUtils from "../shared/NumberUtils";
 import { RowDetailDto } from "~/application/dtos/entities/RowDetailDto";
 import CheckIcon from "~/components/ui/icons/CheckIcon";
 import XIcon from "~/components/ui/icons/XIcon";
+import { validatePropertyValue, validatePropertyValue_Media } from "./PropertyHelper";
+import { TFunction } from "react-i18next";
 
 const getCellValue = (entity: Entity, item: RowWithDetails, property: Property) => {
   const value = getPropertyValue(entity, item, property);
@@ -225,7 +227,7 @@ const setObjectProperties = (entity: EntityWithDetails, item: RowWithDetails) =>
     });
 };
 
-const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, existing?: RowWithDetails) => {
+const getRowPropertiesFromForm = (t: TFunction, entity: EntityWithDetails, form: FormData, existing?: RowWithDetails) => {
   const dynamicProperties: RowValueDto[] = [];
   let dynamicRows: RowDetailDto[] = [];
   const properties: any = {};
@@ -272,14 +274,13 @@ const getRowPropertiesFromForm = (entity: EntityWithDetails, form: FormData, exi
         //   console.log("name", mediaItem.name);
         //   console.log("type", mediaItem.type);
         // });
-        if (property.isRequired && media.length === 0) {
-          throw Error(`${property.title} is required`);
-        }
+        validatePropertyValue_Media(t, property, media);
       } else {
         formValue = form.get(name);
         if (property.isRequired && (formValue === null || formValue === undefined)) {
-          throw Error(`${property.title} is required`);
+          throw Error(`${t(property.title)} (${property.name}) is required`);
         }
+        validatePropertyValue(t, property, formValue);
       }
       const value = getValueFromType(property.type, formValue);
       value.media = media;

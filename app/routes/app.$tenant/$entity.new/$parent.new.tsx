@@ -41,6 +41,7 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
+  const { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
   const tenantUrl = await getTenantUrl(params);
   const entity = await getEntityBySlug(params.parent ?? "");
@@ -51,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
 
   try {
-    const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
+    const rowValues = RowHelper.getRowPropertiesFromForm(t, entity, form);
     const created = await createRow({
       entityId: entity.id,
       tenantId: tenantUrl.tenantId,

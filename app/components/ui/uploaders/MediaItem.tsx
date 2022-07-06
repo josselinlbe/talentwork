@@ -12,7 +12,7 @@ interface Props {
   onChangeTitle: (e: string) => void;
   onDelete: () => void;
   onDownload: () => void;
-  onPreview: () => void;
+  onPreview?: () => void;
   readOnly?: boolean;
 }
 export default function MediaItem({ item, onChangeTitle, onDelete, onDownload, onPreview, readOnly }: Props) {
@@ -26,9 +26,11 @@ export default function MediaItem({ item, onChangeTitle, onDelete, onDownload, o
           </div>
           <div className="ml-4 flex-shrink-0 space-x-2">
             <div className="flex items-center space-x-3">
-              <ButtonTertiary type="button" onClick={onPreview} className=" border-0 shadow-none font-medium text-gray-500 hover:text-gray-500">
-                <EyeIcon className="h-4 w-4 text-gray-600" />
-              </ButtonTertiary>
+              {onPreview && (
+                <ButtonTertiary type="button" onClick={onPreview} className=" border-0 shadow-none font-medium text-gray-500 hover:text-gray-500">
+                  <EyeIcon className="h-4 w-4 text-gray-600" />
+                </ButtonTertiary>
+              )}
               <ButtonTertiary type="button" onClick={onDownload} className=" border-0 shadow-none font-medium text-gray-500 hover:text-gray-500">
                 <DownloadIcon className="h-4 w-4 text-gray-600" />
               </ButtonTertiary>
@@ -38,9 +40,9 @@ export default function MediaItem({ item, onChangeTitle, onDelete, onDownload, o
       ) : (
         <div className="flex justify-between space-x-2 items-center select-none py-1">
           <div className="flex flex-grow space-x-1 items-center py-1">
-            <div className="inline-flex items-center justify-center h-9 w-9 rounded-sm border border-gray-300 bg-gray-100">
-              <span className="p-1 text-xs font-medium text-gray-500 uppercase">
-                <div>{item.type.split("/")[1]}</div>
+            <div className=" flex-shrink-0 inline-flex items-center justify-center h-9 w-9 rounded-sm border border-gray-300 bg-gray-100 truncate">
+              <span className="p-1 text-xs font-medium text-gray-500 uppercase truncate">
+                <div>{item.name.substring(item.name.lastIndexOf(".") + 1)}</div>
               </span>
             </div>
             <InputText

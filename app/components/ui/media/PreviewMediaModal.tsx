@@ -51,7 +51,7 @@ export default function PreviewMediaModal({ item, onClose, onDownload }: Props) 
                   <img alt={item.title} className="h-96 object-contain mx-auto" src={item.file} />
                 </div>
               ) : (
-                <div>Not PDF</div>
+                <div>Not PDF or Image</div>
               )}
             </div>
           </div>

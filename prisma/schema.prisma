@@ -209,8 +209,7 @@ model ApiKey {
   tenantId        String
   key             String         @default(uuid())
   alias           String
-  max             Int
-  expires         DateTime
+  expires         DateTime?
   active          Boolean
   createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -393,25 +392,31 @@ model Entity {
 }
 
 model Property {
-  id         String           @id @default(cuid())
-  entityId   String
-  order      Int
-  name       String
-  title      String
-  type       Int
-  formula    String?
-  parentId   String?
-  isDynamic  Boolean
-  isDefault  Boolean
-  isRequired Boolean
-  isHidden   Boolean
-  isDetail   Boolean
-  pattern    String?
-  entity     Entity           @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  parent     Property?        @relation("parentProperty", fields: [parentId], references: [id], onDelete: Cascade)
-  children   Property[]       @relation("parentProperty")
-  options    PropertyOption[]
-  values     RowValue[]
+  id              String           @id @default(cuid())
+  entityId        String
+  order           Int
+  name            String
+  title           String
+  type            Int
+  formula         String?
+  parentId        String?
+  isDynamic       Boolean
+  isDefault       Boolean
+  isRequired      Boolean
+  isHidden        Boolean
+  isDetail        Boolean
+  pattern         String? // TEXT
+  min             Int? // TEXT, NUMBER, MEDIA
+  max             Int? // TEXT, NUMBER, MEDIA
+  step            String? // NUMBER
+  rows            Int? // TEXT
+  defaultValue    String? // TEXT, NUMBER, BOOLEAN, SELECT
+  acceptFileTypes String? // MEDIA
+  entity          Entity           @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  parent          Property?        @relation("parentProperty", fields: [parentId], references: [id], onDelete: Cascade)
+  children        Property[]       @relation("parentProperty")
+  options         PropertyOption[]
+  values          RowValue[]
 
   @@unique([entityId, order])
   @@unique([entityId, name])
@@ -424,6 +429,7 @@ model PropertyOption {
   parentId   String?
   order      Int
   value      String
+  name       String?
   color      Int              @default(0)
   parent     PropertyOption?  @relation("parentOption", fields: [parentId], references: [id], onDelete: Cascade)
   property   Property         @relation(fields: [propertyId], references: [id], onDelete: Cascade)

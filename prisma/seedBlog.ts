@@ -41,7 +41,7 @@ export async function seedBlog() {
     { name: "Tutorial", color: Colors.ORANGE },
   ]);
 
-  await seedBlogPosts();
+  return await seedBlogPosts();
 }
 
 export async function seedBlogPosts() {
@@ -110,10 +110,24 @@ export async function seedBlogPosts() {
       tagNames: ["remix", "crm", "saas", "no-code"],
       published: true,
     },
+    {
+      slug: "saasrock-v0-3-2-row-filters-tags-tasks-comments-and-workflows",
+      title: "SaasRock v0.3.2 - Row Filters, Tags, Tasks, Comments, Workflows, Kanban Board, and API limits",
+      description:
+        "The entity builder just got stronger with a lot of new features for every created Row. Plus a Kanban board component and API limits based on the account's subscription.",
+      date: new Date("2022-07-03T09:14:00.000Z"),
+      image: "https://miro.medium.com/max/1400/1*uQ5usk8MEeL-wZgXpijdvA.png",
+      readingTime: "2 min",
+      authorSlug: "alexandromtzg",
+      categoryName: "Article",
+      tagNames: ["remix", "saas", "no-code"],
+      published: true,
+    },
   ];
 
   return Promise.all(
     posts.map(async (post) => {
+      await new Promise((r) => setTimeout(r, 100));
       return await seedBlogPost(post);
     })
   );
@@ -138,7 +152,7 @@ async function seedAuthors(
     url: string;
   }[]
 ) {
-  Promise.all(
+  return Promise.all(
     authors.map(async (data) => {
       return await db.blogAuthor.create({
         data,

@@ -158,10 +158,10 @@ export default function LoginRoute() {
                   <span className="font-bold">Admin User</span>:{" "}
                   <button
                     type="button"
-                    onClick={() => setDemoAccount("demo@admin.com")}
+                    onClick={() => setDemoAccount("guest@admin.com")}
                     className="border-b border-dashed hover:border-dotted border-accent-300"
                   >
-                    demo@admin.com
+                    guest@admin.com
                   </button>
                 </p>
               </p>

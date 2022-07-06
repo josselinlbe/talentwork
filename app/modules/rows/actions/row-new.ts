@@ -6,6 +6,7 @@ import { createRowLog } from "~/utils/db/logs.db.server";
 import RowHelper from "~/utils/helpers/RowHelper";
 import { getUserInfo } from "~/utils/session.server";
 import { Params } from "react-router";
+import { i18nHelper } from "~/locale/i18n.utils";
 
 export type ActionDataRowNew = {
   error?: string;
@@ -13,6 +14,7 @@ export type ActionDataRowNew = {
 };
 const badRequest = (data: ActionDataRowNew) => json(data, { status: 400 });
 export const actionRowNew = async (request: Request, params: Params, tenantId: string | null, entitySlug: string, entityRowsRoute: string) => {
+  const { t } = await i18nHelper(request);
   const userInfo = await getUserInfo(request);
   const entity = await getEntityBySlug(entitySlug);
   if (!entity) {
@@ -22,7 +24,7 @@ export const actionRowNew = async (request: Request, params: Params, tenantId: s
   const form = await request.formData();
 
   try {
-    const rowValues = RowHelper.getRowPropertiesFromForm(entity, form);
+    const rowValues = RowHelper.getRowPropertiesFromForm(t, entity, form);
     const created = await createRow({
       entityId: entity.id,
       tenantId,

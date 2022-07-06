@@ -945,7 +945,13 @@
       "pattern": "Expresión regular",
       "options": "Opciones",
       "children": "Children",
-      "values": "Valores"
+      "values": "Valores",
+      "min": "Mínimo",
+      "max": "Máximo",
+      "step": "Intervalos",
+      "rows": "Renglones",
+      "defaultValue": "Valor predeterminado",
+      "acceptFileTypes": "Tipos de archivos"
     },
     "workflow": {
       "object": "Flujo",

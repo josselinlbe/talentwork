@@ -50,7 +50,7 @@ export const actionRowEdit = async (
   if (action === "edit") {
     await verifyUserHasPermission(request, getEntityPermission(entity, "update"), tenantId);
     try {
-      const rowValues = RowHelper.getRowPropertiesFromForm(entity, form, item);
+      const rowValues = RowHelper.getRowPropertiesFromForm(t, entity, form, item);
       await updateRow(item.id ?? "", {
         dynamicProperties: rowValues.dynamicProperties,
         dynamicRows: rowValues.dynamicRows,

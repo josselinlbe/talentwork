@@ -109,7 +109,7 @@ const FormGroup = (
         {(!id || editing) && (
           <div className="flex justify-between space-x-2">
             <div>
-              {id && (
+              {id && canDelete && (
                 <ButtonSecondary disabled={loading || !canDelete} destructive={true} type="button" onClick={remove}>
                   <div>{t("shared.delete")}</div>
                 </ButtonSecondary>

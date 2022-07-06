@@ -21,9 +21,26 @@ interface Props {
   required?: boolean;
   hint?: ReactNode;
   step?: string;
+  placeholder?: string;
 }
 const InputNumber = (
-  { name, title, withLabel = true, value, setValue, className, hint, help, disabled = false, readOnly = false, required = false, min = 0, max, step }: Props,
+  {
+    name,
+    title,
+    withLabel = true,
+    value,
+    setValue,
+    className,
+    hint,
+    help,
+    disabled = false,
+    readOnly = false,
+    required = false,
+    min = 0,
+    max,
+    step,
+    placeholder,
+  }: Props,
   ref: Ref<RefInputNumber>
 ) => {
   useImperativeHandle(ref, () => ({ input }));
@@ -54,6 +71,7 @@ const InputNumber = (
           max={max}
           value={value ?? ""}
           step={step}
+          placeholder={placeholder}
           onChange={(e) => (setValue ? setValue(Number(e.currentTarget.value)) : {})}
           disabled={disabled}
           readOnly={readOnly}

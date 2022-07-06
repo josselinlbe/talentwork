@@ -1,4 +1,4 @@
-import { Media } from "@prisma/client";
+import { RowMedia } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
@@ -10,16 +10,20 @@ import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
 interface Props {
-  initialMedia: Media[] | undefined;
+  initialMedia: RowMedia[] | undefined;
   property: PropertyWithDetails;
   disabled?: boolean;
   onSelected: (item: MediaDto[]) => void;
   className?: string;
   readOnly?: boolean;
+  min?: number;
+  max?: number;
+  accept?: string;
 }
-export default function PropertyMediaInput({ initialMedia, property, disabled, onSelected, className, readOnly }: Props) {
+export default function PropertyMediaInput({ initialMedia, property, disabled, onSelected, className, readOnly, min, max, accept }: Props) {
   const { t } = useTranslation();
 
+  const [error, setError] = useState<string | undefined>(undefined);
   const [items, setItems] = useState<MediaDto[]>(initialMedia ?? []);
   const [selectedItem, setSelectedItem] = useState<MediaDto>();
 
@@ -33,6 +37,13 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
   }
 
   function onDroppedFiles(e: FileBase64[]) {
+    if (max) {
+      if (e.length + items.length > max) {
+        setError("Maximun number of files exceeded: " + max);
+        return;
+      }
+    }
+
     const newAttachments: MediaDto[] = [...items];
     e.forEach(({ file, base64 }) => {
       newAttachments.push({
@@ -60,12 +71,25 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
   return (
     <div className={className}>
       <label htmlFor="result" className="block text-xs font-medium text-gray-700">
-        {t(property.title)}
-        {property.isRequired && <span className="ml-1 text-red-500">*</span>}
+        <div className="flex justify-between space-x-2">
+          <div>
+            {t(property.title)}
+            {property.isRequired && <span className="ml-1 text-red-500">*</span>}
+          </div>
+          <div>{error && <span className="text-red-500">{error}</span>}</div>
+        </div>
       </label>
       <div className="mt-1">
         {/* <UploadDocuments onDropped={onDroppedFile} /> */}
-        {!readOnly && <UploadDocuments name={property.name} disabled={disabled} multiple={true} onDroppedFiles={onDroppedFiles} />}
+        {!readOnly && (
+          <UploadDocuments
+            name={property.name}
+            disabled={disabled || (max !== undefined && max <= items.length)}
+            multiple={true}
+            onDroppedFiles={onDroppedFiles}
+            accept={accept}
+          />
+        )}
 
         {items.map((item, idx) => {
           return <input key={idx} type="hidden" name={property.name + `[]`} value={JSON.stringify(item)} />;
@@ -86,7 +110,7 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
                   onDelete={() => deleteMedia(idx)}
                   readOnly={readOnly}
                   onDownload={() => download(item)}
-                  onPreview={() => preview(item)}
+                  onPreview={item.type.includes("pdf") || item.type.includes("image") ? () => preview(item) : undefined}
                 />
               );
             })}

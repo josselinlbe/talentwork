@@ -132,7 +132,7 @@ const InputText = (
               disabled={disabled}
               readOnly={readOnly}
               placeholder={placeholder}
-              pattern={pattern}
+              pattern={pattern !== "" && pattern !== undefined ? pattern : undefined}
               className={clsx(
                 "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
                 className,

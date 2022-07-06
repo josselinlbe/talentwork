@@ -172,8 +172,7 @@ CREATE TABLE "ApiKey" (
     "tenantId" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "alias" TEXT NOT NULL,
-    "max" INTEGER NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL,
+    "expires" TIMESTAMP(3),
     "active" BOOLEAN NOT NULL,
 
     CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id")
@@ -369,6 +368,12 @@ CREATE TABLE "Property" (
     "isHidden" BOOLEAN NOT NULL,
     "isDetail" BOOLEAN NOT NULL,
     "pattern" TEXT,
+    "min" INTEGER,
+    "max" INTEGER,
+    "step" TEXT,
+    "rows" INTEGER,
+    "defaultValue" TEXT,
+    "acceptFileTypes" TEXT,
 
     CONSTRAINT "Property_pkey" PRIMARY KEY ("id")
 );
@@ -380,6 +385,7 @@ CREATE TABLE "PropertyOption" (
     "parentId" TEXT,
     "order" INTEGER NOT NULL,
     "value" TEXT NOT NULL,
+    "name" TEXT,
     "color" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "PropertyOption_pkey" PRIMARY KEY ("id")
@@ -449,7 +455,7 @@ CREATE TABLE "EntityWorkflowStep" (
     "action" TEXT NOT NULL,
     "fromStateId" TEXT NOT NULL,
     "toStateId" TEXT NOT NULL,
-    "assignTo" TEXT NOT NULL DEFAULT E'private',
+    "assignTo" TEXT NOT NULL DEFAULT 'private',
 
     CONSTRAINT "EntityWorkflowStep_pkey" PRIMARY KEY ("id")
 );
@@ -477,7 +483,7 @@ CREATE TABLE "Row" (
     "createdByUserId" TEXT,
     "createdByApiKeyId" TEXT,
     "linkedAccountId" TEXT,
-    "visibility" TEXT NOT NULL DEFAULT E'private',
+    "visibility" TEXT NOT NULL DEFAULT 'private',
     "canComment" BOOLEAN NOT NULL DEFAULT true,
     "canUpdate" BOOLEAN NOT NULL DEFAULT true,
     "canDelete" BOOLEAN NOT NULL DEFAULT true,

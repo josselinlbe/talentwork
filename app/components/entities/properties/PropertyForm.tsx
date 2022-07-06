@@ -48,12 +48,16 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
   const [isHidden, setIsHidden] = useState<boolean>(item?.isHidden ?? false);
   const [isDetail, setIsDetail] = useState<boolean>(item?.isDetail ?? false);
   const [pattern, setPattern] = useState<string>(item?.pattern ?? "");
+  const [min, setMin] = useState<number | undefined>(item?.min ?? undefined);
+  const [max, setMax] = useState<number | undefined>(item?.max ?? undefined);
+  const [step, setStep] = useState<string | undefined>(item?.step ?? undefined);
+  const [rows, setRows] = useState<number | undefined>(item?.rows ?? undefined);
+  const [defaultValue, setDefaultValue] = useState<string | undefined>(item?.defaultValue ?? undefined);
+  const [acceptFileTypes, setAcceptFileTypes] = useState<string | undefined>(item?.acceptFileTypes ?? undefined);
 
   const [entity, setEntity] = useState<EntityWithDetails>();
   const [formula, setFormula] = useState<string>();
-  // const [editableInSteps, setEditableInSteps] = useState<FormFieldWorkflowStepDto[]>([]);
 
-  // const [selectedWorkflowSteps, setSelectedWorkflowSteps] = useState<WorkflowStepDto[]>([]);
   const [titleEnabled, setTitleEnabled] = useState(false);
 
   useEffect(() => {
@@ -62,10 +66,8 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
   }, []);
 
   useEffect(() => {
-    if (!item) {
-      setName(StringUtils.toCamelCase(title.toLowerCase()));
-    }
-  }, [item, title]);
+    setName(StringUtils.toCamelCase(title.toLowerCase()));
+  }, [title]);
 
   useEffect(() => {
     let formField = entity?.properties.find((f) => f.type === PropertyType.ID);
@@ -93,108 +95,19 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
 
   useEffect(() => {
     setTitleEnabled(true);
-    // switch (type) {
-    //   case PropertyType.USER:
-    //   case PropertyType.ROLE:
-    //     setTitleEnabled(true);
-    //     // setTitleEnabled(false);
-    //     break;
-    //   case PropertyType.ENTITY:
-    //   case PropertyType.DATE:
-    //   case PropertyType.TEXT:
-    //   case PropertyType.NUMBER:
-    //   case PropertyType.SELECT:
-    //   case PropertyType.FORMULA:
-    //   case PropertyType.MEDIA:
-    //     setTitleEnabled(true);
-    //     break;
-    // }
   }, [type]);
 
   function close() {
     navigate(`/admin/entities/${params.slug}/properties`);
   }
 
-  // function save(e: Event) {
-  //   e?.preventDefault();
-  //   const saved: Property = {
-  //     id: undefined,
-  //     formId: formId,
-  //     form: {} as Entity,
-  //     parentId,
-  //     parent,
-  //     order,
-  //     name,
-  //     title,
-  //     type,
-  //     // fields,
-  //     options,
-  //     isDefault: false,
-  //     isDetail,
-  //     isRequired,
-  //     isHidden,
-  //     formula,
-  //     editableInSteps,
-  //   };
-  //   setLoading(true);
-  //   if (!item) {
-  //     services.forms
-  //       .createField(formId, saved)
-  //       .then((response) => {
-  //         onCreated(response);
-  //         setOpen(false);
-  //       })
-  //       .catch((error) => {
-  //         errorModal.current?.show(t(error));
-  //       })
-  //       .finally(() => {
-  //         setLoading(false);
-  //       });
-  //   } else {
-  //     services.forms
-  //       .updateField(item.id, saved)
-  //       .then((response) => {
-  //         onUpdated(response);
-  //         setOpen(false);
-  //       })
-  //       .catch((error) => {
-  //         errorModal.current?.show(t(error));
-  //       })
-  //       .finally(() => {
-  //         setLoading(false);
-  //       });
-  //   }
-  // }
+  function supportsMinAndMax() {
+    return [PropertyType.TEXT, PropertyType.NUMBER, PropertyType.MEDIA].includes(type);
+  }
 
-  // useEffect(() => {
-  //   const steps: FormFieldWorkflowStepDto[] = [];
-  //   selectedWorkflowSteps
-  //     .filter((f) => f)
-  //     .forEach((step) => {
-  //       steps.push({
-  //         id: undefined,
-  //         formFieldId: item?.id ?? undefined,
-  //         formField: {} as Property,
-  //         workflowStepId: step?.id,
-  //         workflowStep: {} as WorkflowStepDto,
-  //       });
-  //     });
-
-  //   if (steps.length > 0) {
-  //     setIsDetail(false);
-  //   }
-  //   setEditableInSteps(steps);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedWorkflowSteps]);
-
-  // function onSelectedWorkflowSteps(e: WorkflowStepDto) {
-  //   const item = selectedWorkflowSteps.find((f) => f.id === e.id);
-  //   if (item) {
-  //     setSelectedWorkflowSteps([...selectedWorkflowSteps.filter((f) => f !== item)]);
-  //   } else {
-  //     setSelectedWorkflowSteps([...selectedWorkflowSteps, e]);
-  //   }
-  // }
+  function supportsDefaultValue() {
+    return [PropertyType.TEXT, PropertyType.NUMBER, PropertyType.BOOLEAN, PropertyType.SELECT].includes(type);
+  }
 
   return (
     <Transition.Root show={true} as={Fragment}>
@@ -231,7 +144,7 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                   {item ? "Update property" : "Create property"}
                 </Dialog.Title>
 
-                <FormGroup id={item?.id} editing={true} canDelete={!item?.isDefault}>
+                <FormGroup id={item?.id} editing={true} canDelete={!item?.isDefault && showAdvancedOptions}>
                   {/* <input type="hidden" name="order" value={order} /> */}
 
                   <div className="mt-4 space-y-3">
@@ -243,7 +156,6 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                         <PropertyTypeSelector selected={type} onSelected={(e) => setType(e)} />
                       </div>
                     </div>
-
                     {type === PropertyType.ENTITY && (
                       <div className="w-full">
                         <label htmlFor="entity" className="block text-xs font-medium text-gray-700">
@@ -254,7 +166,6 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                         </div>
                       </div>
                     )}
-
                     {titleEnabled && (
                       <InputText
                         name="title"
@@ -271,7 +182,6 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                         placeholder="Property title..."
                       />
                     )}
-
                     <InputText
                       name="name"
                       title={t("models.property.name")}
@@ -283,7 +193,6 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                       pattern="[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?"
                       hint={<span className="text-gray-400 font-normal italic">Camel case</span>}
                     />
-
                     {type === PropertyType.FORMULA && (
                       <div className="w-full">
                         <label htmlFor="formula" className="block text-xs font-medium text-gray-700">
@@ -304,7 +213,6 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                         </div>
                       </div>
                     )}
-
                     {type === PropertyType.SELECT && (
                       <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700">Options</label>
@@ -333,18 +241,15 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                         </div>
                       </div>
                     )}
-
                     <div className="flex">
                       <ButtonTertiary onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}>
                         {!showAdvancedOptions ? "Show advanced options" : "Hide advanced options"}
                       </ButtonTertiary>
                     </div>
-
+                    <div className={clsx("w-full px-1", !showAdvancedOptions && "hidden")}>
+                      <InputNumber name="order" title={t("models.property.order")} value={order} setValue={setOrder} />
+                    </div>
                     <div className="divide-y divide-gray-200">
-                      <div className={clsx("w-full px-1", !showAdvancedOptions && "hidden")}>
-                        <InputNumber name="order" title={t("models.property.order")} value={order} setValue={setOrder} />
-                      </div>
-
                       <div className={clsx("w-full px-1", !showAdvancedOptions && "hidden")}>
                         <InputCheckboxWithDescription
                           name="is-dynamic"
@@ -384,34 +289,147 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                           setValue={setIsDetail}
                         />
                       </div>
-
-                      {type === PropertyType.TEXT && (
+                    </div>
+                    {type === PropertyType.TEXT && (
+                      <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
+                        <InputText
+                          name="pattern"
+                          title={t("models.property.pattern")}
+                          hint={<span className="text-gray-400 font-light">Regular expression to validate user input</span>}
+                          value={pattern}
+                          setValue={setPattern}
+                        />
+                      </div>
+                    )}
+                    {supportsMinAndMax() && (
+                      <>
                         <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
-                          <InputText
-                            name="pattern"
-                            title={t("models.property.pattern")}
-                            hint={<span className="text-gray-400 font-light">Regular expression to validate user input</span>}
-                            value={pattern}
-                            setValue={setPattern}
+                          <InputNumber
+                            name="min"
+                            title={t("models.property.min")}
+                            value={min}
+                            setValue={(e) => setMin(e ? Number(e) : undefined)}
+                            hint={
+                              <>
+                                {min && (
+                                  <button type="button" onClick={() => setMin(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                                    {t("shared.remove")}
+                                  </button>
+                                )}
+                              </>
+                            }
                           />
                         </div>
-                      )}
-
-                      {/* <div className="w-full">
-                        <label htmlFor="from-status" className="block text-xs font-medium text-gray-700">
-                          Only editable for Steps
-                        </label>
-                        <div className="mt-1">
-                          <WorkflowStepSelector formId={formId} selected={selectedWorkflowSteps} onSelected={onSelectedWorkflowSteps} />
+                        <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
+                          <InputNumber
+                            name="max"
+                            title={t("models.property.max")}
+                            value={max}
+                            setValue={(e) => setMax(e ? Number(e) : undefined)}
+                            hint={
+                              <>
+                                {max && (
+                                  <button type="button" onClick={() => setMax(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                                    {t("shared.remove")}
+                                  </button>
+                                )}
+                              </>
+                            }
+                          />
                         </div>
-                      </div> */}
-                    </div>
+                      </>
+                    )}
+
+                    {type === PropertyType.NUMBER && (
+                      <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
+                        <InputText
+                          name="step"
+                          title={t("models.property.step")}
+                          value={step}
+                          setValue={(e) => setStep(e.toString())}
+                          placeholder="0.01"
+                          hint={
+                            <>
+                              {step && (
+                                <button type="button" onClick={() => setStep(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                                  {t("shared.remove")}
+                                </button>
+                              )}
+                            </>
+                          }
+                        />
+                      </div>
+                    )}
+
+                    {type === PropertyType.TEXT && (
+                      <>
+                        <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
+                          <InputNumber
+                            name="rows"
+                            title={t("models.property.rows")}
+                            value={rows}
+                            setValue={(e) => setRows(e ? Number(e) : undefined)}
+                            hint={
+                              <>
+                                {rows && (
+                                  <button type="button" onClick={() => setRows(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                                    {t("shared.remove")}
+                                  </button>
+                                )}
+                              </>
+                            }
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {supportsDefaultValue() && (
+                      <>
+                        <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
+                          <InputText
+                            name="default-value"
+                            title={t("models.property.defaultValue")}
+                            value={defaultValue}
+                            setValue={(e) => setDefaultValue(e.toString() ?? undefined)}
+                            hint={
+                              <>
+                                {defaultValue && (
+                                  <button type="button" onClick={() => setDefaultValue(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                                    {t("shared.remove")}
+                                  </button>
+                                )}
+                              </>
+                            }
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {type === PropertyType.MEDIA && (
+                      <>
+                        <div className={clsx("w-full px-1 pt-2", !showAdvancedOptions && "hidden")}>
+                          <InputText
+                            name="accept-file-types"
+                            title={t("models.property.acceptFileTypes")}
+                            value={acceptFileTypes}
+                            setValue={(e) => setAcceptFileTypes(e.toString() ?? undefined)}
+                            hint={
+                              <>
+                                {acceptFileTypes && (
+                                  <button type="button" onClick={() => setAcceptFileTypes(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                                    {t("shared.remove")}
+                                  </button>
+                                )}
+                              </>
+                            }
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </FormGroup>
               </div>
               <PropertyOptionsForm ref={selectOptionsForm} title={title} onSet={(e) => setOptions(e)} />
-              {/* <ConfirmModal ref={confirmDelete} destructive onYes={confirmedDelete} />
-              <ErrorModal ref={errorModal} /> */}
             </div>
           </Transition.Child>
         </div>

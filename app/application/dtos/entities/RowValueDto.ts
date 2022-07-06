@@ -1,4 +1,4 @@
-import { PropertyOption, Media } from "@prisma/client";
+import { PropertyOption, RowMedia } from "@prisma/client";
 import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 
@@ -14,5 +14,5 @@ export type RowValueDto = {
   booleanValue?: boolean | undefined;
   selectedOption?: PropertyOption | undefined;
   relatedRow?: RowWithDetails | undefined;
-  media?: Media[];
+  media?: RowMedia[];
 };

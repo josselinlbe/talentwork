@@ -12,7 +12,15 @@ import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import { getColors } from "~/utils/shared/ColorUtils";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
-export type OptionValue = { id: string | null; parentId: string | null; order: number; value: string; color?: Colors; options?: OptionValue[] };
+export type OptionValue = {
+  id: string | null;
+  parentId: string | null;
+  order: number;
+  value: string;
+  name: string | null;
+  color?: Colors;
+  options?: OptionValue[];
+};
 export interface RefPropertyOptionsForm {
   set: (options: OptionValue[]) => void;
 }
@@ -65,6 +73,7 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
         parentId: null,
         order: maxOrder + 1,
         value: "Option " + (items.length + 1).toString(),
+        name: null,
         color: Colors.UNDEFINED,
         options: [],
       },

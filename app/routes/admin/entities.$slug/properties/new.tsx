@@ -46,6 +46,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const isHidden = Boolean(form.get("is-hidden"));
   const isDetail = Boolean(form.get("is-detail"));
   const pattern = form.get("pattern")?.toString() ?? "";
+  const min = form.get("min");
+  const max = form.get("max");
+  const step = form.get("step");
+  const rows = form.get("rows");
+  const defaultValue = form.get("default-value");
+  const acceptFileTypes = form.get("accept-file-types");
   const entityId = form.get("entity-id")?.toString() ?? "";
 
   if (name === "rows") {
@@ -61,7 +67,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
   }
 
-  const options: { order: number; value: string; color?: Colors }[] = form.getAll("options[]").map((f: FormDataEntryValue) => {
+  const options: { order: number; value: string; name?: string; color?: Colors }[] = form.getAll("options[]").map((f: FormDataEntryValue) => {
     return JSON.parse(f.toString());
   });
 
@@ -93,6 +99,12 @@ export const action: ActionFunction = async ({ request, params }) => {
         isDetail,
         pattern,
         parentId,
+        min: min ? Number(min) : null,
+        max: max ? Number(max) : null,
+        step: step?.toString() ?? null,
+        rows: rows ? Number(rows) : null,
+        defaultValue: defaultValue?.toString() ?? null,
+        acceptFileTypes: acceptFileTypes?.toString() ?? null,
       });
       await updatePropertyOptions(property.id, options);
       return redirect(`/admin/entities/${params.slug}/properties`);

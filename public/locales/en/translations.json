@@ -947,7 +947,13 @@
       "pattern": "Pattern",
       "options": "Options",
       "children": "Children",
-      "values": "Values"
+      "values": "Values",
+      "min": "Minimum",
+      "max": "Maximum",
+      "step": "Step",
+      "rows": "Rows",
+      "defaultValue": "Default value",
+      "acceptFileTypes": "Accept file types"
     },
     "workflow": {
       "object": "Workflow",

@@ -7,11 +7,10 @@ import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole
 import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
 import { db } from "~/utils/db.server";
 import { createEntity, getEntityByName, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
-import { createProperty } from "~/utils/db/entities/properties.db.server";
+import { createProperties } from "~/utils/db/entities/properties.db.server";
 import { createRow, getMaxRowFolio, getRow } from "~/utils/db/entities/rows.db.server";
 import { createManualRowLog } from "~/utils/db/logs.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
-import { defaultProperties } from "~/utils/helpers/PropertyHelper";
 
 export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User) {
   const { employeesEntity, employees } = await createSampleEntity_Employees(tenant1And2Relationship.providerTenantId, user1.id);
@@ -192,21 +191,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     },
   ];
 
-  const properties = await Promise.all(
-    fields.map(async (field, idx) => {
-      return await createProperty({
-        entityId: employeesEntity.id,
-        order: defaultProperties.length + idx + 1,
-        ...field,
-        isDefault: false,
-        isRequired: true,
-        isHidden: false,
-        isDetail: false,
-        pattern: "",
-        parentId: null,
-      });
-    })
-  );
+  const properties = await createProperties(employeesEntity.id, fields);
   const firstNameProperty = properties.find((f) => f.name === "firstName");
   const lastNameProperty = properties.find((f) => f.name === "lastName");
   const emailProperty = properties.find((f) => f.name === "email");

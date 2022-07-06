@@ -1631,10 +1631,6 @@ select {
   grid-column: span 5 / span 5;
 }
 
-.col-span-4 {
-  grid-column: span 4 / span 4;
-}
-
 .-m-3 {
   margin: -0.75rem;
 }
@@ -2562,11 +2558,6 @@ select {
 
 .gap-y-8 {
   row-gap: 2rem;
-}
-
-.gap-x-3 {
-  -moz-column-gap: 0.75rem;
-       column-gap: 0.75rem;
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -6240,10 +6231,6 @@ select {
 
   .sm\:col-span-1 {
     grid-column: span 1 / span 1;
-  }
-
-  .sm\:col-span-8 {
-    grid-column: span 8 / span 8;
   }
 
   .sm\:col-start-2 {

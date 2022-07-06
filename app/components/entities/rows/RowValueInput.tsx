@@ -138,6 +138,10 @@ const RowValueInput = (
           required={selected.isRequired}
           className={className}
           readOnly={readOnly}
+          pattern={selected.pattern ?? undefined}
+          minLength={selected.min ?? undefined}
+          maxLength={selected.max ?? undefined}
+          rows={selected.rows ?? undefined}
         />
       ) : selected?.type === PropertyType.NUMBER ? (
         <InputNumber
@@ -147,10 +151,12 @@ const RowValueInput = (
           required={selected.isRequired}
           value={numberValue}
           setValue={(e) => onChange(Number(e).toString())}
-          max={100000000}
           disabled={readOnly}
           className={className}
           readOnly={readOnly}
+          min={selected.min ?? undefined}
+          max={selected.max ?? undefined}
+          step={selected.step ?? undefined}
         />
       ) : selected?.type === PropertyType.DATE ? (
         <InputDate
@@ -244,6 +250,9 @@ const RowValueInput = (
           disabled={readOnly}
           onSelected={(e) => setMedia(e)}
           readOnly={readOnly}
+          min={selected.min ?? undefined}
+          max={selected.max ?? undefined}
+          accept={selected.acceptFileTypes ?? undefined}
         />
       ) : (
         // ) : selected?.type === PropertyType.FORMULA ? (

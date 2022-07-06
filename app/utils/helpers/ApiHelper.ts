@@ -8,6 +8,7 @@ import RowHelper from "./RowHelper";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import { TFunction } from "react-i18next";
+import { validatePropertyValue, validatePropertyValue_Media } from "./PropertyHelper";
 
 const generateKey = () => {
   const id: string = uuid();
@@ -109,20 +110,20 @@ function getPropertyValueFromJson(t: TFunction, property: PropertyWithDetails, o
       object[name]?.map((f: MediaDto) => {
         return f;
       }) ?? [];
-    if (property.isRequired && media.length === 0) {
-      if (existing && !object[name]) {
-        return null;
-      }
-      throw Error(`${t(property.title)} (${property.name}) is required`);
-    }
+    validatePropertyValue_Media(t, property, media);
   } else {
     jsonValue = object[name];
     if (property.isRequired && (jsonValue === null || jsonValue === undefined || jsonValue === "")) {
-      if (existing && !object.hasOwnProperty(name)) {
-        return null;
+      if (property.defaultValue) {
+        jsonValue = property.defaultValue;
+      } else {
+        if (existing && !object.hasOwnProperty(name)) {
+          return null;
+        }
+        throw Error(`${t(property.title)} (${property.name}) is required`);
       }
-      throw Error(`${t(property.title)} (${property.name}) is required`);
     }
+    validatePropertyValue(t, property, jsonValue);
   }
   const value = RowHelper.getValueFromType(property.type, jsonValue);
   value.media = media;

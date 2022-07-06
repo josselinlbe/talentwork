@@ -1,13 +1,11 @@
-import { Entity } from "@prisma/client";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import { createContact, getContactByEmail } from "~/utils/db/crm/contacts.db.server";
 import { createDeal } from "~/utils/db/crm/deals.db.server";
 import getMaxEntityOrder, { createEntity } from "~/utils/db/entities/entities.db.server";
-import { createProperty, updatePropertyOptions } from "~/utils/db/entities/properties.db.server";
+import { createProperties } from "~/utils/db/entities/properties.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
 import { getWorkflowStates } from "~/utils/db/workflows/workflowStates.db.server";
-import { defaultProperties } from "~/utils/helpers/PropertyHelper";
 import { setRowInitialWorkflowState, updateRowWorkflowState } from "~/utils/services/WorkflowService";
 
 export async function seedCrm() {
@@ -41,13 +39,14 @@ async function createEntity_Contact() {
     hasWorkflow: false,
   });
 
-  await seedProperties(entity, [
+  await createProperties(entity.id, [
     {
       name: "status",
       title: "models.contact.status",
       type: PropertyType.SELECT,
       isDynamic: false,
       isRequired: true,
+      isDefault: true,
       options: [
         { order: 1, value: "Lead", color: Colors.YELLOW },
         { order: 2, value: "Prospect", color: Colors.INDIGO },
@@ -61,6 +60,7 @@ async function createEntity_Contact() {
       type: PropertyType.TEXT,
       isDynamic: false,
       isRequired: true,
+      isDefault: true,
     },
     {
       name: "firstName",
@@ -68,6 +68,7 @@ async function createEntity_Contact() {
       type: PropertyType.TEXT,
       isDynamic: false,
       isRequired: true,
+      isDefault: true,
     },
     {
       name: "lastName",
@@ -75,6 +76,7 @@ async function createEntity_Contact() {
       type: PropertyType.TEXT,
       isDynamic: false,
       isRequired: true,
+      isDefault: true,
     },
     {
       name: "phone",
@@ -82,6 +84,7 @@ async function createEntity_Contact() {
       type: PropertyType.TEXT,
       isDynamic: false,
       isRequired: false,
+      isDefault: true,
     },
     {
       name: "company",
@@ -89,6 +92,7 @@ async function createEntity_Contact() {
       type: PropertyType.TEXT,
       isDynamic: false,
       isRequired: false,
+      isDefault: true,
     },
     {
       name: "title",
@@ -96,6 +100,7 @@ async function createEntity_Contact() {
       type: PropertyType.TEXT,
       isDynamic: false,
       isRequired: false,
+      isDefault: true,
     },
   ]);
 
@@ -226,52 +231,4 @@ async function createEntity_Deal() {
     await updateRowWorkflowState(deal2.rowId, pendingState.id);
   }
   return entity;
-}
-
-async function seedProperties(
-  entity: Entity,
-  fields: {
-    name: string;
-    title: string;
-    type: PropertyType;
-    isDynamic: boolean;
-    isRequired: boolean;
-    isHidden?: boolean;
-    parentId?: string | null;
-    options?: { order: number; value: string; color?: Colors }[];
-    defaultValue?: string; // TODO
-    // addedByRoles:
-  }[]
-) {
-  await Promise.all(
-    fields.map(async (field, idx) => {
-      const property = await createProperty({
-        entityId: entity.id,
-        order: defaultProperties.length + idx + 1,
-        name: field.name,
-        title: field.title,
-        type: field.type,
-        isDynamic: field.isDynamic,
-        isRequired: field.isRequired,
-        isDefault: !field.isDynamic,
-        isHidden: field.isHidden ?? false,
-        isDetail: false,
-        pattern: "",
-        parentId: field.parentId ?? null,
-      });
-
-      if (field.options) {
-        await updatePropertyOptions(
-          property.id,
-          field.options.map((option) => {
-            return {
-              order: option.order,
-              value: option.value,
-              color: option.color,
-            };
-          })
-        );
-      }
-    })
-  );
 }

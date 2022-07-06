@@ -97,7 +97,7 @@ export async function getApiKeyById(id: string): Promise<ApiKeyWithDetails | nul
 }
 
 export async function getApiKey(key: string): Promise<ApiKeyWithDetails | null> {
-  return await db.apiKey.findUnique({
+  return await db.apiKey.findFirst({
     where: { key },
     include,
   });

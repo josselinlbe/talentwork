@@ -1,4 +1,6 @@
 import { Property } from "@prisma/client";
+import { TFunction } from "react-i18next";
+import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 
 export const validateProperty = async (name: string, title: string, properties: Property[], property?: Property | null) => {
@@ -126,3 +128,48 @@ export const defaultProperties: {
   //   isDynamic: true,
   // },
 ];
+
+export function validatePropertyValue(t: TFunction, property: Property, value: any) {
+  if (property.max) {
+    if (property.type === PropertyType.TEXT) {
+      if (value.length > property.max) {
+        throw Error(`${t(property.title)} (${property.name}) must have less than ${property.max} characters`);
+      }
+    } else if (property.type === PropertyType.NUMBER) {
+      if (Number(value) > property.max) {
+        throw Error(`${t(property.title)} (${property.name}) must be less than ${property.max}`);
+      }
+    }
+  }
+  if (property.min) {
+    if (property.type === PropertyType.TEXT) {
+      if (value.length < property.min) {
+        throw Error(`${t(property.title)} (${property.name}) must have less than ${property.min} characters`);
+      }
+    } else if (property.type === PropertyType.NUMBER) {
+      if (Number(value) < property.min) {
+        throw Error(`${t(property.title)} (${property.name}) must be less than ${property.min}`);
+      }
+    }
+  }
+  return true;
+}
+
+export function validatePropertyValue_Media(t: TFunction, property: Property, media: MediaDto[]) {
+  if (property.isRequired && media.length === 0) {
+    throw Error(`${t(property.title)} (${property.name}) is required`);
+  } else if (property.max && media.length > property.max) {
+    if (property.max === 1) {
+      throw Error(`${t(property.title)} (${property.name}) can only have one file`);
+    } else {
+      throw Error(`${t(property.title)} (${property.name}) cannot have more than ${property.max} files`);
+    }
+  } else if (property.min && media.length < property.min) {
+    if (property.min === 1) {
+      throw Error(`${t(property.title)} (${property.name}) must have at least one file`);
+    } else {
+      throw Error(`${t(property.title)} (${property.name}) must have at least ${property.min} files`);
+    }
+  }
+  return true;
+}
