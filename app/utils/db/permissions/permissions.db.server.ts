@@ -92,15 +92,23 @@ export async function getNextPermissionsOrder(type?: string): Promise<number> {
   );
 }
 
-export async function createPermissions(permissions: { inRoles: string[]; name: string; description: string; type: string }[], fromOrder: number = 0) {
+export async function createPermissions(
+  permissions: { inRoles: string[]; name: string; description: string; type: string; entityId: string | null }[],
+  fromOrder: number = 0
+) {
   return Promise.all(
     permissions.map(async (data, idx) => {
+      const existing = await getPermissionByName(data.name);
+      if (existing) {
+        return existing;
+      }
       const permission = await createPermission({
         order: fromOrder + idx + 1,
         name: data.name,
         description: data.description,
         type: data.type,
         isDefault: true,
+        entityId: data.entityId,
       });
 
       data.inRoles.map(async (inRole) => {
@@ -117,7 +125,7 @@ export async function createPermissions(permissions: { inRoles: string[]; name: 
   );
 }
 
-export async function createPermission(data: { order: number; name: string; description: string; type: string; isDefault: boolean }) {
+export async function createPermission(data: { order: number; name: string; description: string; type: string; isDefault: boolean; entityId: string | null }) {
   return await db.permission.create({
     data,
   });

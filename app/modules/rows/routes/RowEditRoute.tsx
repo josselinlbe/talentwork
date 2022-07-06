@@ -4,15 +4,7 @@ import clsx from "clsx";
 import { useState, useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  Link,
-  Outlet,
-  useActionData,
-  useLoaderData,
-  useParams,
-  useSubmit,
-  useTransition,
-} from "@remix-run/react";
+import { Link, Outlet, useActionData, useLoaderData, useParams, useSubmit, useTransition } from "@remix-run/react";
 
 import WorkflowStateBadge from "~/components/core/workflows/WorkflowStateBadge";
 import RowActivity from "~/components/entities/rows/RowActivity";
@@ -74,7 +66,7 @@ export default function RowEditRoute({ children }: Props) {
         {!data.rowPermissions.canRead ? (
           <div className="font-medium">You don't have permissions to view this record.</div>
         ) : (
-          <>
+          <div className="md:max-w-lg mx-auto lg:max-w-5xl">
             <div className="relative space-y-2 sm:space-y-0 sm:flex items-center justify-between border-b border-gray-200 pb-4 z-10">
               <div className="flex flex-col">
                 <div className="font-bold text-xl truncate flex items-center space-x-2">
@@ -162,8 +154,8 @@ export default function RowEditRoute({ children }: Props) {
                 </div>
               </div>
             </div>
-            <div className="grid gap-4 lg:grid-cols-3">
-              <div className={clsx("lg:col-span-2")}>
+            <div className="mt-4 lg:flex lg:space-x-4 space-y-4 lg:space-y-0">
+              <div className="lg:w-4/6 space-y-4">
                 {children ?? (
                   <RowForm
                     entity={data.entity}
@@ -174,17 +166,15 @@ export default function RowEditRoute({ children }: Props) {
                     canDelete={appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "delete")) && data.rowPermissions.canDelete}
                   />
                 )}
+                <div className="hidden lg:block">{data.rowPermissions.canComment && <RowActivity entity={data.entity} items={data.logs} />}</div>
               </div>
-              <div className="space-y-3">
+              <div className="lg:w-2/6 space-y-4">
                 {data.entity.hasTags && <RowTags entity={data.entity} items={data.tags} />}
                 {data.entity.hasTasks && <RowTasks entity={data.entity} items={data.tasks} />}
-                {!data.entity.hasTags && !data.entity.hasTasks && <RowActivity entity={data.entity} items={data.logs} />}
               </div>
-              {(data.entity.hasTags || data.entity.hasTasks) && (
-                <div className="lg:col-span-2 pt-4">{data.rowPermissions.canComment && <RowActivity entity={data.entity} items={data.logs} />}</div>
-              )}
             </div>
-          </>
+            <div className="lg:hidden pt-4">{data.rowPermissions.canComment && <RowActivity entity={data.entity} items={data.logs} />}</div>
+          </div>
         )}
       </EditPageLayout>
       <Outlet />

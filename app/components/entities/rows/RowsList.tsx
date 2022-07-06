@@ -41,7 +41,7 @@ export default function RowsList({ view, entity, items, columns, pagination, gro
               color: option.color,
               title: (
                 <div className="flex space-x-1 items-center">
-                  <div className="font-bold">{option.value}</div>
+                  {option.name ? <div className="font-bold">{option.name}</div> : <div className="font-bold">{option.value}</div>}
                 </div>
               ),
               value: (i: RowWithDetails) => <RowCard item={i} entity={entity} columns={columns} />,

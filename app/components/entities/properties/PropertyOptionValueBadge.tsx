@@ -17,11 +17,17 @@ export default function PropertyOptionValueBadge({ entity, property, value }: Pr
     }
     return Colors.UNDEFINED;
   }
+  function getName() {
+    const option = entity.properties.find((f) => f.name === property)?.options.find((f) => f.value === value);
+    if (option) {
+      return option.name;
+    }
+  }
   return (
     <>
       <div className="flex items-center space-x-2">
-        {getColor() && <ColorBadge color={getColor()} />}
-        <div>{t(value ?? "")}</div>
+        {getColor() !== undefined && getColor() !== Colors.UNDEFINED && <ColorBadge color={getColor()} />}
+        {getName() ? <div>{t(getName() ?? "")}</div> : <div>{t(value ?? "")}</div>}
       </div>
     </>
   );

@@ -53,6 +53,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       description,
       type,
       isDefault: false,
+      entityId: null,
     };
     const permission = await createPermission(data);
     await setPermissionRoles(permission.id, roles);

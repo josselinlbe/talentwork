@@ -1,5 +1,6 @@
 import { Entity, Property, PropertyOption } from "@prisma/client";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
+import { Visibility } from "~/application/dtos/shared/Visibility";
 import { defaultProperties } from "~/utils/helpers/PropertyHelper";
 import { createDefaultEntityWorkflow } from "~/utils/services/WorkflowService";
 import { db } from "../../db.server";
@@ -81,6 +82,12 @@ export async function getAllEntitiesWithRowCount(): Promise<EntityWithCount[]> {
         },
       },
     },
+    orderBy: [
+      { isDefault: "desc" },
+      {
+        name: "asc",
+      },
+    ],
   });
 }
 
@@ -253,6 +260,7 @@ export async function createEntity(data: {
   hasComments: boolean;
   hasTasks: boolean;
   hasWorkflow: boolean;
+  defaultVisibility: string;
 }) {
   const entity = await db.entity.create({
     data,
@@ -325,6 +333,7 @@ export async function updateEntity(
     hasComments: boolean;
     hasTasks: boolean;
     hasWorkflow: boolean;
+    defaultVisibility: string;
   }
 ) {
   return await db.entity.update({
@@ -352,5 +361,18 @@ export default async function getMaxEntityOrder(): Promise<number> {
         },
       })
     )._max?.order ?? 0
+  );
+}
+
+export async function getDefaultEntityVisibility(id: string): Promise<string | null> {
+  return (
+    (
+      await db.entity.findFirst({
+        where: { id },
+        select: {
+          defaultVisibility: true,
+        },
+      })
+    )?.defaultVisibility ?? Visibility.Private
   );
 }

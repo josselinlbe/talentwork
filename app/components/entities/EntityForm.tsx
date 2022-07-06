@@ -10,6 +10,9 @@ import { Entity } from "@prisma/client";
 import FormGroup from "../ui/forms/FormGroup";
 import { useAdminData } from "~/utils/data/useAdminData";
 import StringUtils from "~/utils/shared/StringUtils";
+import { Visibility } from "~/application/dtos/shared/Visibility";
+import InputSelect from "../ui/input/InputSelect";
+import VisibilityHelper from "~/utils/helpers/VisibilityHelper";
 
 interface Props {
   item?: Entity | null;
@@ -42,6 +45,8 @@ export default function EntityForm({ item, canDelete }: Props) {
   const [hasComments, setHasComments] = useState(item?.hasComments ?? true);
   const [hasTasks, setHasTasks] = useState(item?.hasTasks ?? true);
   const [hasWorkflow, setHasWorkflow] = useState(item?.hasWorkflow ?? false);
+
+  const [defaultVisibility, setDefaultVisibility] = useState<string | number | undefined>(item?.defaultVisibility ?? Visibility.Private);
 
   useEffect(() => {
     setTimeout(() => {
@@ -135,7 +140,7 @@ export default function EntityForm({ item, canDelete }: Props) {
       <InputGroup title="Display">
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
           <InputNumber
-            className="col-span-6"
+            className="sm:col-span-4"
             name="order"
             title={t("models.entity.order")}
             value={order}
@@ -148,7 +153,7 @@ export default function EntityForm({ item, canDelete }: Props) {
           />
 
           <InputText
-            className="col-span-6"
+            className="sm:col-span-4"
             name="prefix"
             title={t("models.entity.prefix")}
             value={prefix}
@@ -158,6 +163,28 @@ export default function EntityForm({ item, canDelete }: Props) {
             uppercase
             required
             help="Folio prefix, eg: EMP-0001, EMP-0002..."
+          />
+
+          <InputSelect
+            className="sm:col-span-4"
+            name="default-visibility"
+            title={`Default visibility`}
+            value={defaultVisibility}
+            setValue={setDefaultVisibility}
+            options={[
+              {
+                name: VisibilityHelper.getVisibilityTitle(t, Visibility.Private),
+                value: Visibility.Private,
+              },
+              {
+                name: VisibilityHelper.getVisibilityTitle(t, Visibility.Tenant),
+                value: Visibility.Tenant,
+              },
+              {
+                name: VisibilityHelper.getVisibilityTitle(t, Visibility.Public),
+                value: Visibility.Public,
+              },
+            ]}
           />
 
           <InputText

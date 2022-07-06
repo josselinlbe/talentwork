@@ -1,11 +1,13 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Ref, useImperativeHandle, useRef, useState, Fragment, forwardRef } from "react";
+import { Ref, useImperativeHandle, useRef, useState, Fragment, forwardRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Colors } from "~/application/enums/shared/Colors";
 import ColorBadge from "~/components/ui/badges/ColorBadge";
 import ButtonPrimary from "~/components/ui/buttons/ButtonPrimary";
 import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
+import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import TrashIcon from "~/components/ui/icons/TrashIcon";
+import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 import InputSelector from "~/components/ui/input/InputSelector";
 import InputText, { RefInputText } from "~/components/ui/input/InputText";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
@@ -38,14 +40,20 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
   const errorModal = useRef<RefErrorModal>(null);
 
   const inputOption = useRef<RefInputText>(null);
+
+  const [withColors, setWithColors] = useState(false);
+  const [withDescriptions, setWithDescriptions] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<OptionValue[]>([]);
 
   function set(options: OptionValue[]) {
     setItems(options);
-    if (options.length === 0) {
+    if (options.length === 0 && items.length === 0) {
       addOption();
     }
+    setWithColors(options.some((f) => f.color));
+    setWithDescriptions(options.some((f) => f.name));
 
     setOpen(true);
   }
@@ -72,7 +80,7 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
         id: null,
         parentId: null,
         order: maxOrder + 1,
-        value: "Option " + (items.length + 1).toString(),
+        value: "",
         name: null,
         color: Colors.UNDEFINED,
         options: [],
@@ -113,18 +121,37 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full sm:p-6">
               <div>
                 <div className="mt-3 sm:mt-5">
                   <Dialog.Title as="h3" className=" capitalize text-lg leading-6 font-medium text-gray-900">
-                    {t(title)} Dropdown options
+                    <div className="flex items-center justify-between space-x-2">
+                      <div>{t(title)} Dropdown options</div>
+                    </div>
                   </Dialog.Title>
                   <div className="mt-4 space-y-3">
+                    <div className="flex space-x-3">
+                      <InputCheckboxInline name="with-colors" title="With colors" description="" value={withColors} setValue={setWithColors} />
+                      <InputCheckboxInline
+                        name="with-descriptions"
+                        title="With descriptions"
+                        description=""
+                        value={withDescriptions}
+                        setValue={setWithDescriptions}
+                      />
+                    </div>
                     <div className="w-full">
-                      <label htmlFor="select" className="block text-xs font-medium text-gray-700">
-                        Options
-                      </label>
-                      <div className="mt-1 space-y-2">
+                      <div className="flex justify-between items-center space-x-2">
+                        <label htmlFor="select" className="block text-sm font-medium text-gray-700">
+                          Options
+                        </label>
+                        <div className="flex space-x-2">
+                          <ButtonTertiary onClick={addOption}>
+                            <div className="text-xs -mx-1">Add option</div>
+                          </ButtonTertiary>
+                        </div>
+                      </div>
+                      <div className="mt-1 space-y-2 h-48 overflow-hidden overflow-y-auto border-2 border-gray-300 border-dashed rounded-md p-2 bg-gray-50">
                         {items.map((option, idx) => {
                           return (
                             <div key={option.order} className="mt-1 flex items-center space-x-1 rounded-md">
@@ -135,53 +162,68 @@ const PropertyOptionsForm = ({ title, onSet }: Props, ref: Ref<RefPropertyOption
                                 withLabel={false}
                                 name={"select-option-" + idx}
                                 value={option.value}
+                                placeholder="Value..."
                                 setValue={(e) =>
                                   updateItemByIdx(items, setItems, idx, {
                                     value: e,
                                   })
                                 }
+                                className="flex-auto"
                               />
 
-                              <InputSelector
-                                name="color"
-                                title={t("models.group.color")}
-                                withSearch={false}
-                                value={option.color ?? Colors.UNDEFINED}
-                                withLabel={false}
-                                setValue={(e) =>
-                                  updateItemByIdx(items, setItems, idx, {
-                                    color: Number(e),
-                                  })
-                                }
-                                selectPlaceholder={""}
-                                className="w-20"
-                                options={
-                                  getColors().map((color) => {
-                                    return {
-                                      name: <ColorBadge color={color} />,
-                                      value: color,
-                                    };
-                                  }) ?? []
-                                }
-                              ></InputSelector>
+                              {withDescriptions && (
+                                <InputText
+                                  type="text"
+                                  title=""
+                                  withLabel={false}
+                                  name={"select-option-name-" + idx}
+                                  placeholder="Name..."
+                                  value={option.name ?? undefined}
+                                  setValue={(e) =>
+                                    updateItemByIdx(items, setItems, idx, {
+                                      name: e,
+                                    })
+                                  }
+                                  className="flex-auto"
+                                />
+                              )}
+
+                              {withColors && (
+                                <InputSelector
+                                  name="color"
+                                  title={t("models.group.color")}
+                                  withSearch={false}
+                                  value={option.color ?? Colors.UNDEFINED}
+                                  withLabel={false}
+                                  setValue={(e) =>
+                                    updateItemByIdx(items, setItems, idx, {
+                                      color: Number(e),
+                                    })
+                                  }
+                                  selectPlaceholder={""}
+                                  className="w-32"
+                                  options={
+                                    getColors().map((color) => {
+                                      return {
+                                        name: <ColorBadge color={color} />,
+                                        value: color,
+                                      };
+                                    }) ?? []
+                                  }
+                                ></InputSelector>
+                              )}
 
                               <ButtonSecondary
                                 disabled={items.length === 1}
                                 type="button"
                                 onClick={() => setItems([...items.filter((_, index) => index !== idx)])}
                               >
-                                <TrashIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                <TrashIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
                               </ButtonSecondary>
                             </div>
                           );
                         })}
-                      </div>
-                    </div>
-                    <div className="w-full">
-                      <div className="flex space-x-2">
-                        <ButtonSecondary onClick={addOption}>
-                          <div className="text-xs -mx-1">Add option</div>
-                        </ButtonSecondary>
+                        <div className="w-full"></div>
                       </div>
                     </div>
                   </div>

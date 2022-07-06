@@ -6,7 +6,7 @@ function getVisibilityTitle(t: TFunction, visibility: string) {
     case Visibility.Private:
       return t("shared.private");
     case Visibility.Tenant:
-      return "Everyone on this account";
+      return "Everyone on the account";
     case Visibility.Roles:
       return "Specific roles";
     case Visibility.Groups:

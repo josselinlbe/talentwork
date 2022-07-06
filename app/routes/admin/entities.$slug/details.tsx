@@ -1,6 +1,7 @@
 import { Entity } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { Visibility } from "~/application/dtos/shared/Visibility";
 import EntityForm from "~/components/entities/EntityForm";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
@@ -55,6 +56,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     const hasTasks = Boolean(form.get("has-tasks"));
     const hasWorkflow = Boolean(form.get("has-workflow"));
 
+    const defaultVisibility = form.get("default-visibility")?.toString() ?? Visibility.Private;
+
     const errors = await EntityHelper.validateEntity(name, slug, order, prefix, item);
     if (errors.length > 0) {
       return badRequest({ error: errors.join(", ") });
@@ -79,6 +82,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         hasComments,
         hasTasks,
         hasWorkflow,
+        defaultVisibility,
       });
 
       return redirect("/admin/entities");

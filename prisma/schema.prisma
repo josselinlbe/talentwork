@@ -120,6 +120,8 @@ model Permission {
   isDefault   Boolean
   order       Int
   inRoles     RolePermission[]
+  entityId    String?
+  entity      Entity?          @relation(fields: [entityId], references: [id], onDelete: Cascade)
 }
 
 model RolePermission {
@@ -381,6 +383,8 @@ model Entity {
   hasComments            Boolean                      @default(true)
   hasTasks               Boolean                      @default(true)
   hasWorkflow            Boolean                      @default(false)
+  defaultVisibility      String                       @default("private")
+  createdPermissions     Permission[]
   apiKeys                ApiKeyEntity[]
   tags                   EntityTag[]
   permissions            EntityTenantUserPermission[]
@@ -524,10 +528,10 @@ model Row {
   entityId          String
   tenantId          String?
   folio             Int
+  visibility        String
   createdByUserId   String?
   createdByApiKeyId String?
   linkedAccountId   String?
-  visibility        String                  @default("private")
   canComment        Boolean                 @default(true)
   canUpdate         Boolean                 @default(true)
   canDelete         Boolean                 @default(true)

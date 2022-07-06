@@ -3,11 +3,14 @@ import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
+import { Visibility } from "~/application/dtos/shared/Visibility";
 import { getRowPermissionsCondition } from "~/utils/helpers/PermissionsHelper";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import TenantHelper from "~/utils/helpers/TenantHelper";
 import { setRowInitialWorkflowState } from "~/utils/services/WorkflowService";
 import { db } from "../../db.server";
+import { createRowPermission } from "../permissions/rowPermissions.db.server";
+import { getDefaultEntityVisibility } from "./entities.db.server";
 import { RowTagWithDetails } from "./rowTags.db.server";
 
 export type RowValueWithDetails = RowValue & {
@@ -281,6 +284,7 @@ export async function createRow(
       folio = maxFolio._max.folio + 1;
     }
   }
+  const defaultVisibility = await getDefaultEntityVisibility(data.entityId);
   const row = await db.row.create({
     data: {
       folio,
@@ -291,6 +295,7 @@ export async function createRow(
       linkedAccountId: data.linkedAccountId,
       parentRowId: parentRowId ?? null,
       ...data.properties,
+      visibility: defaultVisibility,
       values: {
         create: data.dynamicProperties
           // .filter((f) => !f.id)
@@ -324,6 +329,21 @@ export async function createRow(
   }
 
   await setRowInitialWorkflowState(data.entityId, row.id);
+
+  if (row.visibility !== Visibility.Private) {
+    await setRowPermissions(row.id, {
+      visibility: row.visibility,
+      canComment: true,
+      canUpdate: false,
+      canDelete: false,
+    });
+  }
+  if (row.visibility === Visibility.Tenant) {
+    await createRowPermission({
+      rowId: row.id,
+      tenantId: data.tenantId,
+    });
+  }
 
   return row;
 }

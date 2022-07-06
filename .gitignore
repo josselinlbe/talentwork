@@ -21,3 +21,5 @@ prisma/dev.db
 .env.production
 
 .idea
+api/index.js.map
+app/styles/app.css

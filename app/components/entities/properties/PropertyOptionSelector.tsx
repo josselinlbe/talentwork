@@ -76,7 +76,15 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
                       {selected ? (
                         <>
                           {hasColors() && <ColorBadge color={selected.color} />}
-                          <div>{selected.value}</div>
+                          <div className="flex space-x-1">
+                            <div>{selected.value}</div>
+                            {selected.name && (
+                              <>
+                                <div>-</div>
+                                <div>{selected.name}</div>
+                              </>
+                            )}
+                          </div>
                         </>
                       ) : (
                         <div className="text-gray-500">
@@ -114,7 +122,15 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
                               <>
                                 <div className="flex items-center space-x-2">
                                   {hasColors() && <ColorBadge color={item.color} />}
-                                  <div>{item.value}</div>
+                                  <div className="flex space-x-1">
+                                    <div>{item.value}</div>
+                                    {item.name && (
+                                      <>
+                                        <div>-</div>
+                                        <div>{item.name}</div>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
 
                                 {selected ? (
