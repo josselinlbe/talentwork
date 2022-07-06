@@ -62,26 +62,23 @@ export async function createProperty(data: {
   });
 }
 
-export async function createProperties(
-  entityId: string,
-  fields: {
-    name: string;
-    title: string;
-    type: PropertyType;
-    isDynamic: boolean;
-    isRequired?: boolean;
-    isDefault?: boolean;
-    parentId?: string | null;
-    options?: { order: number; value: string; name?: string; color?: Colors }[];
-    min?: number | null;
-    max?: number | null;
-    step?: string | null;
-    rows?: number | null;
-    defaultValue?: string | null;
-    acceptFileTypes?: string | null;
-    // addedByRoles:
-  }[]
-) {
+export type CreatePropertyDto = {
+  name: string;
+  title: string;
+  type: PropertyType;
+  isDynamic: boolean;
+  isRequired?: boolean;
+  isDefault?: boolean;
+  parentId?: string | null;
+  options?: { order: number; value: string; name?: string; color?: Colors }[];
+  min?: number | null;
+  max?: number | null;
+  step?: string | null;
+  rows?: number | null;
+  defaultValue?: string | null;
+  acceptFileTypes?: string | null;
+};
+export async function createProperties(entityId: string, fields: CreatePropertyDto[]) {
   return await Promise.all(
     fields.map(async (field, idx) => {
       const property = await createProperty({
