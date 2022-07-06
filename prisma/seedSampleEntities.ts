@@ -1,5 +1,6 @@
 import { LinkedAccount, User } from "@prisma/client";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
+import { Visibility } from "~/application/dtos/shared/Visibility";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import FakePdfBase64 from "~/components/ui/pdf/FakePdfBase64";
 import { EmployeeDto } from "~/modules/contracts/dtos/EmployeeDto";
@@ -64,6 +65,7 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
     hasComments: true,
     hasTasks: true,
     hasWorkflow: true,
+    defaultVisibility: Visibility.Private,
   });
   const tenantAusers = await db.tenantUser.findMany({
     where: { tenantId: linkedAccount.providerTenantId },
@@ -88,6 +90,7 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
           createdByUserId,
           tenantId: linkedAccount.providerTenantId,
           linkedAccountId: linkedAccount.id,
+          visibility: Visibility.Private,
         },
       },
       name: "Contract 1",
@@ -158,6 +161,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     hasComments: true,
     hasTasks: true,
     hasWorkflow: true,
+    defaultVisibility: Visibility.Private,
   });
   const employeesEntity = await getEntityByName("employee");
   if (!employeesEntity) {

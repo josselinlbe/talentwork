@@ -1,3 +1,4 @@
+import { Visibility } from "~/application/dtos/shared/Visibility";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import { createContact, getContactByEmail } from "~/utils/db/crm/contacts.db.server";
@@ -37,6 +38,7 @@ async function createEntity_Contact() {
     hasComments: true,
     hasTasks: true,
     hasWorkflow: false,
+    defaultVisibility: Visibility.Private,
   });
 
   await createProperties(entity.id, [
@@ -171,6 +173,7 @@ async function createEntity_Deal() {
     hasComments: true,
     hasTasks: true,
     hasWorkflow: true,
+    defaultVisibility: Visibility.Private,
   });
 
   // const contactEntity = await getEntityByName("contact");
