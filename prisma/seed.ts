@@ -47,13 +47,21 @@ async function seed() {
   });
 
   // Sample Entities
+  // TODO: Remove this line when you have understood how to seed entities
   await seedSampleEntities(tenant1And2Relationship, user1);
 
-  // Modules
-  await seedCrm();
+  await seedCoreEntities();
 
   // Permissions
   await seedRolesAndPermissions();
+}
+
+async function seedCoreEntities() {
+  // Admin Entities
+  await seedCrm();
+
+  // App Entities
+  // TODO: Seed your entities
 }
 
 async function createUser(firstName: string, lastName: string, email: string, password: string, adminRole?: TenantUserType) {
