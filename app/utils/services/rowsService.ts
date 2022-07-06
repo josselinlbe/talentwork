@@ -1,4 +1,6 @@
+import { Visibility } from "~/application/dtos/shared/Visibility";
 import { db } from "../db.server";
+import { getEntityByName } from "../db/entities/entities.db.server";
 import { getMaxRowFolio } from "../db/entities/rows.db.server";
 
 export async function getCreateNewRow(entityName: string, createdByUserId: string, linkedAccountId: string | null = null, tenantId: string | null = null) {
@@ -30,10 +32,12 @@ export async function createNewRowWithEntity(
   linkedAccountId: string | null = null,
   tenantId: string | null = null
 ) {
+  const entity = await getEntityByName(entityName);
   const newRow = await getCreateNewRow(entityName, createdByUserId, linkedAccountId, tenantId);
   return await db.row.create({
     data: {
       ...newRow.row.create,
+      visibility: entity?.defaultVisibility ?? Visibility.Private,
     },
   });
 }
