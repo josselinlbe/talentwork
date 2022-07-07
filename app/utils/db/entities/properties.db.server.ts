@@ -22,6 +22,7 @@ export async function getProperty(id: string) {
       id,
     },
     include: {
+      attributes: true,
       options: {
         orderBy: {
           order: "asc",
@@ -31,34 +32,56 @@ export async function getProperty(id: string) {
   });
 }
 
-export async function createProperty(data: {
-  entityId: string;
-  name: string;
-  title: string;
-  type: PropertyType;
-  isDynamic: boolean;
-  order: number;
-  isDefault: boolean;
-  isRequired: boolean;
-  isHidden: boolean;
-  isDetail: boolean;
-  pattern: string;
-  parentId: string | null;
-  min: number | null;
-  max: number | null;
-  step: string | null;
-  rows: number | null;
-  defaultValue: string | null;
-  acceptFileTypes: string | null;
-}) {
+export async function createProperty(
+  data: {
+    entityId: string;
+    name: string;
+    title: string;
+    type: PropertyType;
+    isDynamic: boolean;
+    order: number;
+    isDefault: boolean;
+    isRequired: boolean;
+    isHidden: boolean;
+    isDetail: boolean;
+    parentId: string | null;
+  },
+  attributes: {
+    pattern?: string | null;
+    min?: number | null; // TEXT, NUMBER, MEDIA
+    max?: number | null; // TEXT, NUMBER, MEDIA
+    maxSize?: number | null; // MEDIA (KB)
+    step?: string | null; // NUMBER
+    rows?: number | null; // TEXT
+    defaultValue?: string | null; // TEXT, NUMBER, BOOLEAN, SELECT
+    acceptFileTypes?: string | null; // MEDIA
+    uppercase?: boolean | null; // TODO
+    lowercase?: boolean | null; // TODO
+    hintText?: string | null; // TODO
+    helpText?: string | null; // TODO
+    placeholder?: string | null; // TODO
+    icon?: string | null; // TODO
+  }
+) {
   if (data.name.includes(" ")) {
     throw Error("Property names cannot contain spaces");
   }
   if (data.name.includes("-")) {
     throw Error("Property names cannot contain: -");
   }
+  let createAttributes = {};
+  if (attributes) {
+    createAttributes = {
+      attributes: {
+        create: attributes,
+      },
+    };
+  }
   return await db.property.create({
-    data,
+    data: {
+      ...data,
+      ...createAttributes,
+    },
   });
 }
 
@@ -71,36 +94,58 @@ export type CreatePropertyDto = {
   isDefault?: boolean;
   parentId?: string | null;
   options?: { order: number; value: string; name?: string; color?: Colors }[];
-  min?: number | null;
-  max?: number | null;
-  step?: string | null;
-  rows?: number | null;
-  defaultValue?: string | null;
-  acceptFileTypes?: string | null;
+  attributes?: {
+    pattern?: string | null;
+    min?: number | null; // TEXT, NUMBER, MEDIA
+    max?: number | null; // TEXT, NUMBER, MEDIA
+    maxSize?: number | null; // MEDIA (KB)
+    step?: string | null; // NUMBER
+    rows?: number | null; // TEXT
+    defaultValue?: string | null; // TEXT, NUMBER, BOOLEAN, SELECT
+    acceptFileTypes?: string | null; // MEDIA
+    uppercase?: boolean | null; // TODO
+    lowercase?: boolean | null; // TODO
+    hintText?: string | null; // TODO
+    helpText?: string | null; // TODO
+    placeholder?: string | null; // TODO
+    icon?: string | null; // TODO
+  };
 };
 export async function createProperties(entityId: string, fields: CreatePropertyDto[]) {
   return await Promise.all(
     fields.map(async (field, idx) => {
-      const property = await createProperty({
-        entityId,
-        order: defaultProperties.length + idx + 1,
-        name: field.name,
-        title: field.title,
-        type: field.type,
-        isDynamic: field.isDynamic,
-        isRequired: field.isRequired ?? true,
-        isDefault: field.isDefault ?? false,
-        isHidden: false,
-        isDetail: false,
-        pattern: "",
-        parentId: field.parentId ?? null,
-        min: field.min ?? null,
-        max: field.max ?? null,
-        step: field.step ?? null,
-        rows: field.rows ?? null,
-        defaultValue: field.defaultValue ?? null,
-        acceptFileTypes: field.acceptFileTypes ?? null,
-      });
+      const property = await createProperty(
+        {
+          entityId,
+          order: defaultProperties.length + idx + 1,
+          name: field.name,
+          title: field.title,
+          type: field.type,
+          isDynamic: field.isDynamic,
+          isRequired: field.isRequired ?? true,
+          isDefault: field.isDefault ?? false,
+          isHidden: false,
+          isDetail: false,
+          parentId: field.parentId ?? null,
+        },
+        {
+          // Attributes
+          pattern: field.attributes?.pattern ?? null,
+          min: field.attributes?.min ?? null,
+          max: field.attributes?.max ?? null,
+          maxSize: field.attributes?.maxSize ?? null,
+          step: field.attributes?.step ?? null,
+          rows: field.attributes?.rows ?? null,
+          defaultValue: field.attributes?.defaultValue ?? null,
+          acceptFileTypes: field.attributes?.acceptFileTypes ?? null,
+          uppercase: field.attributes?.uppercase ?? null,
+          lowercase: field.attributes?.lowercase ?? null,
+          hintText: field.attributes?.hintText ?? null,
+          helpText: field.attributes?.helpText ?? null,
+          placeholder: field.attributes?.placeholder ?? null,
+          icon: field.attributes?.icon ?? null,
+        }
+      );
 
       if (field.options) {
         await updatePropertyOptions(
@@ -132,14 +177,23 @@ export async function updateProperty(
     isRequired: boolean;
     isHidden: boolean;
     isDetail: boolean;
-    pattern: string;
     parentId: string | null;
-    min: number | null;
-    max: number | null;
-    step: string | null;
-    rows: number | null;
-    defaultValue: string | null;
-    acceptFileTypes: string | null;
+  },
+  attributes?: {
+    pattern?: string | null;
+    min?: number | null; // TEXT, NUMBER, MEDIA
+    max?: number | null; // TEXT, NUMBER, MEDIA
+    step?: string | null; // NUMBER
+    rows?: number | null; // TEXT
+    defaultValue?: string | null; // TEXT, NUMBER, BOOLEAN, SELECT
+    maxSize?: number | null; // MEDIA (KB)
+    acceptFileTypes?: string | null; // MEDIA
+    uppercase?: boolean | null; // TODO
+    lowercase?: boolean | null; // TODO
+    hintText?: string | null; // TODO
+    helpText?: string | null; // TODO
+    placeholder?: string | null; // TODO
+    icon?: string | null; // TODO
   }
 ) {
   if (data.name.includes(" ")) {
@@ -150,7 +204,14 @@ export async function updateProperty(
   }
   const property = await db.property.update({
     where: { id },
-    data,
+    data: {
+      ...data,
+      attributes: {
+        update: {
+          ...attributes,
+        },
+      },
+    },
   });
 
   return property;

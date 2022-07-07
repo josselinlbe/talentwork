@@ -23,3 +23,4 @@ prisma/dev.db
 .idea
 api/index.js.map
 app/styles/app.css
+api/index.js.map

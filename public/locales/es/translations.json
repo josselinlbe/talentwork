@@ -942,16 +942,27 @@
       "isRequired": "Es requerido",
       "isHidden": "Es oculto",
       "isDetail": "Es detalle",
-      "pattern": "Expresión regular",
       "options": "Opciones",
       "children": "Children",
-      "values": "Valores",
+      "values": "Valores"
+    },
+    "propertyAttribute": {
+      "object": "Atributo",
+      "plural": "Atributo",
+      "pattern": "Expresión regular",
       "min": "Mínimo",
       "max": "Máximo",
       "step": "Intervalos",
       "rows": "Renglones",
       "defaultValue": "Valor predeterminado",
-      "acceptFileTypes": "Tipos de archivos"
+      "maxSize": "Tamaño máximo (en MB)",
+      "acceptFileTypes": "Tipos de archivos",
+      "uppercase": "Mayúsculas",
+      "lowercase": "Minúsculas",
+      "hintText": "Texto de pista",
+      "helpText": "Texto de ayuda",
+      "placeholder": "Placeholder",
+      "icon": "Ícon"
     },
     "workflow": {
       "object": "Flujo",

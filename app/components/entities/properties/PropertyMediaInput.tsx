@@ -1,26 +1,51 @@
 import { RowMedia } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import PreviewMediaModal from "~/components/ui/media/PreviewMediaModal";
+import HintTooltip from "~/components/ui/tooltips/HintTooltip";
 import MediaItem from "~/components/ui/uploaders/MediaItem";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
 import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
 interface Props {
+  name: string;
+  title: string;
   initialMedia: RowMedia[] | undefined;
   property: PropertyWithDetails;
   disabled?: boolean;
   onSelected: (item: MediaDto[]) => void;
   className?: string;
   readOnly?: boolean;
+  required?: boolean;
   min?: number;
   max?: number;
   accept?: string;
+  hint?: ReactNode;
+  help?: string;
+  icon?: string;
+  maxSize?: number;
 }
-export default function PropertyMediaInput({ initialMedia, property, disabled, onSelected, className, readOnly, min, max, accept }: Props) {
+export default function PropertyMediaInput({
+  name,
+  title,
+  initialMedia,
+  property,
+  disabled,
+  onSelected,
+  className,
+  readOnly,
+  required,
+  min,
+  max,
+  accept,
+  hint,
+  help,
+  icon,
+  maxSize,
+}: Props) {
   const { t } = useTranslation();
 
   const [error, setError] = useState<string | undefined>(undefined);
@@ -40,6 +65,14 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
     if (max) {
       if (e.length + items.length > max) {
         setError("Maximun number of files exceeded: " + max);
+        return;
+      }
+    }
+    if (maxSize) {
+      const bytesToMegaBytes = (bytes: number) => bytes / (1024 * 1024);
+      const found = e.find((f) => bytesToMegaBytes(f.file.size) > maxSize);
+      if (found) {
+        setError(`Max size is ${maxSize} MB, found ${bytesToMegaBytes(found.file.size).toFixed(2)}`);
         return;
       }
     }
@@ -70,14 +103,16 @@ export default function PropertyMediaInput({ initialMedia, property, disabled, o
 
   return (
     <div className={className}>
-      <label htmlFor="result" className="block text-xs font-medium text-gray-700">
-        <div className="flex justify-between space-x-2">
-          <div>
-            {t(property.title)}
-            {property.isRequired && <span className="ml-1 text-red-500">*</span>}
+      <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 ">
+        <div className=" flex space-x-1 items-center">
+          <div className="truncate">
+            {title}
+            {required && <span className="ml-1 text-red-500">*</span>}
           </div>
-          <div>{error && <span className="text-red-500">{error}</span>}</div>
+          <div className="">{help && <HintTooltip text={help} />}</div>
         </div>
+        <div>{error && <span className="text-red-500">{error}</span>}</div>
+        {hint}
       </label>
       <div className="mt-1">
         {/* <UploadDocuments onDropped={onDroppedFile} /> */}

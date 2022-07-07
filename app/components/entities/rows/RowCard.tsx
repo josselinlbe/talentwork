@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ColumnDto } from "~/application/dtos/data/ColumnDto";
@@ -21,12 +22,13 @@ export default function RowCard({ entity, item, columns }: Props) {
   }, [entity, columns]);
 
   return (
-    <div className="flex flex-col whitespace-nowrap text-sm text-gray-600">
+    <div className="flex flex-col whitespace-nowrap text-sm text-gray-600 space-y-2">
       {headers.map((header, idx) => {
         return (
-          <span key={idx} className="truncate">
-            {RowDisplayValueHelper.displayRowValue(t, header, item, idx)}
-          </span>
+          <div key={idx} className={clsx("truncate flex flex-col", header.className)}>
+            <div className="text-xs font-medium text-gray-400">{t(header.title)}</div>
+            <div>{RowDisplayValueHelper.displayRowValue(t, header, item, idx)}</div>
+          </div>
         );
       })}
     </div>

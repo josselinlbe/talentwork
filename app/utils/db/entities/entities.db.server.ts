@@ -1,4 +1,4 @@
-import { Entity, Property, PropertyOption } from "@prisma/client";
+import { Entity, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
 import { defaultProperties } from "~/utils/helpers/PropertyHelper";
@@ -12,6 +12,7 @@ export type EntityWithCount = EntityWithDetails & { _count: { rows: number } };
 
 export type PropertyWithDetails = Property & {
   // entity: EntityWithDetails;
+  attributes: PropertyAttributes | null;
   options: PropertyOption[];
   parent?: PropertyWithDetails;
 };
@@ -35,6 +36,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
   return await db.entity.findMany({
     where,
     orderBy: [
+      { isDefault: "desc" },
       {
         order: "asc",
       },
@@ -43,6 +45,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
       properties: {
         orderBy: { order: "asc" },
         include: {
+          attributes: true,
           // entity: {
           //   include: {
           //     ...includePropertiesWithDetails,
@@ -75,6 +78,7 @@ export async function getAllEntitiesWithRowCount(): Promise<EntityWithCount[]> {
           //     ...includePropertiesWithDetails,
           //   },
           // },
+          attributes: true,
           options: {
             orderBy: {
               order: "asc",
@@ -166,6 +170,7 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
       properties: {
         orderBy: { order: "asc" },
         include: {
+          attributes: true,
           options: {
             orderBy: {
               order: "asc",
@@ -186,6 +191,7 @@ export async function getEntityBySlug(slug: string): Promise<EntityWithDetails |
       properties: {
         orderBy: { order: "asc" },
         include: {
+          attributes: true,
           // entity: {
           //   include: {
           //     ...includePropertiesWithDetails,
@@ -216,6 +222,7 @@ export async function getEntityByName(name: string): Promise<EntityWithDetails |
           //     ...includePropertiesWithDetails,
           //   },
           // },
+          attributes: true,
           options: {
             orderBy: {
               order: "asc",

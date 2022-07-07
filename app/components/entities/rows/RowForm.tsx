@@ -64,7 +64,7 @@ const RowForm = (
         const search = location.search;
         const preselected = new URLSearchParams(search).get(property.name);
 
-        const selectedOption = property.options?.find((f) => f.value === (existing?.textValue ?? preselected));
+        const selectedOption = property.options?.find((f) => f.value === (existing?.textValue ?? property.attributes?.defaultValue ?? preselected));
 
         let dateValue = existing?.dateValue ?? undefined;
         // if (property.type === PropertyType.DATE && !dateValue) {
@@ -74,10 +74,18 @@ const RowForm = (
           propertyId: property.id,
           property: property,
           idValue: existing?.idValue ?? undefined,
-          textValue: existing?.textValue ?? preselected ?? property.defaultValue ?? undefined,
-          numberValue: existing?.numberValue ? Number(existing?.numberValue) : property.defaultValue ? Number(property.defaultValue) : undefined,
+          textValue: existing?.textValue ?? preselected ?? property.attributes?.defaultValue ?? undefined,
+          numberValue: existing?.numberValue
+            ? Number(existing?.numberValue)
+            : property.attributes?.defaultValue
+            ? Number(property.attributes?.defaultValue)
+            : undefined,
           dateValue,
-          booleanValue: existing?.booleanValue ? Boolean(existing?.booleanValue) : property.defaultValue ? Boolean(property.defaultValue) : undefined,
+          booleanValue: existing?.booleanValue
+            ? Boolean(existing?.booleanValue)
+            : !existing && property.attributes?.defaultValue
+            ? Boolean(property.attributes?.defaultValue)
+            : undefined,
           relatedRowId: existing?.relatedRowId ?? preselected ?? undefined,
           selectedOption,
           media: existing?.media ?? [],

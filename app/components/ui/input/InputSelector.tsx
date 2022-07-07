@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { Link } from "@remix-run/react";
 import { Colors } from "~/application/enums/shared/Colors";
 import ColorBadge from "../badges/ColorBadge";
+import HintTooltip from "../tooltips/HintTooltip";
+import EntityIcon from "~/components/layouts/icons/EntityIcon";
 
 export interface RefInputSelector {
   focus: () => void;
@@ -26,6 +28,9 @@ interface Props {
   onNew?: () => void;
   onNewRoute?: string;
   required?: boolean;
+  help?: string;
+  hint?: ReactNode;
+  icon?: string;
 }
 const InputSelector = (
   {
@@ -43,6 +48,9 @@ const InputSelector = (
     onNew,
     required,
     onNewRoute,
+    help,
+    hint,
+    icon,
   }: Props,
   ref: Ref<RefInputSelector>
 ) => {
@@ -96,9 +104,16 @@ const InputSelector = (
       {({ open }) => (
         <div className={clsx(className, "text-gray-800")}>
           {withLabel && (
-            <Listbox.Label htmlFor={name} className="block text-xs font-medium text-gray-600 truncate">
-              {title}
-              {required && <span className="ml-1 text-red-500">*</span>}
+            <Listbox.Label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600">
+              <div className=" flex space-x-1 items-center">
+                <div className="truncate">
+                  {title}
+                  {required && <span className="ml-1 text-red-500">*</span>}
+                </div>
+
+                {help && <HintTooltip text={help} />}
+              </div>
+              {hint}
             </Listbox.Label>
           )}
 
@@ -112,6 +127,13 @@ const InputSelector = (
               )}
             >
               <input type="hidden" readOnly name={name} value={selected?.value ?? ""} />
+
+              {icon && (
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <EntityIcon className="h-5 w-5 text-gray-400" icon={icon} />
+                </div>
+              )}
+
               <span className="w-full inline-flex truncate space-x-1 items-center">
                 {withColors && selected && <ColorBadge color={selected?.color ?? Colors.UNDEFINED} />}
                 <span className="truncate">

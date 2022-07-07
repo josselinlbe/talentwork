@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { PropertyOption } from "@prisma/client";
 import clsx from "clsx";
@@ -8,6 +8,8 @@ import CheckIcon from "~/components/ui/icons/CheckIcon";
 import SelectorIcon from "~/components/ui/icons/SelectorIcon";
 import { useTranslation } from "react-i18next";
 import ColorBadge from "~/components/ui/badges/ColorBadge";
+import HintTooltip from "~/components/ui/tooltips/HintTooltip";
+import EntityIcon from "~/components/layouts/icons/EntityIcon";
 
 interface Props {
   className?: string;
@@ -16,10 +18,13 @@ interface Props {
   parent?: PropertyOption | undefined;
   initial: PropertyOption | undefined;
   parentSelectedValue: RowValueDto | undefined;
+  help?: string;
+  hint?: ReactNode;
+  icon?: string;
   onSelected: (item: PropertyOption | undefined) => void;
 }
 
-const PropertyOptionSelector = ({ className, field, parent, disabled, initial, parentSelectedValue, onSelected }: Props) => {
+const PropertyOptionSelector = ({ className, field, parent, disabled, initial, parentSelectedValue, onSelected, help, hint, icon }: Props) => {
   const { t } = useTranslation();
 
   const button = useRef<HTMLButtonElement>(null);
@@ -54,9 +59,15 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
   return (
     <div className="space-y-3">
       <div>
-        <label htmlFor="result" className="block text-xs font-medium text-gray-700">
-          {t(field.title)}
-          {field.isRequired && <span className="ml-1 text-red-500">*</span>}
+        <label htmlFor={field.name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 ">
+          <div className=" flex space-x-1 items-center">
+            <div className="truncate">
+              {t(field.title)}
+              {field.isRequired && <span className="ml-1 text-red-500">*</span>}
+            </div>
+            <div className="">{help && <HintTooltip text={help} />}</div>
+          </div>
+          {hint}
         </label>
         <div className="mt-1">
           <input type="hidden" name={field.name} value={selected?.value} required={field.isRequired} disabled={selected === undefined} />
@@ -72,7 +83,12 @@ const PropertyOptionSelector = ({ className, field, parent, disabled, initial, p
                       disabled && "bg-gray-100 cursor-not-allowed"
                     )}
                   >
-                    <div className="flex items-center space-x-2">
+                    {icon && (
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <EntityIcon className="h-5 w-5 text-gray-400" icon={icon} />
+                      </div>
+                    )}
+                    <div className={clsx("flex items-center space-x-2", icon && "pl-8")}>
                       {selected ? (
                         <>
                           {hasColors() && <ColorBadge color={selected.color} />}

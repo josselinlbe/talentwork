@@ -138,10 +138,16 @@ const RowValueInput = (
           required={selected.isRequired}
           className={className}
           readOnly={readOnly}
-          pattern={selected.pattern ?? undefined}
-          minLength={selected.min ?? undefined}
-          maxLength={selected.max ?? undefined}
-          rows={selected.rows ?? undefined}
+          pattern={selected.attributes?.pattern ?? undefined}
+          minLength={selected.attributes?.min ?? undefined}
+          maxLength={selected.attributes?.max ?? undefined}
+          rows={selected.attributes?.rows ?? undefined}
+          hint={selected.attributes?.hintText ?? undefined}
+          help={selected.attributes?.helpText ?? undefined}
+          placeholder={selected.attributes?.placeholder ?? undefined}
+          icon={selected.attributes?.icon ?? undefined}
+          uppercase={selected.attributes?.uppercase ?? undefined}
+          lowercase={selected.attributes?.lowercase ?? undefined}
         />
       ) : selected?.type === PropertyType.NUMBER ? (
         <InputNumber
@@ -154,9 +160,13 @@ const RowValueInput = (
           disabled={readOnly}
           className={className}
           readOnly={readOnly}
-          min={selected.min ?? undefined}
-          max={selected.max ?? undefined}
-          step={selected.step ?? undefined}
+          min={selected.attributes?.min ?? undefined}
+          max={selected.attributes?.max ?? undefined}
+          step={selected.attributes?.step ?? undefined}
+          hint={selected.attributes?.hintText ?? undefined}
+          help={selected.attributes?.helpText ?? undefined}
+          placeholder={selected.attributes?.placeholder ?? undefined}
+          icon={selected.attributes?.icon ?? undefined}
         />
       ) : selected?.type === PropertyType.DATE ? (
         <>
@@ -169,6 +179,9 @@ const RowValueInput = (
             onChange={(e) => onChange(e)}
             className={className}
             readOnly={readOnly}
+            hint={selected.attributes?.hintText ?? undefined}
+            help={selected.attributes?.helpText ?? undefined}
+            icon={selected.attributes?.icon ?? undefined}
           />
         </>
       ) : selected?.type === PropertyType.ROLE ? (
@@ -213,23 +226,31 @@ const RowValueInput = (
             }
             required={selected.isRequired}
             disabled={readOnly}
+            hint={selected.attributes?.hintText ?? undefined}
+            help={selected.attributes?.helpText ?? undefined}
+            icon={selected.attributes?.icon ?? undefined}
             // onNewRoute={`${relatedEntity?.entity.slug}/new`}
           />
         </div>
       ) : selected?.type === PropertyType.SELECT ? (
-        <PropertyOptionSelector
-          field={selected}
-          initial={initialOption}
-          parentSelectedValue={parentSelectedValue}
-          onSelected={(e) => {
-            onChange(e?.id ?? "");
-            if (onChangeOption) {
-              onChangeOption(e);
-            }
-          }}
-          className={className}
-          disabled={readOnly}
-        />
+        <>
+          <PropertyOptionSelector
+            field={selected}
+            initial={initialOption}
+            parentSelectedValue={parentSelectedValue}
+            onSelected={(e) => {
+              onChange(e?.id ?? "");
+              if (onChangeOption) {
+                onChangeOption(e);
+              }
+            }}
+            className={className}
+            disabled={readOnly}
+            hint={selected.attributes?.hintText ?? undefined}
+            help={selected.attributes?.helpText ?? undefined}
+            icon={selected.attributes?.icon ?? undefined}
+          />
+        </>
       ) : selected?.type === PropertyType.BOOLEAN ? (
         <>
           <InputCheckbox
@@ -242,19 +263,27 @@ const RowValueInput = (
             disabled={readOnly}
             className={className}
             readOnly={readOnly}
+            hint={selected.attributes?.hintText ?? undefined}
+            help={selected.attributes?.helpText ?? undefined}
+            icon={selected.attributes?.icon ?? undefined}
           />
         </>
       ) : selected?.type === PropertyType.MEDIA ? (
         <PropertyMediaInput
+          name={selected.name}
+          title={selected.title}
           initialMedia={initialMedia}
           className={className}
           property={selected}
           disabled={readOnly}
           onSelected={(e) => setMedia(e)}
           readOnly={readOnly}
-          min={selected.min ?? undefined}
-          max={selected.max ?? undefined}
-          accept={selected.acceptFileTypes ?? undefined}
+          min={selected.attributes?.min ?? undefined}
+          max={selected.attributes?.max ?? undefined}
+          maxSize={selected.attributes?.maxSize ?? undefined}
+          accept={selected.attributes?.acceptFileTypes ?? undefined}
+          hint={selected.attributes?.hintText ?? undefined}
+          help={selected.attributes?.helpText ?? undefined}
         />
       ) : (
         // ) : selected?.type === PropertyType.FORMULA ? (

@@ -1,15 +1,17 @@
 import { Fragment, ReactNode, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import XIcon from "../icons/XIcon";
+import clsx from "clsx";
 
 interface Props {
   title: string;
   description: string;
   children: ReactNode;
   onClosed: () => void;
+  className?: string;
 }
 
-export default function SlideOverFormLayout({ title, description, children, onClosed }: Props) {
+export default function SlideOverFormLayout({ title, description, children, onClosed, className }: Props) {
   const [open, setOpen] = useState(true);
 
   function onClose() {
@@ -44,7 +46,7 @@ export default function SlideOverFormLayout({ title, description, children, onCl
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-lg">
+                <Dialog.Panel className={clsx("pointer-events-auto w-screen max-w-lg", className)}>
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex-1">
                       {/* Header */}

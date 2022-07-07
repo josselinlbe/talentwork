@@ -12,7 +12,7 @@ function displayRowValue<T>(t: TFunction, header: RowHeaderDisplayDto<T>, item: 
       {!header.setValue ? (
         <>
           {header.href !== undefined ? (
-            <Link to={header.href(item)} className="p-2 hover:bg-gray-50 border border-transparent hover:border-gray-300 rounded-md focus:bg-gray-100">
+            <Link to={header.href(item)} className="border-b border-transparent border-dashed hover:border-gray-400 rounded-md focus:bg-gray-100">
               <span>{header.formattedValue ? header.formattedValue(item, idxRow) : header.value(item)}</span>
             </Link>
           ) : (

@@ -369,15 +369,30 @@ CREATE TABLE "Property" (
     "isRequired" BOOLEAN NOT NULL,
     "isHidden" BOOLEAN NOT NULL,
     "isDetail" BOOLEAN NOT NULL,
+
+    CONSTRAINT "Property_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PropertyAttributes" (
+    "id" TEXT NOT NULL,
+    "propertyId" TEXT NOT NULL,
     "pattern" TEXT,
     "min" INTEGER,
     "max" INTEGER,
     "step" TEXT,
     "rows" INTEGER,
     "defaultValue" TEXT,
+    "maxSize" INTEGER,
     "acceptFileTypes" TEXT,
+    "uppercase" BOOLEAN,
+    "lowercase" BOOLEAN,
+    "hintText" TEXT,
+    "helpText" TEXT,
+    "placeholder" TEXT,
+    "icon" TEXT,
 
-    CONSTRAINT "Property_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "PropertyAttributes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -772,6 +787,9 @@ CREATE UNIQUE INDEX "Property_entityId_name_key" ON "Property"("entityId", "name
 CREATE UNIQUE INDEX "Property_entityId_title_key" ON "Property"("entityId", "title");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PropertyAttributes_propertyId_key" ON "PropertyAttributes"("propertyId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Email_messageId_key" ON "Email"("messageId");
 
 -- CreateIndex
@@ -905,6 +923,9 @@ ALTER TABLE "Property" ADD CONSTRAINT "Property_entityId_fkey" FOREIGN KEY ("ent
 
 -- AddForeignKey
 ALTER TABLE "Property" ADD CONSTRAINT "Property_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PropertyAttributes" ADD CONSTRAINT "PropertyAttributes_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PropertyOption" ADD CONSTRAINT "PropertyOption_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;

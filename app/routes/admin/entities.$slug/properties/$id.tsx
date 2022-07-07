@@ -1,8 +1,9 @@
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import PropertyForm from "~/components/entities/properties/PropertyForm";
+import SlideOverFormLayout from "~/components/ui/slideOvers/SlideOverFormLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { PropertyWithDetails, EntityWithDetails, getEntityById, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
@@ -10,7 +11,7 @@ import { deleteProperty, getProperty, updateProperty, updatePropertyOptions } fr
 import { validateProperty } from "~/utils/helpers/PropertyHelper";
 
 type LoaderData = {
-  entityId: string;
+  entity: EntityWithDetails;
   item: PropertyWithDetails;
   parentEntity: EntityWithDetails | undefined;
 };
@@ -31,7 +32,7 @@ export let loader: LoaderFunction = async ({ params }) => {
     }
   }
   const data: LoaderData = {
-    entityId: entity.id,
+    entity,
     item,
     parentEntity,
   };
@@ -68,7 +69,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   const step = form.get("step");
   const rows = form.get("rows");
   const defaultValue = form.get("default-value");
+
+  const maxSize = form.get("max-size");
   const acceptFileTypes = form.get("accept-file-types");
+
+  const uppercase = form.get("uppercase");
+  const lowercase = form.get("lowercase");
+  const hintText = form.get("hint-text");
+  const helpText = form.get("help-text");
+  const placeholder = form.get("placeholder");
+  const icon = form.get("icon");
+
   const entityId = form.get("entity-id")?.toString() ?? "";
 
   if (name === "rows") {
@@ -103,25 +114,37 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (action === "edit") {
     try {
-      await updateProperty(params.id ?? "", {
-        name,
-        title,
-        type,
-        isDynamic,
-        order,
-        isDefault: existing?.isDefault ?? false,
-        isRequired,
-        isHidden,
-        isDetail,
-        pattern,
-        parentId,
-        min: min ? Number(min) : null,
-        max: max ? Number(max) : null,
-        step: step?.toString() ?? null,
-        rows: rows ? Number(rows) : null,
-        defaultValue: defaultValue?.toString() ?? null,
-        acceptFileTypes: acceptFileTypes?.toString() ?? null,
-      });
+      await updateProperty(
+        params.id ?? "",
+        {
+          name,
+          title,
+          type,
+          isDynamic,
+          order,
+          isDefault: existing?.isDefault ?? false,
+          isRequired,
+          isHidden,
+          isDetail,
+          parentId,
+        },
+        {
+          pattern,
+          min: min ? Number(min) : null,
+          max: max ? Number(max) : null,
+          step: step?.toString() ?? null,
+          rows: rows ? Number(rows) : null,
+          defaultValue: defaultValue?.toString() ?? null,
+          maxSize: maxSize ? Number(maxSize) : null,
+          acceptFileTypes: acceptFileTypes?.toString() ?? null,
+          uppercase: uppercase !== undefined ? Boolean(uppercase) : null,
+          lowercase: lowercase !== undefined ? Boolean(lowercase) : null,
+          hintText: hintText?.toString() ?? null,
+          helpText: helpText?.toString() ?? null,
+          placeholder: placeholder?.toString() ?? null,
+          icon: icon?.toString() ?? null,
+        }
+      );
       await updatePropertyOptions(params.id ?? "", options);
       return redirect(`/admin/entities/${params.slug}/properties`);
     } catch (e: any) {
@@ -142,5 +165,15 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function EditEntityPropertyRoute() {
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
-  return <PropertyForm item={data.item} properties={[]} entities={adminData.entities} parentEntity={data.parentEntity} />;
+  const navigate = useNavigate();
+  return (
+    <SlideOverFormLayout
+      title={"Update property"}
+      description={data.item.title}
+      onClosed={() => navigate(`/admin/entities/${data.entity.slug}/properties`)}
+      className="max-w-sm"
+    >
+      <PropertyForm item={data.item} properties={[]} entities={adminData.entities} parentEntity={data.parentEntity} />
+    </SlideOverFormLayout>
+  );
 }

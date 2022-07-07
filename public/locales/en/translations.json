@@ -944,16 +944,27 @@
       "isRequired": "Is required",
       "isHidden": "Is hidden",
       "isDetail": "Is detail",
-      "pattern": "Pattern",
       "options": "Options",
       "children": "Children",
-      "values": "Values",
+      "values": "Values"
+    },
+    "propertyAttribute": {
+      "object": "Attribute",
+      "plural": "Attributes",
+      "pattern": "Pattern",
       "min": "Minimum",
       "max": "Maximum",
       "step": "Step",
       "rows": "Rows",
       "defaultValue": "Default value",
-      "acceptFileTypes": "Accept file types"
+      "maxSize": "Max size (in MB)",
+      "acceptFileTypes": "Accept file types",
+      "uppercase": "Uppercase",
+      "lowercase": "Lowercase",
+      "hintText": "Hint text",
+      "helpText": "Help text",
+      "placeholder": "Placeholder",
+      "icon": "Icon"
     },
     "workflow": {
       "object": "Workflow",

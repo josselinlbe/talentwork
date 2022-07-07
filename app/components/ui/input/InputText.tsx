@@ -1,7 +1,9 @@
 import clsx from "clsx";
 import { forwardRef, ReactNode, Ref, RefObject, useImperativeHandle, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import EntityIcon from "~/components/layouts/icons/EntityIcon";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
+import XIcon from "../icons/XIcon";
 
 export interface RefInputText {
   input: RefObject<HTMLInputElement> | RefObject<HTMLTextAreaElement>;
@@ -14,7 +16,6 @@ interface Props {
   value?: string;
   setValue?: React.Dispatch<React.SetStateAction<string>>;
   className?: string;
-  help?: string;
   minLength?: number;
   maxLength?: number;
   readOnly?: boolean;
@@ -25,13 +26,15 @@ interface Props {
   translationParams?: string[];
   placeholder?: string;
   pattern?: string;
-  hint?: ReactNode;
   rows?: number;
   button?: ReactNode;
   lowercase?: boolean;
   uppercase?: boolean;
   type?: string;
   darkMode?: boolean;
+  hint?: ReactNode;
+  help?: string;
+  icon?: string;
   onBlur?: () => void;
 }
 const InputText = (
@@ -60,6 +63,7 @@ const InputText = (
     uppercase,
     type = "text",
     darkMode,
+    icon,
     onBlur,
   }: Props,
   ref: Ref<RefInputText>
@@ -92,14 +96,13 @@ const InputText = (
   return (
     <div className={clsx(className, !darkMode && "text-gray-800")}>
       {withLabel && (
-        <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 truncate">
+        <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600 ">
           <div className=" flex space-x-1 items-center">
-            <div>
+            <div className="truncate">
               {title}
               {required && <span className="ml-1 text-red-500">*</span>}
             </div>
-
-            <span className=" overflow-hidden">{help && <HintTooltip text={help} />}</span>
+            <div className="">{help && <HintTooltip text={help} />}</div>
           </div>
           {withTranslation && value?.includes(".") && (
             <div className="text-slate-600 font-light italic">
@@ -117,6 +120,11 @@ const InputText = (
       <div className={clsx("flex rounded-md shadow-sm w-full relative", withLabel && "mt-1")}>
         {!rows ? (
           <>
+            {icon && (
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <EntityIcon className="h-5 w-5 text-gray-400" icon={icon} />
+              </div>
+            )}
             <input
               ref={input}
               type={type}
@@ -137,7 +145,9 @@ const InputText = (
                 "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
                 className,
                 (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
-                lowercase && "lowercase"
+                lowercase && "lowercase",
+                uppercase && "uppercase",
+                icon && "pl-10"
               )}
             />
             {button}
