@@ -63,7 +63,7 @@ export const AdminSidebar: SideBarItem[] = [
       },
       {
         title: "models.email.plural",
-        path: "/admin/email",
+        path: "/admin/emails",
         icon: SvgIcon.EMAILS,
       },
       {

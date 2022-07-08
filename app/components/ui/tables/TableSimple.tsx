@@ -1,17 +1,18 @@
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "@remix-run/react";
+import { useNavigate, useSearchParams } from "@remix-run/react";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import RowDisplayValueHelper from "~/utils/helpers/RowDisplayValueHelper";
 import ButtonTertiary from "../buttons/ButtonTertiary";
 import TablePagination from "./TablePagination";
+import { ReactNode } from "react";
 
 interface Props<T> {
   headers: RowHeaderDisplayDto<T>[];
   items: T[];
   actions?: {
-    title: string;
+    title: string | ReactNode;
     onClick?: (idx: number, item: T) => void;
     onClickRoute?: (idx: number, item: T) => string;
     disabled?: boolean;
@@ -19,11 +20,14 @@ interface Props<T> {
   }[];
   updatesUrl?: boolean;
   pagination?: PaginationDto;
+  onClickRoute?: (idx: number, item: T) => string;
+  className?: (idx: number, item: T) => string;
 }
 
-export default function TableSimple<T>({ headers, items, actions = [], updatesUrl = false, pagination }: Props<T>) {
+export default function TableSimple<T>({ headers, items, actions = [], updatesUrl = false, pagination, onClickRoute, className }: Props<T>) {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   function onSortBy(header: RowHeaderDisplayDto<T>) {
     let sort = header.name.toString();
@@ -107,7 +111,15 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                 ) : (
                   items.map((item, idxRow) => {
                     return (
-                      <tr key={idxRow}>
+                      <tr
+                        key={idxRow}
+                        onClick={() => {
+                          if (onClickRoute !== undefined) {
+                            navigate(onClickRoute(idxRow, item));
+                          }
+                        }}
+                        className="group"
+                      >
                         {headers.map((header, idxHeader) => {
                           return (
                             <td
@@ -120,7 +132,8 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                                 header.breakpoint === "md" && "hidden mg:table-cell",
                                 header.breakpoint === "lg" && "hidden lg:table-cell",
                                 header.breakpoint === "xl" && "hidden xl:table-cell",
-                                header.breakpoint === "2xl" && "hidden 2xl:table-cell"
+                                header.breakpoint === "2xl" && "hidden 2xl:table-cell",
+                                className && className(idxRow, item)
                               )}
                             >
                               {RowDisplayValueHelper.displayRowValue(t, header, item, idxRow)}
@@ -128,13 +141,13 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                           );
                         })}
                         {actions && (
-                          <td className="px-2 py-1 whitespace-nowrap text-sm text-gray-600">
+                          <td className={clsx("px-2 py-1 whitespace-nowrap text-sm text-gray-600", className && className(idxRow, item))}>
                             <div className="flex space-x-2">
-                              {actions.map((action) => {
+                              {actions.map((action, idx) => {
                                 return (
                                   <ButtonTertiary
                                     disabled={action.disabled}
-                                    key={t(action.title)}
+                                    key={idx}
                                     destructive={action.destructive}
                                     onClick={() => {
                                       if (action.onClick) {
@@ -143,7 +156,7 @@ export default function TableSimple<T>({ headers, items, actions = [], updatesUr
                                     }}
                                     to={action.onClickRoute && action.onClickRoute(idxRow, item)}
                                   >
-                                    {t(action.title)}
+                                    {action.title}
                                   </ButtonTertiary>
                                 );
                               })}

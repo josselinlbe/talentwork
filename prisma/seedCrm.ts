@@ -3,7 +3,7 @@ import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import { createContact, getContactByEmail } from "~/utils/db/crm/contacts.db.server";
 import { createDeal } from "~/utils/db/crm/deals.db.server";
-import getMaxEntityOrder, { createEntity } from "~/utils/db/entities/entities.db.server";
+import { createEntity } from "~/utils/db/entities/entities.db.server";
 import { createProperties } from "~/utils/db/entities/properties.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
 import { getWorkflowStates } from "~/utils/db/workflows/workflowStates.db.server";
@@ -19,7 +19,6 @@ async function createEntity_Contact() {
   if (!adminUser) {
     throw new Error("No admin user seeded with email: " + process.env.ADMIN_EMAIL);
   }
-  const maxOrder = await getMaxEntityOrder();
   const entity = await createEntity({
     name: "contact",
     slug: "contacts",
@@ -37,7 +36,7 @@ async function createEntity_Contact() {
     hasComments: true,
     hasTasks: true,
     hasWorkflow: false,
-    defaultVisibility: Visibility.Private,
+    defaultVisibility: Visibility.Tenant,
   });
 
   await createProperties(entity.id, [
@@ -153,7 +152,6 @@ async function createEntity_Deal() {
   if (!adminUser) {
     throw new Error("No admin user seeded with email: " + process.env.ADMIN_EMAIL);
   }
-  const maxOrder = await getMaxEntityOrder();
   const entity = await createEntity({
     name: "deal",
     slug: "deals",
@@ -171,7 +169,7 @@ async function createEntity_Deal() {
     hasComments: true,
     hasTasks: true,
     hasWorkflow: true,
-    defaultVisibility: Visibility.Private,
+    defaultVisibility: Visibility.Tenant,
   });
 
   // const contactEntity = await getEntityByName("contact");

@@ -13,6 +13,7 @@ import StringUtils from "~/utils/shared/StringUtils";
 import { Visibility } from "~/application/dtos/shared/Visibility";
 import InputSelect from "../ui/input/InputSelect";
 import VisibilityHelper from "~/utils/helpers/VisibilityHelper";
+import Constants from "~/application/Constants";
 
 interface Props {
   item?: Entity | null;
@@ -46,7 +47,7 @@ export default function EntityForm({ item, canDelete }: Props) {
   const [hasTasks, setHasTasks] = useState(item?.hasTasks ?? true);
   const [hasWorkflow, setHasWorkflow] = useState(item?.hasWorkflow ?? false);
 
-  const [defaultVisibility, setDefaultVisibility] = useState<string | number | undefined>(item?.defaultVisibility ?? Visibility.Private);
+  const [defaultVisibility, setDefaultVisibility] = useState<string | number | undefined>(item?.defaultVisibility ?? Constants.DEFAULT_ROW_VISIBILITY);
 
   useEffect(() => {
     setTimeout(() => {

@@ -10,17 +10,22 @@ export type PermissionWithRoles = Permission & {
 };
 
 export async function getAllPermissions(type?: string, filters?: FiltersDto): Promise<PermissionWithRoles[]> {
-  let where = RowFiltersHelper.getFiltersCondition(filters);
-  const roleId = filters?.properties.find((f) => f.name === "roleId")?.value;
-  if (roleId) {
-    where = {
-      OR: [where, { inRoles: { some: { roleId } } }],
-    };
-  }
-  if (type !== undefined) {
-    where = {
-      AND: [type, where],
-    };
+  let where: any = {
+    type,
+  };
+  if (filters) {
+    where = RowFiltersHelper.getFiltersCondition(filters);
+    const roleId = filters?.properties.find((f) => f.name === "roleId")?.value;
+    if (roleId) {
+      where = {
+        OR: [where, { inRoles: { some: { roleId } } }],
+      };
+    }
+    if (type !== undefined) {
+      where = {
+        AND: [type, where],
+      };
+    }
   }
 
   return await db.permission.findMany({

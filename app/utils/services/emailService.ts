@@ -3,6 +3,7 @@ import emailTemplates from "~/application/emails/emailTemplates.server";
 import UrlUtils from "../app/UrlUtils";
 import { db } from "../db.server";
 import { createPostmarkTemplate, deletePostmarkTemplate, getPostmarkTemplates } from "../email.server";
+import { getTenant } from "../db/tenants.db.server";
 
 export async function getEmailTemplates(): Promise<EmailTemplate[]> {
   const items: EmailTemplate[] = [];
@@ -72,4 +73,34 @@ export async function getAvailableTenantSlug(name: string) {
     }
   } while (true);
   return slug;
+}
+
+export async function getAvailableTenantInboundAddress(name: string) {
+  const slug = await getAvailableTenantSlug(name);
+  const slugWithDots = slug.split("-").join(".");
+  let address = slugWithDots;
+  let tries = 1;
+  do {
+    const existingAddress = await db.tenantInboundAddress.findUnique({
+      where: {
+        address,
+      },
+    });
+    if (existingAddress !== null) {
+      address = slugWithDots + tries.toString();
+      tries++;
+    } else {
+      break;
+    }
+  } while (true);
+  return address;
+}
+
+export async function getTenantDefaultInboundAddress(tenantId: string) {
+  const tenant = await getTenant(tenantId);
+  let address: string | null = null;
+  if (tenant?.inboundAddresses && tenant?.inboundAddresses.length > 0) {
+    address = tenant.inboundAddresses[0].address;
+  }
+  return address;
 }

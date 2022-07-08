@@ -114,6 +114,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (action === "edit") {
     try {
+      const existingOrder = entity.properties.find((f) => f.id !== existing?.id && f.order === order);
+      if (existingOrder) {
+        return badRequest({ error: "Order of display already used by: " + existingOrder.name });
+      }
       await updateProperty(
         params.id ?? "",
         {

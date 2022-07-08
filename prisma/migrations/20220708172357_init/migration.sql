@@ -613,8 +613,18 @@ CREATE TABLE "RowWorkflowTransition" (
 );
 
 -- CreateTable
+CREATE TABLE "TenantInboundAddress" (
+    "id" TEXT NOT NULL,
+    "tenantId" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+
+    CONSTRAINT "TenantInboundAddress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Email" (
     "id" TEXT NOT NULL,
+    "tenantInboundAddressId" TEXT,
     "messageId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
@@ -627,6 +637,16 @@ CREATE TABLE "Email" (
     "htmlBody" TEXT NOT NULL,
 
     CONSTRAINT "Email_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EmailRead" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "emailId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "EmailRead_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -644,9 +664,12 @@ CREATE TABLE "EmailAttachment" (
     "id" TEXT NOT NULL,
     "emailId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "length" INTEGER NOT NULL,
+    "content" TEXT NOT NULL,
+    "publicUrl" TEXT,
+    "storageBucket" TEXT,
+    "storageProvider" TEXT,
 
     CONSTRAINT "EmailAttachment_pkey" PRIMARY KEY ("id")
 );
@@ -788,6 +811,9 @@ CREATE UNIQUE INDEX "Property_entityId_title_key" ON "Property"("entityId", "tit
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PropertyAttributes_propertyId_key" ON "PropertyAttributes"("propertyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TenantInboundAddress_address_key" ON "TenantInboundAddress"("address");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Email_messageId_key" ON "Email"("messageId");
@@ -1061,6 +1087,18 @@ ALTER TABLE "RowWorkflowTransition" ADD CONSTRAINT "RowWorkflowTransition_workfl
 
 -- AddForeignKey
 ALTER TABLE "RowWorkflowTransition" ADD CONSTRAINT "RowWorkflowTransition_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TenantInboundAddress" ADD CONSTRAINT "TenantInboundAddress_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Email" ADD CONSTRAINT "Email_tenantInboundAddressId_fkey" FOREIGN KEY ("tenantInboundAddressId") REFERENCES "TenantInboundAddress"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmailRead" ADD CONSTRAINT "EmailRead_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmailRead" ADD CONSTRAINT "EmailRead_emailId_fkey" FOREIGN KEY ("emailId") REFERENCES "Email"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "EmailCc" ADD CONSTRAINT "EmailCc_emailId_fkey" FOREIGN KEY ("emailId") REFERENCES "Email"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -3,7 +3,6 @@ import { forwardRef, ReactNode, Ref, RefObject, useImperativeHandle, useRef } fr
 import { useTranslation } from "react-i18next";
 import EntityIcon from "~/components/layouts/icons/EntityIcon";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
-import XIcon from "../icons/XIcon";
 
 export interface RefInputText {
   input: RefObject<HTMLInputElement> | RefObject<HTMLTextAreaElement>;

@@ -155,7 +155,10 @@
     "hide": "Ocultar",
     "show": "Mostrar",
     "private": "Privado",
-    "public": "Público"
+    "public": "Público",
+    "mail": {
+      "inboundAddress": "Correo de entrada"
+    }
   },
   "front": {
     "navbar": {

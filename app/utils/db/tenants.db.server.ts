@@ -1,10 +1,10 @@
-import { AdminUser, Role, Tenant, TenantUser, User } from "@prisma/client";
+import { AdminUser, Role, Tenant, TenantInboundAddress, TenantUser, User } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
 import RowFiltersHelper from "../helpers/RowFiltersHelper";
-import { getAvailableTenantSlug } from "../services/emailService";
+import { getAvailableTenantInboundAddress, getAvailableTenantSlug } from "../services/emailService";
 import { createUserRole } from "./permissions/userRoles.db.server";
 import { TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
 import { createTenantSubscription } from "./tenantSubscriptions.db.server";
@@ -14,6 +14,7 @@ export type MyTenant = TenantUser & {
 };
 
 export type TenantWithDetails = Tenant & {
+  inboundAddresses: TenantInboundAddress[];
   users: (TenantUser & {
     user: User;
   })[];
@@ -33,6 +34,28 @@ export type TenantWithUsage = TenantWithDetails & {
   };
 };
 
+const includeTenantWithDetails = {
+  inboundAddresses: true,
+  users: {
+    include: {
+      user: true,
+    },
+  },
+  subscription: {
+    include: {
+      subscriptionPrice: {
+        include: {
+          subscriptionProduct: {
+            include: {
+              features: true,
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export type TenantUserWithUser = TenantUser & {
   user: User & {
     admin?: AdminUser | null;
@@ -42,24 +65,7 @@ export type TenantUserWithUser = TenantUser & {
 export async function adminGetAllTenants(): Promise<TenantWithDetails[]> {
   return await db.tenant.findMany({
     include: {
-      users: {
-        include: {
-          user: true,
-        },
-      },
-      subscription: {
-        include: {
-          subscriptionPrice: {
-            include: {
-              subscriptionProduct: {
-                include: {
-                  features: true,
-                },
-              },
-            },
-          },
-        },
-      },
+      ...includeTenantWithDetails,
     },
   });
 }
@@ -75,6 +81,7 @@ export async function adminGetAllTenantsWithUsage(filters?: FiltersDto): Promise
   return await db.tenant.findMany({
     where,
     include: {
+      inboundAddresses: true,
       users: {
         include: {
           user: true,
@@ -98,7 +105,7 @@ export async function adminGetAllTenantsWithUsage(filters?: FiltersDto): Promise
   });
 }
 
-export async function getTenant(id?: string) {
+export async function getTenant(id?: string): Promise<TenantWithDetails | null> {
   if (!id) {
     return null;
   }
@@ -107,7 +114,7 @@ export async function getTenant(id?: string) {
       id,
     },
     include: {
-      subscription: true,
+      ...includeTenantWithDetails,
     },
   });
 }
@@ -233,11 +240,15 @@ export async function updateTenantUser(id: string, data: { type: number }) {
 
 export async function createTenant(name: string, subscriptionCustomerId: string, icon: string) {
   const slug = await getAvailableTenantSlug(name);
+  const inboundAddress = await getAvailableTenantInboundAddress(name);
   const tenant = await db.tenant.create({
     data: {
       name,
       slug,
       icon,
+      inboundAddresses: {
+        create: [{ address: inboundAddress }],
+      },
     },
   });
 

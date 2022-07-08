@@ -1,4 +1,5 @@
 import { Entity, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
+import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
 import { defaultProperties } from "~/utils/helpers/PropertyHelper";
@@ -363,7 +364,7 @@ export async function createCoreEntity(
     hasComments: data.hasComments ?? true,
     hasTasks: data.hasTasks ?? true,
     hasWorkflow: data.hasTasks ?? false,
-    defaultVisibility: data.defaultVisibility ?? Visibility.Private,
+    defaultVisibility: data.defaultVisibility ?? Constants.DEFAULT_ROW_VISIBILITY,
   });
   if (properties) {
     await createProperties(entity.id, properties);
@@ -431,6 +432,6 @@ export async function getDefaultEntityVisibility(id: string): Promise<string | n
           defaultVisibility: true,
         },
       })
-    )?.defaultVisibility ?? Visibility.Private
+    )?.defaultVisibility ?? Constants.DEFAULT_ROW_VISIBILITY
   );
 }

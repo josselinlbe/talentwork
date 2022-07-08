@@ -1,9 +1,7 @@
-import { Dialog, Transition } from "@headlessui/react";
 import { Property } from "@prisma/client";
 import clsx from "clsx";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "@remix-run/react";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import FormGroup from "~/components/ui/forms/FormGroup";
@@ -17,8 +15,6 @@ import StringUtils from "~/utils/shared/StringUtils";
 import EntitySelector from "../EntitySelector";
 import PropertyTypeSelector from "./PropertyTypeSelector";
 import PropertyOptionsForm, { OptionValue, RefPropertyOptionsForm } from "./PropertyOptionsForm";
-import InputCheckbox from "~/components/ui/input/InputCheckbox";
-import InputCheckboxInline from "~/components/ui/input/InputCheckboxInline";
 
 interface Props {
   item?: PropertyWithDetails;
@@ -29,8 +25,6 @@ interface Props {
 
 export default function PropertyForm({ item, properties, entities, parentEntity }: Props) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const params = useParams();
 
   const selectOptionsForm = useRef<RefPropertyOptionsForm>(null);
 
@@ -109,9 +103,9 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
     setTitleEnabled(true);
   }, [type]);
 
-  function close() {
-    navigate(`/admin/entities/${params.slug}/properties`);
-  }
+  // function close() {
+  //   navigate(`/admin/entities/${params.slug}/properties`);
+  // }
 
   function supportsMinAndMax() {
     return [PropertyType.TEXT, PropertyType.NUMBER, PropertyType.MEDIA].includes(type);
@@ -128,7 +122,7 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
   return (
     <>
       <FormGroup id={item?.id} editing={true} canDelete={item !== undefined && !item?.isDefault && showAdvancedOptions} className="px-4 pb-4 space-y-2">
-        {/* <input type="hidden" name="order" value={order} /> */}
+        <input type="hidden" name="order" value={order} />
 
         <div className="mt-4 space-y-3">
           <div className="w-full">

@@ -102,6 +102,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   if (action === "create") {
     try {
+      const existingOrder = entity.properties.find((f) => f.order === order);
+      if (existingOrder) {
+        return badRequest({ error: "Order of display already used by: " + existingOrder.name });
+      }
       const property = await createProperty(
         {
           entityId: entity.id,

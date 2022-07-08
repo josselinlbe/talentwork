@@ -3,13 +3,13 @@ import bcrypt from "bcryptjs";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
-import UrlUtils from "~/utils/app/UrlUtils";
 import { seedBlog } from "./seedBlog";
 import { seedSampleEntities } from "./seedSampleEntities";
 import { createLinkedAccount } from "~/utils/db/linkedAccounts.db.server";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { seedRolesAndPermissions } from "./seedRolesAndPermissions";
 import { seedCrm } from "./seedCrm";
+import { getAvailableTenantInboundAddress, getAvailableTenantSlug } from "~/utils/services/emailService";
 const db = new PrismaClient();
 
 async function seed() {
@@ -88,11 +88,18 @@ async function createUser(firstName: string, lastName: string, email: string, pa
 }
 
 async function createTenant(name: string, users: { id: string; type: TenantUserType }[]) {
+  const slug = await getAvailableTenantSlug(name);
+  const address = await getAvailableTenantInboundAddress(name);
   const tenant = await db.tenant.create({
     data: {
       name,
-      slug: UrlUtils.slugify(name),
+      slug,
       icon: "",
+      inboundAddresses: {
+        create: {
+          address,
+        },
+      },
     },
   });
 

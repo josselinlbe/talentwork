@@ -8,7 +8,7 @@ export async function getRowPermissions(rowId: string) {
   });
 }
 
-export async function getRowPermissionByTenant(rowId: string, tenantId: string) {
+export async function getRowPermissionByTenant(rowId: string, tenantId?: string | null) {
   return await db.rowPermission.findFirst({
     where: {
       rowId,

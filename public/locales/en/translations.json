@@ -156,7 +156,10 @@
     "hide": "Hide",
     "show": "Show",
     "private": "Private",
-    "public": "Public"
+    "public": "Public",
+    "mail": {
+      "inboundAddress": "Inbound Address"
+    }
   },
   "front": {
     "navbar": {

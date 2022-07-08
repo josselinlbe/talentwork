@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 
 interface Props {

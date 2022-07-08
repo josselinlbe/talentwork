@@ -1,6 +1,5 @@
 import { RowMedia } from "@prisma/client";
 import { ReactNode, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import PreviewMediaModal from "~/components/ui/media/PreviewMediaModal";
@@ -46,8 +45,6 @@ export default function PropertyMediaInput({
   icon,
   maxSize,
 }: Props) {
-  const { t } = useTranslation();
-
   const [error, setError] = useState<string | undefined>(undefined);
   const [items, setItems] = useState<MediaDto[]>(initialMedia ?? []);
   const [selectedItem, setSelectedItem] = useState<MediaDto>();

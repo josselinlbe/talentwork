@@ -419,7 +419,7 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
     hasComments: true,
     hasTasks: true,
     hasWorkflow: true,
-    defaultVisibility: Visibility.Private,
+    defaultVisibility: Visibility.Tenant,
   });
   const tenantAusers = await db.tenantUser.findMany({
     where: { tenantId: linkedAccount.providerTenantId },
@@ -444,7 +444,7 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
           createdByUserId,
           tenantId: linkedAccount.providerTenantId,
           linkedAccountId: linkedAccount.id,
-          visibility: Visibility.Private,
+          visibility: Visibility.Tenant,
         },
       },
       name: "Contract 1",
@@ -514,7 +514,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     hasComments: true,
     hasTasks: true,
     hasWorkflow: true,
-    defaultVisibility: Visibility.Private,
+    defaultVisibility: Visibility.Tenant,
   });
   const employeesEntity = await getEntityByName("employee");
   if (!employeesEntity) {

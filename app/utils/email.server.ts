@@ -1,5 +1,5 @@
 // eslint-disable import/first
-// import postmark from "postmark"
+// import postmark from "postmark";
 var postmark = require("postmark");
 
 import { Template, TemplateInList, TemplateTypes } from "postmark/dist/client/models";
@@ -94,12 +94,12 @@ export async function deletePostmarkTemplate(alias: string) {
   return client.deleteTemplate(alias);
 }
 
-export async function getPostmarkInboundAddress() {
+export async function getPostmarkServer() {
   const client = getClient();
   if (!client) {
     return;
   }
-  return await client.getMessageStream("inbound");
+  return await client.getServer();
 }
 
 export async function getPostmarkInboundMessageStreams(): Promise<

@@ -63,7 +63,7 @@ export async function getUserRowPermission(row: Row, tenantId?: string | null, u
     canDelete: false,
   };
   const userRoles = await getUserRoles(userId ?? "", tenantId);
-  // console.log({ tenantId, userRoles: userRoles.map((f) => f.role.name) });
+  console.log({ permissions, tenantId, userRoles: userRoles.map((f) => f.role.name) });
   if (
     row.createdByUserId === userId ||
     userRoles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) ||
@@ -80,7 +80,7 @@ export async function getUserRowPermission(row: Row, tenantId?: string | null, u
     permissions.canComment = row.canComment;
     permissions.canUpdate = row.canUpdate;
     permissions.canDelete = row.canDelete;
-  } else if (row.visibility === "tenant" && tenantId) {
+  } else if (row.visibility === "tenant") {
     const tenantPermission = await getRowPermissionByTenant(row.id, tenantId);
     if (tenantPermission) {
       permissions.canRead = true;

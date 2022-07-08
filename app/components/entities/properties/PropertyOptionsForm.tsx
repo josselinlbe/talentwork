@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Ref, useImperativeHandle, useRef, useState, Fragment, forwardRef, useEffect } from "react";
+import { Ref, useImperativeHandle, useRef, useState, Fragment, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Colors } from "~/application/enums/shared/Colors";
 import ColorBadge from "~/components/ui/badges/ColorBadge";

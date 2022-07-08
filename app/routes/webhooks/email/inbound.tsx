@@ -1,6 +1,10 @@
 import { ActionFunction, json } from "@remix-run/node";
 import { db } from "~/utils/db.server";
-import { createEmail } from "~/utils/db/email/emails.db.server";
+import { updateEmailAttachmentFileProvider } from "~/utils/db/email/emailAttachments.db.server";
+import { createEmail, getEmail } from "~/utils/db/email/emails.db.server";
+import { getTenantInboundAddress } from "~/utils/db/email/tenantInboundAddresses.db.server";
+import { createSupabaseFile, getSupabaseAttachmentBucket, getSupabaseAttachmentPath } from "~/utils/integrations/supabaseService";
+import { createBlobFromBase64 } from "~/utils/services/fileService";
 
 export const action: ActionFunction = async ({ request }) => {
   try {
@@ -14,7 +18,10 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ error: "Message already exists" }, { status: 400 });
       }
 
-      await createEmail({
+      const fromInboundAddress = email.ToFull[0].Email.split("@")[0];
+      const tenantWithInboundAddress = await getTenantInboundAddress(fromInboundAddress);
+      const createdEmail = await createEmail({
+        tenantInboundAddressId: tenantWithInboundAddress?.id ?? null,
         messageId: email.MessageID,
         type: "inbound",
         date: new Date(email.Date),
@@ -35,9 +42,35 @@ export const action: ActionFunction = async ({ request }) => {
           })),
         },
       });
+      const emailWithAttachments = await getEmail(createdEmail.id);
+      if (emailWithAttachments) {
+        Promise.all(
+          emailWithAttachments?.attachments.map(async (attachment) => {
+            const blob = await createBlobFromBase64(attachment.type, attachment.content);
+            const file = new File([blob], attachment.name);
+
+            try {
+              const storageBucket = getSupabaseAttachmentBucket();
+              const createdFile = await createSupabaseFile(storageBucket, getSupabaseAttachmentPath(attachment), file);
+              if (createdFile.publicUrl) {
+                return await updateEmailAttachmentFileProvider(attachment.id, {
+                  content: "",
+                  publicUrl: createdFile.publicUrl,
+                  storageBucket,
+                  storageProvider: "supabase",
+                });
+              }
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.log("Could not create file: " + e);
+            }
+          })
+        );
+      }
+
       return json({}, { status: 201 });
     }
   } catch (e: any) {
-    return json({ error: JSON.stringify(e) }, { status: 400 });
+    return json({ error: e.message }, { status: 400 });
   }
 };

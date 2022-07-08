@@ -1,8 +1,9 @@
 import { DefaultAdminRoles } from "~/application/dtos/shared/DefaultAdminRoles";
 import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";
 import { getAllEntities } from "~/utils/db/entities/entities.db.server";
-import { createPermissions } from "~/utils/db/permissions/permissions.db.server";
-import { createRole } from "~/utils/db/permissions/roles.db.server";
+import { createPermissions, getAllPermissions } from "~/utils/db/permissions/permissions.db.server";
+import { createRolePermission } from "~/utils/db/permissions/rolePermissions.db.server";
+import { createRole, getRoleByName } from "~/utils/db/permissions/roles.db.server";
 import { createUserRole } from "~/utils/db/permissions/userRoles.db.server";
 import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
 import { adminGetAllUsers } from "~/utils/db/users.db.server";
@@ -131,7 +132,7 @@ export async function seedRolesAndPermissions() {
 
   await createPermissions(appPermissions);
 
-  const entities = await getAllEntities();
+  const entities = await getAllEntities(true, false);
   await Promise.all(
     entities.map(async (entity) => {
       return (await getEntityPermissions(entity)).map(async (permission) => {
@@ -170,6 +171,19 @@ export async function seedRolesAndPermissions() {
       });
     })
   );
+
+  const guestRole = await getRoleByName("Guest");
+  if (guestRole) {
+    const viewAndReadPermissions = (await getAllPermissions()).filter((f) => f.name.includes(".view") || f.name.includes(".read"));
+    await Promise.all(
+      viewAndReadPermissions.map(async (permission) => {
+        return await createRolePermission({
+          roleId: guestRole.id,
+          permissionId: permission.id,
+        });
+      })
+    );
+  }
 }
 
 async function seedRoles(roles: { name: string; description: string; type: "admin" | "app"; assignToNewUsers: boolean }[]) {

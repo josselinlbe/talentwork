@@ -9,6 +9,7 @@ import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 import { getEntityPermissions, verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { Visibility } from "~/application/dtos/shared/Visibility";
+import Constants from "~/application/Constants";
 
 export let loader: LoaderFunction = async ({ request }) => {
   await verifyUserHasPermission(request, "admin.entities.create");
@@ -42,7 +43,7 @@ export const action: ActionFunction = async ({ request }) => {
     const hasTasks = Boolean(form.get("has-tasks"));
     const hasWorkflow = Boolean(form.get("has-workflow"));
 
-    const defaultVisibility = form.get("default-visibility")?.toString() ?? Visibility.Private;
+    const defaultVisibility = form.get("default-visibility")?.toString() ?? Constants.DEFAULT_ROW_VISIBILITY;
 
     const errors = await EntityHelper.validateEntity(name, slug, null, prefix);
     if (errors.length > 0) {

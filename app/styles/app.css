@@ -1631,6 +1631,10 @@ select {
   grid-column: span 5 / span 5;
 }
 
+.col-span-10 {
+  grid-column: span 10 / span 10;
+}
+
 .-m-3 {
   margin: -0.75rem;
 }
@@ -4189,6 +4193,10 @@ select {
   text-align: right;
 }
 
+.text-end {
+  text-align: end;
+}
+
 .align-baseline {
   vertical-align: baseline;
 }
@@ -5903,6 +5911,11 @@ select {
 
 .group:hover .group-hover\:flex {
   display: flex;
+}
+
+.group:hover .group-hover\:border-theme-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(16 185 129 / var(--tw-border-opacity));
 }
 
 .group:hover .group-hover\:text-gray-500 {

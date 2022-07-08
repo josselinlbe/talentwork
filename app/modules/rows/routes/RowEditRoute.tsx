@@ -92,7 +92,15 @@ export default function RowEditRoute({ children }: Props) {
                     {data.nextWorkflowSteps.map((step) => {
                       return (
                         <>
-                          <ButtonSecondary disabled={isUpdatingWorkflowState} key={step.id} onClick={() => onClickedWorkflowStep(step)}>
+                          <ButtonSecondary
+                            disabled={
+                              isUpdatingWorkflowState ||
+                              !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) ||
+                              !data.rowPermissions.canUpdate
+                            }
+                            key={step.id}
+                            onClick={() => onClickedWorkflowStep(step)}
+                          >
                             <div className="flex items-center space-x-2">
                               <ColorBadge color={step.toState.color} />
                               <div>{t(step.action)}</div>
