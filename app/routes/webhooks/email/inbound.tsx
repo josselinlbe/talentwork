@@ -45,7 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
       if (process.env.SUPABASE_API_URL && process.env.SUPABASE_KEY) {
         const emailWithAttachments = await getEmail(createdEmail.id);
         if (emailWithAttachments) {
-          Promise.all(
+          await Promise.all(
             emailWithAttachments?.attachments.map(async (attachment) => {
               const blob = await createBlobFromBase64(attachment.type, attachment.content);
               const file = new File([blob], attachment.name);
