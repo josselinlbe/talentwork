@@ -42,30 +42,32 @@ export const action: ActionFunction = async ({ request }) => {
           })),
         },
       });
-      const emailWithAttachments = await getEmail(createdEmail.id);
-      if (emailWithAttachments) {
-        Promise.all(
-          emailWithAttachments?.attachments.map(async (attachment) => {
-            const blob = await createBlobFromBase64(attachment.type, attachment.content);
-            const file = new File([blob], attachment.name);
+      if (process.env.SUPABASE_API_URL && process.env.SUPABASE_KEY) {
+        const emailWithAttachments = await getEmail(createdEmail.id);
+        if (emailWithAttachments) {
+          Promise.all(
+            emailWithAttachments?.attachments.map(async (attachment) => {
+              const blob = await createBlobFromBase64(attachment.type, attachment.content);
+              const file = new File([blob], attachment.name);
 
-            try {
-              const storageBucket = getSupabaseAttachmentBucket();
-              const createdFile = await createSupabaseFile(storageBucket, getSupabaseAttachmentPath(attachment), file);
-              if (createdFile.publicUrl) {
-                return await updateEmailAttachmentFileProvider(attachment.id, {
-                  content: "",
-                  publicUrl: createdFile.publicUrl,
-                  storageBucket,
-                  storageProvider: "supabase",
-                });
+              try {
+                const storageBucket = getSupabaseAttachmentBucket();
+                const createdFile = await createSupabaseFile(storageBucket, getSupabaseAttachmentPath(attachment), file);
+                if (createdFile.publicUrl) {
+                  return await updateEmailAttachmentFileProvider(attachment.id, {
+                    content: "",
+                    publicUrl: createdFile.publicUrl,
+                    storageBucket,
+                    storageProvider: "supabase",
+                  });
+                }
+              } catch (e) {
+                // eslint-disable-next-line no-console
+                console.log("Could not create file: " + e);
               }
-            } catch (e) {
-              // eslint-disable-next-line no-console
-              console.log("Could not create file: " + e);
-            }
-          })
-        );
+            })
+          );
+        }
       }
 
       return json({}, { status: 201 });

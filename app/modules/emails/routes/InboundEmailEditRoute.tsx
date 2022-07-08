@@ -8,7 +8,10 @@ export default function InboundEmailRoute() {
   const data = useLoaderData<LoaderDataInboundEmailEdit>();
   const navigate = useNavigate();
   function getFileUrl(item: EmailAttachment) {
-    return item.publicUrl ?? `data:${item.type};base64,${item.content}`;
+    if (item.publicUrl) {
+      return item.publicUrl;
+    }
+    return `data:application/octet-stream;base64,${item.content}`;
   }
   return (
     <div>
@@ -20,55 +23,55 @@ export default function InboundEmailRoute() {
       >
         <div className="p-2">
           <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-2 text-end pt-1">
-              <div className="text-gray-400 text-sm">Subject: </div>
+            <div className="col-span-2 text-end">
+              <div className="text-gray-400 text-xs">Subject: </div>
             </div>
             <div className="col-span-10">
-              <div className="font-extrabold truncate">{data.item.subject}</div>
+              <div className="font-extrabold truncate text-sm">{data.item.subject}</div>
             </div>
 
-            <div className="col-span-2 text-end pt-1">
-              <div className="text-gray-400 text-sm">From: </div>
+            <div className="col-span-2 text-end">
+              <div className="text-gray-400 text-xs">From: </div>
             </div>
             <div className="col-span-10">
-              <div className="flex flex-col">
+              <div className="flex flex-col text-sm">
                 <div className="font-medium">{data.item.fromName}</div>
                 <div className="text-sm text-gray-400 truncate select-all">{data.item.fromEmail}</div>
               </div>
             </div>
 
-            <div className="col-span-2 text-end pt-1">
-              <div className="text-gray-400 text-sm">To: </div>
+            <div className="col-span-2 text-end">
+              <div className="text-gray-400 text-xs">To: </div>
             </div>
             <div className="col-span-10">
-              <div className="flex flex-col">
+              <div className="flex flex-col text-sm">
                 <div className="font-medium">{data.item.toName}</div>
                 <div className="text-sm text-gray-400 truncate select-all">{data.item.toEmail}</div>
               </div>
             </div>
 
-            <div className="col-span-2 text-end pt-1">
-              <div className="text-gray-400 text-sm">Date: </div>
+            <div className="col-span-2 text-end">
+              <div className="text-gray-400 text-xs">Date: </div>
             </div>
             <div className="col-span-10">
-              <div className="flex space-x-1 items-baseline">
+              <div className="flex space-x-1 items-baseline text-sm">
                 <div className="font-medium">{DateUtils.dateAgo(data.item.date)}</div>
                 <div className="text-xs text-gray-400">- {DateUtils.dateYMDHMS(data.item.date)}</div>
               </div>
             </div>
 
-            <div className="col-span-2 text-end pt-1">
-              <div className="text-gray-400 text-sm">Read at: </div>
+            <div className="col-span-2 text-end">
+              <div className="text-gray-400 text-xs">Read at: </div>
             </div>
             <div className="col-span-10">
-              <div className="flex space-x-1 items-baseline">
+              <div className="flex space-x-1 items-baseline text-sm">
                 <div className="font-medium">{DateUtils.dateAgo(data.myRead.createdAt)}</div>
                 <div className="text-xs text-gray-400">- {DateUtils.dateYMDHMS(data.myRead.createdAt)}</div>
               </div>
             </div>
 
-            <div className="col-span-2 text-end pt-1">
-              <div className="text-gray-400 text-sm">Attachments: </div>
+            <div className="col-span-2 text-end">
+              <div className="text-gray-400 text-xs">Attachments: </div>
             </div>
             <div className="col-span-10">
               <div className="flex flex-col">
@@ -76,7 +79,7 @@ export default function InboundEmailRoute() {
                   return (
                     <div key={item.id}>
                       <div className="text-sm">
-                        <a href={getFileUrl(item)} target="_blank" rel="noreferrer" className="underline hover:text-theme-500">
+                        <a href={getFileUrl(item)} download={item.name} target="_blank" rel="noreferrer" className="underline hover:text-theme-500">
                           {item.name}
                         </a>
                       </div>
