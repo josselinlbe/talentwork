@@ -255,6 +255,15 @@ export async function getMaxRowFolio(tenantId: string | null, entityId: string, 
   });
 }
 
+export async function getNextRowFolio(tenantId: string | null, entityId: string, parentRowId: string | undefined = undefined) {
+  const maxFolio = await getMaxRowFolio(tenantId, entityId, parentRowId);
+  let next = 1;
+  if (maxFolio && maxFolio._max.folio !== null) {
+    next = maxFolio._max.folio + 1;
+  }
+  return next;
+}
+
 export async function createRow(
   data: {
     entityId: string;

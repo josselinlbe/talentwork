@@ -32,18 +32,23 @@ export async function createNewRowWithEntity(
   createdByUserId: string,
   linkedAccountId: string | null = null,
   tenantId: string | null = null,
-  request?: Request
+  request?: Request,
+  nextFolio?: number
 ) {
   // const newRow = await getCreateNewRow(entityName, createdByUserId, linkedAccountId, tenantId);
-  const row = await createRow({
-    entityId: entity?.id ?? "",
-    createdByUserId,
-    linkedAccountId,
-    tenantId,
-    properties: {},
-    dynamicProperties: [],
-    dynamicRows: null,
-  });
+  const row = await createRow(
+    {
+      entityId: entity?.id ?? "",
+      createdByUserId,
+      linkedAccountId,
+      tenantId,
+      properties: {},
+      dynamicProperties: [],
+      dynamicRows: null,
+    },
+    undefined,
+    nextFolio
+  );
   const item = await getRow(entity.id, row.id, tenantId);
   if (row) {
     if (request) {
