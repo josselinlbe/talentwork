@@ -1,5 +1,6 @@
 import { EmailAttachment } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
+import { MediaDto } from "~/application/dtos/entities/MediaDto";
 
 function getClient() {
   const supabaseUrl = process.env.SUPABASE_API_URL?.toString() ?? "";
@@ -85,6 +86,18 @@ export async function getSupabaseFilePublicUrl(bucketId: string, path: string): 
 export function getSupabaseAttachmentBucket() {
   return "email-attachments";
 }
+
 export function getSupabaseAttachmentPath(attachment: EmailAttachment) {
   return attachment.id + "-" + attachment.name;
+}
+
+export async function createFileFromMedia(bucketId: string, id: string, data: MediaDto) {
+  const blobFile = await fetch(`${data.file}`);
+  const file = new File([await blobFile.blob()], data.name, { type: data.type });
+  try {
+    return await createSupabaseFile(bucketId, `${id}`, file);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
 }
