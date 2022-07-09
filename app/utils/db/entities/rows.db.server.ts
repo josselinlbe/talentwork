@@ -37,6 +37,7 @@ export type RowWithDetails = Row & {
     | null;
   values: RowValueWithDetails[];
   details: RowWithValues[];
+  workflowState: EntityWorkflowState | null;
   tags: RowTagWithDetails[];
   contact: Contact | null;
   deal: Deal | null;
@@ -79,6 +80,7 @@ export const includeRowDetails = {
       },
     },
   },
+  workflowState: true,
   tags: {
     include: {
       tag: true,
