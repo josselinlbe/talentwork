@@ -143,7 +143,7 @@ export async function getRowsWithPagination(
   items: RowWithDetails[];
   pagination: PaginationDto;
 }> {
-  let orderBy: any = { createdAt: "desc" };
+  let orderBy: any = { folio: "desc" };
   if (sortedBy?.name === "createdAt" || sortedBy?.name === "folio") {
     orderBy = { [sortedBy?.name]: sortedBy?.direction };
   }
