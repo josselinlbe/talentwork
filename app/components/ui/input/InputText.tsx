@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { forwardRef, ReactNode, Ref, RefObject, useImperativeHandle, useRef } from "react";
+import { forwardRef, ReactNode, Ref, RefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EntityIcon from "~/components/layouts/icons/EntityIcon";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
@@ -69,6 +69,15 @@ const InputText = (
 ) => {
   const { t, i18n } = useTranslation();
 
+  const [actualValue, setActualValue] = useState<string>(value ?? "");
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(actualValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actualValue]);
+
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
   const textArea = useRef<HTMLTextAreaElement>(null);
@@ -80,14 +89,14 @@ const InputText = (
     return t(value);
   }
 
-  function onChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+  function onChange(value: string) {
     if (setValue) {
       if (lowercase) {
-        setValue(e.currentTarget.value.toLowerCase());
+        setValue(value.toLowerCase());
       } else if (uppercase) {
-        setValue(e.currentTarget.value.toUpperCase());
+        setValue(value.toUpperCase());
       } else {
-        setValue(e.currentTarget.value);
+        setValue(value);
       }
     }
   }
@@ -133,8 +142,9 @@ const InputText = (
               required={required}
               minLength={minLength}
               maxLength={maxLength}
-              defaultValue={value ?? ""}
-              onChange={onChange}
+              defaultValue={value}
+              value={actualValue}
+              onChange={(e) => setActualValue(e.currentTarget.value)}
               onBlur={onBlur}
               disabled={disabled}
               readOnly={readOnly}
@@ -161,8 +171,9 @@ const InputText = (
             required={required}
             minLength={minLength}
             maxLength={maxLength}
-            value={value}
-            onChange={onChange}
+            defaultValue={value}
+            value={actualValue}
+            onChange={(e) => setActualValue(e.currentTarget.value)}
             disabled={disabled}
             readOnly={readOnly}
             placeholder={placeholder}

@@ -63,7 +63,7 @@ export async function getUserRowPermission(row: Row, tenantId?: string | null, u
     canDelete: false,
   };
   const userRoles = await getUserRoles(userId ?? "", tenantId);
-  console.log({ permissions, tenantId, userRoles: userRoles.map((f) => f.role.name) });
+  // console.log({ permissions, tenantId, userRoles: userRoles.map((f) => f.role.name) });
   if (
     row.createdByUserId === userId ||
     userRoles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) ||
