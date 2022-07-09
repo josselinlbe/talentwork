@@ -4,6 +4,7 @@ import { db } from "~/utils/db.server";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
+import { includeSimpleCreatedByUser } from "../users.db.server";
 
 export type ContactWithDetails = Contact & {
   deals: Deal[];
@@ -18,7 +19,7 @@ export function getAllContacts(filters?: RowFiltersDto): Promise<ContactWithDeta
       deals: true,
       row: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
           createdByApiKey: true,
           workflowState: true,
         },
@@ -36,7 +37,7 @@ export function getContact(id: string): Promise<ContactWithDetails | null> {
       deals: true,
       row: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
           createdByApiKey: true,
           workflowState: true,
         },
@@ -54,7 +55,7 @@ export function getContactByEmail(email: string): Promise<ContactWithDetails | n
       deals: true,
       row: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
           createdByApiKey: true,
           workflowState: true,
         },

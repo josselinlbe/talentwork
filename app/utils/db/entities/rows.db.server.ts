@@ -1,4 +1,4 @@
-import { Row, User, Tenant, LinkedAccount, Contract, RowValue, ApiKey, RowMedia, Contact, Deal, EntityWorkflowState } from "@prisma/client";
+import { Row, Tenant, LinkedAccount, Contract, RowValue, ApiKey, RowMedia, Contact, Deal, EntityWorkflowState } from "@prisma/client";
 import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
@@ -10,6 +10,7 @@ import TenantHelper from "~/utils/helpers/TenantHelper";
 import { setRowInitialWorkflowState } from "~/utils/services/WorkflowService";
 import { db } from "../../db.server";
 import { createRowPermission } from "../permissions/rowPermissions.db.server";
+import { includeSimpleCreatedByUser, UserSimple } from "../users.db.server";
 import { getDefaultEntityVisibility } from "./entities.db.server";
 import { RowTagWithDetails } from "./rowTags.db.server";
 
@@ -18,13 +19,13 @@ export type RowValueWithDetails = RowValue & {
 };
 export type RowWithValues = Row & { values: RowValueWithDetails[] };
 export type RowWithCreatedBy = Row & {
-  createdByUser: User | null;
+  createdByUser: UserSimple | null;
   createdByApiKey: ApiKey | null;
   workflowState: EntityWorkflowState | null;
 };
 export type RowWithDetails = Row & {
   // entity: Entity;
-  createdByUser: User | null;
+  createdByUser: UserSimple | null;
   createdByApiKey: ApiKey | null;
   tenant: Tenant | null;
   linkedAccount:
@@ -43,7 +44,7 @@ export type RowWithDetails = Row & {
 };
 
 export const includeRowDetails = {
-  createdByUser: true,
+  ...includeSimpleCreatedByUser,
   createdByApiKey: true,
   tenant: true,
   linkedAccount: {
@@ -99,7 +100,7 @@ export const includeRowDetails = {
       row: {
         include: {
           entity: true,
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
           createdByApiKey: true,
         },
       },

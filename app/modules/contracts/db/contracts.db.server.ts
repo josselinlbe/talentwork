@@ -1,16 +1,18 @@
 import { ContractStatusFilter } from "~/modules/contracts/enums/ContractStatusFilter";
 import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
 import { db } from "../../../utils/db.server";
-import { Contract, ContractMember, User, ContractEmployee, ContractActivity } from "@prisma/client";
+import { Contract, ContractMember, ContractEmployee, ContractActivity } from "@prisma/client";
 import { ContractMemberRole } from "../enums/ContractMemberRole";
 import { ContractStatus } from "../enums/ContractStatus";
-import { getMaxRowFolio, includeRowDetails, RowWithDetails } from "~/utils/db/entities/rows.db.server";
+import { includeRowDetails, RowWithDetails } from "~/utils/db/entities/rows.db.server";
+import { createNewRowWithEntity } from "~/utils/services/rowsService";
+import { includeSimpleCreatedByUser, includeSimpleUser, UserSimple } from "~/utils/db/users.db.server";
 
 export type ContractWithDetails = Contract & {
   row: RowWithDetails;
-  members: (ContractMember & { user: User })[];
+  members: (ContractMember & { user: UserSimple })[];
   employees: (ContractEmployee & { row: RowWithDetails })[];
-  activity: (ContractActivity & { createdByUser: User })[];
+  activity: (ContractActivity & { createdByUser: UserSimple })[];
 };
 
 export async function getMonthlyContractsCount(tenantId: string) {
@@ -55,7 +57,7 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
       },
       members: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
       employees: {
@@ -69,7 +71,7 @@ export async function getContract(id?: string): Promise<ContractWithDetails | nu
       },
       activity: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
         },
       },
     },
@@ -86,7 +88,7 @@ export async function getContracts(tenantId: string, filter: ContractStatusFilte
             clientTenant: true,
           },
         },
-        createdByUser: true,
+        ...includeSimpleCreatedByUser,
       },
     },
   };
@@ -143,22 +145,15 @@ export async function createContract(
   members: { userId: string; role: ContractMemberRole }[],
   employees: RowWithDetails[]
 ) {
-  let folio = 1;
-  const maxFolio = await getMaxRowFolio(tenantId, entityId, undefined);
-  if (maxFolio && maxFolio._max.folio !== null) {
-    folio = maxFolio._max.folio + 1;
-  }
+  // let folio = 1;
+  // const maxFolio = await getMaxRowFolio(tenantId, entityId, undefined);
+  // if (maxFolio && maxFolio._max.folio !== null) {
+  //   folio = maxFolio._max.folio + 1;
+  // }
+  const row = await createNewRowWithEntity("contract", createdByUserId, linkedAccountId, tenantId);
   const item = await db.contract.create({
     data: {
-      row: {
-        create: {
-          entityId,
-          createdByUserId,
-          tenantId,
-          linkedAccountId,
-          folio,
-        },
-      },
+      rowId: row.id,
       ...data,
     },
   });

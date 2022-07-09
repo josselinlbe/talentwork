@@ -1,9 +1,10 @@
-import { RowComment, User } from "@prisma/client";
+import { RowComment } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { includeSimpleCreatedByUser, UserSimple } from "../users.db.server";
 import { RowCommentReactionWithDetails } from "./rowCommentReaction.db.server";
 
 export type RowCommentWithDetails = RowComment & {
-  createdByUser: User;
+  createdByUser: UserSimple;
   reactions: RowCommentReactionWithDetails[];
   // replies: (RowComment & { createdByUser: User })[];
 };
@@ -15,15 +16,15 @@ export async function getRowComments(rowId: string): Promise<RowCommentWithDetai
       // parentCommentId: null,
     },
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       reactions: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
         },
       },
       // replies: {
       //   include: {
-      //     createdByUser: true,
+      //     ...includeSimpleCreatedByUser,
       //   },
       // },
     },
@@ -36,15 +37,15 @@ export async function getRowComment(id: string): Promise<RowCommentWithDetails |
       id,
     },
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       reactions: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
         },
       },
       // replies: {
       //   include: {
-      //     createdByUser: true,
+      //     ...includeSimpleCreatedByUser,
       //   },
       // },
     },

@@ -4,6 +4,7 @@ import { db } from "~/utils/db.server";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
 import { SubscriptionPriceWithProduct } from "../subscriptionProducts.db.server";
+import { includeSimpleCreatedByUser } from "../users.db.server";
 
 export type DealWithDetails = Deal & {
   contact: Contact;
@@ -27,7 +28,7 @@ export function getAllDeals(filters?: RowFiltersDto): Promise<DealWithDetails[]>
       contact: true,
       row: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
           createdByApiKey: true,
           workflowState: true,
         },
@@ -50,7 +51,7 @@ export function getAllDeals(filters?: RowFiltersDto): Promise<DealWithDetails[]>
 //       contact: true,
 //       row: {
 //         include: {
-//           createdByUser: true,
+//           ...includeSimpleCreatedByUser,
 //           createdByApiKey: true,
 //           workflowState: true,
 //         },
@@ -73,7 +74,7 @@ export function getDealByRowId(rowId: string): Promise<DealWithDetails | null> {
       contact: true,
       row: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
           createdByApiKey: true,
           workflowState: true,
         },

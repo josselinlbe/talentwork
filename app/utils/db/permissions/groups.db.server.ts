@@ -1,8 +1,9 @@
-import { Group, GroupUser, User } from "@prisma/client";
+import { Group, GroupUser } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { includeSimpleUser, UserSimple } from "../users.db.server";
 
 export type GroupWithDetails = Group & {
-  users: (GroupUser & { user: User })[];
+  users: (GroupUser & { user: UserSimple })[];
 };
 
 export async function getAllGroups(tenantId: string | null): Promise<GroupWithDetails[]> {
@@ -13,7 +14,7 @@ export async function getAllGroups(tenantId: string | null): Promise<GroupWithDe
     include: {
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },
@@ -36,7 +37,7 @@ export async function getGroups(tenantId: string | null, ids: string[]): Promise
     include: {
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },
@@ -68,7 +69,7 @@ export async function getMyGroups(userId: string, tenantId: string | null): Prom
     include: {
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },
@@ -88,7 +89,7 @@ export async function getGroup(id: string): Promise<GroupWithDetails | null> {
     include: {
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },

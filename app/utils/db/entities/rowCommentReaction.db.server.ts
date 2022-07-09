@@ -1,8 +1,9 @@
-import { RowCommentReaction, User } from "@prisma/client";
+import { RowCommentReaction } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { UserSimple } from "../users.db.server";
 
 export type RowCommentReactionWithDetails = RowCommentReaction & {
-  createdByUser: User;
+  createdByUser: UserSimple;
 };
 export async function setRowCommentReaction(data: { createdByUserId: string; rowCommentId: string; reaction: string }) {
   const existing = await db.rowCommentReaction.findFirst({

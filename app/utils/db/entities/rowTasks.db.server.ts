@@ -1,9 +1,10 @@
-import { RowTask, User } from "@prisma/client";
+import { RowTask } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { includeSimpleCreatedByUser, UserSimple } from "../users.db.server";
 
 export type RowTaskWithDetails = RowTask & {
-  createdByUser: User;
-  assignedToUser: User | null;
+  createdByUser: UserSimple;
+  assignedToUser: UserSimple | null;
 };
 
 export async function getRowTasks(rowId: string): Promise<RowTaskWithDetails[]> {
@@ -12,7 +13,7 @@ export async function getRowTasks(rowId: string): Promise<RowTaskWithDetails[]> 
       rowId,
     },
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       assignedToUser: true,
     },
     orderBy: [
@@ -32,7 +33,7 @@ export async function getRowTask(id: string): Promise<RowTaskWithDetails | null>
       id,
     },
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       assignedToUser: true,
     },
   });

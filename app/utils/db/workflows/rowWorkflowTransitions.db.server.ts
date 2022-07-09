@@ -1,8 +1,9 @@
-import { EntityWorkflowState, EntityWorkflowStep, RowWorkflowTransition, User } from "@prisma/client";
+import { EntityWorkflowState, EntityWorkflowStep, RowWorkflowTransition } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { includeSimpleCreatedByUser, UserSimple } from "../users.db.server";
 
 export type RowWorkflowTransitionWithDetails = RowWorkflowTransition & {
-  createdByUser: User;
+  createdByUser: UserSimple;
   workflowStep: EntityWorkflowStep & {
     fromState: EntityWorkflowState;
     toState: EntityWorkflowState;
@@ -15,7 +16,7 @@ export async function getRowWorkflowTransitions(rowId: string): Promise<RowWorkf
       rowId,
     },
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       workflowStep: {
         include: {
           fromState: true,
@@ -35,7 +36,7 @@ export async function getRowWorkflowTransition(id: string): Promise<RowWorkflowT
       id,
     },
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       workflowStep: {
         include: {
           fromState: true,

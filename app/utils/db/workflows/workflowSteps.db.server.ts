@@ -1,12 +1,13 @@
-import { EntityWorkflowStep, Tenant, Role, Group, User, EntityWorkflowState, EntityWorkflowStepAssignee } from "@prisma/client";
+import { EntityWorkflowStep, Tenant, Role, Group, EntityWorkflowState, EntityWorkflowStepAssignee } from "@prisma/client";
 import { db } from "~/utils/db.server";
+import { includeSimpleUser, UserSimple } from "../users.db.server";
 
 export type EntityWorkflowStepWithDetails = EntityWorkflowStep & {
   assignees: (EntityWorkflowStepAssignee & {
     tenant: Tenant | null;
     role: Role | null;
     group: Group | null;
-    user: User | null;
+    user: UserSimple | null;
   })[];
   fromState: EntityWorkflowState;
   toState: EntityWorkflowState;
@@ -25,7 +26,7 @@ export async function getWorkflowSteps(entityId: string): Promise<EntityWorkflow
           tenant: true,
           role: true,
           group: true,
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },
@@ -51,7 +52,7 @@ export async function getWorkflowStepsFromState(entityId: string, fromStateId: s
           tenant: true,
           role: true,
           group: true,
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },
@@ -76,7 +77,7 @@ export async function getWorkflowStep(id: string): Promise<EntityWorkflowStepWit
           tenant: true,
           role: true,
           group: true,
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },

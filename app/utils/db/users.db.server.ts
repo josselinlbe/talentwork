@@ -4,6 +4,12 @@ import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { db } from "~/utils/db.server";
 import RowFiltersHelper from "../helpers/RowFiltersHelper";
 
+export type UserSimple = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
 export type UserWithoutPassword = {
   id: string;
   email: string;
@@ -20,6 +26,18 @@ export type UserWithDetails = UserWithoutPassword & {
   admin: AdminUser | null;
   tenants: (TenantUser & { tenant: Tenant })[];
   roles: (UserRole & { role: Role })[];
+};
+
+export const includeSimpleUser = {
+  user: {
+    select: { id: true, email: true, firstName: true, lastName: true },
+  },
+};
+
+export const includeSimpleCreatedByUser = {
+  createdByUser: {
+    select: { id: true, email: true, firstName: true, lastName: true },
+  },
 };
 
 export async function adminGetAllTenantUsers(tenantId: string): Promise<UserWithDetails[]> {

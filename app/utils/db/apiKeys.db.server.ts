@@ -1,11 +1,12 @@
-import { ApiKey, ApiKeyEntity, ApiKeyLog, Entity, Tenant, User } from "@prisma/client";
+import { ApiKey, ApiKeyEntity, ApiKeyLog, Entity, Tenant } from "@prisma/client";
 import { db } from "../db.server";
 import { getClientIPAddress } from "remix-utils";
+import { includeSimpleCreatedByUser, UserSimple } from "./users.db.server";
 
 export type ApiKeyWithDetails = ApiKey & {
   tenant: Tenant;
   entities: (ApiKeyEntity & { entity: Entity })[];
-  createdByUser: User;
+  createdByUser: UserSimple;
   _count: { apiKeyLogs: number };
 };
 
@@ -20,7 +21,7 @@ const include = {
       entity: true,
     },
   },
-  createdByUser: true,
+  ...includeSimpleCreatedByUser,
   _count: {
     select: {
       apiKeyLogs: true,

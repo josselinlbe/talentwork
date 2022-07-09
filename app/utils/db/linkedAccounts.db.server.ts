@@ -1,9 +1,10 @@
-import { LinkedAccount, User, Tenant, TenantUser, Row } from "@prisma/client";
+import { LinkedAccount, Tenant, TenantUser, Row } from "@prisma/client";
 import { LinkedAccountStatus } from "~/application/enums/tenants/LinkedAccountStatus";
 import { db } from "../db.server";
+import { includeSimpleCreatedByUser, includeSimpleUser, UserSimple } from "./users.db.server";
 
 export type LinkedAccountWithDetails = LinkedAccount & {
-  createdByUser: User;
+  createdByUser: UserSimple;
   createdByTenant: Tenant;
   providerTenant: Tenant;
   clientTenant: Tenant;
@@ -14,8 +15,8 @@ export type LinkedAccountWithDetailsAndContracts = LinkedAccountWithDetails & {
 };
 
 export type LinkedAccountWithDetailsAndMembers = LinkedAccount & {
-  providerTenant: Tenant & { users: (TenantUser & { tenant: Tenant; user: User })[] };
-  clientTenant: Tenant & { users: (TenantUser & { tenant: Tenant; user: User })[] };
+  providerTenant: Tenant & { users: (TenantUser & { tenant: Tenant; user: UserSimple })[] };
+  clientTenant: Tenant & { users: (TenantUser & { tenant: Tenant; user: UserSimple })[] };
 };
 
 export async function getLinkedAccount(id?: string): Promise<LinkedAccountWithDetailsAndContracts | null> {
@@ -31,7 +32,7 @@ export async function getLinkedAccount(id?: string): Promise<LinkedAccountWithDe
       providerTenant: true,
       clientTenant: true,
       rows: true,
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
     },
   });
 }
@@ -80,7 +81,7 @@ export async function getLinkedAccounts(tenantId: string, status?: LinkedAccount
       createdByTenant: true,
       providerTenant: true,
       clientTenant: true,
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
     },
   });
 }
@@ -104,7 +105,7 @@ export async function getClientLinks(tenantId: string): Promise<LinkedAccountWit
       createdByTenant: true,
       providerTenant: true,
       clientTenant: true,
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       rows: true,
     },
   });
@@ -129,7 +130,7 @@ export async function getProviderLinks(tenantId: string): Promise<LinkedAccountW
       createdByTenant: true,
       providerTenant: true,
       clientTenant: true,
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       rows: true,
     },
   });
@@ -156,7 +157,7 @@ export async function getLinksWithMembers(tenantId: string | null): Promise<Link
         include: {
           users: {
             include: {
-              user: true,
+              ...includeSimpleUser,
               tenant: true,
             },
           },
@@ -166,7 +167,7 @@ export async function getLinksWithMembers(tenantId: string | null): Promise<Link
         include: {
           users: {
             include: {
-              user: true,
+              ...includeSimpleUser,
               tenant: true,
             },
           },

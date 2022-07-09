@@ -1,14 +1,15 @@
 import { db } from "../../db.server";
-import { Permission, Role, RolePermission, User, UserRole } from "@prisma/client";
+import { Permission, Role, RolePermission, UserRole } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
+import { includeSimpleUser, UserSimple } from "../users.db.server";
 
 export type RoleWithPermissions = Role & {
   permissions: (RolePermission & { permission: Permission })[];
 };
 
 export type RoleWithPermissionsAndUsers = RoleWithPermissions & {
-  users: (UserRole & { user: User })[];
+  users: (UserRole & { user: UserSimple })[];
 };
 
 export async function getAllRoles(type?: "admin" | "app"): Promise<RoleWithPermissions[]> {
@@ -67,7 +68,7 @@ export async function getAllRolesWithUsers(type?: "admin" | "app", filters?: Fil
       },
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },
@@ -97,7 +98,7 @@ export async function getRoles(ids: string[]): Promise<RoleWithPermissionsAndUse
       },
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
     },

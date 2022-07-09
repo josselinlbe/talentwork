@@ -12,6 +12,7 @@ import { createCoreEntity, createEntity, getEntityByName, getEntityBySlug } from
 import { createProperties, CreatePropertyDto } from "~/utils/db/entities/properties.db.server";
 import { createRow, getMaxRowFolio, getRow } from "~/utils/db/entities/rows.db.server";
 import { createManualRowLog } from "~/utils/db/logs.db.server";
+import { includeSimpleUser } from "~/utils/db/users.db.server";
 
 export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User) {
   await createSampleEntity_Contract(
@@ -423,11 +424,11 @@ async function createSampleEntity_Contract(linkedAccount: LinkedAccount, created
   });
   const tenantAusers = await db.tenantUser.findMany({
     where: { tenantId: linkedAccount.providerTenantId },
-    include: { user: true },
+    include: { ...includeSimpleUser },
   });
   const tenantBusers = await db.tenantUser.findMany({
     where: { tenantId: linkedAccount.clientTenantId },
-    include: { user: true },
+    include: { ...includeSimpleUser },
   });
 
   let folio = 1;

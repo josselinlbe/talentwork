@@ -10,10 +10,11 @@ import { EntityWithDetails } from "./entities/entities.db.server";
 import { callEntityWebhooks } from "./entities/entityWebhooks.db.server";
 import { RowCommentWithDetails } from "./entities/rowComments.db.server";
 import { RowWithDetails } from "./entities/rows.db.server";
+import { includeSimpleCreatedByUser, includeSimpleUser, UserSimple } from "./users.db.server";
 import { RowWorkflowTransitionWithDetails } from "./workflows/rowWorkflowTransitions.db.server";
 
 export type LogWithDetails = Log & {
-  user: User | null;
+  user: UserSimple | null;
   apiKey: ApiKey | null;
   tenant?: Tenant | null;
   comment?: RowCommentWithDetails | null;
@@ -21,22 +22,22 @@ export type LogWithDetails = Log & {
 };
 
 const include = {
-  user: true,
+  ...includeSimpleUser,
   tenant: true,
   apiKey: true,
   comment: {
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       reactions: {
         include: {
-          createdByUser: true,
+          ...includeSimpleCreatedByUser,
         },
       },
     },
   },
   workflowTransition: {
     include: {
-      createdByUser: true,
+      ...includeSimpleCreatedByUser,
       workflowStep: {
         include: {
           fromState: true,
