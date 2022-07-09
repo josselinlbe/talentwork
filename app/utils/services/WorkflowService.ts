@@ -152,6 +152,7 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
       id,
     },
     include: {
+      workflowStates: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
