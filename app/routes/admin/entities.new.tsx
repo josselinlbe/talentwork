@@ -4,11 +4,9 @@ import EntityForm from "~/components/entities/EntityForm";
 import NewPageLayout from "~/components/ui/layouts/NewPageLayout";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { createEntity } from "~/utils/db/entities/entities.db.server";
-import { createPermissions } from "~/utils/db/permissions/permissions.db.server";
-import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
+import { createEntityPermissions } from "~/utils/db/permissions/permissions.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
-import { getEntityPermissions, verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
-import { Visibility } from "~/application/dtos/shared/Visibility";
+import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import Constants from "~/application/Constants";
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -70,21 +68,7 @@ export const action: ActionFunction = async ({ request }) => {
         defaultVisibility,
       });
 
-      const allUserRoles = await getAllRoles();
-      const assignToAllUserRoles = allUserRoles.filter((f) => f.assignToNewUsers);
-      const entityPermissions = await getEntityPermissions(entity);
-      await Promise.all(
-        entityPermissions.map(async (permission, idx) => {
-          const entityPermission = {
-            inRoles: assignToAllUserRoles.map((f) => f.name),
-            name: permission.name,
-            description: permission.description,
-            type: "app",
-            entityId: entity.id,
-          };
-          return await createPermissions([entityPermission], allUserRoles.length + idx + 1);
-        })
-      );
+      await createEntityPermissions(entity);
 
       if (entity) {
         return redirect(`/admin/entities/${slug}/properties`);

@@ -2,11 +2,11 @@ import { Entity } from "@prisma/client";
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import Constants from "~/application/Constants";
-import { Visibility } from "~/application/dtos/shared/Visibility";
 import EntityForm from "~/components/entities/EntityForm";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { updateEntity, deleteEntity, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { updateEntity, deleteEntity, getEntityBySlug, getEntityById } from "~/utils/db/entities/entities.db.server";
+import { createEntityPermissions, deleteEntityPermissions } from "~/utils/db/permissions/permissions.db.server";
 import EntityHelper from "~/utils/helpers/EntityHelper";
 
 type LoaderData = {
@@ -85,6 +85,13 @@ export const action: ActionFunction = async ({ request, params }) => {
         hasWorkflow,
         defaultVisibility,
       });
+      if (item.name !== name) {
+        await deleteEntityPermissions(item);
+        const updatedEntity = await getEntityById(item.id);
+        if (updatedEntity) {
+          await createEntityPermissions(updatedEntity);
+        }
+      }
 
       return redirect("/admin/entities");
     } catch (e) {
@@ -95,6 +102,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       if (item.isDefault) {
         return badRequest({ error: "Default entities cannot be deleted" });
       }
+      await deleteEntityPermissions(item);
       await deleteEntity(item.id ?? "");
       return redirect("/admin/entities");
     } catch (e) {

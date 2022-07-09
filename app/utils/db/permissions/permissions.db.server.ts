@@ -1,9 +1,10 @@
 import { db } from "../../db.server";
-import { Permission, Role, RolePermission } from "@prisma/client";
-import { getRoleByName } from "./roles.db.server";
+import { Entity, Permission, Role, RolePermission } from "@prisma/client";
+import { getAllRoles, getRoleByName } from "./roles.db.server";
 import { createRolePermission } from "./rolePermissions.db.server";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { getEntityPermissions } from "~/utils/helpers/PermissionsHelper";
 
 export type PermissionWithRoles = Permission & {
   inRoles: (RolePermission & { role: Role })[];
@@ -67,6 +68,23 @@ export async function getPermissionByName(name: string): Promise<PermissionWithR
   return await db.permission.findUnique({
     where: {
       name,
+    },
+    include: {
+      inRoles: {
+        include: {
+          role: true,
+        },
+      },
+    },
+  });
+}
+
+export async function getPermissionByNames(names: string[]): Promise<PermissionWithRoles[]> {
+  return await db.permission.findMany({
+    where: {
+      name: {
+        in: names,
+      },
     },
     include: {
       inRoles: {
@@ -147,4 +165,36 @@ export async function deletePermission(id: string) {
   return await db.permission.delete({
     where: { id },
   });
+}
+
+export async function deleteEntityPermissions(entity: Entity) {
+  const entityPermissions = await getEntityPermissions(entity);
+  const names = entityPermissions.map((p) => p.name);
+  if (names.length > 0) {
+    return await db.permission.deleteMany({
+      where: {
+        name: {
+          in: names,
+        },
+      },
+    });
+  }
+}
+
+export async function createEntityPermissions(entity: Entity) {
+  const allUserRoles = await getAllRoles();
+  const assignToAllUserRoles = allUserRoles.filter((f) => f.assignToNewUsers);
+  const entityPermissions = await getEntityPermissions(entity);
+  await Promise.all(
+    entityPermissions.map(async (permission, idx) => {
+      const entityPermission = {
+        inRoles: assignToAllUserRoles.map((f) => f.name),
+        name: permission.name,
+        description: permission.description,
+        type: "app",
+        entityId: entity.id,
+      };
+      return await createPermissions([entityPermission], allUserRoles.length + idx + 1);
+    })
+  );
 }
