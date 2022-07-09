@@ -8,6 +8,7 @@ import { getAvailableTenantInboundAddress, getAvailableTenantSlug } from "../ser
 import { createUserRole } from "./permissions/userRoles.db.server";
 import { TenantSubscriptionWithDetails } from "./tenantSubscriptions.db.server";
 import { createTenantSubscription } from "./tenantSubscriptions.db.server";
+import { includeSimpleUser, UserSimple } from "./users.db.server";
 
 export type MyTenant = TenantUser & {
   tenant: Tenant;
@@ -16,7 +17,7 @@ export type MyTenant = TenantUser & {
 export type TenantWithDetails = Tenant & {
   inboundAddresses: TenantInboundAddress[];
   users: (TenantUser & {
-    user: User;
+    user: UserSimple;
   })[];
   subscription: TenantSubscriptionWithDetails | null;
 };
@@ -38,7 +39,7 @@ const includeTenantWithDetails = {
   inboundAddresses: true,
   users: {
     include: {
-      user: true,
+      ...includeSimpleUser,
     },
   },
   subscription: {
@@ -84,7 +85,7 @@ export async function adminGetAllTenantsWithUsage(filters?: FiltersDto): Promise
       inboundAddresses: true,
       users: {
         include: {
-          user: true,
+          ...includeSimpleUser,
         },
       },
       subscription: {
