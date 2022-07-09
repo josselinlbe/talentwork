@@ -1,4 +1,4 @@
-import { EntityTag } from "@prisma/client";
+import { EntityTag, EntityWorkflowState } from "@prisma/client";
 import { Params } from "react-router";
 import { redirect } from "@remix-run/node";
 import Constants from "~/application/Constants";
@@ -10,6 +10,7 @@ import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { verifyUserHasPermission, getEntityPermission } from "~/utils/helpers/PermissionsHelper";
 import { getEntityFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
 import { getUserInfo } from "~/utils/session.server";
+import { getWorkflowStates } from "~/utils/db/workflows/workflowStates.db.server";
 
 export type LoaderDataRowsView = {
   title: string;
@@ -17,6 +18,7 @@ export type LoaderDataRowsView = {
   items: RowWithDetails[];
   tags: EntityTag[];
   pagination?: PaginationDto;
+  workflowStates: EntityWorkflowState[];
 };
 export let loaderRowsView = async (request: Request, params: Params, entitySlug: string, tenantId: string | null) => {
   let { t } = await i18nHelper(request);
@@ -45,6 +47,7 @@ export let loaderRowsView = async (request: Request, params: Params, entitySlug:
     items,
     pagination,
     tags: await getEntityTags(entity.id),
+    workflowStates: await getWorkflowStates(entity.id),
   };
   return data;
 };
