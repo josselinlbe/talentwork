@@ -12,8 +12,8 @@ interface Props {
   name: string;
   title: string;
   initialMedia?: RowMedia[] | undefined;
-  onSelected?: (item: MediaDto[]) => void;
   disabled?: boolean;
+  onSelected: (item: MediaDto[]) => void;
   className?: string;
   readOnly?: boolean;
   required?: boolean;
@@ -47,9 +47,7 @@ export default function InputMedia({
   const [selectedItem, setSelectedItem] = useState<MediaDto>();
 
   useEffect(() => {
-    if (onSelected) {
-      onSelected(items);
-    }
+    onSelected(items);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
@@ -58,6 +56,7 @@ export default function InputMedia({
   }
 
   function onDroppedFiles(e: FileBase64[]) {
+    setError(undefined);
     if (max) {
       if (e.length + items.length > max) {
         setError("Maximun number of files exceeded: " + max);
@@ -69,6 +68,27 @@ export default function InputMedia({
       const found = e.find((f) => bytesToMegaBytes(f.file.size) > maxSize);
       if (found) {
         setError(`Max size is ${maxSize} MB, found ${bytesToMegaBytes(found.file.size).toFixed(2)}`);
+        return;
+      }
+    }
+    if (accept?.includes(".")) {
+      const acceptedFileExtensions = accept.split(",");
+      const invalidFiles = e.map((f) => {
+        let foundExtension = "";
+        acceptedFileExtensions
+          .filter((f) => f)
+          .forEach((element) => {
+            if (f.file.name.toLowerCase().endsWith(element.toLowerCase())) {
+              foundExtension = element;
+            }
+          });
+        if (!foundExtension) {
+          return f;
+        }
+        return null;
+      });
+      if (invalidFiles.find((f) => f !== null)) {
+        setError("Invalid file type: " + accept);
         return;
       }
     }
