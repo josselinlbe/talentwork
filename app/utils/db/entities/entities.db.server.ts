@@ -383,7 +383,7 @@ export async function createCoreEntity(
       hasTags: data.hasTags !== undefined ? data.hasTags : true,
       hasComments: data.hasComments !== undefined ? data.hasComments : true,
       hasTasks: data.hasTasks !== undefined ? data.hasTasks : true,
-      hasWorkflow: data.hasTasks !== undefined ? data.hasTasks : false,
+      hasWorkflow: data.hasWorkflow !== undefined ? data.hasWorkflow : false,
       defaultVisibility: data.defaultVisibility ?? Constants.DEFAULT_ROW_VISIBILITY,
     },
     workflowStates
