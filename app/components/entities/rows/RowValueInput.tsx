@@ -15,9 +15,9 @@ import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { TenantUserWithUser } from "~/utils/db/tenants.db.server";
 import RowHelper from "~/utils/helpers/RowHelper";
 import { RefEntitySelector } from "../EntitySelector";
-import PropertyMediaInput from "../properties/PropertyMediaInput";
 import PropertyOptionSelector from "../properties/PropertyOptionSelector";
 import InputCheckbox from "~/components/ui/input/InputCheckbox";
+import InputMedia from "~/components/ui/input/InputMedia";
 
 export interface RefRowValueInput {
   focus: () => void;
@@ -269,12 +269,11 @@ const RowValueInput = (
           />
         </>
       ) : selected?.type === PropertyType.MEDIA ? (
-        <PropertyMediaInput
+        <InputMedia
           name={selected.name}
           title={selected.title}
           initialMedia={initialMedia}
           className={className}
-          property={selected}
           disabled={readOnly}
           onSelected={(e) => setMedia(e)}
           readOnly={readOnly}

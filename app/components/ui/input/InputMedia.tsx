@@ -6,14 +6,12 @@ import PreviewMediaModal from "~/components/ui/media/PreviewMediaModal";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
 import MediaItem from "~/components/ui/uploaders/MediaItem";
 import UploadDocuments from "~/components/ui/uploaders/UploadDocument";
-import { PropertyWithDetails } from "~/utils/db/entities/entities.db.server";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 
 interface Props {
   name: string;
   title: string;
-  initialMedia: RowMedia[] | undefined;
-  property: PropertyWithDetails;
+  initialMedia?: RowMedia[] | undefined;
   disabled?: boolean;
   onSelected: (item: MediaDto[]) => void;
   className?: string;
@@ -27,11 +25,10 @@ interface Props {
   icon?: string;
   maxSize?: number;
 }
-export default function PropertyMediaInput({
+export default function InputMedia({
   name,
   title,
   initialMedia,
-  property,
   disabled,
   onSelected,
   className,
@@ -115,7 +112,7 @@ export default function PropertyMediaInput({
         {/* <UploadDocuments onDropped={onDroppedFile} /> */}
         {!readOnly && (
           <UploadDocuments
-            name={property.name}
+            name={name}
             disabled={disabled || (max !== undefined && max <= items.length)}
             multiple={true}
             onDroppedFiles={onDroppedFiles}
@@ -124,7 +121,7 @@ export default function PropertyMediaInput({
         )}
 
         {items.map((item, idx) => {
-          return <input key={idx} type="hidden" name={property.name + `[]`} value={JSON.stringify(item)} />;
+          return <input key={idx} type="hidden" name={name + `[]`} value={JSON.stringify(item)} />;
         })}
 
         {items.length > 0 ? (
