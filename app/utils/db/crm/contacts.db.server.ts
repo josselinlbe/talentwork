@@ -3,6 +3,7 @@ import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { db } from "~/utils/db.server";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
+import { EntityWithDetails } from "../entities/entities.db.server";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
 import { includeSimpleCreatedByUser } from "../users.db.server";
 
@@ -65,6 +66,7 @@ export function getContactByEmail(email: string): Promise<ContactWithDetails | n
 }
 
 export async function createContact(
+  entity: EntityWithDetails,
   createdByUserId: string,
   data: {
     status: string;
@@ -76,7 +78,7 @@ export async function createContact(
     title?: string;
   }
 ) {
-  const row = await createNewRowWithEntity("contact", createdByUserId);
+  const row = await createNewRowWithEntity(entity, createdByUserId);
   return db.contact.create({
     data: {
       rowId: row.id,

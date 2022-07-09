@@ -2,6 +2,7 @@ import { Deal, Contact } from "@prisma/client";
 import { RowFiltersDto } from "~/application/dtos/data/RowFiltersDto";
 import { db } from "~/utils/db.server";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
+import { EntityWithDetails } from "../entities/entities.db.server";
 import { RowWithCreatedBy } from "../entities/rows.db.server";
 import { SubscriptionPriceWithProduct } from "../subscriptionProducts.db.server";
 import { includeSimpleCreatedByUser } from "../users.db.server";
@@ -89,6 +90,7 @@ export function getDealByRowId(rowId: string): Promise<DealWithDetails | null> {
 }
 
 export async function createDeal(
+  entity: EntityWithDetails,
   createdByUserId: string,
   data: {
     contactId: string;
@@ -97,7 +99,7 @@ export async function createDeal(
     subscriptionPriceId?: string | null;
   }
 ) {
-  const row = await createNewRowWithEntity("deal", createdByUserId);
+  const row = await createNewRowWithEntity(entity, createdByUserId);
   return db.deal.create({
     data: {
       rowId: row.id,

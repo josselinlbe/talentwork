@@ -3,7 +3,7 @@ import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
 import { createContact, getContactByEmail } from "~/utils/db/crm/contacts.db.server";
 import { createDeal } from "~/utils/db/crm/deals.db.server";
-import { createEntity } from "~/utils/db/entities/entities.db.server";
+import { createEntity, getEntityById } from "~/utils/db/entities/entities.db.server";
 import { createProperties } from "~/utils/db/entities/properties.db.server";
 import { getUserByEmail } from "~/utils/db/users.db.server";
 import { getWorkflowStates } from "~/utils/db/workflows/workflowStates.db.server";
@@ -104,7 +104,11 @@ async function createEntity_Contact() {
     },
   ]);
 
-  await createContact(adminUser.id, {
+  const contactEntity = await getEntityById(entity.id);
+  if (!contactEntity) {
+    throw new Error("Could not create contact entity");
+  }
+  await createContact(contactEntity, adminUser.id, {
     status: "Partner",
     email: "joanj.fisher@teleworm.us",
     firstName: "Joan",
@@ -114,7 +118,7 @@ async function createEntity_Contact() {
     title: "Software Engineer",
   });
 
-  await createContact(adminUser.id, {
+  await createContact(contactEntity, adminUser.id, {
     status: "Customer",
     email: "john.doe@company.com",
     firstName: "John",
@@ -124,7 +128,7 @@ async function createEntity_Contact() {
     title: "Product Manager",
   });
 
-  await createContact(adminUser.id, {
+  await createContact(contactEntity, adminUser.id, {
     status: "Customer",
     email: "wadeb.landis@rhyta.com",
     firstName: "Wade",
@@ -134,7 +138,7 @@ async function createEntity_Contact() {
     title: "Marketing Manager",
   });
 
-  await createContact(adminUser.id, {
+  await createContact(contactEntity, adminUser.id, {
     status: "Lead",
     email: "luna.davis@company.com",
     firstName: "Luna",
@@ -206,8 +210,13 @@ async function createEntity_Deal() {
   //   },
   // ]);
 
+  const dealEntity = await getEntityById(entity.id);
+  if (!dealEntity) {
+    throw new Error("Could not create deal entity");
+  }
+
   const contact1 = await getContactByEmail("john.doe@company.com");
-  const deal1 = await createDeal(adminUser.id, {
+  const deal1 = await createDeal(dealEntity, adminUser.id, {
     contactId: contact1?.id ?? "",
     name: "Deal with John Doe",
     value: 2500,
@@ -216,7 +225,7 @@ async function createEntity_Deal() {
   await setRowInitialWorkflowState(entity?.id ?? "", deal1.rowId);
 
   const contact2 = await getContactByEmail("luna.davis@company.com");
-  const deal2 = await createDeal(adminUser.id, {
+  const deal2 = await createDeal(dealEntity, adminUser.id, {
     contactId: contact2?.id ?? "",
     name: "Deal with Luna Davis",
     value: 4000,

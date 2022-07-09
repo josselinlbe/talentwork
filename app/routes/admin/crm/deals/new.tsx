@@ -6,7 +6,7 @@ import { i18nHelper } from "~/locale/i18n.utils";
 import { LoaderDataRowNew, loaderRowNew } from "~/modules/rows/loaders/row-new";
 import { ContactWithDetails, getAllContacts } from "~/utils/db/crm/contacts.db.server";
 import { createDeal } from "~/utils/db/crm/deals.db.server";
-import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
+import { getEntityByName, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { SubscriptionPriceWithProduct, getSubscriptionPrices } from "~/utils/db/subscriptionProducts.db.server";
 import { setRowInitialWorkflowState } from "~/utils/services/WorkflowService";
 import { getUserInfo } from "~/utils/session.server";
@@ -33,6 +33,10 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
+  const entity = await getEntityByName("deal");
+  if (!entity) {
+    throw badRequest({ error: "Entity required: deal" });
+  }
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
   const action = form.get("action")?.toString() ?? "";
@@ -41,7 +45,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (!subscriptionPriceId) {
       subscriptionPriceId = null;
     }
-    const deal = await createDeal(userInfo.userId, {
+    const deal = await createDeal(entity, userInfo.userId, {
       contactId: form.get("contact")?.toString() ?? "",
       name: form.get("name")?.toString() ?? "",
       value: Number(form.get("value")),

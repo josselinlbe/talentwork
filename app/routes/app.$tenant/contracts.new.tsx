@@ -30,12 +30,10 @@ import { getTenantUrl } from "~/utils/services/urlService";
 import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
-import { getRow, getRows, RowWithDetails } from "~/utils/db/entities/rows.db.server";
+import { getRows, RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
-import { createRowLog } from "~/utils/db/logs.db.server";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
-import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 
 type LoaderData = {
   title: string;
@@ -118,7 +116,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Contract entity required" });
   }
   const createdContract = await createContract(
-    entity.id,
+    entity,
     userInfo.userId,
     tenantUrl.tenantId,
     linkedAccountId,
@@ -136,15 +134,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     return badRequest({ error: "Could not create contract" });
   }
   const contract = await getContract(createdContract.id);
-
-  const contractRow = await getRow(entity.id, contract?.rowId ?? "", tenantUrl.tenantId);
-  await createRowLog(request, {
-    tenantId: tenantUrl.tenantId,
-    createdByUserId: userInfo.userId,
-    action: DefaultLogActions.Created,
-    entity,
-    item: contractRow,
-  });
 
   const employeeEntity = await getEntityBySlug("employees");
   if (!employeeEntity) {

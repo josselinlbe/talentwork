@@ -132,7 +132,7 @@ export async function seedRolesAndPermissions() {
 
   await createPermissions(appPermissions);
 
-  const entities = await getAllEntities(true, false);
+  const entities = await getAllEntities(true);
   await Promise.all(
     entities.map(async (entity) => {
       return (await getEntityPermissions(entity)).map(async (permission) => {

@@ -11,7 +11,6 @@ import ChatAltIcon from "~/components/ui/icons/ChatAltIcon";
 import LightningBoltFilledIcon from "~/components/ui/icons/LightningBoltFilledIcon";
 import PencilIcon from "~/components/ui/icons/PencilIcon";
 import QuestionMarkFilledIcon from "~/components/ui/icons/QuestionMarkFilledIcon";
-import { useAppData } from "~/utils/data/useAppData";
 import { LogWithDetails } from "~/utils/db/logs.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 import RowLogComment from "./RowLogComment";

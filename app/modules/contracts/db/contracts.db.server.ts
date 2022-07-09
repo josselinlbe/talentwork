@@ -7,6 +7,7 @@ import { ContractStatus } from "../enums/ContractStatus";
 import { includeRowDetails, RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { createNewRowWithEntity } from "~/utils/services/rowsService";
 import { includeSimpleCreatedByUser, includeSimpleUser, UserSimple } from "~/utils/db/users.db.server";
+import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
 
 export type ContractWithDetails = Contract & {
   row: RowWithDetails;
@@ -132,7 +133,7 @@ export async function getContracts(tenantId: string, filter: ContractStatusFilte
 }
 
 export async function createContract(
-  entityId: string,
+  entity: EntityWithDetails,
   createdByUserId: string,
   tenantId: string,
   linkedAccountId: string,
@@ -150,7 +151,7 @@ export async function createContract(
   // if (maxFolio && maxFolio._max.folio !== null) {
   //   folio = maxFolio._max.folio + 1;
   // }
-  const row = await createNewRowWithEntity("contract", createdByUserId, linkedAccountId, tenantId);
+  const row = await createNewRowWithEntity(entity, createdByUserId, linkedAccountId, tenantId);
   const item = await db.contract.create({
     data: {
       rowId: row.id,

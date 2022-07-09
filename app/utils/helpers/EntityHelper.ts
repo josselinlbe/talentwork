@@ -1,7 +1,7 @@
 import { Entity, Property } from "@prisma/client";
 import { Params } from "react-router";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
-import { getEntityByOrder, getEntityByPrefix, getEntityBySlug } from "../db/entities/entities.db.server";
+import { getEntityByName, getEntityByOrder, getEntityByPrefix, getEntityBySlug } from "../db/entities/entities.db.server";
 
 const getEntityFromParams = async (params: Params) => {
   return await getEntityBySlug(params.entity ?? "");
@@ -11,7 +11,7 @@ const validateEntity = async (name: string, slug: string, order: number | null, 
   const errors: string[] = [];
 
   if (!entity || entity?.name !== name) {
-    const existingName = await getEntityBySlug(name);
+    const existingName = await getEntityByName(name);
     if (existingName) {
       errors.push(`Existing entity with name '${name}': ${existingName.slug}`);
     }
