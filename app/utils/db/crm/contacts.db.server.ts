@@ -76,9 +76,10 @@ export async function createContact(
     phone?: string;
     company?: string;
     title?: string;
-  }
+  },
+  request?: Request
 ) {
-  const row = await createNewRowWithEntity(entity, createdByUserId);
+  const row = await createNewRowWithEntity(entity, createdByUserId, null, null, request);
   return db.contact.create({
     data: {
       rowId: row.id,

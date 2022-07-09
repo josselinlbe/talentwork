@@ -45,12 +45,17 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (!subscriptionPriceId) {
       subscriptionPriceId = null;
     }
-    const deal = await createDeal(entity, userInfo.userId, {
-      contactId: form.get("contact")?.toString() ?? "",
-      name: form.get("name")?.toString() ?? "",
-      value: Number(form.get("value")),
-      subscriptionPriceId,
-    });
+    const deal = await createDeal(
+      entity,
+      userInfo.userId,
+      {
+        contactId: form.get("contact")?.toString() ?? "",
+        name: form.get("name")?.toString() ?? "",
+        value: Number(form.get("value")),
+        subscriptionPriceId,
+      },
+      request
+    );
     const dealEntity = await getEntityBySlug("deals");
     if (dealEntity) {
       await setRowInitialWorkflowState(dealEntity?.id ?? "", deal.rowId);

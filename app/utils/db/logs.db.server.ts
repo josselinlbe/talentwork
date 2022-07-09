@@ -151,7 +151,13 @@ export async function createManualRowLog(data: {
   item: RowWithDetails | null;
   workflowTransition?: RowWorkflowTransitionWithDetails | null;
 }) {
-  let details = data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null;
+  let details =
+    data.item !== null
+      ? JSON.stringify({
+          ...RowHelper.getProperties(data.entity, data.item),
+          id: data.item,
+        })
+      : null;
   if (data.workflowTransition) {
     details = `From ${data.workflowTransition.workflowStep.fromState.title} to ${data.workflowTransition.workflowStep.toState.title}`;
   }

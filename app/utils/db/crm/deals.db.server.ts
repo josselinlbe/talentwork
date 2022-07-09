@@ -97,9 +97,10 @@ export async function createDeal(
     name: string;
     value: number;
     subscriptionPriceId?: string | null;
-  }
+  },
+  request?: Request
 ) {
-  const row = await createNewRowWithEntity(entity, createdByUserId);
+  const row = await createNewRowWithEntity(entity, createdByUserId, null, null, request);
   return db.deal.create({
     data: {
       rowId: row.id,

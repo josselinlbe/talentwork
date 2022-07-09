@@ -144,14 +144,15 @@ export async function createContract(
     status: ContractStatus;
   },
   members: { userId: string; role: ContractMemberRole }[],
-  employees: RowWithDetails[]
+  employees: RowWithDetails[],
+  request?: Request
 ) {
   // let folio = 1;
   // const maxFolio = await getMaxRowFolio(tenantId, entityId, undefined);
   // if (maxFolio && maxFolio._max.folio !== null) {
   //   folio = maxFolio._max.folio + 1;
   // }
-  const row = await createNewRowWithEntity(entity, createdByUserId, linkedAccountId, tenantId);
+  const row = await createNewRowWithEntity(entity, createdByUserId, linkedAccountId, tenantId, request);
   const item = await db.contract.create({
     data: {
       rowId: row.id,

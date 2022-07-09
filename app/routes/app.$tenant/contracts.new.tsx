@@ -127,7 +127,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       status: ContractStatus.PENDING,
     },
     members,
-    employees
+    employees,
+    request
   );
 
   if (!createdContract) {
