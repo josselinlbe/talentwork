@@ -91,7 +91,7 @@ export function getSupabaseAttachmentPath(attachment: EmailAttachment) {
   return attachment.id + "-" + attachment.name;
 }
 
-export async function createFileFromMedia(bucketId: string, id: string, data: MediaDto) {
+export async function createSupabaseFileFromMedia(bucketId: string, id: string, data: MediaDto) {
   const blobFile = await fetch(`${data.file}`);
   const file = new File([await blobFile.blob()], data.name, { type: data.type });
   try {
