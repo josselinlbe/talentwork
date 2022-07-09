@@ -12,8 +12,8 @@ interface Props {
   name: string;
   title: string;
   initialMedia?: RowMedia[] | undefined;
+  onSelected?: (item: MediaDto[]) => void;
   disabled?: boolean;
-  onSelected: (item: MediaDto[]) => void;
   className?: string;
   readOnly?: boolean;
   required?: boolean;
@@ -47,7 +47,9 @@ export default function InputMedia({
   const [selectedItem, setSelectedItem] = useState<MediaDto>();
 
   useEffect(() => {
-    onSelected(items);
+    if (onSelected) {
+      onSelected(items);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
