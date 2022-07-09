@@ -1,14 +1,14 @@
 import clsx from "clsx";
 
 interface Props {
-  item: { avatar: string | null } | null;
+  avatar: string | undefined | null;
   className?: string;
 }
-export default function UserAvatarBadge({ item, className = "h-9 w-9" }: Props) {
+export default function UserAvatarBadge({ avatar, className = "h-9 w-9" }: Props) {
   return (
     <div className="flex shrink-0">
-      {item?.avatar ? (
-        <img className={clsx("rounded-full bg-gray-400 flex items-center justify-center ring-1 ring-gray-50", className)} src={item.avatar} alt="Avatar" />
+      {avatar ? (
+        <img className={clsx("rounded-full bg-gray-400 flex items-center justify-center ring-1 ring-gray-50", className)} src={avatar} alt="Avatar" />
       ) : (
         <span className={clsx("inline-block rounded-full overflow-hidden bg-gray-100", className)}>
           <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">

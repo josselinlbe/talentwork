@@ -50,7 +50,7 @@ export default function RowLogComment({ item }: Props) {
       {item.comment && (
         <>
           <div className="relative px-1">
-            <UserAvatarBadge className="h-9 w-9" item={item.user} />
+            <UserAvatarBadge className="h-9 w-9" avatar={item.user?.avatar} />
 
             <span className="absolute -bottom-0.5 -right-1 bg-gray-50 rounded-tl px-0.5 py-px">
               <ChatAltIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />

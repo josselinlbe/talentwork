@@ -14,7 +14,7 @@ import { includeSimpleCreatedByUser, includeSimpleUser, UserSimple } from "./use
 import { RowWorkflowTransitionWithDetails } from "./workflows/rowWorkflowTransitions.db.server";
 
 export type LogWithDetails = Log & {
-  user: UserSimple | null;
+  user: User | null;
   apiKey: ApiKey | null;
   tenant?: Tenant | null;
   comment?: RowCommentWithDetails | null;
@@ -22,7 +22,7 @@ export type LogWithDetails = Log & {
 };
 
 const include = {
-  ...includeSimpleUser,
+  user: true,
   tenant: true,
   apiKey: true,
   comment: {
