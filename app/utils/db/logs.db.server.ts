@@ -133,7 +133,14 @@ export async function createRowLog(
       url: new URL(request.url).pathname,
       rowId: data.item?.id ?? null,
       action: data.action,
-      details: data.details ?? (data.item !== null ? JSON.stringify(RowHelper.getProperties(data.entity, data.item)) : null),
+      details:
+        data.details ??
+        (data.item !== null
+          ? JSON.stringify({
+              ...RowHelper.getProperties(data.entity, data.item),
+              id: data.item.id,
+            })
+          : null),
       commentId: data.commentId ?? null,
     },
   });
