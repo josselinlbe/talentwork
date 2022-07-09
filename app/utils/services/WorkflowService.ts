@@ -56,6 +56,27 @@ export async function createDefaultEntityWorkflow(entityId: string) {
   // await createStep(entityId, "Cancel", stateRejected, stateCancelled, [fakeRoleService.roles[3]]);
 }
 
+export async function createCustomEntityWorkflowStates(entityId: string, workflowStates: { name: string; title: string; color: Colors }[] | null) {
+  if (workflowStates === null) {
+    return;
+  }
+  await Promise.all(
+    workflowStates.map(async (workflowState, idx) => {
+      const state = await createState(entityId, {
+        order: idx + 1,
+        name: workflowState.name,
+        title: workflowState.title,
+        color: workflowState.color,
+        canUpdate: true,
+        canDelete: true,
+        emailSubject: "",
+        emailBody: "",
+      });
+      return state;
+    })
+  );
+}
+
 async function createState(
   entityId: string,
   state: {
@@ -134,7 +155,12 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
       properties: {
         orderBy: { order: "asc" },
         include: {
-          options: true,
+          attributes: true,
+          options: {
+            orderBy: {
+              order: "asc",
+            },
+          },
         },
       },
     },
