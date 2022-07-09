@@ -16,6 +16,7 @@ import { LogWithDetails } from "~/utils/db/logs.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 import RowLogComment from "./RowLogComment";
 import RowLogWorkflowTransition from "./RowLogWorkflowTransition";
+import { useAppOrAdminData } from "~/utils/data/useAppOrAdminData";
 
 interface Props {
   entity: Entity;
@@ -24,7 +25,7 @@ interface Props {
 
 export default function RowActivity({ entity, items }: Props) {
   const { t } = useTranslation();
-  const appData = useAppData();
+  const appOrAdminData = useAppOrAdminData();
   const transition = useTransition();
   const isAdding = transition.state === "submitting" && transition.submission.formData.get("action") === "comment";
   const formRef = useRef<HTMLFormElement>(null);
@@ -74,7 +75,7 @@ export default function RowActivity({ entity, items }: Props) {
                             <div>
                               <div className="relative px-1">
                                 <div className="relative">
-                                  <UserAvatarBadge className="h-9 w-9" avatar={appData.user.avatar} />
+                                  <UserAvatarBadge className="h-9 w-9" avatar={appOrAdminData.user.avatar} />
 
                                   <span className="absolute -bottom-0.5 -right-1 bg-gray-50 rounded-tl px-0.5 py-px">
                                     {/* <TagIcon className="h-4 w-4 text-gray-500" aria-hidden="true" /> */}
@@ -124,7 +125,7 @@ export default function RowActivity({ entity, items }: Props) {
                 <div className="flex space-x-3">
                   <div className="flex-shrink-0">
                     <div className="relative px-1">
-                      <UserAvatarBadge className="h-9 w-9" avatar={appData.user.avatar} />
+                      <UserAvatarBadge className="h-9 w-9" avatar={appOrAdminData.user.avatar} />
 
                       <span className="absolute -bottom-0.5 -right-1 bg-gray-50 rounded-tl px-0.5 py-px">
                         <ChatAltIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
