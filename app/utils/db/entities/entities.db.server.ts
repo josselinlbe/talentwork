@@ -1,4 +1,4 @@
-import { Entity, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
+import { Entity, EntityWorkflowState, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
 import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
@@ -9,7 +9,10 @@ import { db } from "../../db.server";
 import { createProperties, CreatePropertyDto } from "./properties.db.server";
 
 export type RowsUsage = { entityId: string; _count: number };
-export type EntityWithDetails = Entity & { properties: PropertyWithDetails[] };
+export type EntityWithDetails = Entity & {
+  properties: PropertyWithDetails[];
+  workflowStates: EntityWorkflowState[];
+};
 export type EntityWithCount = EntityWithDetails & { _count: { rows: number } };
 
 export type PropertyWithDetails = Property & {
@@ -44,6 +47,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
       },
     ],
     include: {
+      workflowStates: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
@@ -67,6 +71,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
 export async function getAllEntitiesWithRowCount(): Promise<EntityWithCount[]> {
   return await db.entity.findMany({
     include: {
+      workflowStates: true,
       _count: {
         select: {
           rows: true,
@@ -169,6 +174,7 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
       id,
     },
     include: {
+      workflowStates: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
@@ -190,6 +196,7 @@ export async function getEntityBySlug(slug: string): Promise<EntityWithDetails |
       slug,
     },
     include: {
+      workflowStates: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
@@ -216,6 +223,7 @@ export async function getEntityByName(name: string): Promise<EntityWithDetails |
       name,
     },
     include: {
+      workflowStates: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
