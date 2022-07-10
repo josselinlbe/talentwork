@@ -11,7 +11,7 @@ import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
 interface Props {
   name: string;
   title: string;
-  initialMedia?: RowMedia[] | undefined;
+  initialMedia?: RowMedia[] | MediaDto[] | undefined;
   disabled?: boolean;
   onSelected?: (item: MediaDto[]) => void;
   className?: string;
