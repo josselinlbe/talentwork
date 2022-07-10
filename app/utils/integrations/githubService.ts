@@ -9,15 +9,18 @@ export async function getGitHubSocialProof(): Promise<SocialProofDto> {
     };
   }
   const collaborators = await getGitHubRepositoryCollaborators();
+  const hideMembers = process.env.GITHUB_HIDE_USERS?.toString().split(",") ?? [];
   return {
     totalMembers: collaborators?.length ?? 0,
     members:
-      collaborators?.map((f) => {
-        return {
-          user: f.login,
-          avatar_url: f.avatar_url,
-        };
-      }) ?? [],
+      collaborators
+        ?.filter((f) => !hideMembers.includes(f.login))
+        .map((f) => {
+          return {
+            user: f.login,
+            avatar_url: f.avatar_url,
+          };
+        }) ?? [],
   };
 }
 
