@@ -1,4 +1,5 @@
 import { useSubmit, useTransition } from "@remix-run/react";
+import clsx from "clsx";
 import ApiKeyBadge from "~/components/core/users/ApiKeyBadge";
 import UserAvatarBadge from "~/components/core/users/UserAvatarBadge";
 import UserBadge from "~/components/core/users/UserBadge";
@@ -40,7 +41,7 @@ export default function RowLogComment({ item }: Props) {
   }
 
   function getReactions(reaction: string) {
-    return item.comment?.reactions.filter((f) => f.reaction === reaction);
+    return item.comment?.reactions.filter((f) => f.reaction === reaction) ?? [];
   }
   function hasMyReaction(reaction: string) {
     return item.comment?.reactions.find((f) => f.createdByUserId === user?.id && f.reaction === reaction);
@@ -77,13 +78,13 @@ export default function RowLogComment({ item }: Props) {
             <div className="text-gray-500 font-medium flex items-center justify-between space-x-1">
               {/* <div>{DateUtils.dateAgo(item.createdAt)}</div> */}
               <time dateTime={DateUtils.dateYMDHMS(item.createdAt)}>{DateUtils.dateAgo(item.createdAt)}</time>
-              <div className="flex items-center space-x-2 invisible group-hover:visible">
+              <div className="flex items-center space-x-2 group">
                 {!item.comment.isDeleted && item.comment.createdByUserId === user?.id && (
                   <button
                     type="button"
                     disabled={isDeleting}
                     onClick={() => onDeleted()}
-                    className="text-gray-500 hover:text-gray-600 p-0.5 focus:outline-none"
+                    className="text-gray-500 hover:text-gray-600 p-0.5 focus:outline-none invisible group-hover:visible"
                   >
                     <div className="flex items-center space-x-1">
                       <TrashEmptyIcon className="h-4 w-4" />
@@ -94,7 +95,10 @@ export default function RowLogComment({ item }: Props) {
                   type="button"
                   disabled={isAdding}
                   onClick={() => onReacted("like")}
-                  className="text-gray-500 hover:text-gray-600 p-0.5 focus:outline-none"
+                  className={clsx(
+                    "text-gray-500 hover:text-gray-600 p-0.5 focus:outline-none",
+                    getReactions("like").length === 0 && "invisible group-hover:visible"
+                  )}
                 >
                   <div
                     className="flex items-center space-x-1"
