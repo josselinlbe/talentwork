@@ -50,7 +50,7 @@ export default function InputFilters({ filters, withSearch = true }: Props) {
     setItems(items);
     setSearchInput(searchParams.get("q") ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filters]);
 
   useEffect(() => {
     const appliedFilters: FilterValueDto[] = [];
