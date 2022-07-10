@@ -5,11 +5,19 @@ export async function getGitHubSocialProof(): Promise<SocialProofDto> {
   if (process.env.NODE_ENV === "development") {
     return {
       totalMembers: 100,
+      members: [],
     };
   }
   const collaborators = await getGitHubRepositoryCollaborators();
   return {
     totalMembers: collaborators?.length ?? 0,
+    members:
+      collaborators?.map((f) => {
+        return {
+          user: f.login,
+          avatar_url: f.avatar_url,
+        };
+      }) ?? [],
   };
 }
 
