@@ -44,7 +44,10 @@ export const action: ActionFunction = async ({ request, params }) => {
       if (existingTitle) {
         return badRequest({ error: "There is already a state with this title" });
       }
-      const maxOrder = Math.max(...states.map((o) => o.order)) ?? 1;
+      let maxOrder = 0;
+      if (states.length > 0) {
+        maxOrder = Math.max(...states.map((state) => state.order));
+      }
       await createWorkflowState({
         entityId: entity.id,
         order: maxOrder + 1,
