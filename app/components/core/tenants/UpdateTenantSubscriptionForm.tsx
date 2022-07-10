@@ -9,14 +9,19 @@ import { Form, useSubmit, useTransition } from "@remix-run/react";
 import InputSelect from "~/components/ui/input/InputSelect";
 import { SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
+import InputText from "~/components/ui/input/InputText";
+import EyeIcon from "~/components/ui/icons/EyeIcon";
+import PlusIcon from "~/components/ui/icons/PlusIcon";
+import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 interface Props {
   tenant: Tenant;
   subscription: TenantSubscriptionWithDetails | null;
   subscriptionPrices: SubscriptionPriceWithProduct[];
+  isStripeTest: boolean;
 }
 
-export default function UpdateTenantSubscriptionForm({ tenant, subscription, subscriptionPrices }: Props) {
+export default function UpdateTenantSubscriptionForm({ tenant, subscription, subscriptionPrices, isStripeTest }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
   const transition = useTransition();
@@ -92,6 +97,13 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
       method: "post",
     });
   }
+  function createStripeCustomer() {
+    const form = new FormData();
+    form.set("action", "create-stripe-customer");
+    submit(form, {
+      method: "post",
+    });
+  }
 
   return (
     <div>
@@ -102,6 +114,32 @@ export default function UpdateTenantSubscriptionForm({ tenant, subscription, sub
             <div className="shadow overflow-hidden sm:rounded-md">
               <div className="px-4 py-5 bg-white sm:p-6">
                 <div className="grid grid-cols-12 gap-6">
+                  <div className="col-span-12">
+                    <InputText
+                      name="stripe-customer-id"
+                      title="Stripe customer ID"
+                      value={subscription?.stripeCustomerId ? subscription?.stripeCustomerId : t("shared.undefined")}
+                      disabled={true}
+                      hint={
+                        <>
+                          {subscription?.stripeCustomerId ? (
+                            <a
+                              href={`https://dashboard.stripe.com${isStripeTest ? "/test" : ""}/customers/${subscription.stripeCustomerId}`}
+                              rel="noreferrer"
+                              target="_blank"
+                              className="text-xs underline hover:text-theme-600"
+                            >
+                              {t("shared.view")}
+                            </a>
+                          ) : (
+                            <button type="button" onClick={createStripeCustomer} className="text-xs underline hover:text-theme-600">
+                              {t("shared.create")}
+                            </button>
+                          )}
+                        </>
+                      }
+                    />
+                  </div>
                   <div className="col-span-12">
                     <InputSelect
                       name="subscription-price-id"

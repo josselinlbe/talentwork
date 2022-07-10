@@ -2,16 +2,22 @@ import { useTranslation } from "react-i18next";
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData, useParams, useSubmit } from "@remix-run/react";
 import { i18nHelper } from "~/locale/i18n.utils";
-import { getTenant, getTenantBySlug, updateTenant } from "~/utils/db/tenants.db.server";
+import { getTenant, getTenantBySlug, getTenantUsers, updateTenant } from "~/utils/db/tenants.db.server";
 import Breadcrumb from "~/components/ui/breadcrumbs/Breadcrumb";
 import UpdateTenantDetailsForm from "~/components/core/tenants/UpdateTenantDetailsForm";
 import { createAdminLog } from "~/utils/db/logs.db.server";
 import UsersTable from "~/components/core/users/UsersTable";
 import { adminGetAllTenantUsers } from "~/utils/db/users.db.server";
 import UpdateTenantSubscriptionForm from "~/components/core/tenants/UpdateTenantSubscriptionForm";
-import { getTenantSubscription, TenantSubscriptionWithDetails, updateTenantStripeSubscriptionId } from "~/utils/db/tenantSubscriptions.db.server";
+import {
+  getOrPersistTenantSubscription,
+  getTenantSubscription,
+  TenantSubscriptionWithDetails,
+  updateTenantStripeSubscriptionId,
+  updateTenantSubscriptionCustomerId,
+} from "~/utils/db/tenantSubscriptions.db.server";
 import { getSubscriptionPrice, getSubscriptionPrices, SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
-import { cancelStripeSubscription, createStripeSubscription } from "~/utils/stripe.server";
+import { cancelStripeSubscription, createStripeCustomer, createStripeSubscription } from "~/utils/stripe.server";
 import { useEffect, useRef } from "react";
 import ErrorModal, { RefErrorModal } from "~/components/ui/modals/ErrorModal";
 import SuccessModal, { RefSuccessModal } from "~/components/ui/modals/SuccessModal";
@@ -22,6 +28,7 @@ import { Tenant } from "@prisma/client";
 import Stripe from "stripe";
 import { deleteAndCancelTenant } from "~/utils/services/tenantService";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 
 type LoaderData = {
   title: string;
@@ -29,6 +36,7 @@ type LoaderData = {
   users: Awaited<ReturnType<typeof adminGetAllTenantUsers>>;
   subscription: TenantSubscriptionWithDetails | null;
   subscriptionPrices: SubscriptionPriceWithProduct[];
+  isStripeTest: boolean;
 };
 
 export let loader: LoaderFunction = async ({ request, params }) => {
@@ -49,6 +57,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     users,
     subscription,
     subscriptionPrices,
+    isStripeTest: process.env.STRIPE_SK?.toString().startsWith("sk_test_") ?? true,
   };
   return json(data);
 };
@@ -147,6 +156,34 @@ export const action: ActionFunction = async ({ request, params }) => {
     } catch (e: any) {
       return badRequest({ updateSubscriptionError: e.toString() });
     }
+  } else if (action === "create-stripe-customer") {
+    const tenant = await getTenant(params.id ?? "");
+    if (!tenant) {
+      return badRequest({ updateSubscriptionError: "Invalid tenant" });
+    }
+    const tenantUsers = await getTenantUsers(params.id ?? "");
+    if (tenantUsers.length === 0) {
+      return badRequest({ updateSubscriptionError: "No users found" });
+    }
+    const tenantOwner = tenantUsers.find((user) => user.type === TenantUserType.OWNER);
+    if (!tenantOwner) {
+      return badRequest({ updateSubscriptionError: "No owner found" });
+    }
+    const tenantSubscription = await getOrPersistTenantSubscription(tenant.id);
+    if (tenantSubscription.stripeCustomerId) {
+      return badRequest({ updateSubscriptionError: "Stripe Customer already set" });
+    }
+    const stripeCustomer = await createStripeCustomer(tenantOwner.user.email, tenant.name);
+    if (!stripeCustomer) {
+      return badRequest({ updateSubscriptionError: "Could not create stripe customer" });
+    }
+    await updateTenantSubscriptionCustomerId(tenant.id, {
+      stripeCustomerId: stripeCustomer.id,
+    });
+    const data: ActionData = {
+      updateSubscriptionSuccess: "Stripe customer created",
+    };
+    return json(data);
   } else if (action === "delete-tenant") {
     await deleteAndCancelTenant(params.id ?? "");
     return redirect("/admin/accounts");
@@ -258,7 +295,12 @@ export default function TenantRoute() {
                 </div>
               </div>
               <div className="mt-5 md:mt-0 md:col-span-2">
-                <UpdateTenantSubscriptionForm tenant={data.tenant} subscription={data.subscription} subscriptionPrices={data.subscriptionPrices} />
+                <UpdateTenantSubscriptionForm
+                  tenant={data.tenant}
+                  subscription={data.subscription}
+                  subscriptionPrices={data.subscriptionPrices}
+                  isStripeTest={data.isStripeTest}
+                />
               </div>
             </div>
             {/*Separator */}
