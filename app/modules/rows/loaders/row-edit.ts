@@ -20,7 +20,7 @@ import { Params } from "react-router";
 export type LoaderDataRowEdit = {
   title: string;
   entity: EntityWithDetails;
-  item: any;
+  item: RowWithDetails;
   logs: LogWithDetails[];
   comments: RowCommentWithDetails[];
   tasks: RowTaskWithDetails[];
