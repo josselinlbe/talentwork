@@ -149,15 +149,18 @@ export async function createRowLog(
   return log;
 }
 
-export async function createManualRowLog(data: {
-  tenantId: string | null;
-  createdByUserId?: string | null;
-  createdByApiKey?: string | null;
-  action: string;
-  entity: EntityWithDetails;
-  item: RowWithDetails | null;
-  workflowTransition?: RowWorkflowTransitionWithDetails | null;
-}) {
+export async function createManualRowLog(
+  data: {
+    tenantId: string | null;
+    createdByUserId?: string | null;
+    createdByApiKey?: string | null;
+    action: string;
+    entity: EntityWithDetails;
+    item: RowWithDetails | null;
+    workflowTransition?: RowWorkflowTransitionWithDetails | null;
+  },
+  request?: Request
+) {
   let details =
     data.item !== null
       ? JSON.stringify({
@@ -173,7 +176,7 @@ export async function createManualRowLog(data: {
       tenantId: data.tenantId,
       userId: data.createdByUserId ?? null,
       apiKeyId: data.createdByApiKey ?? null,
-      url: "",
+      url: request ? new URL(request.url).pathname : "",
       rowId: data.item?.id ?? null,
       action: data.action,
       details,

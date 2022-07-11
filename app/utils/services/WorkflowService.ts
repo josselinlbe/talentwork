@@ -118,7 +118,7 @@ export async function setRowInitialWorkflowState(entityId: string, rowId: string
   }
 }
 
-export async function performRowWorkflowStep(entity: EntityWithDetails, row: RowWithDetails, workflowStep: EntityWorkflowStep, userId: string) {
+export async function performRowWorkflowStep(entity: EntityWithDetails, row: RowWithDetails, workflowStep: EntityWorkflowStep, userId: string, request?: Request) {
   if (workflowStep) {
     await updateRowWorkflowState(row.id, workflowStep.toStateId);
     const transition = await createRowWorkflowTransition(row.id, workflowStep.id, userId);
@@ -131,7 +131,7 @@ export async function performRowWorkflowStep(entity: EntityWithDetails, row: Row
       entity,
       item: row,
       workflowTransition,
-    });
+    }, request);
   }
 }
 

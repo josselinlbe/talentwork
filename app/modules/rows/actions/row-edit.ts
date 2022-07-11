@@ -165,7 +165,7 @@ export const actionRowEdit = async (
     const workflowStepId = form.get("workflow-step-id")?.toString() ?? "";
     const workflowStep = await getWorkflowStep(workflowStepId);
     if (workflowStep) {
-      await performRowWorkflowStep(entity, item, workflowStep, userInfo.userId);
+      await performRowWorkflowStep(entity, item, workflowStep, userInfo.userId, request);
     }
     return json({});
   } else {
