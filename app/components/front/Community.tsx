@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
-import ButtonSecondary from "../ui/buttons/ButtonSecondary";
 
 interface Props {
   title: string;
@@ -14,7 +13,7 @@ interface Props {
 export default function Community({ title, subtitle, socialProof, cta }: Props) {
   return (
     <div>
-      {socialProof.members.length > 0 && (
+      {socialProof.members && socialProof.members.length > 0 && (
         <div className="max-w-7xl mx-auto py-12 px-4 text-center sm:px-6 lg:px-8 lg:py-24">
           <div className="space-y-8 sm:space-y-12">
             <div className="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
