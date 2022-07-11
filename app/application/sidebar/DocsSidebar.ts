@@ -355,6 +355,14 @@ export const DocsSidebar: SideBarItem[] = [
             title: "Extend Existing Models",
             path: "/docs/learning-center/guides/entities/extend-existing-models",
           },
+          {
+            title: "Vercel",
+            path: "/docs/learning-center/guides/hosting/vercel",
+          },
+          {
+            title: "Supabase",
+            path: "/docs/learning-center/guides/database/supabase",
+          },
         ],
       },
     ],

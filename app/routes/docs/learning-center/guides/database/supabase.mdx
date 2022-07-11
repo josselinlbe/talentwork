@@ -1,0 +1,70 @@
+---
+meta:
+  title: Supabase | Guides | Learning Center | SaasRock
+  description: Use Supabase as the PostgreSQL database for app.
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Supabase",
+      routePath:
+        "/docs/learning-center/guides/database/supabase",
+    },
+  ]}
+/>
+
+# Supabase
+
+SaasRock uses [Supabase](https://supabase.io/) as it's PostgreSQL database provider, but there are a few things to be aware of when hosting in a Serverless environment like [Vercel](/docs/learning-center/guides/hosting/vercel).
+
+## Development Connection String
+
+Seed your remote database or test locally using the following **_Connection String_** configuration:
+
+```
+DATABASE_URL="postgresql://{USER}:{PASSWORD}@{HOST}:5432/postgres"
+```
+
+## Production Connection String
+
+If you deploy your app to a serverless environment, you need to use the **_Connection Pooling_** configuration:
+
+```
+DATABASE_URL=postgres://{USER}:{PASSWORD}@{HOST}:6543/postgres?pgbouncer=true
+```
+
+<InfoBanner title="Supabase Documentation">
+  [Click here to learn more about this on the Supabase
+  documentation.](https://supabase.com/docs/guides/database/connecting-to-postgres#api-vs-direct-vs-pooling)
+</InfoBanner>
+
+Otherwise you could get error the following error:
+
+```
+Remaining connection slots are reserved for non-replication superuser connections
+```
+
+<DocTutorialImage
+  alt="Connection slots error"
+  src="https://yahooder.sirv.com/saasrock/guides/database/supabase/slots-error.png"
+/>
+
+---
+
+I hope this quick guide was useful! [Let me know](/docs/community) if you have any question.

@@ -156,10 +156,11 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
                   name="v"
                   title={""}
                   withLabel={false}
-                  value={"v0.3.2"}
+                  value={"v0.3.5"}
                   options={[
-                    { name: "v0.3.2 (current)", value: "v0.3.2" },
-                    { name: "v0.2.6", value: "v0.2.6" },
+                    { name: "v0.3.5 (current)", value: "v0.3.5" },
+                    { name: "v0.3.2", value: "v0.3.2", disabled: true },
+                    { name: "v0.2.6", value: "v0.2.6", disabled: true },
                     { name: "v0.2.0", value: "v0.2.0", disabled: true },
                     { name: "v0.0.1", value: "v0.0.1", disabled: true },
                   ]}

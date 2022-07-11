@@ -1,0 +1,52 @@
+---
+meta:
+  title: Vercel | Guides | Learning Center | SaasRock
+  description: Host your SaasRock application on Vercel.
+headers:
+  Cache-Control: no-cache
+---
+
+import DocBreadcrumb from "~/components/ui/docs/DocBreadcrumb";
+import DocTutorialImage from "~/components/ui/docs/DocTutorialImage";
+import InfoBanner from "~/components/ui/banners/InfoBanner";
+import WarningBanner from "~/components/ui/banners/WarningBanner";
+
+<DocBreadcrumb
+  items={[
+    {
+      title: "Learning Center",
+      routePath: "/docs/learning-center",
+    },
+    {
+      title: "Guides",
+      routePath: "",
+    },
+    {
+      title: "Vercel",
+      routePath:
+        "/docs/learning-center/guides/hosting/vercel",
+    },
+  ]}
+/>
+
+# Vercel
+
+SaasRock hosts on [Vercel](https://vercel.com).
+
+## Prisma Schema Changes
+
+Whenever you modify your Prisma schema, you have two ways of updating Vercel's schema.
+
+1. Add a `vercel-build` [script](https://stackoverflow.com/a/71146297/5697060).
+2. Redeploy the latest Vercel Deployment unchecking _"Redeploy with existing Build Cache."_.
+
+Otherwise you could get errors in production like:
+
+<DocTutorialImage
+  alt="Schema error"
+  src="https://yahooder.sirv.com/saasrock/guides/hosting/vercel/schema-error.png"
+/>
+
+---
+
+I hope this quick guide was useful! [Let me know](/docs/community) if you have any question.
