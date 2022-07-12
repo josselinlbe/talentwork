@@ -8,7 +8,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (request.method === "POST") {
       attempt = await db.eventWebhookAttempt.findUnique({ where: { id: params.id ?? "" } });
       if (!attempt) {
-        throw new Error("Inalid event webhook attempt");
+        throw new Error("Invalid event webhook attempt");
       }
       await db.eventWebhookAttempt.update({
         where: {

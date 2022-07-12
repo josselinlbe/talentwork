@@ -776,7 +776,7 @@ model Event {
   id        String                @id @default(cuid())
   createdAt DateTime              @default(now())
   tenantId  String?
-  tenant    Tenant?               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant    Tenant?               @relation(fields: [tenantId], references: [id])
   name      String
   data      String
   resource  String?
