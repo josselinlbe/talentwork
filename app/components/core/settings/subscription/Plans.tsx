@@ -75,7 +75,11 @@ export default function Plans({ items }: Props) {
           <ToggleBillingPeriod className="mt-10" billingPeriod={billingPeriod} toggleBillingPeriod={toggleBillingPeriod} yearlyDiscount={getYearlyDiscount()} />
 
           <div className="space-y-6">
-            {testProducts && <WarningBanner redirect="/admin/setup/pricing" title={t("shared.warning")} text={t("admin.pricing.thesePricesAreFromFiles")} />}
+            {testProducts && (
+              <div className="my-3">
+                <WarningBanner redirect="/admin/setup/pricing" title={t("shared.warning")} text={t("admin.pricing.thesePricesAreFromFiles")} />
+              </div>
+            )}
 
             <div className={clsx("mt-16 grid gap-6 lg:gap-3", products.length === 2 && "lg:grid-cols-2", products.length > 2 && "lg:grid-cols-3")}>
               {products.map((plan, index) => {

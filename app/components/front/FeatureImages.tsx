@@ -427,6 +427,24 @@ const featureImages = [
     route: "",
     src: "https://user-images.githubusercontent.com/8606530/174460727-d2a10e3e-70a1-46c1-b5f2-e558ee6e840a.png",
   },
+  {
+    group: "Events and Webhooks",
+    title: "Events Route",
+    route: "",
+    src: "https://yahooder.sirv.com/saasrock/features/events-and-webhooks/events.png",
+  },
+  {
+    group: "Events and Webhooks",
+    title: "Event",
+    route: "",
+    src: "https://yahooder.sirv.com/saasrock/features/events-and-webhooks/event.png",
+  },
+  {
+    group: "Events and Webhooks",
+    title: "Event Details",
+    route: "",
+    src: "https://yahooder.sirv.com/saasrock/features/events-and-webhooks/event-details.png",
+  },
 ];
 export default function FeatureImages() {
   return (
@@ -434,7 +452,7 @@ export default function FeatureImages() {
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 sm:max-w-3xl lg:px-8 lg:max-w-5xl space-y-8">
         <div>
           <h2 className="text-base font-semibold tracking-wider text-theme-600 uppercase">Don't build from scratch</h2>
-          <p className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight sm:text-4xl">+50 SaaS-ready pages</p>
+          <p className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight sm:text-4xl">+70 SaaS-ready pages</p>
           <p className="mt-5 max-w-prose mx-auto text-base text-gray-500">
             Marketing pages (Landing, Blog, Pricing), App pages (Dashboard, Account Settings), and Admin pages (Tenant/Users, Pricing, Entity Builder, Blog
             posts, and more).

@@ -14,6 +14,8 @@ export default function UpcomingFeatures() {
       return `Under Review`;
     } else if (item.status === MarketingFeatureStatus.InProgress) {
       return `In Progress`;
+    } else if (item.status === MarketingFeatureStatus.Done) {
+      return `Done`;
     }
     return "?";
   }
@@ -24,6 +26,8 @@ export default function UpcomingFeatures() {
       return Colors.YELLOW;
     } else if (item.status === MarketingFeatureStatus.InProgress) {
       return Colors.GREEN;
+    } else if (item.status === MarketingFeatureStatus.Done) {
+      return Colors.GREEN;
     }
     return Colors.UNDEFINED;
   }
@@ -31,7 +35,7 @@ export default function UpcomingFeatures() {
     <div className="pt-12 relative">
       <div className="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="text-base font-semibold uppercase tracking-wider text-theme-600">Enterprise-Ready</h2>
-        <p className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Upcoming Enterprise Features 🚀</p>
+        <p className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Enterprise Features 🚀</p>
         <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
           We're hoping to meet{" "}
           <a href="https://www.enterpriseready.io/" className="border-b border-theme-300 border-dashed hover:border-dotted">
@@ -56,7 +60,7 @@ export default function UpcomingFeatures() {
                     </div> */}
                     <div className="flex items-center space-x-1 justify-center">
                       <SimpleBadge color={getMarketingFeatureStatusColor(item)} title={getMarketingFeatureStatusDescription(item)} />
-                      <div className="text-xs">{item.type === MarketingFeatureType.Core ? "🪨" : "🚀"}</div>
+                      {/* <div className="text-xs">{item.type === MarketingFeatureType.Core ? "🪨" : "🚀"}</div> */}
                     </div>
                     <h3 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white border-gray-300 dark:border-gray-700">{item.name}</h3>
                     {/* <p className="mt-5 text-base text-gray-500">{item.description}</p> */}

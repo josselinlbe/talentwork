@@ -186,6 +186,14 @@ export const DocsSidebar: SideBarItem[] = [
             title: "Audit Trails",
             path: "/docs/features/audit-trails",
           },
+          {
+            title: "Roles & Permissions",
+            path: "/docs/features/roles-and-permissions",
+          },
+          {
+            title: "Events and Webhooks",
+            path: "/docs/features/events-and-webhooks",
+          },
         ],
       },
       {

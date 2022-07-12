@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
-import { MarketingFeatureType } from "~/application/dtos/marketing/MarketingFeatureDto";
+import { MarketingFeatureStatus, MarketingFeatureType } from "~/application/dtos/marketing/MarketingFeatureDto";
 import { getFeatures, getUpcomingFeatures } from "~/utils/services/marketingService";
 import ToggleBillingPeriod from "../core/settings/subscription/ToggleBillingPeriod";
 import CheckIcon from "../ui/icons/CheckIcon";
@@ -22,9 +22,11 @@ const plans = [
     yearlyPriceBefore: "2,388",
     features: [
       ...baseFeatures,
-      ...getFeatures().map((i) => i.name),
-      ...getUpcomingFeatures()
+      ...getFeatures()
         .filter((f) => f.type === MarketingFeatureType.Core)
+        .map((i) => i.name),
+      ...getUpcomingFeatures()
+        .filter((f) => f.type === MarketingFeatureType.Core && f.status !== MarketingFeatureStatus.Done)
         .map((i) => i.name + " (🚧)"),
     ],
     ctaButton: "Get early access",
@@ -45,8 +47,11 @@ const plans = [
     features: [
       "All core features",
       ...baseFeatures,
-      ...getUpcomingFeatures()
+      ...getFeatures()
         .filter((f) => f.type === MarketingFeatureType.Enterprise)
+        .map((i) => i.name),
+      ...getUpcomingFeatures()
+        .filter((f) => f.type === MarketingFeatureType.Enterprise && f.status !== MarketingFeatureStatus.Done)
         .map((i) => i.name + " (🚧)"),
     ],
     ctaButton: "Get early access",

@@ -81,7 +81,7 @@ export function getFeatures(): MarketingFeatureDto[] {
     },
     {
       type: MarketingFeatureType.Core,
-      name: "Webhooks",
+      name: "Entity Webhooks",
       status: MarketingFeatureStatus.Done,
       description: "Connect with Zappier, hence with +4,000 popular applications like Google Drive, Notion, Asana...",
       link: "/docs/features/webhooks",
@@ -98,6 +98,14 @@ export function getFeatures(): MarketingFeatureDto[] {
       name: "Roles & Permissions",
       status: MarketingFeatureStatus.Done,
       description: "Roles, permissions for page views and actions + Groups, and row-level permissions for CRUD security.",
+      link: "/docs/features/roles-and-permissions",
+    },
+    {
+      type: MarketingFeatureType.Enterprise,
+      name: "Events & Webhooks",
+      status: MarketingFeatureStatus.Done,
+      description: "Trigger actions when certain events happen with internal or external webhooks to customize business logic.",
+      link: "/docs/features/events-and-webhooks",
     },
   ];
 }
@@ -105,7 +113,7 @@ export function getFeatures(): MarketingFeatureDto[] {
 export function getUpcomingFeatures(): MarketingFeatureDto[] {
   return [
     {
-      status: MarketingFeatureStatus.InProgress,
+      status: MarketingFeatureStatus.Done,
       name: "Workflows",
       type: MarketingFeatureType.Enterprise,
       description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
@@ -116,6 +124,19 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
         },
       ],
       save: 150,
+    },
+    {
+      status: MarketingFeatureStatus.Done,
+      name: "Events & Webhooks",
+      type: MarketingFeatureType.Enterprise,
+      description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+      platforms: [
+        {
+          site: "https://www.g2.com/products/zapier/pricing",
+          price: "$19/month",
+        },
+      ],
+      save: 19,
     },
     {
       status: MarketingFeatureStatus.Planned,
@@ -160,8 +181,8 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
     },
     {
       status: MarketingFeatureStatus.Planned,
-      name: "CRM",
-      type: MarketingFeatureType.Core,
+      name: "Advanced CRM",
+      type: MarketingFeatureType.Enterprise,
       description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
       platforms: [
         {
@@ -175,7 +196,7 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
     {
       status: MarketingFeatureStatus.Planned,
       name: "Advanced Blogging",
-      type: MarketingFeatureType.Core,
+      type: MarketingFeatureType.Enterprise,
       description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
       platforms: [
         {
@@ -187,7 +208,7 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
     },
     {
       status: MarketingFeatureStatus.Planned,
-      name: "HelpDesk + Chat",
+      name: "HelpDesk",
       type: MarketingFeatureType.Enterprise,
       description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
       platforms: [
@@ -210,8 +231,20 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
           price: "$299/month",
         },
       ],
-
       save: 299,
+    },
+    {
+      status: MarketingFeatureStatus.Planned,
+      name: "Single Sign-On",
+      type: MarketingFeatureType.Enterprise,
+      description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+      platforms: [
+        {
+          site: "https://workos.com/pricing",
+          price: "$49/month",
+        },
+      ],
+      save: 49,
     },
     {
       status: MarketingFeatureStatus.UnderReview,
@@ -245,33 +278,33 @@ export function getUpcomingFeatures(): MarketingFeatureDto[] {
 
       save: 99,
     },
-    {
-      status: MarketingFeatureStatus.UnderReview,
-      name: "Product Text Editing",
-      type: MarketingFeatureType.Enterprise,
-      description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
-      platforms: [
-        {
-          site: "https://www.flycode.com/pricing",
-          price: "$79/month",
-        },
-      ],
+    // {
+    //   status: MarketingFeatureStatus.UnderReview,
+    //   name: "Product Text Editing",
+    //   type: MarketingFeatureType.Enterprise,
+    //   description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+    //   platforms: [
+    //     {
+    //       site: "https://www.flycode.com/pricing",
+    //       price: "$79/month",
+    //     },
+    //   ],
 
-      save: 79,
-    },
-    {
-      status: MarketingFeatureStatus.UnderReview,
-      name: "Accessibility",
-      type: MarketingFeatureType.Enterprise,
-      description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
-      platforms: [
-        {
-          site: "https://accessibe.com/pricing",
-          price: "$149/month",
-        },
-      ],
+    //   save: 79,
+    // },
+    // {
+    //   status: MarketingFeatureStatus.UnderReview,
+    //   name: "Accessibility",
+    //   type: MarketingFeatureType.Enterprise,
+    //   description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+    //   platforms: [
+    //     {
+    //       site: "https://accessibe.com/pricing",
+    //       price: "$149/month",
+    //     },
+    //   ],
 
-      save: 149,
-    },
+    //   save: 149,
+    // },
   ];
 }

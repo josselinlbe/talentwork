@@ -173,7 +173,7 @@
     "hero": {
       "headline1": "Construye tu propio SaaS",
       "headline2": "Framework multi-tenant con funcionalidades SaaS",
-      "headline3": "Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades/Planes y más.",
+      "headline3": "Autenticación, Subscripciones, Blog, Bitácora, Portal de Admin, Ajustes de Cuenta, Constructor de Entidades, Roles & Permisos, Eventos & Webhooks y más.",
       "subheadline1": "Lanza tu MVP pronto",
       "hint": "Este sitio usa v0.4.0",
       "buy": "Obtener early-access",
