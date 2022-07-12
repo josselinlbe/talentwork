@@ -224,205 +224,64 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
             </ButtonTertiary>
           </div>
 
-          {showAdvancedOptions && (
-            <>
-              <div className="w-full">
-                <InputNumber name="order" title={t("models.property.order")} value={order} setValue={setOrder} />
-              </div>
+          <div className={clsx(showAdvancedOptions ? "visible" : "invisible")}>
+            <div className="w-full">
+              <InputNumber name="order" title={t("models.property.order")} value={order} setValue={setOrder} />
+            </div>
 
-              <div className="w-full">
-                <InputCheckboxWithDescription
-                  name="is-dynamic"
-                  title={t("models.property.isDynamic")}
-                  description="Uncheck if you plan to manually set the database model property for this field."
-                  value={isDynamic}
-                  setValue={setIsDynamic}
-                />
-              </div>
+            <div className="w-full">
+              <InputCheckboxWithDescription
+                name="is-dynamic"
+                title={t("models.property.isDynamic")}
+                description="Uncheck if you plan to manually set the database model property for this field."
+                value={isDynamic}
+                setValue={setIsDynamic}
+              />
+            </div>
 
-              <div className="w-full">
-                <InputCheckboxWithDescription
-                  name="is-required"
-                  title={t("models.property.isRequired")}
-                  description="Forces user to set value"
-                  value={isRequired}
-                  setValue={setIsRequired}
-                />
-              </div>
+            <div className="w-full">
+              <InputCheckboxWithDescription
+                name="is-required"
+                title={t("models.property.isRequired")}
+                description="Forces user to set value"
+                value={isRequired}
+                setValue={setIsRequired}
+              />
+            </div>
 
-              <div className="w-full">
-                <InputCheckboxWithDescription
-                  name="is-hidden"
-                  title={t("models.property.isHidden")}
-                  description="Defines if visible in forms, views and reports"
-                  value={isHidden}
-                  setValue={setIsHidden}
-                />
-              </div>
+            <div className="w-full">
+              <InputCheckboxWithDescription
+                name="is-hidden"
+                title={t("models.property.isHidden")}
+                description="Defines if visible in forms, views and reports"
+                value={isHidden}
+                setValue={setIsHidden}
+              />
+            </div>
 
-              <div className="w-full">
-                <InputCheckboxWithDescription
-                  name="is-detail"
-                  title={t("models.property.isDetail")}
-                  description="Is a table detail property"
-                  value={isDetail}
-                  setValue={setIsDetail}
-                />
-              </div>
+            <div className="w-full">
+              <InputCheckboxWithDescription
+                name="is-detail"
+                title={t("models.property.isDetail")}
+                description="Is a table detail property"
+                value={isDetail}
+                setValue={setIsDetail}
+              />
+            </div>
 
-              {/* <div className="font-bold">{t("models.propertyAttribute.plural")}</div> */}
+            {/* <div className="font-bold">{t("models.propertyAttribute.plural")}</div> */}
 
-              {type === PropertyType.TEXT && (
-                <div className="w-full">
-                  <InputText
-                    name="pattern"
-                    title={t("models.propertyAttribute.pattern")}
-                    value={pattern}
-                    setValue={setPattern}
-                    hint={
-                      <>
-                        {pattern && (
-                          <button type="button" onClick={() => setPattern("")} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-              )}
-              {supportsMinAndMax() && (
-                <>
-                  <div className="w-full">
-                    <InputNumber
-                      name="min"
-                      title={t("models.propertyAttribute.min")}
-                      value={min}
-                      setValue={(e) => setMin(e ? Number(e) : undefined)}
-                      hint={
-                        <>
-                          {min && (
-                            <button type="button" onClick={() => setMin(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                              {t("shared.remove")}
-                            </button>
-                          )}
-                        </>
-                      }
-                    />
-                  </div>
-                  <div className="w-full">
-                    <InputNumber
-                      name="max"
-                      title={t("models.propertyAttribute.max")}
-                      value={max}
-                      setValue={(e) => setMax(e ? Number(e) : undefined)}
-                      hint={
-                        <>
-                          {max && (
-                            <button type="button" onClick={() => setMax(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                              {t("shared.remove")}
-                            </button>
-                          )}
-                        </>
-                      }
-                    />
-                  </div>
-                </>
-              )}
-
-              {type === PropertyType.NUMBER && (
-                <div className="w-full">
-                  <InputText
-                    name="step"
-                    title={t("models.propertyAttribute.step")}
-                    value={step}
-                    setValue={(e) => setStep(e.toString())}
-                    placeholder="0.01"
-                    hint={
-                      <>
-                        {step && (
-                          <button type="button" onClick={() => setStep(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-              )}
-
-              {supportsDefaultValue() && (
-                <>
-                  <div className="w-full">
-                    <InputText
-                      name="default-value"
-                      title={t("models.propertyAttribute.defaultValue")}
-                      value={defaultValue}
-                      setValue={(e) => setDefaultValue(e.toString() ?? undefined)}
-                      hint={
-                        <>
-                          {defaultValue && (
-                            <button type="button" onClick={() => setDefaultValue(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                              {t("shared.remove")}
-                            </button>
-                          )}
-                        </>
-                      }
-                    />
-                  </div>
-                </>
-              )}
-
-              {type === PropertyType.MEDIA && (
-                <>
-                  <div className="w-full">
-                    <InputText
-                      name="accept-file-types"
-                      title={t("models.propertyAttribute.acceptFileTypes")}
-                      value={acceptFileTypes}
-                      setValue={(e) => setAcceptFileTypes(e.toString() ?? undefined)}
-                      hint={
-                        <>
-                          {acceptFileTypes && (
-                            <button type="button" onClick={() => setAcceptFileTypes(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                              {t("shared.remove")}
-                            </button>
-                          )}
-                        </>
-                      }
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <InputNumber
-                      name="max-size"
-                      title={t("models.propertyAttribute.maxSize")}
-                      value={maxSize}
-                      setValue={(e) => setMaxSize(e ? Number(e) : undefined)}
-                      hint={
-                        <>
-                          {maxSize !== undefined && (
-                            <button type="button" onClick={() => setMaxSize(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                              {t("shared.remove")}
-                            </button>
-                          )}
-                        </>
-                      }
-                    />
-                  </div>
-                </>
-              )}
-
+            {type === PropertyType.TEXT && (
               <div className="w-full">
                 <InputText
-                  name="hint-text"
-                  title={t("models.propertyAttribute.hintText")}
-                  value={hintText}
-                  setValue={(e) => setHintText(e.toString() ?? undefined)}
+                  name="pattern"
+                  title={t("models.propertyAttribute.pattern")}
+                  value={pattern}
+                  setValue={setPattern}
                   hint={
                     <>
-                      {hintText && (
-                        <button type="button" onClick={() => setHintText(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                      {pattern && (
+                        <button type="button" onClick={() => setPattern("")} className="text-xs text-gray-600 hover:text-red-500">
                           {t("shared.remove")}
                         </button>
                       )}
@@ -430,34 +289,19 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                   }
                 />
               </div>
-              <div className="w-full">
-                <InputText
-                  name="help-text"
-                  title={t("models.propertyAttribute.helpText")}
-                  value={helpText}
-                  setValue={(e) => setHelpText(e.toString() ?? undefined)}
-                  hint={
-                    <>
-                      {helpText && (
-                        <button type="button" onClick={() => setHelpText(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                          {t("shared.remove")}
-                        </button>
-                      )}
-                    </>
-                  }
-                />
-              </div>
-              {supportsPlaceholder() && (
+            )}
+            {supportsMinAndMax() && (
+              <>
                 <div className="w-full">
-                  <InputText
-                    name="placeholder"
-                    title={t("models.propertyAttribute.placeholder")}
-                    value={placeholder}
-                    setValue={(e) => setPlaceholder(e.toString() ?? undefined)}
+                  <InputNumber
+                    name="min"
+                    title={t("models.propertyAttribute.min")}
+                    value={min}
+                    setValue={(e) => setMin(e ? Number(e) : undefined)}
                     hint={
                       <>
-                        {placeholder && (
-                          <button type="button" onClick={() => setPlaceholder(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                        {min && (
+                          <button type="button" onClick={() => setMin(undefined)} className="text-xs text-gray-600 hover:text-red-500">
                             {t("shared.remove")}
                           </button>
                         )}
@@ -465,17 +309,38 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                     }
                   />
                 </div>
-              )}
+                <div className="w-full">
+                  <InputNumber
+                    name="max"
+                    title={t("models.propertyAttribute.max")}
+                    value={max}
+                    setValue={(e) => setMax(e ? Number(e) : undefined)}
+                    hint={
+                      <>
+                        {max && (
+                          <button type="button" onClick={() => setMax(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                            {t("shared.remove")}
+                          </button>
+                        )}
+                      </>
+                    }
+                  />
+                </div>
+              </>
+            )}
+
+            {type === PropertyType.NUMBER && (
               <div className="w-full">
                 <InputText
-                  name="icon"
-                  title={t("models.propertyAttribute.icon")}
-                  value={icon}
-                  setValue={(e) => setIcon(e.toString() ?? undefined)}
+                  name="step"
+                  title={t("models.propertyAttribute.step")}
+                  value={step}
+                  setValue={(e) => setStep(e.toString())}
+                  placeholder="0.01"
                   hint={
                     <>
-                      {icon && (
-                        <button type="button" onClick={() => setIcon(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                      {step && (
+                        <button type="button" onClick={() => setStep(undefined)} className="text-xs text-gray-600 hover:text-red-500">
                           {t("shared.remove")}
                         </button>
                       )}
@@ -483,48 +348,181 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                   }
                 />
               </div>
+            )}
 
-              {type === PropertyType.TEXT && (
-                <>
-                  <div className="w-full">
-                    <InputNumber
-                      name="rows"
-                      title={t("models.propertyAttribute.rows")}
-                      value={rows}
-                      setValue={(e) => setRows(e ? Number(e) : undefined)}
-                      hint={
-                        <>
-                          {rows && (
-                            <button type="button" onClick={() => setRows(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                              {t("shared.remove")}
-                            </button>
-                          )}
-                        </>
-                      }
-                    />
-                  </div>
-                  <div className="w-full">
-                    <InputCheckboxWithDescription
-                      description="Force text to be uppercase"
-                      name="uppercase"
-                      title={t("models.propertyAttribute.uppercase")}
-                      value={uppercase}
-                      setValue={(e) => setUppercase(e ? Boolean(e) : undefined)}
-                    />
-                  </div>
-                  <div className="w-full">
-                    <InputCheckboxWithDescription
-                      description="Force text to be lowercase"
-                      name="lowercase"
-                      title={t("models.propertyAttribute.lowercase")}
-                      value={lowercase}
-                      setValue={(e) => setLowercase(e ? Boolean(e) : undefined)}
-                    />
-                  </div>
-                </>
-              )}
-            </>
-          )}
+            {supportsDefaultValue() && (
+              <>
+                <div className="w-full">
+                  <InputText
+                    name="default-value"
+                    title={t("models.propertyAttribute.defaultValue")}
+                    value={defaultValue}
+                    setValue={(e) => setDefaultValue(e.toString() ?? undefined)}
+                    hint={
+                      <>
+                        {defaultValue && (
+                          <button type="button" onClick={() => setDefaultValue(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                            {t("shared.remove")}
+                          </button>
+                        )}
+                      </>
+                    }
+                  />
+                </div>
+              </>
+            )}
+
+            {type === PropertyType.MEDIA && (
+              <>
+                <div className="w-full">
+                  <InputText
+                    name="accept-file-types"
+                    title={t("models.propertyAttribute.acceptFileTypes")}
+                    value={acceptFileTypes}
+                    setValue={(e) => setAcceptFileTypes(e.toString() ?? undefined)}
+                    hint={
+                      <>
+                        {acceptFileTypes && (
+                          <button type="button" onClick={() => setAcceptFileTypes(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                            {t("shared.remove")}
+                          </button>
+                        )}
+                      </>
+                    }
+                  />
+                </div>
+
+                <div className="w-full">
+                  <InputNumber
+                    name="max-size"
+                    title={t("models.propertyAttribute.maxSize")}
+                    value={maxSize}
+                    setValue={(e) => setMaxSize(e ? Number(e) : undefined)}
+                    hint={
+                      <>
+                        {maxSize !== undefined && (
+                          <button type="button" onClick={() => setMaxSize(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                            {t("shared.remove")}
+                          </button>
+                        )}
+                      </>
+                    }
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="w-full">
+              <InputText
+                name="hint-text"
+                title={t("models.propertyAttribute.hintText")}
+                value={hintText}
+                setValue={(e) => setHintText(e.toString() ?? undefined)}
+                hint={
+                  <>
+                    {hintText && (
+                      <button type="button" onClick={() => setHintText(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                        {t("shared.remove")}
+                      </button>
+                    )}
+                  </>
+                }
+              />
+            </div>
+            <div className="w-full">
+              <InputText
+                name="help-text"
+                title={t("models.propertyAttribute.helpText")}
+                value={helpText}
+                setValue={(e) => setHelpText(e.toString() ?? undefined)}
+                hint={
+                  <>
+                    {helpText && (
+                      <button type="button" onClick={() => setHelpText(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                        {t("shared.remove")}
+                      </button>
+                    )}
+                  </>
+                }
+              />
+            </div>
+            {supportsPlaceholder() && (
+              <div className="w-full">
+                <InputText
+                  name="placeholder"
+                  title={t("models.propertyAttribute.placeholder")}
+                  value={placeholder}
+                  setValue={(e) => setPlaceholder(e.toString() ?? undefined)}
+                  hint={
+                    <>
+                      {placeholder && (
+                        <button type="button" onClick={() => setPlaceholder(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                          {t("shared.remove")}
+                        </button>
+                      )}
+                    </>
+                  }
+                />
+              </div>
+            )}
+            <div className="w-full">
+              <InputText
+                name="icon"
+                title={t("models.propertyAttribute.icon")}
+                value={icon}
+                setValue={(e) => setIcon(e.toString() ?? undefined)}
+                hint={
+                  <>
+                    {icon && (
+                      <button type="button" onClick={() => setIcon(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                        {t("shared.remove")}
+                      </button>
+                    )}
+                  </>
+                }
+              />
+            </div>
+
+            {type === PropertyType.TEXT && (
+              <>
+                <div className="w-full">
+                  <InputNumber
+                    name="rows"
+                    title={t("models.propertyAttribute.rows")}
+                    value={rows}
+                    setValue={(e) => setRows(e ? Number(e) : undefined)}
+                    hint={
+                      <>
+                        {rows && (
+                          <button type="button" onClick={() => setRows(undefined)} className="text-xs text-gray-600 hover:text-red-500">
+                            {t("shared.remove")}
+                          </button>
+                        )}
+                      </>
+                    }
+                  />
+                </div>
+                <div className="w-full">
+                  <InputCheckboxWithDescription
+                    description="Force text to be uppercase"
+                    name="uppercase"
+                    title={t("models.propertyAttribute.uppercase")}
+                    value={uppercase}
+                    setValue={(e) => setUppercase(e ? Boolean(e) : undefined)}
+                  />
+                </div>
+                <div className="w-full">
+                  <InputCheckboxWithDescription
+                    description="Force text to be lowercase"
+                    name="lowercase"
+                    title={t("models.propertyAttribute.lowercase")}
+                    value={lowercase}
+                    setValue={(e) => setLowercase(e ? Boolean(e) : undefined)}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </FormGroup>
       <PropertyOptionsForm ref={selectOptionsForm} title={title} onSet={(e) => setOptions(e)} />

@@ -72,6 +72,10 @@ const InputText = (
   const [actualValue, setActualValue] = useState<string>(value ?? "");
 
   useEffect(() => {
+    setActualValue(value ?? "");
+  }, [value]);
+
+  useEffect(() => {
     if (onChange) {
       onChange(actualValue);
     }
