@@ -116,11 +116,11 @@ export default function IndexRoute() {
             },
           ]}
         />
-        {/* <VideoDemo
+        <VideoDemo
           title="Building a SaaS with SaasRock 🎥"
           url="https://www.youtube.com/embed/FyQvTxyl7LI"
           subtitle="Follow this tutorial while you build your SaaS with SaasRock."
-        /> */}
+        />
         <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />
         <PricingCTA />
