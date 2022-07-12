@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import GroupBadge from "~/components/core/roles/GroupBadge";
 import InputSearch from "~/components/ui/input/InputSearch";
 import { useState } from "react";
+import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
   title: string;
@@ -18,13 +19,14 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request, params }) => {
   let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  const userInfo = await getUserInfo(request);
 
   const { permission, userPermission } = await getUserPermission(request, "app.settings.groups.full", tenantUrl.tenantId);
   let items: GroupWithDetails[];
   if (!permission || userPermission) {
     items = await getAllGroups(tenantUrl.tenantId);
   } else {
-    items = await getMyGroups(tenantUrl.tenantId);
+    items = await getMyGroups(userInfo.userId, tenantUrl.tenantId);
   }
 
   const data: LoaderData = {
