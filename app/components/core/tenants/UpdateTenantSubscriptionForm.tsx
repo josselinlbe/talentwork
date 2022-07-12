@@ -10,9 +10,6 @@ import InputSelect from "~/components/ui/input/InputSelect";
 import { SubscriptionPriceWithProduct } from "~/utils/db/subscriptionProducts.db.server";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import InputText from "~/components/ui/input/InputText";
-import EyeIcon from "~/components/ui/icons/EyeIcon";
-import PlusIcon from "~/components/ui/icons/PlusIcon";
-import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 
 interface Props {
   tenant: Tenant;

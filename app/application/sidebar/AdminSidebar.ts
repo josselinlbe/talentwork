@@ -57,6 +57,12 @@ export const AdminSidebar: SideBarItem[] = [
         permission: "admin.auditTrails.view",
       },
       {
+        title: "Events & Webhooks",
+        path: "/admin/events",
+        icon: SvgIcon.EVENTS,
+        permission: "admin.events.view",
+      },
+      {
         title: "CRM",
         path: "/admin/crm",
         icon: SvgIcon.CLIENTS,

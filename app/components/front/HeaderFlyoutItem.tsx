@@ -40,10 +40,19 @@ export default function HeaderFlyoutItem({ title, items, className }: Props) {
               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                 <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                   {items?.map((item) => (
-                    <Link key={item.title} to={item.path ?? "#"} className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
-                      <p className="text-base font-medium text-gray-900">{item.title}</p>
-                      {item.description && <p className="mt-1 text-sm text-gray-500">{item.description}</p>}
-                    </Link>
+                    <>
+                      {item.path?.startsWith("https:") ? (
+                        <a key={item.title} href={item.path ?? "#"} className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                          <p className="text-base font-medium text-gray-900">{item.title}</p>
+                          {item.description && <p className="mt-1 text-sm text-gray-500">{item.description}</p>}
+                        </a>
+                      ) : (
+                        <Link key={item.title} to={item.path ?? "#"} className="-m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150">
+                          <p className="text-base font-medium text-gray-900">{item.title}</p>
+                          {item.description && <p className="mt-1 text-sm text-gray-500">{item.description}</p>}
+                        </Link>
+                      )}
+                    </>
                   ))}
                 </div>
               </div>

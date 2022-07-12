@@ -32,6 +32,7 @@ export type TenantWithUsage = TenantWithDetails & {
     createdLinkedAccounts?: number;
     asProviderLinkedAccounts?: number;
     asClientLinkedAccounts?: number;
+    events?: number;
   };
 };
 

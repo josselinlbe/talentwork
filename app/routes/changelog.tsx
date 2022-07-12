@@ -16,6 +16,94 @@ export let loader: LoaderFunction = async ({ request }) => {
 
   const changelogItems: ChangelogItem[] = [
     {
+      date: "Jul 11, 2022",
+      releaseTag: "0.4.0",
+      title: "SaasRock v0.4.0 - Events and Webhooks",
+      description: "Use the Events to log essential data and use Webhooks to customize your business logic within internal or external webhooks.",
+      url: "https://alexandro.dev/saasrock-v0-4-0-events-and-webhooks",
+      videos: [
+        {
+          title: "Building a SaaS with SaasRock - Day 1 - Set up and the Taxpayers model",
+          url: "https://www.youtube.com/embed/FyQvTxyl7LI",
+        },
+        {
+          title: "Building a SaaS with SaasRock - Day 2 - Postmark, Supabase and ngrok",
+          url: "https://www.youtube.com/embed/GBNe8xm6FRo",
+        },
+        {
+          title: "Building a SaaS with SaasRock - Day 3 - Custom routes for List view and New form",
+          url: "https://www.youtube.com/embed/8LFbl0uuDO8",
+        },
+        {
+          title: "Deploying your SaasRock app to Vercel and Supabase",
+          url: "https://www.youtube.com/embed/d9QUBcNVZyU",
+        },
+        {
+          title: "Events and Webhooks - Customize your SaaS business logic or connect with Zapier!",
+          url: "https://www.youtube.com/embed/YLw_6Lb0Bqg",
+        },
+      ],
+      added: [
+        {
+          title: "Manage API entities as administrator #124",
+          img: [
+            {
+              title: "Manage API entities as administrator",
+              img: "https://yahooder.sirv.com/saasrock/changelog/0.4.0/entities-api.png",
+            },
+          ],
+        },
+      ],
+      closed: [
+        {
+          title: "Events and Webhooks #125",
+          img: [
+            {
+              title: "Application Events",
+              img: "https://user-images.githubusercontent.com/8606530/178308128-52eb5f42-df05-41d7-9b80-b843e815821b.png",
+            },
+            {
+              title: "Events Route",
+              img: "https://user-images.githubusercontent.com/8606530/178391679-e5023faf-3650-45e3-b198-bf0359a06ba6.png",
+            },
+            {
+              title: "Event Details Route",
+              img: "https://user-images.githubusercontent.com/8606530/178391754-434e378a-a88f-47d2-b9b9-c2cd29628f4d.png",
+            },
+          ],
+        },
+        {
+          title: "Property Attributes in separate model + UI Tests #123",
+          img: [
+            {
+              title: "Property options with description",
+              img: "https://yahooder.sirv.com/saasrock/changelog/0.4.0/property-attributes-model.png",
+            },
+          ],
+        },
+        {
+          title: "Property options with description #121",
+          img: [
+            {
+              title: "Property options with description",
+              img: "https://user-images.githubusercontent.com/8606530/177469142-4cf562c7-4f8a-4ece-aeed-e2d3671e8feb.png",
+            },
+          ],
+        },
+        {
+          title: "HTML attributes Mix, Min, Rows, Rows, DefaultValue for certain Property Types #120",
+          img: [
+            { title: "Text UI", img: "https://user-images.githubusercontent.com/8606530/177437022-41398ef7-e586-4435-b5b5-65e1f4c35c68.png" },
+            { title: "Text API", img: "https://user-images.githubusercontent.com/8606530/177437044-3332a0b2-d936-416e-8962-cbaf887d3508.png" },
+            { title: "Number UI", img: "https://user-images.githubusercontent.com/8606530/177437504-8d3fb00e-d46a-499c-ac35-8edacaa57b8d.png" },
+            { title: "Number API", img: "https://user-images.githubusercontent.com/8606530/177437080-6187eb51-84b3-41cc-a2da-0ccec5a13dab.png" },
+            { title: "Media UI", img: "https://user-images.githubusercontent.com/8606530/177437115-a94aaefa-b548-42d1-bfd6-c1370a3b3710.png" },
+            { title: "Media API", img: "https://user-images.githubusercontent.com/8606530/177437408-76131185-f047-4c57-b197-4d5650a2cc5d.png" },
+          ],
+        },
+      ],
+    },
+    {
       date: "Jul 03, 2022",
       releaseTag: "0.3.2",
       title: "SaasRock v0.3.2 - Row Filters, Tags, Tasks, Comments, Workflows, Kanban Board and API limits",
@@ -617,6 +705,23 @@ export default function ChangelogRoute() {
                                 )}
                               </p>
                             )} */}
+
+                            {item.videos && (
+                              <div>
+                                <h2 className="text-black dark:text-white font-semibold text-sm">Videos</h2>
+                                <ul>
+                                  {item.videos.map((video, idx) => {
+                                    return (
+                                      <li key={idx}>
+                                        <a href={video.url} className="text-theme-600 dark:text-theme-400">
+                                          🎥 {video.title}
+                                        </a>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              </div>
+                            )}
 
                             <ChangelogIssues title="Done" items={item.closed} icon="✅" />
                             <ChangelogIssues title="Added issues" items={item.added} icon="⌛" />

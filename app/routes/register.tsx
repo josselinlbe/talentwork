@@ -13,6 +13,7 @@ import { TenantUserType } from "~/application/enums/tenants/TenantUserType";
 import { sendEmail } from "~/utils/email.server";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 import { getAllRoles } from "~/utils/db/permissions/roles.db.server";
+import { createAccountCreatedEvent } from "~/utils/services/events/accountsEventsService";
 
 export const meta: MetaFunction = ({ data }) => ({
   title: data?.title,
@@ -106,6 +107,11 @@ export const action: ActionFunction = async ({ request }) => {
   await sendEmail(email, "welcome", {
     action_url: process.env.SERVER_URL + `/login`,
     name: firstName,
+  });
+
+  await createAccountCreatedEvent(tenant.id, {
+    tenant: { id: tenant.id, name: tenant.name, slug: tenant.slug },
+    user: { id: user.id, email: user.email },
   });
 
   const userSession = await setLoggedUser(user);

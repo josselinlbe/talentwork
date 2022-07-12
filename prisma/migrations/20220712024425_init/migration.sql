@@ -707,6 +707,34 @@ CREATE TABLE "Deal" (
 );
 
 -- CreateTable
+CREATE TABLE "Event" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "tenantId" TEXT,
+    "name" TEXT NOT NULL,
+    "data" TEXT NOT NULL,
+    "resource" TEXT,
+
+    CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EventWebhookAttempt" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "startedAt" TIMESTAMP(3),
+    "finishedAt" TIMESTAMP(3),
+    "eventId" TEXT NOT NULL,
+    "endpoint" TEXT NOT NULL,
+    "success" BOOLEAN,
+    "status" INTEGER,
+    "message" TEXT,
+    "body" TEXT,
+
+    CONSTRAINT "EventWebhookAttempt_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Contract" (
     "id" TEXT NOT NULL,
     "rowId" TEXT NOT NULL,
@@ -1120,6 +1148,12 @@ ALTER TABLE "Deal" ADD CONSTRAINT "Deal_rowId_fkey" FOREIGN KEY ("rowId") REFERE
 
 -- AddForeignKey
 ALTER TABLE "Deal" ADD CONSTRAINT "Deal_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "Contact"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Event" ADD CONSTRAINT "Event_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EventWebhookAttempt" ADD CONSTRAINT "EventWebhookAttempt_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Contract" ADD CONSTRAINT "Contract_rowId_fkey" FOREIGN KEY ("rowId") REFERENCES "Row"("id") ON DELETE CASCADE ON UPDATE CASCADE;

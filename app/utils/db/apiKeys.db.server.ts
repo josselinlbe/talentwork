@@ -13,6 +13,7 @@ export type ApiKeyWithDetails = ApiKey & {
 export type ApiKeyLogWithDetails = ApiKeyLog & {
   apiKey: (ApiKey & { tenant: Tenant }) | null;
 };
+export type ApiKeyLogSimple = { apiKeyId: string | null; status: number | null };
 
 const include = {
   tenant: true,
@@ -53,6 +54,27 @@ export async function getAllApiKeyLogs(tenantId?: string): Promise<ApiKeyLogWith
       apiKey: {
         include: { tenant: true },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
+export async function getAllApiKeyLogsSimple(tenantId?: string): Promise<ApiKeyLogSimple[]> {
+  let where: any = {};
+  if (tenantId) {
+    where = {
+      apiKey: {
+        tenantId,
+      },
+    };
+  }
+  return await db.apiKeyLog.findMany({
+    where,
+    select: {
+      apiKeyId: true,
+      status: true,
     },
     orderBy: {
       createdAt: "desc",

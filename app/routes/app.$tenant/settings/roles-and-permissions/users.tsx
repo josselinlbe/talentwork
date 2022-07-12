@@ -12,6 +12,8 @@ import { getTenant } from "~/utils/db/tenants.db.server";
 import { createAdminLog } from "~/utils/db/logs.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 import { useAppData } from "~/utils/data/useAppData";
+import { createRoleAssignedEvent } from "~/utils/services/events/rolesEventsService";
+import { getUserInfo } from "~/utils/session.server";
 
 type LoaderData = {
   title: string;
@@ -49,6 +51,11 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  const userInfo = await getUserInfo(request);
+  const fromUser = await getUser(userInfo.userId);
+  if (!fromUser) {
+    return badRequest({ error: "Invalid user" });
+  }
 
   const form = await request.formData();
   const action = form.get("action")?.toString() ?? "";
@@ -63,6 +70,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (add) {
       await createUserRole(userId, roleId, tenantUrl.tenantId);
+      if (fromUser && user && role) {
+        await createRoleAssignedEvent(tenantUrl.tenantId, {
+          fromUser: { id: fromUser.id, email: fromUser.email },
+          toUser: { id: user.id, email: user.email },
+          role: { id: role.id, name: role.name, description: role.description },
+        });
+      }
       createAdminLog(request, "Created", `[${tenant?.name}] ${user?.email} - ${role?.name}}`);
     } else {
       await deleteUserRole(userId, roleId, tenantUrl.tenantId);

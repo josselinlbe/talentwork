@@ -14,6 +14,7 @@ export enum SvgIcon {
   SETTINGS,
   SETUP,
   LOGS,
+  EVENTS,
   BLOG,
   ENTITIES,
   KEYS,

@@ -14,7 +14,7 @@ import { createRow, getMaxRowFolio, getRow } from "~/utils/db/entities/rows.db.s
 import { createManualRowLog } from "~/utils/db/logs.db.server";
 import { includeSimpleUser } from "~/utils/db/users.db.server";
 
-export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User) {
+export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User, seedAttributeEntities = false) {
   await createSampleEntity_Contract(
     tenant1And2Relationship,
     user1.id,
@@ -22,362 +22,364 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
   );
   await createSampleEntity_Employees(tenant1And2Relationship.providerTenantId, user1.id);
 
-  // Text attributes
-  await createCoreEntity(
-    {
-      name: "text-attribute-test",
-      slug: "text-attribute-tests",
-      title: "Text Attribute Test",
-      titlePlural: "Text Attribute Tests",
-      prefix: "TXT",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-    },
-    [
+  if (seedAttributeEntities) {
+    // Text attributes
+    await createCoreEntity(
       {
-        name: "textWithPattern",
-        title: "Text with pattern (email)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" },
+        name: "text-attribute-test",
+        slug: "text-attribute-tests",
+        title: "Text Attribute Test",
+        titlePlural: "Text Attribute Tests",
+        prefix: "TXT",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
       },
-      {
-        name: "textWithMinLength",
-        title: "Text with Min length (9)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { min: 9 },
-      },
-      {
-        name: "textWithMaxLength",
-        title: "Text with Max length (10)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { max: 10 },
-      },
-      {
-        name: "textWithDefaultValue",
-        title: "Text with Default Value (Abc123)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { defaultValue: "Abc123" },
-      },
-      {
-        name: "textWithHintText",
-        title: "Text with Hint Text (Hi)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { hintText: "Hi" },
-      },
-      {
-        name: "textWithHelpText",
-        title: "Text with Help Text (Hello)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { helpText: "Hello" },
-      },
-      {
-        name: "textWithPlaceholder",
-        title: "Text with Placeholder (Type your name...)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { placeholder: "Type your name..." },
-      },
-      {
-        name: "textWithIcon",
-        title: "Text with Icon",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+      [
+        {
+          name: "textWithPattern",
+          title: "Text with pattern (email)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" },
         },
-      },
-      {
-        name: "textWithRows",
-        title: "Text with Rows (2)",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { rows: 2 },
-      },
-      {
-        name: "textAsUppercase",
-        title: "Text as Uppercase",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { uppercase: true },
-      },
-      {
-        name: "textAsLowercase",
-        title: "Text as Lowercase",
-        type: PropertyType.TEXT,
-        isDynamic: true,
-        attributes: { lowercase: true },
-      },
-    ]
-  );
-
-  // Number attributes
-  await createCoreEntity(
-    {
-      name: "number-attribute-test",
-      slug: "number-attribute-tests",
-      title: "Number Attribute Test",
-      titlePlural: "Number Attribute Tests",
-      prefix: "NUM",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-    },
-    [
-      {
-        name: "numberWithMin",
-        title: "Number with Min (11)",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: { min: 11 },
-      },
-      {
-        name: "numberWithMax",
-        title: "Number with Max (12)",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: { max: 12 },
-      },
-      {
-        name: "numberWithDefaultValue",
-        title: "Number with Default Value (6)",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: { defaultValue: "6" },
-      },
-      {
-        name: "numberWithHintText",
-        title: "Number with Hint Text (Hi)",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: { hintText: "Hi" },
-      },
-      {
-        name: "numberWithHelpText",
-        title: "Number with Help Text (Hello)",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: { helpText: "Hello" },
-      },
-      {
-        name: "numberWithPlaceholder",
-        title: "Number with Placeholder (Type your age 😉)",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: { placeholder: "Type your age 😉" },
-      },
-      {
-        name: "numberWithIcon",
-        title: "Number with Icon",
-        type: PropertyType.NUMBER,
-        isDynamic: true,
-        attributes: {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+        {
+          name: "textWithMinLength",
+          title: "Text with Min length (9)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { min: 9 },
         },
-      },
-    ]
-  );
-
-  // Date attributes
-  await createCoreEntity(
-    {
-      name: "date-attribute-test",
-      slug: "date-attribute-tests",
-      title: "Date Attribute Test",
-      titlePlural: "Date Attribute Tests",
-      prefix: "DAT",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-    },
-    [
-      {
-        name: "dateWithHintText",
-        title: "Date with Hint Text (Hi)",
-        type: PropertyType.DATE,
-        isDynamic: true,
-        attributes: { hintText: "Hi" },
-      },
-      {
-        name: "dateWithHelpText",
-        title: "Date with Help Text (Hello)",
-        type: PropertyType.DATE,
-        isDynamic: true,
-        attributes: { helpText: "Hello" },
-      },
-      {
-        name: "dateWithIcon",
-        title: "Date with Icon",
-        type: PropertyType.DATE,
-        isDynamic: true,
-        attributes: {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+        {
+          name: "textWithMaxLength",
+          title: "Text with Max length (10)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { max: 10 },
         },
-      },
-    ]
-  );
-
-  // Select attributes
-  await createCoreEntity(
-    {
-      name: "select-attribute-test",
-      slug: "select-attribute-tests",
-      title: "Select Attribute Test",
-      titlePlural: "Select Attribute Tests",
-      prefix: "SLT",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-    },
-    [
-      {
-        name: "selectWithDefaultValue",
-        title: "Select with Default Value (Option 2)",
-        type: PropertyType.SELECT,
-        isDynamic: true,
-        options: [
-          { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
-          { order: 2, value: "2", name: "Option 2", color: Colors.RED },
-        ],
-        attributes: { defaultValue: "2" },
-      },
-      {
-        name: "selectWithHintText",
-        title: "Select with Hint Text (Hi)",
-        type: PropertyType.SELECT,
-        isDynamic: true,
-        options: [
-          { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
-          { order: 2, value: "2", name: "Option 2", color: Colors.RED },
-        ],
-        attributes: { hintText: "Hi" },
-      },
-      {
-        name: "selectWithHelpText",
-        title: "Select with Help Text (Hello)",
-        type: PropertyType.SELECT,
-        isDynamic: true,
-        options: [
-          { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
-          { order: 2, value: "2", name: "Option 2", color: Colors.RED },
-        ],
-        attributes: { helpText: "Hello" },
-      },
-      {
-        name: "selectWithPlaceholder",
-        title: "Select with Placeholder (Select one...)",
-        type: PropertyType.SELECT,
-        isDynamic: true,
-        options: [
-          { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
-          { order: 2, value: "2", name: "Option 2", color: Colors.RED },
-        ],
-        attributes: { placeholder: "Select one..." },
-      },
-      {
-        name: "selectWithIcon",
-        title: "Select with Icon",
-        type: PropertyType.SELECT,
-        isDynamic: true,
-        options: [
-          { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
-          { order: 2, value: "2", name: "Option 2", color: Colors.RED },
-        ],
-        attributes: {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+        {
+          name: "textWithDefaultValue",
+          title: "Text with Default Value (Abc123)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { defaultValue: "Abc123" },
         },
-      },
-    ]
-  );
+        {
+          name: "textWithHintText",
+          title: "Text with Hint Text (Hi)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { hintText: "Hi" },
+        },
+        {
+          name: "textWithHelpText",
+          title: "Text with Help Text (Hello)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { helpText: "Hello" },
+        },
+        {
+          name: "textWithPlaceholder",
+          title: "Text with Placeholder (Type your name...)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { placeholder: "Type your name..." },
+        },
+        {
+          name: "textWithIcon",
+          title: "Text with Icon",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: {
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+          },
+        },
+        {
+          name: "textWithRows",
+          title: "Text with Rows (2)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { rows: 2 },
+        },
+        {
+          name: "textAsUppercase",
+          title: "Text as Uppercase",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { uppercase: true },
+        },
+        {
+          name: "textAsLowercase",
+          title: "Text as Lowercase",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: { lowercase: true },
+        },
+      ]
+    );
 
-  // Boolean attributes
-  await createCoreEntity(
-    {
-      name: "boolean-attribute-test",
-      slug: "boolean-attribute-tests",
-      title: "Boolean Attribute Test",
-      titlePlural: "Boolean Attribute Tests",
-      prefix: "BOO",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-    },
-    [
+    // Number attributes
+    await createCoreEntity(
       {
-        name: "booleanWithDefaultValue",
-        title: "Boolean with Default Value (true)",
-        type: PropertyType.BOOLEAN,
-        isDynamic: true,
-        attributes: { defaultValue: "true" },
+        name: "number-attribute-test",
+        slug: "number-attribute-tests",
+        title: "Number Attribute Test",
+        titlePlural: "Number Attribute Tests",
+        prefix: "NUM",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
       },
-      {
-        name: "booleanWithHintText",
-        title: "Boolean with Hint Text (Hi)",
-        type: PropertyType.BOOLEAN,
-        isDynamic: true,
-        attributes: { hintText: "Hi" },
-      },
-      {
-        name: "booleanWithHelpText",
-        title: "Boolean with Help Text (Hello)",
-        type: PropertyType.BOOLEAN,
-        isDynamic: true,
-        attributes: { helpText: "Hello" },
-      },
-    ]
-  );
+      [
+        {
+          name: "numberWithMin",
+          title: "Number with Min (11)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: { min: 11 },
+        },
+        {
+          name: "numberWithMax",
+          title: "Number with Max (12)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: { max: 12 },
+        },
+        {
+          name: "numberWithDefaultValue",
+          title: "Number with Default Value (6)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: { defaultValue: "6" },
+        },
+        {
+          name: "numberWithHintText",
+          title: "Number with Hint Text (Hi)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: { hintText: "Hi" },
+        },
+        {
+          name: "numberWithHelpText",
+          title: "Number with Help Text (Hello)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: { helpText: "Hello" },
+        },
+        {
+          name: "numberWithPlaceholder",
+          title: "Number with Placeholder (Type your age 😉)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: { placeholder: "Type your age 😉" },
+        },
+        {
+          name: "numberWithIcon",
+          title: "Number with Icon",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: {
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+          },
+        },
+      ]
+    );
 
-  // Media attributes
-  await createCoreEntity(
-    {
-      name: "media-attribute-test",
-      slug: "media-attribute-tests",
-      title: "Media Attribute Test",
-      titlePlural: "Media Attribute Tests",
-      prefix: "MED",
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-    },
-    [
+    // Date attributes
+    await createCoreEntity(
       {
-        name: "mediaWithMinLength",
-        title: "Media with Min files (2)",
-        type: PropertyType.MEDIA,
-        isDynamic: true,
-        attributes: { min: 2 },
+        name: "date-attribute-test",
+        slug: "date-attribute-tests",
+        title: "Date Attribute Test",
+        titlePlural: "Date Attribute Tests",
+        prefix: "DAT",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
       },
+      [
+        {
+          name: "dateWithHintText",
+          title: "Date with Hint Text (Hi)",
+          type: PropertyType.DATE,
+          isDynamic: true,
+          attributes: { hintText: "Hi" },
+        },
+        {
+          name: "dateWithHelpText",
+          title: "Date with Help Text (Hello)",
+          type: PropertyType.DATE,
+          isDynamic: true,
+          attributes: { helpText: "Hello" },
+        },
+        {
+          name: "dateWithIcon",
+          title: "Date with Icon",
+          type: PropertyType.DATE,
+          isDynamic: true,
+          attributes: {
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+          },
+        },
+      ]
+    );
+
+    // Select attributes
+    await createCoreEntity(
       {
-        name: "mediaWithMaxLength",
-        title: "Media with Max files (3)",
-        type: PropertyType.MEDIA,
-        isDynamic: true,
-        attributes: { max: 3 },
+        name: "select-attribute-test",
+        slug: "select-attribute-tests",
+        title: "Select Attribute Test",
+        titlePlural: "Select Attribute Tests",
+        prefix: "SLT",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
       },
+      [
+        {
+          name: "selectWithDefaultValue",
+          title: "Select with Default Value (Option 2)",
+          type: PropertyType.SELECT,
+          isDynamic: true,
+          options: [
+            { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
+            { order: 2, value: "2", name: "Option 2", color: Colors.RED },
+          ],
+          attributes: { defaultValue: "2" },
+        },
+        {
+          name: "selectWithHintText",
+          title: "Select with Hint Text (Hi)",
+          type: PropertyType.SELECT,
+          isDynamic: true,
+          options: [
+            { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
+            { order: 2, value: "2", name: "Option 2", color: Colors.RED },
+          ],
+          attributes: { hintText: "Hi" },
+        },
+        {
+          name: "selectWithHelpText",
+          title: "Select with Help Text (Hello)",
+          type: PropertyType.SELECT,
+          isDynamic: true,
+          options: [
+            { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
+            { order: 2, value: "2", name: "Option 2", color: Colors.RED },
+          ],
+          attributes: { helpText: "Hello" },
+        },
+        {
+          name: "selectWithPlaceholder",
+          title: "Select with Placeholder (Select one...)",
+          type: PropertyType.SELECT,
+          isDynamic: true,
+          options: [
+            { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
+            { order: 2, value: "2", name: "Option 2", color: Colors.RED },
+          ],
+          attributes: { placeholder: "Select one..." },
+        },
+        {
+          name: "selectWithIcon",
+          title: "Select with Icon",
+          type: PropertyType.SELECT,
+          isDynamic: true,
+          options: [
+            { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
+            { order: 2, value: "2", name: "Option 2", color: Colors.RED },
+          ],
+          attributes: {
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+          },
+        },
+      ]
+    );
+
+    // Boolean attributes
+    await createCoreEntity(
       {
-        name: "mediaWithAccepFileTypes",
-        title: "Media with Accept File Types (images)",
-        type: PropertyType.MEDIA,
-        isDynamic: true,
-        attributes: { acceptFileTypes: "image/png, image/gif, image/jpeg" },
+        name: "boolean-attribute-test",
+        slug: "boolean-attribute-tests",
+        title: "Boolean Attribute Test",
+        titlePlural: "Boolean Attribute Tests",
+        prefix: "BOO",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
       },
+      [
+        {
+          name: "booleanWithDefaultValue",
+          title: "Boolean with Default Value (true)",
+          type: PropertyType.BOOLEAN,
+          isDynamic: true,
+          attributes: { defaultValue: "true" },
+        },
+        {
+          name: "booleanWithHintText",
+          title: "Boolean with Hint Text (Hi)",
+          type: PropertyType.BOOLEAN,
+          isDynamic: true,
+          attributes: { hintText: "Hi" },
+        },
+        {
+          name: "booleanWithHelpText",
+          title: "Boolean with Help Text (Hello)",
+          type: PropertyType.BOOLEAN,
+          isDynamic: true,
+          attributes: { helpText: "Hello" },
+        },
+      ]
+    );
+
+    // Media attributes
+    await createCoreEntity(
       {
-        name: "mediaWithMaxSize",
-        title: "Media with Max File Size (5 MB)",
-        type: PropertyType.MEDIA,
-        isDynamic: true,
-        attributes: { maxSize: 5 },
+        name: "media-attribute-test",
+        slug: "media-attribute-tests",
+        title: "Media Attribute Test",
+        titlePlural: "Media Attribute Tests",
+        prefix: "MED",
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
       },
-      {
-        name: "mediaWithHintText",
-        title: "Media with Hint Text (Hi)",
-        type: PropertyType.MEDIA,
-        isDynamic: true,
-        attributes: { hintText: "Hi" },
-      },
-      {
-        name: "mediaWithHelpText",
-        title: "Media with Help Text (Hello)",
-        type: PropertyType.MEDIA,
-        isDynamic: true,
-        attributes: { helpText: "Hello" },
-      },
-    ]
-  );
+      [
+        {
+          name: "mediaWithMinLength",
+          title: "Media with Min files (2)",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { min: 2 },
+        },
+        {
+          name: "mediaWithMaxLength",
+          title: "Media with Max files (3)",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { max: 3 },
+        },
+        {
+          name: "mediaWithAccepFileTypes",
+          title: "Media with Accept File Types (images)",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { acceptFileTypes: "image/png, image/gif, image/jpeg" },
+        },
+        {
+          name: "mediaWithMaxSize",
+          title: "Media with Max File Size (5 MB)",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { maxSize: 5 },
+        },
+        {
+          name: "mediaWithHintText",
+          title: "Media with Hint Text (Hi)",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { hintText: "Hi" },
+        },
+        {
+          name: "mediaWithHelpText",
+          title: "Media with Help Text (Hello)",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { helpText: "Hello" },
+        },
+      ]
+    );
+  }
 }
 
 async function createSampleEntity_Contract(linkedAccount: LinkedAccount, createdByUserId: string, employees: EmployeeDto[]) {

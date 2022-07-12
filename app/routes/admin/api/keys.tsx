@@ -2,15 +2,15 @@ import { json, LoaderFunction } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import ApiKeysTable from "~/components/core/apiKeys/ApiKeysTable";
 import { useAdminData } from "~/utils/data/useAdminData";
-import { ApiKeyLogWithDetails, ApiKeyWithDetails, getAllApiKeyLogs, getAllApiKeys } from "~/utils/db/apiKeys.db.server";
+import { ApiKeyLogSimple, ApiKeyWithDetails, getAllApiKeyLogsSimple, getAllApiKeys } from "~/utils/db/apiKeys.db.server";
 
 type LoaderData = {
   apiKeys: ApiKeyWithDetails[];
-  apiKeyLogs: ApiKeyLogWithDetails[];
+  apiKeyLogs: ApiKeyLogSimple[];
 };
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async () => {
   const apiKeys = await getAllApiKeys();
-  const apiKeyLogs = await getAllApiKeyLogs();
+  const apiKeyLogs = await getAllApiKeyLogsSimple();
   const data: LoaderData = {
     apiKeys,
     apiKeyLogs,

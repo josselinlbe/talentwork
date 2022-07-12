@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 import ButtonTertiary from "~/components/ui/buttons/ButtonTertiary";
 import EmptyState from "~/components/ui/emptyState/EmptyState";
 import InputSearch from "~/components/ui/input/InputSearch";
-import { ApiKeyLogWithDetails, ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
+import { ApiKeyLogSimple, ApiKeyWithDetails } from "~/utils/db/apiKeys.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 
 interface Props {
   entities: Entity[];
   items: ApiKeyWithDetails[];
-  logs: ApiKeyLogWithDetails[];
+  logs: ApiKeyLogSimple[];
   withTenant?: boolean;
   canCreate?: boolean;
 }

@@ -6,6 +6,7 @@ import InputSearch from "~/components/ui/input/InputSearch";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { TenantWithUsage } from "~/utils/db/tenants.db.server";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
+import { Link } from "react-router-dom";
 
 interface Props {
   items: TenantWithUsage[];
@@ -60,6 +61,12 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
       name: "rows",
       title: t("models.entity.rows"),
       value: (i) => i._count.rows,
+    });
+    headers.push({
+      name: "events",
+      title: "Events",
+      value: (i) => i._count.events,
+      formattedValue: (i) => <Link to={`/admin/events?tenantId=${i.id}`}>{i._count.events}</Link>,
     });
     // entities.forEach((entity) => {
     //   headers.push({

@@ -20,7 +20,7 @@ export default function Community({ title, subtitle, socialProof, cta }: Props) 
               <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{title}</h2>
               <p className="text-xl text-gray-500">{subtitle}</p>
               {cta && (
-                <div className="flex space-x-2 justify-center">
+                <div className="flex-col space-y-1 sm:space-y-0 flex sm:flex-row sm:space-x-2 justify-center">
                   {cta.map((item) => {
                     return (
                       <div key={item.link} className="rounded-md ">
@@ -30,7 +30,7 @@ export default function Community({ title, subtitle, socialProof, cta }: Props) 
                           target="_blank"
                           rel="noreferrer"
                           className={clsx(
-                            "group w-full flex items-center space-x-2 justify-center px-8 py-3 border text-base font-medium rounded-md md:py-2 md:px-4 hover:bg-gray-100 dark:hover:bg-gray-900"
+                            "group w-full flex items-center space-x-2 justify-center px-8 py-3 border text-base font-medium rounded-md md:py-2 md:px-4 hover:bg-gray-100 dark:hover:bg-gray-900 truncate"
                           )}
                         >
                           {item.message}

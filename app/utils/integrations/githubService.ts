@@ -2,12 +2,12 @@ import { SocialProofDto } from "~/application/dtos/marketing/SocialProofDto";
 import { Octokit } from "octokit";
 
 export async function getGitHubSocialProof(): Promise<SocialProofDto> {
-  if (process.env.NODE_ENV === "development") {
-    return {
-      totalMembers: 100,
-      members: [],
-    };
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   return {
+  //     totalMembers: 100,
+  //     members: [],
+  //   };
+  // }
   const collaborators = await getGitHubRepositoryCollaborators();
   const hideMembers = process.env.GITHUB_HIDE_USERS?.toString().split(",") ?? [];
   return {

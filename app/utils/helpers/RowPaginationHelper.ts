@@ -6,10 +6,12 @@ import { EntityWithDetails } from "../db/entities/entities.db.server";
 import { countRows, getRows, RowWithDetails } from "../db/entities/rows.db.server";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { FilterablePropertyDto } from "~/application/dtos/data/FilterablePropertyDto";
+import Constants from "~/application/Constants";
 
-export function getPaginationFromCurrentUrl(request: Request): { page: number; sortedBy: SortedByDto; query: string } {
+export function getPaginationFromCurrentUrl(request: Request): { page: number; pageSize: number; sortedBy: SortedByDto; query: string } {
   return {
     page: getPageFromCurrentUrl(request),
+    pageSize: Constants.DEFAULT_PAGE_SIZE,
     sortedBy: getSortByFromCurrentUrl(request),
     query: getSearchQueryFromCurrentUrl(request),
   };

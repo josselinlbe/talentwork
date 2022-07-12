@@ -12,6 +12,7 @@ export type ChangelogItem = {
   closed: Issue[];
   added: Issue[];
   releaseTag?: string;
+  videos?: { title: string; url: string }[];
 };
 
 type Issue = {
@@ -58,7 +59,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                 <h2 className="text-black dark:text-white font-semibold text-sm">{title}</h2>
                 {imageCount() > 0 && (
                   <button className=" text-xs underline" type="button" onClick={() => setViewImages(!viewImages)}>
-                    ({!viewImages ? "Click here to expand images" : "Hide images"})
+                    ({!viewImages ? "Click here to show images" : "Hide images"})
                   </button>
                 )}
               </div>
@@ -76,7 +77,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                         </>
                       )}
                       {issue.title.split("#")[0]}
-                      {!viewImages && (
+                      {viewImages && (
                         <div className="flex items-baseline space-x-3">
                           {issue.img?.map((image, idx) => {
                             return (
@@ -91,7 +92,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                           })}
                         </div>
                       )}
-                      {viewImages && (
+                      {/* {viewImages && (
                         <>
                           {issue.img?.map((image, idx) => {
                             return (
@@ -107,7 +108,7 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                             </a>
                           )}
                         </>
-                      )}
+                      )} */}
                     </li>
                   );
                 })}

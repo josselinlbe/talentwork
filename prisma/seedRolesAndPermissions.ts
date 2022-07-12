@@ -69,6 +69,7 @@ export async function seedRolesAndPermissions() {
     { inRoles: [DefaultAdminRoles.SuperAdmin, "Developer"], name: "admin.apiKeys.update", description: "Update API Key", type: "admin" },
     { inRoles: [DefaultAdminRoles.SuperAdmin, "Developer"], name: "admin.apiKeys.delete", description: "Delete API Key", type: "admin" },
     { inRoles: [DefaultAdminRoles.SuperAdmin, "Auditor", "Guest"], name: "admin.auditTrails.view", description: "View Audit Trails page", type: "admin" },
+    { inRoles: [DefaultAdminRoles.SuperAdmin, "Auditor", "Developer"], name: "admin.events.view", description: "View Events and Webhooks page", type: "admin" },
     { inRoles: [DefaultAdminRoles.SuperAdmin, "Product Designer", "Guest"], name: "admin.pricing.view", description: "View API Keys page", type: "admin" },
     { inRoles: [DefaultAdminRoles.SuperAdmin, "Product Designer"], name: "admin.pricing.create", description: "Create plan", type: "admin" },
     { inRoles: [DefaultAdminRoles.SuperAdmin, "Product Designer"], name: "admin.pricing.update", description: "Update plan", type: "admin" },

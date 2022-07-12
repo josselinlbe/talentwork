@@ -24,6 +24,9 @@ export async function seedBlog() {
     { name: "roles", color: Colors.GREEN },
     { name: "permissions", color: Colors.EMERALD },
     { name: "crm", color: Colors.GREEN },
+    { name: "webhooks", color: Colors.ORANGE },
+    { name: "zapier", color: Colors.ORANGE },
+    { name: "workflow-automation", color: Colors.BLUE },
   ]);
 
   await seedAuthors([
@@ -121,6 +124,18 @@ export async function seedBlogPosts() {
       authorSlug: "alexandromtzg",
       categoryName: "Article",
       tagNames: ["remix", "saas", "no-code"],
+      published: true,
+    },
+    {
+      slug: "saasrock-v0-4-0-events-and-webhooks",
+      title: "SaasRock v0.4.0 - Events and Webhooks",
+      description: "Use the Events to log essential data and use Webhooks to customize your business logic within internal or external webhooks.",
+      date: new Date("2022-07-11T21:34:00.000Z"),
+      image: "https://miro.medium.com/max/1400/1*HR_jXKO32RRbxvy9GCN52g.png",
+      readingTime: "2 min",
+      authorSlug: "alexandromtzg",
+      categoryName: "Article",
+      tagNames: ["remix", "webhooks", "zapier", "workflow-automation"],
       published: true,
     },
   ];

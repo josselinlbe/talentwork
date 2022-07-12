@@ -17,6 +17,8 @@ import bcrypt from "bcryptjs";
 import { i18nHelper } from "~/locale/i18n.utils";
 import supportedLocales from "~/locale/supportedLocales";
 import { deleteUserWithItsTenants } from "~/utils/services/userService";
+import { createUserProfileUpdatedEvent } from "~/utils/services/events/usersEventsService";
+import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   title: string;
@@ -52,8 +54,9 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const { t } = await i18nHelper(request);
+  const tenantUrl = await getTenantUrl(params);
   const userInfo = await getUserInfo(request);
   const form = await request.formData();
   const action = form.get("action");
@@ -78,7 +81,9 @@ export const action: ActionFunction = async ({ request }) => {
       admin: true,
     },
   });
-
+  if (!user) {
+    return badRequest({ profileError: `User not found.` });
+  }
   switch (action) {
     case "profile": {
       const fields = { action, firstName, lastName, avatar, passwordCurrent, passwordNew, passwordNewConfirm };
@@ -101,6 +106,11 @@ export const action: ActionFunction = async ({ request }) => {
           profileError: `Could not update profile`,
         });
       }
+      await createUserProfileUpdatedEvent(tenantUrl.tenantId, {
+        new: { firstName, lastName },
+        old: { firstName: user.firstName, lastName: user.lastName },
+        userId: userInfo?.userId,
+      });
       return json({
         profileSuccess: "Profile updated",
       });
@@ -191,7 +201,7 @@ export default function ProfileRoute() {
   }, []);
 
   const locales = supportedLocales;
-  const [avatar, setAvatar] = useState<string | undefined>(appData.user?.avatar);
+  const [avatar, setAvatar] = useState<string | undefined>(appData.user?.avatar ?? undefined);
   const [selectedLocale, setSelectedLocale] = useState(i18n.language);
   const [showUploadImage, setShowUploadImage] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);

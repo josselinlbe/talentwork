@@ -69,7 +69,9 @@ export async function createStripeCustomer(email: string, name: string) {
       email,
       name,
     })
-    .catch(() => {
+    .catch((e: any) => {
+      // eslint-disable-next-line no-console
+      console.error(e.message);
       return null;
     });
 }

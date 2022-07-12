@@ -6,19 +6,19 @@ import ApiKeysTable from "~/components/core/apiKeys/ApiKeysTable";
 import CheckPlanFeatureLimit from "~/components/core/settings/subscription/CheckPlanFeatureLimit";
 import InfoBanner from "~/components/ui/banners/InfoBanner";
 import { useAppData } from "~/utils/data/useAppData";
-import { ApiKeyLogWithDetails, ApiKeyWithDetails, getAllApiKeyLogs, getApiKeys } from "~/utils/db/apiKeys.db.server";
+import { ApiKeyLogSimple, ApiKeyWithDetails, getAllApiKeyLogsSimple, getApiKeys } from "~/utils/db/apiKeys.db.server";
 import { getPlanFeatureUsage } from "~/utils/services/subscriptionService";
 import { getTenantUrl } from "~/utils/services/urlService";
 
 type LoaderData = {
   apiKeys: ApiKeyWithDetails[];
-  apiKeyLogs: ApiKeyLogWithDetails[];
+  apiKeyLogs: ApiKeyLogSimple[];
   featurePlanUsage: PlanFeatureUsageDto | undefined;
 };
 export let loader: LoaderFunction = async ({ params }) => {
   const tenantUrl = await getTenantUrl(params);
   const apiKeys = await getApiKeys(tenantUrl.tenantId);
-  const apiKeyLogs = await getAllApiKeyLogs(tenantUrl.tenantId);
+  const apiKeyLogs = await getAllApiKeyLogsSimple(tenantUrl.tenantId);
   const featurePlanUsage = await getPlanFeatureUsage(tenantUrl.tenantId, DefaultFeatures.API);
   const data: LoaderData = {
     apiKeys,

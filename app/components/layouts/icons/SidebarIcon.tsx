@@ -27,6 +27,7 @@ import EntityIcon from "./EntityIcon";
 import IconKeys from "./IconKeys";
 import IconDocs from "./IconDocs";
 import IconRoles from "./IconRoles";
+import IconEvents from "./IconEvents";
 // import IconEntities from "./IconEntities";
 
 interface Props {
@@ -53,6 +54,7 @@ export default function SidebarIcon({ className, item }: Props) {
       {item.icon === SvgIcon.SETTINGS && <IconSettings className={className} />}
       {item.icon === SvgIcon.SETUP && <IconCode className={className} />}
       {item.icon === SvgIcon.LOGS && <IconHistory className={className} />}
+      {item.icon === SvgIcon.EVENTS && <IconEvents className={className} />}
       {item.icon === SvgIcon.BLOG && <IconBlog className={className} />}
       {item.icon === SvgIcon.ENTITIES && <IconEntities className={className} />}
       {item.icon === SvgIcon.KEYS && <IconKeys className={className} />}

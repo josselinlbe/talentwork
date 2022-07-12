@@ -71,6 +71,7 @@ model Tenant {
   invitations              TenantUserInvitation[]
   userRoles                UserRole[]
   inboundAddresses         TenantInboundAddress[]
+  events                   Event[]
 }
 
 model TenantSubscription {
@@ -770,6 +771,33 @@ model Deal {
   row                 Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   subscriptionPrice   SubscriptionPrice? @relation(fields: [subscriptionPriceId], references: [id], onDelete: Cascade)
 }
+
+model Event {
+  id        String                @id @default(cuid())
+  createdAt DateTime              @default(now())
+  tenantId  String?
+  tenant    Tenant?               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  data      String
+  resource  String?
+  attempts  EventWebhookAttempt[]
+}
+
+model EventWebhookAttempt {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  startedAt  DateTime?
+  finishedAt DateTime?
+  eventId    String
+  event      Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  endpoint   String
+  success    Boolean?
+  status     Int?
+  message    String?
+  body       String?
+}
+
+// Application Demo: Contracts
 
 model Contract {
   id          String             @id @default(cuid())

@@ -98,6 +98,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
 
       const profile = await updateUserProfile({ firstName, lastName, avatar }, userInfo?.userId);
+
       if (!profile) {
         return badRequest({
           fields,
@@ -177,7 +178,7 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function ProfileRoute() {
-  const appData = useAdminData();
+  const adminData = useAdminData();
   const actionData = useActionData<ActionData>();
   const { t, i18n } = useTranslation();
   const transition = useTransition();
@@ -195,7 +196,7 @@ export default function ProfileRoute() {
   }, []);
 
   const locales = supportedLocales;
-  const [avatar, setAvatar] = useState<string | undefined>(appData.user?.avatar);
+  const [avatar, setAvatar] = useState<string | undefined>(adminData.user?.avatar ?? undefined);
   const [selectedLocale, setSelectedLocale] = useState(i18n.language);
   const [showUploadImage, setShowUploadImage] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -210,7 +211,7 @@ export default function ProfileRoute() {
   }
 
   function deleteAccount() {
-    if (appData.user?.admin !== null) {
+    if (adminData.user?.admin !== null) {
       errorModal.current?.show(t("settings.profile.errors.cannotDeleteAdmin"));
     } else {
       confirmModal.current?.show(t("settings.danger.confirmDelete"), t("shared.confirm"), t("shared.cancel"), t("shared.warningCannotUndo"));
@@ -253,7 +254,7 @@ export default function ProfileRoute() {
                         type="email"
                         id="email-address"
                         name="email"
-                        defaultValue={appData.user?.email}
+                        defaultValue={adminData.user?.email}
                         className="bg-gray-100 mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                       />
                     </div>
@@ -266,7 +267,7 @@ export default function ProfileRoute() {
                         id="firstName"
                         name="firstName"
                         required
-                        defaultValue={appData.user?.firstName}
+                        defaultValue={adminData.user?.firstName}
                         aria-invalid={Boolean(actionData?.fieldErrors?.firstName)}
                         aria-errormessage={actionData?.fieldErrors?.firstName ? "firstName-error" : undefined}
                         className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -285,7 +286,7 @@ export default function ProfileRoute() {
                       <input
                         id="lastName"
                         name="lastName"
-                        defaultValue={appData.user?.lastName}
+                        defaultValue={adminData.user?.lastName}
                         aria-invalid={Boolean(actionData?.fieldErrors?.lastName)}
                         aria-errormessage={actionData?.fieldErrors?.lastName ? "lastName-error" : undefined}
                         className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -371,7 +372,7 @@ export default function ProfileRoute() {
               <h3 className="text-lg font-medium leading-6 text-gray-900">{t("settings.profile.securityTitle")}</h3>
               <p className="mt-1 text-xs leading-5 text-gray-600">
                 {t("account.login.forgot")}{" "}
-                <a className="text-theme-600 font-bold hover:text-theme-500" href={"/forgot-password?e=" + appData.user?.email ?? ""}>
+                <a className="text-theme-600 font-bold hover:text-theme-500" href={"/forgot-password?e=" + adminData.user?.email ?? ""}>
                   {t("account.reset.button")}
                 </a>
               </p>

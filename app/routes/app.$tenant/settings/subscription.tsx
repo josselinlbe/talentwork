@@ -41,6 +41,7 @@ import { PricingModel } from "~/application/enums/subscriptions/PricingModel";
 import { getPlanFeaturesUsage } from "~/utils/services/subscriptionService";
 import { PlanFeatureUsageDto } from "~/application/dtos/subscriptions/PlanFeatureUsageDto";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
+import { createSubscriptionCancelledEvent, createSubscriptionSubscribedEvent } from "~/utils/services/events/subscriptionsEventsService";
 
 type LoaderData = DashboardLoaderData & {
   title: string;
@@ -100,6 +101,15 @@ export let loader: LoaderFunction = async ({ request, params }) => {
           stripeSubscriptionId: session.subscription.toString(),
           quantity,
         });
+        if (price) {
+          await createSubscriptionSubscribedEvent(tenantUrl.tenantId, {
+            user: { id: user.id, email: user.email },
+            subscription: {
+              price: { id: price.id, billingPeriod: price.billingPeriod, amount: price.price },
+              product: { id: price.subscriptionProduct.id, title: t(price.subscriptionProduct.title) },
+            },
+          });
+        }
         await createLog(request, tenantUrl, "Subscribed", t(price?.subscriptionProduct.title ?? ""));
         return redirect(UrlUtils.currentTenantUrl(params, `settings/subscription`));
       }
@@ -141,7 +151,9 @@ type ActionData = {
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request, params }) => {
+  let { t } = await i18nHelper(request);
   const tenantUrl = await getTenantUrl(params);
+  const userInfo = await getUserInfo(request);
   const tenantSubscription = await getTenantSubscription(tenantUrl.tenantId);
   const form = await request.formData();
 
@@ -187,6 +199,17 @@ export const action: ActionFunction = async ({ request, params }) => {
       stripeSubscriptionId: null,
       quantity: 0,
     });
+    const user = await getUser(userInfo.userId);
+    const fromPrice = await getSubscriptionPrice(tenantSubscription.subscriptionPriceId ?? "");
+    if (fromPrice && user) {
+      await createSubscriptionCancelledEvent(tenantUrl.tenantId, {
+        user: { id: user.id, email: user.email },
+        subscription: {
+          price: { id: fromPrice.id, billingPeriod: fromPrice.billingPeriod, amount: fromPrice.price },
+          product: { id: fromPrice.subscriptionProduct.id, title: t(fromPrice.subscriptionProduct.title) },
+        },
+      });
+    }
     const actionData: ActionData = {
       success: "Successfully cancelled",
     };

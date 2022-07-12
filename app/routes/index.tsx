@@ -110,6 +110,10 @@ export default function IndexRoute() {
               message: "Join Discord",
               link: "https://discord.gg/KMkjU2BFn9",
             },
+            {
+              message: "Youtube channel",
+              link: "https://www.youtube.com/channel/UCdXy3FPDHxP-b7NhPspt6cQ",
+            },
           ]}
         />
         <VideoDemo

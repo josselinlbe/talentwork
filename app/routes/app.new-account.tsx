@@ -12,6 +12,7 @@ import { createTenant, createTenantUser, getMyTenants } from "~/utils/db/tenants
 import { getUser, updateUserDefaultTenantId } from "~/utils/db/users.db.server";
 import { getUserInfo } from "~/utils/session.server";
 import { createStripeCustomer } from "~/utils/stripe.server";
+import { createAccountCreatedEvent } from "~/utils/services/events/accountsEventsService";
 
 type LoaderData = {
   myTenants: Awaited<ReturnType<typeof getMyTenants>>;
@@ -63,6 +64,11 @@ export const action: ActionFunction = async ({ request }) => {
   );
 
   await updateUserDefaultTenantId({ defaultTenantId: tenant.id }, user.id);
+
+  await createAccountCreatedEvent(tenant.id, {
+    tenant: { id: tenant.id, name: tenant.name, slug: tenant.slug },
+    user: { id: user.id, email: user.email },
+  });
 
   return redirect(`/app/${tenant.id}/dashboard`);
 };

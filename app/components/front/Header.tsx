@@ -45,6 +45,10 @@ export default function Header() {
           path: "/newsletter",
           title: "Newsletter",
         },
+        {
+          path: "https://www.youtube.com/channel/UCdXy3FPDHxP-b7NhPspt6cQ",
+          title: "Tutorials",
+        },
       ],
     },
   ];
@@ -194,32 +198,64 @@ export default function Header() {
                       return (
                         <>
                           {link.path ? (
-                            <Link
-                              key={link.title}
-                              to={link.path}
-                              role="menuitem"
-                              className={clsx(
-                                "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
-                                isCurrent(link.path) ? "bg-slate-100 dark:bg-gray-900" : ""
+                            <>
+                              {link.path.startsWith("https:") ? (
+                                <a
+                                  key={link.title}
+                                  href={link.path}
+                                  role="menuitem"
+                                  className={clsx(
+                                    "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
+                                    isCurrent(link.path) ? "bg-slate-100 dark:bg-gray-900" : ""
+                                  )}
+                                >
+                                  {link.title}
+                                </a>
+                              ) : (
+                                <Link
+                                  key={link.title}
+                                  to={link.path}
+                                  role="menuitem"
+                                  className={clsx(
+                                    "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
+                                    isCurrent(link.path) ? "bg-slate-100 dark:bg-gray-900" : ""
+                                  )}
+                                >
+                                  {link.title}
+                                </Link>
                               )}
-                            >
-                              {link.title}
-                            </Link>
+                            </>
                           ) : (
                             <>
                               {link.items?.map((subItem, idxSubItem) => {
                                 return (
-                                  <Link
-                                    key={subItem.title}
-                                    to={subItem.path ?? ""}
-                                    role="menuitem"
-                                    className={clsx(
-                                      "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
-                                      isCurrent(subItem.path ?? "") ? "bg-slate-100 dark:bg-gray-900" : ""
+                                  <>
+                                    {subItem.path?.startsWith("https:") ? (
+                                      <a
+                                        key={subItem.title}
+                                        href={subItem.path ?? ""}
+                                        role="menuitem"
+                                        className={clsx(
+                                          "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
+                                          isCurrent(subItem.path ?? "") ? "bg-slate-100 dark:bg-gray-900" : ""
+                                        )}
+                                      >
+                                        {subItem.title}
+                                      </a>
+                                    ) : (
+                                      <Link
+                                        key={subItem.title}
+                                        to={subItem.path ?? ""}
+                                        role="menuitem"
+                                        className={clsx(
+                                          "block px-3 py-2 rounded-md text-base font-medium text-gray-900 dark:text-slate-300 hover:text-gray-900 hover:bg-gray-50 dark:hover:bg-slate-800",
+                                          isCurrent(subItem.path ?? "") ? "bg-slate-100 dark:bg-gray-900" : ""
+                                        )}
+                                      >
+                                        {subItem.title}
+                                      </Link>
                                     )}
-                                  >
-                                    {subItem.title}
-                                  </Link>
+                                  </>
                                 );
                               })}
                               {/* <HeaderFlyoutItem
