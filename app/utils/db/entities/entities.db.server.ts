@@ -197,6 +197,7 @@ export async function getEntityBySlug(slug: string): Promise<EntityWithDetails |
     },
     include: {
       workflowStates: true,
+      workflowSteps: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
