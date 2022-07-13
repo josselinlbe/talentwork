@@ -280,7 +280,8 @@ export async function createEntity(
     hasWorkflow: boolean;
     defaultVisibility: string;
   },
-  workflowStates?: { name: string; title: string; color: Colors }[] | null
+  workflowStates?: { name: string; title: string; color: Colors }[] | null,
+  workflowSteps?: { fromState: string; action: string; toState: string }[] | null
 ) {
   const order = (await getMaxEntityOrder()) + 1;
   const entity = await db.entity.create({
@@ -334,7 +335,7 @@ export async function createEntity(
 
   if (entity.hasWorkflow) {
     if (workflowStates !== undefined) {
-      await createCustomEntityWorkflowStates(entity.id, workflowStates);
+      await createCustomEntityWorkflowStates(entity.id, workflowStates, workflowSteps);
     } else {
       await createDefaultEntityWorkflow(entity.id);
     }
@@ -364,7 +365,8 @@ export async function createCoreEntity(
     defaultVisibility?: Visibility;
   },
   properties?: CreatePropertyDto[],
-  workflowStates?: { name: string; title: string; color: Colors }[] | null
+  workflowStates?: { name: string; title: string; color: Colors }[] | null,
+  workflowSteps?: { fromState: string; action: string; toState: string }[] | null
 ) {
   const entity = await createEntity(
     {
@@ -386,7 +388,8 @@ export async function createCoreEntity(
       hasWorkflow: data.hasWorkflow !== undefined ? data.hasWorkflow : false,
       defaultVisibility: data.defaultVisibility ?? Constants.DEFAULT_ROW_VISIBILITY,
     },
-    workflowStates
+    workflowStates,
+    workflowSteps
   );
   if (properties) {
     await createProperties(entity.id, properties);

@@ -56,11 +56,15 @@ export async function createDefaultEntityWorkflow(entityId: string) {
   // await createStep(entityId, "Cancel", stateRejected, stateCancelled, [fakeRoleService.roles[3]]);
 }
 
-export async function createCustomEntityWorkflowStates(entityId: string, workflowStates: { name: string; title: string; color: Colors }[] | null) {
-  if (workflowStates === null) {
+export async function createCustomEntityWorkflowStates(
+  entityId: string,
+  workflowStates: { name: string; title: string; color: Colors; steps?: { action: string; toState: string }[] }[] | undefined | null,
+  workflowSteps: { fromState: string; action: string; toState: string }[] | undefined | null
+) {
+  if (!workflowStates) {
     return;
   }
-  await Promise.all(
+  const states = await Promise.all(
     workflowStates.map(async (workflowState, idx) => {
       const state = await createState(entityId, {
         order: idx + 1,
@@ -75,6 +79,23 @@ export async function createCustomEntityWorkflowStates(entityId: string, workflo
       return state;
     })
   );
+
+  if (workflowSteps) {
+    await Promise.all(
+      workflowSteps.map(async (workflowStep) => {
+        const fromState = states.find((state) => state.name === workflowStep.fromState);
+        const toState = states.find((state) => state.name === workflowStep.toState);
+        if (!fromState) {
+          throw new Error("From state not found: " + workflowStep.fromState);
+        }
+        if (!toState) {
+          throw new Error("To state not found: " + workflowStep.toState);
+        }
+        const step = await createStep(entityId, workflowStep.action, fromState!, toState!, "");
+        return step;
+      })
+    );
+  }
 }
 
 async function createState(
@@ -118,20 +139,29 @@ export async function setRowInitialWorkflowState(entityId: string, rowId: string
   }
 }
 
-export async function performRowWorkflowStep(entity: EntityWithDetails, row: RowWithDetails, workflowStep: EntityWorkflowStep, userId: string, request?: Request) {
+export async function performRowWorkflowStep(
+  entity: EntityWithDetails,
+  row: RowWithDetails,
+  workflowStep: EntityWorkflowStep,
+  userId: string,
+  request?: Request
+) {
   if (workflowStep) {
     await updateRowWorkflowState(row.id, workflowStep.toStateId);
     const transition = await createRowWorkflowTransition(row.id, workflowStep.id, userId);
     const workflowTransition = await getRowWorkflowTransition(transition.id);
-    await createManualRowLog({
-      tenantId: row.tenantId,
-      createdByUserId: userId,
-      createdByApiKey: null,
-      action: DefaultLogActions.WorkflowTransition,
-      entity,
-      item: row,
-      workflowTransition,
-    }, request);
+    await createManualRowLog(
+      {
+        tenantId: row.tenantId,
+        createdByUserId: userId,
+        createdByApiKey: null,
+        action: DefaultLogActions.WorkflowTransition,
+        entity,
+        item: row,
+        workflowTransition,
+      },
+      request
+    );
   }
 }
 

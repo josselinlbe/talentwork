@@ -1,4 +1,4 @@
-import { MarketingFeatureDto, MarketingFeatureStatus, MarketingFeatureType } from "~/application/dtos/marketing/MarketingFeatureDto";
+import { MarketingFeatureDto, MarketingFeatureStatus } from "~/application/dtos/marketing/MarketingFeatureDto";
 import { Colors } from "~/application/enums/shared/Colors";
 import { getUpcomingFeatures } from "~/utils/services/marketingService";
 import NumberUtils from "~/utils/shared/NumberUtils";
