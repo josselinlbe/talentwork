@@ -40,6 +40,21 @@ export const includeSimpleCreatedByUser = {
   },
 };
 
+export const includeCreatedBy = {
+  byUser: {
+    select: { id: true, email: true, firstName: true, lastName: true },
+  },
+  byApiKey: {
+    select: { id: true, alias: true },
+  },
+  byEmail: {
+    select: { id: true, subject: true },
+  },
+  byEventWebhookAttempt: {
+    select: { id: true, endpoint: true, message: true },
+  },
+};
+
 export async function adminGetAllTenantUsers(tenantId: string): Promise<UserWithDetails[]> {
   return db.user.findMany({
     where: {

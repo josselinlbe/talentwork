@@ -1,5 +1,5 @@
 import { Menu } from "@headlessui/react";
-import { EntityWorkflowStep } from "@prisma/client";
+import { EntityWorkflowState, EntityWorkflowStep } from "@prisma/client";
 import clsx from "clsx";
 import { useState, useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
@@ -51,6 +51,19 @@ export default function RowEditRoute({ children }: Props) {
     });
   }
 
+  function onClickedWorkflowState(state: EntityWorkflowState) {
+    const form = new FormData();
+    form.set("action", "workflow-set-manual-state");
+    form.set("workflow-state-id", state.id);
+    submit(form, {
+      method: "post",
+    });
+  }
+
+  function canUpdate() {
+    return !(isUpdatingWorkflowState || !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) || !data.rowPermissions.canUpdate);
+  }
+
   return (
     <>
       <EditPageLayout
@@ -92,15 +105,7 @@ export default function RowEditRoute({ children }: Props) {
                     {data.nextWorkflowSteps.map((step) => {
                       return (
                         <>
-                          <ButtonSecondary
-                            disabled={
-                              isUpdatingWorkflowState ||
-                              !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) ||
-                              !data.rowPermissions.canUpdate
-                            }
-                            key={step.id}
-                            onClick={() => onClickedWorkflowStep(step)}
-                          >
+                          <ButtonSecondary disabled={!canUpdate()} key={step.id} onClick={() => onClickedWorkflowStep(step)}>
                             <div className="flex items-center space-x-2">
                               <ColorBadge color={step.toState.color} />
                               <div>{t(step.action)}</div>
@@ -111,18 +116,13 @@ export default function RowEditRoute({ children }: Props) {
                     })}
                   </div>
                   <ButtonSecondary disabled={data.item.createdByUserId !== appOrAdminData?.user?.id && !appOrAdminData?.isSuperUser} to="share">
-                    {/* {data.rowPermissions.visibility === Visibility.Private ? (
-                      <div>{t("shared.share")}</div>
-                    ) : (
-                      <div>{VisibilityHelper.getVisibilityTitle(t, data.rowPermissions.visibility)}</div>
-                    )} */}
                     <div>{t("shared.share")}</div>
                     <ShareIcon className="h-4 w-4 text-gray-500" />
                   </ButtonSecondary>
                   <DropdownWithClick
                     button={<div className="flex items-center space-x-2">{editing ? t("shared.cancel") : t("shared.edit")}</div>}
                     onClick={() => setEditing(!editing)}
-                    disabled={!appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) || !data.rowPermissions.canUpdate}
+                    disabled={!canUpdate()}
                     options={
                       <div className="z-50">
                         <Menu.Item>
@@ -156,6 +156,34 @@ export default function RowEditRoute({ children }: Props) {
                             </Menu.Item>
                           );
                         })}
+
+                        {appOrAdminData.isSuperUser && (
+                          <>
+                            <div className="border-t border-gray-200"></div>
+
+                            {data.entity.workflowStates.map((state) => {
+                              return (
+                                <Menu.Item key={state.id}>
+                                  {({ active }) => (
+                                    <button
+                                      type="button"
+                                      onClick={() => onClickedWorkflowState(state)}
+                                      className={clsx(
+                                        "w-full text-left flex space-x-2 items-center",
+                                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                        "block px-4 py-2 text-sm"
+                                      )}
+                                    >
+                                      <div>
+                                        <span className="font-bold text-xs">[Admin]</span> Set {t(state.title)}
+                                      </div>
+                                    </button>
+                                  )}
+                                </Menu.Item>
+                              );
+                            })}
+                          </>
+                        )}
                       </div>
                     }
                   />

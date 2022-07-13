@@ -1,9 +1,13 @@
 import { EntityWorkflowState, EntityWorkflowStep, RowWorkflowTransition } from "@prisma/client";
+import { CreatedByDto } from "~/application/dtos/shared/CreatedByDto";
 import { db } from "~/utils/db.server";
-import { includeSimpleCreatedByUser, UserSimple } from "../users.db.server";
+import { includeCreatedBy } from "../users.db.server";
 
 export type RowWorkflowTransitionWithDetails = RowWorkflowTransition & {
-  createdByUser: UserSimple;
+  byUser: { id: string; email: string; firstName: string; lastName: string } | null;
+  byApiKey?: { id: string; alias: string } | null;
+  byEmail?: { id: string; subject: string } | null;
+  byEventWebhook?: { id: string; endpoint: string; message: true } | null;
   workflowStep: EntityWorkflowStep & {
     fromState: EntityWorkflowState;
     toState: EntityWorkflowState;
@@ -16,7 +20,7 @@ export async function getRowWorkflowTransitions(rowId: string): Promise<RowWorkf
       rowId,
     },
     include: {
-      ...includeSimpleCreatedByUser,
+      ...includeCreatedBy,
       workflowStep: {
         include: {
           fromState: true,
@@ -36,7 +40,7 @@ export async function getRowWorkflowTransition(id: string): Promise<RowWorkflowT
       id,
     },
     include: {
-      ...includeSimpleCreatedByUser,
+      ...includeCreatedBy,
       workflowStep: {
         include: {
           fromState: true,
@@ -47,12 +51,12 @@ export async function getRowWorkflowTransition(id: string): Promise<RowWorkflowT
   });
 }
 
-export async function createRowWorkflowTransition(rowId: string, workflowStepId: string, createdByUserId: string): Promise<RowWorkflowTransition> {
+export async function createRowWorkflowTransition(rowId: string, workflowStepId: string, createdBy: CreatedByDto): Promise<RowWorkflowTransition> {
   return await db.rowWorkflowTransition.create({
     data: {
       rowId,
       workflowStepId,
-      createdByUserId,
+      ...createdBy,
     },
   });
 }

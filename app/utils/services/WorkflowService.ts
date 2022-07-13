@@ -148,7 +148,9 @@ export async function performRowWorkflowStep(
 ) {
   if (workflowStep) {
     await updateRowWorkflowState(row.id, workflowStep.toStateId);
-    const transition = await createRowWorkflowTransition(row.id, workflowStep.id, userId);
+    const transition = await createRowWorkflowTransition(row.id, workflowStep.id, {
+      byUserId: userId,
+    });
     const workflowTransition = await getRowWorkflowTransition(transition.id);
     await createManualRowLog(
       {

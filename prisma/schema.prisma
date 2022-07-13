@@ -41,7 +41,6 @@ model User {
   invitation                 TenantUserInvitation?
   roles                      UserRole[]
   readEmails                 EmailRead[]
-  createdByMe                CreatedBy[]
 }
 
 model AdminUser {
@@ -209,21 +208,21 @@ model LinkedAccount {
 }
 
 model ApiKey {
-  id              String         @id @default(cuid())
-  createdAt       DateTime       @default(now())
+  id              String                  @id @default(cuid())
+  createdAt       DateTime                @default(now())
   createdByUserId String
   tenantId        String
-  key             String         @default(uuid())
+  key             String                  @default(uuid())
   alias           String
   expires         DateTime?
   active          Boolean
-  createdByUser   User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdByUser   User                    @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  tenant          Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   entities        ApiKeyEntity[]
   apiKeyLogs      ApiKeyLog[]
   logs            Log[]
   createdRows     Row[]
-  createdByMe     CreatedBy[]
+  transitions     RowWorkflowTransition[]
 
   @@unique([tenantId, alias])
 }
@@ -671,27 +670,21 @@ model RowTask {
 }
 
 model RowWorkflowTransition {
-  id              String             @id @default(cuid())
-  createdAt       DateTime           @default(now())
-  createdByUserId String?
-  rowId           String
-  workflowStepId  String
-  createdByUser   User?              @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  row             Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
-  workflowStep    EntityWorkflowStep @relation(fields: [workflowStepId], references: [id], onDelete: Cascade)
-  logs            Log[]
-}
-
-model CreatedBy {
-  id                    String               @id @default(cuid())
-  userId                String?
-  user                  User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKeyId              String?
-  apiKey                ApiKey?              @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  emailId               String?
-  email                 Email?               @relation(fields: [emailId], references: [id], onDelete: Cascade)
-  eventWebhookAttemptId String?
-  eventWebhookAttempt   EventWebhookAttempt? @relation(fields: [eventWebhookAttemptId], references: [id], onDelete: Cascade)
+  id                      String               @id @default(cuid())
+  createdAt               DateTime             @default(now())
+  byUserId                String?
+  byApiKeyId              String?
+  byEmailId               String?
+  byEventWebhookAttemptId String?
+  rowId                   String
+  workflowStepId          String
+  byUser                  User?                @relation(fields: [byUserId], references: [id], onDelete: Cascade)
+  byApiKey                ApiKey?              @relation(fields: [byApiKeyId], references: [id], onDelete: Cascade)
+  byEmail                 Email?               @relation(fields: [byEmailId], references: [id], onDelete: Cascade)
+  byEventWebhookAttempt   EventWebhookAttempt? @relation(fields: [byEventWebhookAttemptId], references: [id], onDelete: Cascade)
+  row                     Row                  @relation(fields: [rowId], references: [id], onDelete: Cascade)
+  workflowStep            EntityWorkflowStep   @relation(fields: [workflowStepId], references: [id], onDelete: Cascade)
+  logs                    Log[]
 }
 
 model TenantInboundAddress {
@@ -703,10 +696,10 @@ model TenantInboundAddress {
 }
 
 model Email {
-  id                     String                @id @default(cuid())
+  id                     String                  @id @default(cuid())
   tenantInboundAddressId String?
-  tenantInboundAddress   TenantInboundAddress? @relation(fields: [tenantInboundAddressId], references: [id], onDelete: Cascade)
-  messageId              String                @unique
+  tenantInboundAddress   TenantInboundAddress?   @relation(fields: [tenantInboundAddressId], references: [id], onDelete: Cascade)
+  messageId              String                  @unique
   type                   String // inbound, outbound
   date                   DateTime
   subject                String
@@ -721,8 +714,8 @@ model Email {
   reads                  EmailRead[]
   attachments            EmailAttachment[]
   cc                     EmailCc[]
-  createdByMe            CreatedBy[]
   // replies       Email[]           @relation(name: "replies")
+  transitions            RowWorkflowTransition[]
 }
 
 model EmailRead {
@@ -799,18 +792,18 @@ model Event {
 }
 
 model EventWebhookAttempt {
-  id          String      @id @default(cuid())
-  createdAt   DateTime    @default(now())
+  id          String                  @id @default(cuid())
+  createdAt   DateTime                @default(now())
   startedAt   DateTime?
   finishedAt  DateTime?
   eventId     String
-  event       Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event       Event                   @relation(fields: [eventId], references: [id], onDelete: Cascade)
   endpoint    String
   success     Boolean?
   status      Int?
   message     String?
   body        String?
-  createdByMe CreatedBy[]
+  transitions RowWorkflowTransition[]
 }
 
 // Application Demo: Contracts

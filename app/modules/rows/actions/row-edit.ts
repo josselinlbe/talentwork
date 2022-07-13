@@ -13,10 +13,11 @@ import { getWorkflowStep } from "~/utils/db/workflows/workflowSteps.db.server";
 import { sendEmail } from "~/utils/email.server";
 import { verifyUserHasPermission, getEntityPermission } from "~/utils/helpers/PermissionsHelper";
 import RowHelper from "~/utils/helpers/RowHelper";
-import { performRowWorkflowStep } from "~/utils/services/WorkflowService";
+import { performRowWorkflowStep, updateRowWorkflowState } from "~/utils/services/WorkflowService";
 import { getUserInfo } from "~/utils/session.server";
 import DateUtils from "~/utils/shared/DateUtils";
 import { Params } from "react-router";
+import { getWorkflowState } from "~/utils/db/workflows/workflowStates.db.server";
 
 export type ActionDataRowEdit = {
   error?: string;
@@ -166,6 +167,13 @@ export const actionRowEdit = async (
     const workflowStep = await getWorkflowStep(workflowStepId);
     if (workflowStep) {
       await performRowWorkflowStep(entity, item, workflowStep, userInfo.userId, request);
+    }
+    return json({});
+  } else if (action === "workflow-set-manual-state") {
+    const workflowStateId = form.get("workflow-state-id")?.toString() ?? "";
+    const workflowState = await getWorkflowState(workflowStateId);
+    if (workflowState) {
+      await updateRowWorkflowState(item.id, workflowState.id);
     }
     return json({});
   } else {

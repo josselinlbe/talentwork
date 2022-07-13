@@ -10,7 +10,7 @@ import { EntityWithDetails } from "./entities/entities.db.server";
 import { callEntityWebhooks } from "./entities/entityWebhooks.db.server";
 import { RowCommentWithDetails } from "./entities/rowComments.db.server";
 import { RowWithDetails } from "./entities/rows.db.server";
-import { includeSimpleCreatedByUser } from "./users.db.server";
+import { includeCreatedBy, includeSimpleCreatedByUser } from "./users.db.server";
 import { RowWorkflowTransitionWithDetails } from "./workflows/rowWorkflowTransitions.db.server";
 
 export type LogWithDetails = Log & {
@@ -37,7 +37,7 @@ const include = {
   },
   workflowTransition: {
     include: {
-      ...includeSimpleCreatedByUser,
+      ...includeCreatedBy,
       workflowStep: {
         include: {
           fromState: true,
