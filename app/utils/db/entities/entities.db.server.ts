@@ -1,4 +1,4 @@
-import { Entity, EntityWorkflowState, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
+import { Entity, EntityWorkflowState, EntityWorkflowStep, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
 import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
@@ -12,6 +12,7 @@ export type RowsUsage = { entityId: string; _count: number };
 export type EntityWithDetails = Entity & {
   properties: PropertyWithDetails[];
   workflowStates: EntityWorkflowState[];
+  workflowSteps: EntityWorkflowStep[];
 };
 export type EntityWithCount = EntityWithDetails & { _count: { rows: number } };
 
@@ -48,6 +49,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
     ],
     include: {
       workflowStates: true,
+      workflowSteps: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
@@ -72,6 +74,7 @@ export async function getAllEntitiesWithRowCount(): Promise<EntityWithCount[]> {
   return await db.entity.findMany({
     include: {
       workflowStates: true,
+      workflowSteps: true,
       _count: {
         select: {
           rows: true,
@@ -175,6 +178,7 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
     },
     include: {
       workflowStates: true,
+      workflowSteps: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
@@ -225,6 +229,7 @@ export async function getEntityByName(name: string): Promise<EntityWithDetails |
     },
     include: {
       workflowStates: true,
+      workflowSteps: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
