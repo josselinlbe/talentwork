@@ -41,6 +41,7 @@ model User {
   invitation                 TenantUserInvitation?
   roles                      UserRole[]
   readEmails                 EmailRead[]
+  createdByMe                CreatedBy[]
 }
 
 model AdminUser {
@@ -222,6 +223,7 @@ model ApiKey {
   apiKeyLogs      ApiKeyLog[]
   logs            Log[]
   createdRows     Row[]
+  createdByMe     CreatedBy[]
 
   @@unique([tenantId, alias])
 }
@@ -671,13 +673,25 @@ model RowTask {
 model RowWorkflowTransition {
   id              String             @id @default(cuid())
   createdAt       DateTime           @default(now())
-  createdByUserId String
+  createdByUserId String?
   rowId           String
   workflowStepId  String
-  createdByUser   User               @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByUser   User?              @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   row             Row                @relation(fields: [rowId], references: [id], onDelete: Cascade)
   workflowStep    EntityWorkflowStep @relation(fields: [workflowStepId], references: [id], onDelete: Cascade)
   logs            Log[]
+}
+
+model CreatedBy {
+  id                    String               @id @default(cuid())
+  userId                String?
+  user                  User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKeyId              String?
+  apiKey                ApiKey?              @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  emailId               String?
+  email                 Email?               @relation(fields: [emailId], references: [id], onDelete: Cascade)
+  eventWebhookAttemptId String?
+  eventWebhookAttempt   EventWebhookAttempt? @relation(fields: [eventWebhookAttemptId], references: [id], onDelete: Cascade)
 }
 
 model TenantInboundAddress {
@@ -707,6 +721,7 @@ model Email {
   reads                  EmailRead[]
   attachments            EmailAttachment[]
   cc                     EmailCc[]
+  createdByMe            CreatedBy[]
   // replies       Email[]           @relation(name: "replies")
 }
 
@@ -784,17 +799,18 @@ model Event {
 }
 
 model EventWebhookAttempt {
-  id         String    @id @default(cuid())
-  createdAt  DateTime  @default(now())
-  startedAt  DateTime?
-  finishedAt DateTime?
-  eventId    String
-  event      Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  endpoint   String
-  success    Boolean?
-  status     Int?
-  message    String?
-  body       String?
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  eventId     String
+  event       Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  endpoint    String
+  success     Boolean?
+  status      Int?
+  message     String?
+  body        String?
+  createdByMe CreatedBy[]
 }
 
 // Application Demo: Contracts

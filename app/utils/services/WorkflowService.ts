@@ -183,6 +183,7 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
     },
     include: {
       workflowStates: true,
+      workflowSteps: true,
       properties: {
         orderBy: { order: "asc" },
         include: {
