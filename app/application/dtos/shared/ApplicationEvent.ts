@@ -32,7 +32,6 @@ export enum ApplicationEvent {
   RowDeleted = "row.deleted",
   RowShared = "row.shared",
   RowTagsCreated = "row.tags.created",
-  RowTagsUpdated = "row.tags.updated",
   RowTagsDeleted = "row.tags.deleted",
   RowTasksCreated = "row.tasks.created",
   RowTasksUpdated = "row.tasks.updated",
