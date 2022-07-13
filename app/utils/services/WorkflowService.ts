@@ -1,4 +1,5 @@
 import { EntityWorkflowState, EntityWorkflowStep } from "@prisma/client";
+import { CreatedByDto } from "~/application/dtos/shared/CreatedByDto";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
 import { Colors } from "~/application/enums/shared/Colors";
@@ -143,20 +144,18 @@ export async function performRowWorkflowStep(
   entity: EntityWithDetails,
   row: RowWithDetails,
   workflowStep: EntityWorkflowStep,
-  userId: string,
+  createdBy: CreatedByDto,
   request?: Request
 ) {
   if (workflowStep) {
     await updateRowWorkflowState(row.id, workflowStep.toStateId);
-    const transition = await createRowWorkflowTransition(row.id, workflowStep.id, {
-      byUserId: userId,
-    });
+    const transition = await createRowWorkflowTransition(row.id, workflowStep.id, createdBy);
     const workflowTransition = await getRowWorkflowTransition(transition.id);
     await createManualRowLog(
       {
         tenantId: row.tenantId,
-        createdByUserId: userId,
-        createdByApiKey: null,
+        createdByUserId: createdBy.byUserId ?? null,
+        createdByApiKey: createdBy.byApiKeyId ?? null,
         action: DefaultLogActions.WorkflowTransition,
         entity,
         item: row,
@@ -164,6 +163,7 @@ export async function performRowWorkflowStep(
       },
       request
     );
+    return workflowTransition;
   }
 }
 

@@ -166,7 +166,7 @@ export const actionRowEdit = async (
     const workflowStepId = form.get("workflow-step-id")?.toString() ?? "";
     const workflowStep = await getWorkflowStep(workflowStepId);
     if (workflowStep) {
-      await performRowWorkflowStep(entity, item, workflowStep, userInfo.userId, request);
+      await performRowWorkflowStep(entity, item, workflowStep, { byUserId: userInfo.userId }, request);
     }
     return json({});
   } else if (action === "workflow-set-manual-state") {
