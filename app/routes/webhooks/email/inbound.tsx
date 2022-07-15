@@ -42,9 +42,9 @@ export const action: ActionFunction = async ({ request }) => {
           })),
         },
       });
-      if (process.env.SUPABASE_API_URL && process.env.SUPABASE_KEY) {
-        const emailWithAttachments = await getEmail(createdEmail.id);
-        if (emailWithAttachments) {
+      const emailWithAttachments = await getEmail(createdEmail.id);
+      if (emailWithAttachments && emailWithAttachments.attachments.length > 0) {
+        if (process.env.SUPABASE_API_URL && process.env.SUPABASE_KEY) {
           await Promise.all(
             emailWithAttachments?.attachments.map(async (attachment) => {
               const blob = await createBlobFromBase64(attachment.type, attachment.content);
