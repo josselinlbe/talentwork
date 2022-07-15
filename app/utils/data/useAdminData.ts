@@ -56,6 +56,7 @@ export async function loadAdminData(request: Request) {
     allRoles: await getAllRoles("admin"),
     permissions,
     isSuperUser: roles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) !== undefined,
+    isSuperAdmin: roles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) !== undefined,
     myGroups: await getMyGroups(user.id, null),
   };
   return data;

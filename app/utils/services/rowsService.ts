@@ -29,7 +29,7 @@ export async function getCreateNewRow(entityName: string, createdByUserId: strin
 
 export async function createNewRowWithEntity(
   entity: EntityWithDetails,
-  createdByUserId: string,
+  createdByUserId: string | null,
   linkedAccountId: string | null = null,
   tenantId: string | null = null,
   request?: Request,

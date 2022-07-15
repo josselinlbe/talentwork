@@ -17,6 +17,7 @@ import { getMyGroups } from "../db/permissions/groups.db.server";
 import { getAllRoles } from "../db/permissions/roles.db.server";
 import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";
 import { AppOrAdminData } from "./useAppOrAdminData";
+import { DefaultAdminRoles } from "~/application/dtos/shared/DefaultAdminRoles";
 
 export type AppLoaderData = AppOrAdminData & {
   currentTenant: TenantWithDetails;
@@ -63,6 +64,7 @@ export async function loadAppData(request: Request, params: Params) {
   const mySubscription = await getTenantSubscription(tenantUrl.tenantId);
 
   const roles = await getUserRoles(userInfo.userId, tenantUrl.tenantId);
+  const allUserRoles = await getUserRoles(userInfo.userId);
   const permissions: string[] = [];
   roles.forEach((role) => {
     role.role.permissions.forEach((permission) => {
@@ -85,6 +87,7 @@ export async function loadAppData(request: Request, params: Params) {
     permissions,
     myGroups: await getMyGroups(user.id, currentTenant.id),
     isSuperUser: roles.find((f) => f.role.name === DefaultAppRoles.SuperUser) !== undefined,
+    isSuperAdmin: allUserRoles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) !== undefined,
   };
   return data;
 }

@@ -18,6 +18,7 @@ export type AppOrAdminData = {
   permissions: string[];
   entities: EntityWithDetails[];
   isSuperUser: boolean;
+  isSuperAdmin: boolean;
   myGroups: GroupWithDetails[];
 };
 
