@@ -90,7 +90,7 @@ export default function IndexRoute() {
         message={t("front.hero.prelaunch")}
         cta={{
           message: t("front.hero.cta"),
-          link: "https://alexandromg.gumroad.com/l/SaasRock",
+          link: "https://alexandromg.gumroad.com/l/Talentwork",
         }}
       />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
@@ -98,13 +98,13 @@ export default function IndexRoute() {
         <LogoClouds />
         <FeatureImages />
         <Community
-          title="The SaasRock Community"
+          title="The Talentwork Community"
           subtitle="We're all looking to build successful SaaS applications."
           socialProof={data.socialProof}
           cta={[
             {
               message: "Subscribe",
-              link: "https://alexandromg.gumroad.com/l/SaasRock",
+              link: "https://alexandromg.gumroad.com/l/Talentwork",
             },
             {
               message: "Join Discord",
@@ -117,9 +117,9 @@ export default function IndexRoute() {
           ]}
         />
         <VideoDemo
-          title="Building a SaaS with SaasRock 🎥"
+          title="Building a SaaS with Talentwork 🎥"
           url="https://www.youtube.com/embed/FyQvTxyl7LI"
-          subtitle="Follow this tutorial while you build your SaaS with SaasRock."
+          subtitle="Follow this tutorial while you build your SaaS with Talentwork."
         />
         <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />

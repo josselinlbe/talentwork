@@ -18,24 +18,24 @@ export let loader: LoaderFunction = async ({ request }) => {
     {
       date: "Jul 11, 2022",
       releaseTag: "0.4.0",
-      title: "SaasRock v0.4.0 - Events and Webhooks",
+      title: "Talentwork v0.4.0 - Events and Webhooks",
       description: "Use the Events to log essential data and use Webhooks to customize your business logic within internal or external webhooks.",
       url: "https://alexandro.dev/saasrock-v0-4-0-events-and-webhooks",
       videos: [
         {
-          title: "Building a SaaS with SaasRock - Day 1 - Set up and the Taxpayers model",
+          title: "Building a SaaS with Talentwork - Day 1 - Set up and the Taxpayers model",
           url: "https://www.youtube.com/embed/FyQvTxyl7LI",
         },
         {
-          title: "Building a SaaS with SaasRock - Day 2 - Postmark, Supabase and ngrok",
+          title: "Building a SaaS with Talentwork - Day 2 - Postmark, Supabase and ngrok",
           url: "https://www.youtube.com/embed/GBNe8xm6FRo",
         },
         {
-          title: "Building a SaaS with SaasRock - Day 3 - Custom routes for List view and New form",
+          title: "Building a SaaS with Talentwork - Day 3 - Custom routes for List view and New form",
           url: "https://www.youtube.com/embed/8LFbl0uuDO8",
         },
         {
-          title: "Deploying your SaasRock app to Vercel and Supabase",
+          title: "Deploying your Talentwork app to Vercel and Supabase",
           url: "https://www.youtube.com/embed/d9QUBcNVZyU",
         },
         {
@@ -106,7 +106,7 @@ export let loader: LoaderFunction = async ({ request }) => {
     {
       date: "Jul 03, 2022",
       releaseTag: "0.3.2",
-      title: "SaasRock v0.3.2 - Row Filters, Tags, Tasks, Comments, Workflows, Kanban Board and API limits",
+      title: "Talentwork v0.3.2 - Row Filters, Tags, Tasks, Comments, Workflows, Kanban Board and API limits",
       description:
         "The entity builder just got stronger with a lot of new features for every created Row. Plus a kanban board component and API limits based on the account's subscription.",
       url: "https://alexandro.dev/saasrock-v0-3-2-row-filters-tags-tasks-comments-and-workflows",

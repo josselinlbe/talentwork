@@ -219,7 +219,7 @@
     },
     "roadmap": {
       "title": "Roadmap",
-      "headline": "Learn more about SaasRock's current status."
+      "headline": "Learn more about Piloterr's current status."
     },
     "faq": {
       "title": "Frequently asked questions",
@@ -374,20 +374,20 @@
     "demo": "DEMO PAGE - You'd customize this page",
     "custom": {
       "title": "Custom Plan",
-      "description": "This is a demo plan, this is not SaasRock's pricing plan."
+      "description": "This is a demo plan, this is not Piloterr's pricing plan."
     },
     "products": {
       "plan1": {
         "title": "Free",
-        "description": "This is a demo plan, this is not SaasRock's pricing plan."
+        "description": "This is a demo plan, this is not Piloterr's pricing plan."
       },
       "plan2": {
         "title": "Standard",
-        "description": "This is a demo plan, this is not SaasRock's pricing plan."
+        "description": "This is a demo plan, this is not Piloterr's pricing plan."
       },
       "plan3": {
         "title": "Enterprise",
-        "description": "This is a demo plan, this is not SaasRock's pricing plan."
+        "description": "This is a demo plan, this is not Piloterr's pricing plan."
       }
     },
     "features": {

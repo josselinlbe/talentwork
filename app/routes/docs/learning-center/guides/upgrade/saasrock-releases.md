@@ -1,6 +1,6 @@
 ---
 meta:
-  title: SaasRock releases | Guides | Learning Center | SaasRock
+  title: Talentwork releases | Guides | Learning Center | Talentwork
   description: Learn how to add another language translations
 headers:
   Cache-Control: no-cache
@@ -21,25 +21,25 @@ title: "Guides",
 routePath: "",
 },
 {
-title: "SaasRock releases",
+title: "Talentwork releases",
 routePath:
 "/docs/learning-center/guides/upgrade/saasrock-releases",
 },
 ]}
 />
 
-# SaasRock releases
+# Talentwork releases
 
-The following steps are my recommendation to constantly stay up to date with SaasRock releases.
+The following steps are my recommendation to constantly stay up to date with Talentwork releases.
 
 <WarningBanner title="WARNING">
-  There will be constant breaking changes until SaasRock is stable. 
+  There will be constant breaking changes until Talentwork is stable. 
   This gives me the flexibility to add new features with freedom.
 </WarningBanner>
 
-💿 Create a private GitHub repository with the SaasRock's latest release.
+💿 Create a private GitHub repository with the Talentwork's latest release.
 
-💿 Set SaasRock as the upstream
+💿 Set Talentwork as the upstream
 
 ```shell
 git remote add upstream https://github.com/AlexandroMtzG/saasrock.git

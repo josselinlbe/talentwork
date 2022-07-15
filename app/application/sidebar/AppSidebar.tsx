@@ -32,12 +32,7 @@ export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebu
         icon: SvgIcon.DASHBOARD,
         // tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN, TenantUserType.MEMBER],
       },
-      ...entitiesItems,
-      {
-        title: "models.email.plural",
-        path: `${currentTenantUrl}/emails`,
-        icon: SvgIcon.EMAILS,
-      },
+      ...entitiesItems
     ],
   };
   return [

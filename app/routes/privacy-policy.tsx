@@ -33,7 +33,7 @@ export default function PrivacyPolicyRoute() {
                   {t("front.privacy.title")}
                 </h1>
                 <p>
-                  Your privacy is important to us. It is SaasRock&#39; policy to respect your privacy and comply with any applicable law and regulation
+                  Your privacy is important to us. It is Talentwork&#39; policy to respect your privacy and comply with any applicable law and regulation
                   regarding any personal information we may collect about you, including across our website,{" "}
                   <a className="text-black dark:text-white" href="https://saasrock.com">
                     https://saasrock.com
