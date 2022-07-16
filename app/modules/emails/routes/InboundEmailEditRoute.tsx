@@ -19,7 +19,7 @@ export default function InboundEmailRoute() {
         className="max-w-2xl bg-gray-50"
         title={data.item.subject}
         description={DateUtils.dateAgo(data.item.date)}
-        onClosed={() => navigate("/admin/emails")}
+        onClosed={() => navigate(data.redirectUrl)}
       >
         <div className="p-2">
           <div className="grid grid-cols-12 gap-3">
