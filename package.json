@@ -37,7 +37,6 @@
     "i18next": "^21.8.11",
     "marked": "^4.0.14",
     "moment": "^2.29.1",
-    "monaco-editor": "^0.33.0",
     "numeral": "^2.0.6",
     "octokit": "^1.7.1",
     "pdfjs-dist": "2.9.359",
