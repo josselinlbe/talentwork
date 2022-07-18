@@ -37,7 +37,7 @@ export default function PricingRoute() {
   return (
     <div>
       <div>
-        <TopBanner message={t("pricing.demo")} />
+        <TopBanner message={t("front.hero.prelaunch")} cta={{ message: t("front.hero.cta"), link: "https://alexandromg.gumroad.com/l/SaasRock" }} />
         <Header />
         <div className="bg-white dark:bg-gray-900 pt-6 min-h-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
