@@ -243,7 +243,7 @@ const RowValueInput = (
             options={
               relatedEntity?.rows.map((f) => {
                 return {
-                  name: RowHelper.getRowFolio(relatedEntity.entity, f),
+                  name: RowHelper.getRowDescription(relatedEntity.entity, f, false),
                   value: f.id,
                 };
               }) ?? []

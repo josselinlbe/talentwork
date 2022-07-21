@@ -150,12 +150,24 @@ const getRowFolio = (entity: Entity, item: Row) => {
   return `${entity?.prefix}-${NumberUtils.pad(item?.folio ?? 0, 4)}`.toUpperCase();
 };
 
-const getRowDescription = (entity: EntityWithDetails, item: RowWithDetails) => {
-  // const prop = entity.properties.find((f) => !f.isDefault);
-  // if (prop) {
-  //   const value = item.values.find((f) => f.propertyId === prop.id);
-  //   return getFormattedValue(value, prop.type);
-  // }
+const getRowDescription = (entity: EntityWithDetails, item: RowWithDetails, withFolio = true) => {
+  const textProperties = entity.properties.sort((a, b) => a.order - b.order).filter((f) => !f.isDefault && f.type === PropertyType.TEXT);
+  if (textProperties.length > 0) {
+    const firstProp = textProperties[0];
+    if (firstProp.isDynamic) {
+      const value = item.values.find((f) => f.propertyId === firstProp.id);
+      return getRowFolio(entity, item) + " - " + getFormattedValue(value, firstProp.type);
+    } else {
+      const object = item[entity?.name as keyof typeof item];
+      if (object) {
+        return getRowFolio(entity, item) + " - " + object[firstProp.name as keyof typeof object];
+      }
+      return null;
+    }
+  }
+  if (withFolio) {
+    return getRowFolio(entity, item);
+  }
   return "?";
 };
 
