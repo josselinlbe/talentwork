@@ -119,7 +119,7 @@ export async function createPermissions(
   permissions: { inRoles: string[]; name: string; description: string; type: string; entityId?: string | null }[],
   fromOrder: number = 0
 ) {
-  return Promise.all(
+  return await Promise.all(
     permissions.map(async (data, idx) => {
       const existing = await getPermissionByName(data.name);
       if (existing) {

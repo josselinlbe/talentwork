@@ -140,7 +140,7 @@ export async function seedBlogPosts() {
     },
   ];
 
-  return Promise.all(
+  return await Promise.all(
     posts.map(async (post) => {
       await new Promise((r) => setTimeout(r, 100));
       return await seedBlogPost(post);
@@ -149,7 +149,7 @@ export async function seedBlogPosts() {
 }
 
 async function seedTags(tags: { name: string; color: Colors }[]) {
-  Promise.all(
+  return await Promise.all(
     tags.map(async (data) => {
       return await db.blogTag.create({
         data,
@@ -167,7 +167,7 @@ async function seedAuthors(
     url: string;
   }[]
 ) {
-  return Promise.all(
+  return await Promise.all(
     authors.map(async (data) => {
       return await db.blogAuthor.create({
         data,
@@ -182,7 +182,7 @@ async function seedCategories(
     color: Colors;
   }[]
 ) {
-  Promise.all(
+  return await Promise.all(
     items.map(async (data) => {
       return await db.blogCategory.create({
         data,

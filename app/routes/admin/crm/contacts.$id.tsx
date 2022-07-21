@@ -4,7 +4,7 @@ import { loaderRowEdit } from "~/modules/rows/loaders/row-edit";
 import RowEditRoute from "~/modules/rows/routes/RowEditRoute";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  return json(await loaderRowEdit(request, params, null, "contacts", "/admin/crm/contacts"));
+  return json(await loaderRowEdit({ request, params, tenantId: null, entitySlug: "contacts", entityRowsRoute: "/admin/crm/contacts" }));
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

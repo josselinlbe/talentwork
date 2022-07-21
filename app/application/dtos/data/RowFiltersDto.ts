@@ -5,8 +5,10 @@ export interface RowFiltersDto {
   entity: Entity;
   query: string | null;
   properties: {
-    property: Property;
+    property?: Property;
+    name?: string;
     value: string | null;
+    condition?: string;
   }[];
   tags: string[];
 }

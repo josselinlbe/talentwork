@@ -17,7 +17,7 @@ type LoaderData = LoaderDataRowNew & {
 };
 export let loader: LoaderFunction = async ({ request, params }) => {
   return json({
-    ...(await loaderRowNew(request, params, null, "deals", "/admin/crm/deals")),
+    ...(await loaderRowNew({ request, params, tenantId: null, entitySlug: "deals", entityRowsRoute: "/admin/crm/deals" })),
     contacts: await getAllContacts(),
     subscriptionPrices: await getSubscriptionPrices(),
   });

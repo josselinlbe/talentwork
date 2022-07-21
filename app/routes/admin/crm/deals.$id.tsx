@@ -1,5 +1,6 @@
 import { ActionFunction, json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import { badRequest } from "remix-utils";
 import DealsForm from "~/components/core/crm/DealsForm";
 import InputGroup from "~/components/ui/forms/InputGroup";
@@ -20,7 +21,7 @@ type LoaderData = LoaderDataRowEdit & {
 export let loader: LoaderFunction = async ({ request, params }) => {
   const item = await getDealByRowId(params.id ?? "");
   return json({
-    ...(await loaderRowEdit(request, params, null, "deals", "/admin/crm/deals")),
+    ...(await loaderRowEdit({ request, params, tenantId: null, entitySlug: "deals", entityRowsRoute: "/admin/crm/deals" })),
     item,
     contacts: await getAllContacts(),
     subscriptionPrices: await getSubscriptionPrices(),
@@ -63,16 +64,17 @@ export const meta: MetaFunction = ({ data }) => ({
 
 export default function AdminEditDealRoute() {
   const data = useLoaderData<LoaderData>();
+  const [editing, setEditing] = useState(false);
   return (
     <div>
-      <RowEditRoute>
+      <RowEditRoute onChangeEditing={(e) => setEditing(e)}>
         <InputGroup title={"Details"}>
           <DealsForm
             contacts={data.contacts}
             subscriptionPrices={data.subscriptionPrices}
             item={data.item}
-            canUpdate={data.rowPermissions.canUpdate}
-            canDelete={data.rowPermissions.canDelete}
+            canUpdate={editing && data.rowPermissions.canUpdate}
+            canDelete={editing && data.rowPermissions.canDelete}
           />
         </InputGroup>
       </RowEditRoute>

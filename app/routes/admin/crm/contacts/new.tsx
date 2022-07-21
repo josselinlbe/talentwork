@@ -6,7 +6,7 @@ import { LoaderDataRowNew, loaderRowNew } from "~/modules/rows/loaders/row-new";
 import RowNewRoute from "~/modules/rows/routes/RowNewRoute";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  return json(await loaderRowNew(request, params, null, "contacts", "/admin/crm/contacts"));
+  return json(await loaderRowNew({ request, params, tenantId: null, entitySlug: "contacts", entityRowsRoute: "/admin/crm/contacts" }));
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

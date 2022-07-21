@@ -5,6 +5,6 @@ export interface PaginationDto {
   pageSize: number;
   totalItems: number;
   totalPages: number;
-  sortedBy?: SortedByDto;
+  sortedBy?: SortedByDto[];
   query?: string | undefined;
 }

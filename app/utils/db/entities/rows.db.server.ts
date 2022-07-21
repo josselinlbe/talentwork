@@ -4,6 +4,7 @@ import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { RowValueDto } from "~/application/dtos/entities/RowValueDto";
 import { Visibility } from "~/application/dtos/shared/Visibility";
+import { deleteRowMediaFromStorageProvider, storeRowMediaInStorageProvider } from "~/utils/helpers/MediaHelper";
 import { getRowPermissionsCondition } from "~/utils/helpers/PermissionsHelper";
 import RowFiltersHelper from "~/utils/helpers/RowFiltersHelper";
 import TenantHelper from "~/utils/helpers/TenantHelper";
@@ -11,7 +12,7 @@ import { setRowInitialWorkflowState } from "~/utils/services/WorkflowService";
 import { db } from "../../db.server";
 import { createRowPermission } from "../permissions/rowPermissions.db.server";
 import { includeSimpleCreatedByUser, UserSimple } from "../users.db.server";
-import { getDefaultEntityVisibility } from "./entities.db.server";
+import { getDefaultEntityVisibility, getEntityById } from "./entities.db.server";
 import { RowTagWithDetails } from "./rowTags.db.server";
 
 export type RowValueWithDetails = RowValue & {
@@ -218,6 +219,17 @@ export async function countRows(entityId: string, tenantId: string | null, userI
   });
 }
 
+async function getRowById(id: string): Promise<RowWithDetails | null> {
+  return await db.row.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      ...includeRowDetails,
+    },
+  });
+}
+
 export async function getRow(entityId: string, id: string, tenantId: string | null): Promise<RowWithDetails | null> {
   return await db.row.findFirst({
     where: {
@@ -356,7 +368,13 @@ export async function createRow(
     });
   }
 
-  return row;
+  const createdRow = await getRow(data.entityId, row.id, data.tenantId);
+  const entity = await getEntityById(data.entityId);
+  if (entity && createdRow) {
+    await storeRowMediaInStorageProvider(entity, createdRow);
+  }
+
+  return createdRow;
 }
 
 async function addDetailRows(row: Row, dynamicRows: { id?: string | null; values: RowValueDto[] }[]) {
@@ -407,6 +425,18 @@ export async function updateRow(
     dynamicRows: { id?: string | null; values: RowValueDto[] }[] | null;
   }
 ) {
+  // const media = await db.rowMedia.findMany({
+  //   where: { rowValue: {rowId: id} },
+  // });
+  // await Promise.all(media.map(async (media) => {
+  //   if (media.publicUrl) {
+  //     if (media.storageProvider) {
+  //       await (media.storageProvider, media.publicUrl);
+  //     }
+  //   }
+  // }));
+  let row = await getRowById(id);
+  await deleteRowMediaFromStorageProvider(row);
   await db.rowMedia.deleteMany({
     where: {
       rowValue: {
@@ -467,7 +497,7 @@ export async function updateRow(
         }),
     },
   };
-  const row = await db.row.update({
+  const updatedRow = await db.row.update({
     where: {
       id,
     },
@@ -480,13 +510,23 @@ export async function updateRow(
         parentRowId: id,
       },
     });
-    await addDetailRows(row, data.dynamicRows);
+    await addDetailRows(updatedRow, data.dynamicRows);
   }
 
-  return row;
+  row = await getRowById(id);
+  if (row) {
+    const entity = await getEntityById(row.entityId);
+    if (entity && row) {
+      await storeRowMediaInStorageProvider(entity, row);
+    }
+  }
+
+  return updatedRow;
 }
 
 export async function deleteRow(id: string) {
+  const row = await getRowById(id);
+  await deleteRowMediaFromStorageProvider(row);
   return await db.row.delete({
     where: { id },
     include: {
@@ -494,5 +534,20 @@ export async function deleteRow(id: string) {
       logs: true,
       values: true,
     },
+  });
+}
+
+export async function updateRowMedia(
+  id: string,
+  data: {
+    file?: string;
+    publicUrl?: string | null;
+    storageBucket?: string | null;
+    storageProvider?: string | null;
+  }
+) {
+  await db.rowMedia.update({
+    where: { id },
+    data,
   });
 }

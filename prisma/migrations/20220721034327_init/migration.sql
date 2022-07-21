@@ -374,25 +374,62 @@ CREATE TABLE "Property" (
 );
 
 -- CreateTable
-CREATE TABLE "PropertyAttributes" (
+CREATE TABLE "EntityView" (
+    "id" TEXT NOT NULL,
+    "entityId" TEXT NOT NULL,
+    "layout" TEXT NOT NULL DEFAULT 'table',
+    "order" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "pageSize" INTEGER NOT NULL,
+    "isDefault" BOOLEAN NOT NULL,
+    "columns" INTEGER,
+    "groupByWorkflowStates" BOOLEAN NOT NULL DEFAULT false,
+    "groupByPropertyId" TEXT,
+
+    CONSTRAINT "EntityView_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EntityViewProperty" (
+    "id" TEXT NOT NULL,
+    "entityViewId" TEXT NOT NULL,
+    "propertyId" TEXT NOT NULL,
+    "order" INTEGER NOT NULL,
+
+    CONSTRAINT "EntityViewProperty_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EntityViewFilter" (
+    "id" TEXT NOT NULL,
+    "entityViewId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "condition" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+
+    CONSTRAINT "EntityViewFilter_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EntityViewSort" (
+    "id" TEXT NOT NULL,
+    "entityViewId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "asc" BOOLEAN NOT NULL,
+    "order" INTEGER NOT NULL,
+
+    CONSTRAINT "EntityViewSort_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PropertyAttribute" (
     "id" TEXT NOT NULL,
     "propertyId" TEXT NOT NULL,
-    "pattern" TEXT,
-    "min" INTEGER,
-    "max" INTEGER,
-    "step" TEXT,
-    "rows" INTEGER,
-    "defaultValue" TEXT,
-    "maxSize" INTEGER,
-    "acceptFileTypes" TEXT,
-    "uppercase" BOOLEAN,
-    "lowercase" BOOLEAN,
-    "hintText" TEXT,
-    "helpText" TEXT,
-    "placeholder" TEXT,
-    "icon" TEXT,
+    "name" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
 
-    CONSTRAINT "PropertyAttributes_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "PropertyAttribute_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -548,6 +585,9 @@ CREATE TABLE "RowMedia" (
     "name" TEXT NOT NULL,
     "file" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "publicUrl" TEXT,
+    "storageBucket" TEXT,
+    "storageProvider" TEXT,
 
     CONSTRAINT "RowMedia_pkey" PRIMARY KEY ("id")
 );
@@ -841,7 +881,16 @@ CREATE UNIQUE INDEX "Property_entityId_name_key" ON "Property"("entityId", "name
 CREATE UNIQUE INDEX "Property_entityId_title_key" ON "Property"("entityId", "title");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PropertyAttributes_propertyId_key" ON "PropertyAttributes"("propertyId");
+CREATE UNIQUE INDEX "EntityView_entityId_name_key" ON "EntityView"("entityId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "EntityView_entityId_order_key" ON "EntityView"("entityId", "order");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "EntityViewProperty_entityViewId_propertyId_key" ON "EntityViewProperty"("entityViewId", "propertyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PropertyAttribute_propertyId_name_key" ON "PropertyAttribute"("propertyId", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TenantInboundAddress_address_key" ON "TenantInboundAddress"("address");
@@ -982,7 +1031,25 @@ ALTER TABLE "Property" ADD CONSTRAINT "Property_entityId_fkey" FOREIGN KEY ("ent
 ALTER TABLE "Property" ADD CONSTRAINT "Property_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PropertyAttributes" ADD CONSTRAINT "PropertyAttributes_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "EntityView" ADD CONSTRAINT "EntityView_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "Entity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EntityView" ADD CONSTRAINT "EntityView_groupByPropertyId_fkey" FOREIGN KEY ("groupByPropertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EntityViewProperty" ADD CONSTRAINT "EntityViewProperty_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EntityViewProperty" ADD CONSTRAINT "EntityViewProperty_entityViewId_fkey" FOREIGN KEY ("entityViewId") REFERENCES "EntityView"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EntityViewFilter" ADD CONSTRAINT "EntityViewFilter_entityViewId_fkey" FOREIGN KEY ("entityViewId") REFERENCES "EntityView"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EntityViewSort" ADD CONSTRAINT "EntityViewSort_entityViewId_fkey" FOREIGN KEY ("entityViewId") REFERENCES "EntityView"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PropertyAttribute" ADD CONSTRAINT "PropertyAttribute_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PropertyOption" ADD CONSTRAINT "PropertyOption_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,7 +1,10 @@
 import { Property } from "@prisma/client";
 import { TFunction } from "react-i18next";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
+import { PropertyAttributeName } from "~/application/enums/entities/PropertyAttributeName";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
+import { PropertyWithDetails } from "../db/entities/entities.db.server";
+import PropertyAttributeHelper from "./PropertyAttributeHelper";
 
 export const validateProperty = async (name: string, title: string, properties: Property[], property?: Property | null) => {
   const errors: string[] = [];
@@ -129,46 +132,50 @@ export const defaultProperties: {
   // },
 ];
 
-export function validatePropertyValue(t: TFunction, property: Property, value: any) {
-  if (property.max) {
+export function validatePropertyValue(t: TFunction, property: PropertyWithDetails, value: any) {
+  const max = PropertyAttributeHelper.getPropertyAttributeValue_Number(property, PropertyAttributeName.Max);
+  const min = PropertyAttributeHelper.getPropertyAttributeValue_Number(property, PropertyAttributeName.Min);
+  if (max) {
     if (property.type === PropertyType.TEXT) {
-      if (value.length > property.max) {
-        throw Error(`${t(property.title)} (${property.name}) must have less than ${property.max} characters`);
+      if (value.length > max) {
+        throw Error(`${t(property.title)} (${property.name}) must have less than ${max} characters`);
       }
     } else if (property.type === PropertyType.NUMBER) {
-      if (Number(value) > property.max) {
-        throw Error(`${t(property.title)} (${property.name}) must be less than ${property.max}`);
+      if (Number(value) > max) {
+        throw Error(`${t(property.title)} (${property.name}) must be less than ${max}`);
       }
     }
   }
-  if (property.min) {
+  if (min) {
     if (property.type === PropertyType.TEXT) {
-      if (value.length < property.min) {
-        throw Error(`${t(property.title)} (${property.name}) must have less than ${property.min} characters`);
+      if (value.length < min) {
+        throw Error(`${t(property.title)} (${property.name}) must have less than ${min} characters`);
       }
     } else if (property.type === PropertyType.NUMBER) {
-      if (Number(value) < property.min) {
-        throw Error(`${t(property.title)} (${property.name}) must be less than ${property.min}`);
+      if (Number(value) < min) {
+        throw Error(`${t(property.title)} (${property.name}) must be less than ${min}`);
       }
     }
   }
   return true;
 }
 
-export function validatePropertyValue_Media(t: TFunction, property: Property, media: MediaDto[]) {
+export function validatePropertyValue_Media(t: TFunction, property: PropertyWithDetails, media: MediaDto[]) {
+  const max = PropertyAttributeHelper.getPropertyAttributeValue_Number(property, PropertyAttributeName.Max);
+  const min = PropertyAttributeHelper.getPropertyAttributeValue_Number(property, PropertyAttributeName.Min);
   if (property.isRequired && media.length === 0) {
     throw Error(`${t(property.title)} (${property.name}) is required`);
-  } else if (property.max && media.length > property.max) {
-    if (property.max === 1) {
+  } else if (max && media.length > max) {
+    if (max === 1) {
       throw Error(`${t(property.title)} (${property.name}) can only have one file`);
     } else {
-      throw Error(`${t(property.title)} (${property.name}) cannot have more than ${property.max} files`);
+      throw Error(`${t(property.title)} (${property.name}) cannot have more than ${max} files`);
     }
-  } else if (property.min && media.length < property.min) {
-    if (property.min === 1) {
+  } else if (min && media.length < min) {
+    if (min === 1) {
       throw Error(`${t(property.title)} (${property.name}) must have at least one file`);
     } else {
-      throw Error(`${t(property.title)} (${property.name}) must have at least ${property.min} files`);
+      throw Error(`${t(property.title)} (${property.name}) must have at least ${min} files`);
     }
   }
   return true;

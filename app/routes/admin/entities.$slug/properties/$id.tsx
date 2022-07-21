@@ -7,7 +7,7 @@ import SlideOverFormLayout from "~/components/ui/slideOvers/SlideOverFormLayout"
 import { i18nHelper } from "~/locale/i18n.utils";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { PropertyWithDetails, EntityWithDetails, getEntityById, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
-import { deleteProperty, getProperty, updateProperty, updatePropertyOptions } from "~/utils/db/entities/properties.db.server";
+import { deleteProperty, getProperty, updateProperty, updatePropertyAttributes, updatePropertyOptions } from "~/utils/db/entities/properties.db.server";
 import { validateProperty } from "~/utils/helpers/PropertyHelper";
 
 type LoaderData = {
@@ -63,27 +63,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const isRequired = Boolean(form.get("is-required"));
   const isHidden = Boolean(form.get("is-hidden"));
   const isDetail = Boolean(form.get("is-detail"));
-  const pattern = form.get("pattern")?.toString() ?? "";
-  const min = form.get("min");
-  const max = form.get("max");
-  const step = form.get("step");
-  const rows = form.get("rows");
-  const defaultValue = form.get("default-value");
-
-  const maxSize = form.get("max-size");
-  const acceptFileTypes = form.get("accept-file-types");
-
-  const uppercase = form.get("uppercase");
-  const lowercase = form.get("lowercase");
-  const hintText = form.get("hint-text");
-  const helpText = form.get("help-text");
-  const placeholder = form.get("placeholder");
-  const icon = form.get("icon");
 
   const entityId = form.get("entity-id")?.toString() ?? "";
 
-  if (name === "rows") {
-    return badRequest({ error: "Rows is a reserved word" });
+  if (["id", "folio", "createdAt", "createdByUser", "rows", "sort", "page", "q", "v", "workflowState", "workflowStateId"].includes(name)) {
+    return badRequest({ error: name + " is a reserved property name" });
   }
 
   let parentId: string | null = null;
@@ -96,6 +80,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   const options: { order: number; value: string; name?: string; color?: Colors }[] = form.getAll("options[]").map((f: FormDataEntryValue) => {
+    return JSON.parse(f.toString());
+  });
+
+  const attributes: { name: string; value: string }[] = form.getAll("attributes[]").map((f: FormDataEntryValue) => {
     return JSON.parse(f.toString());
   });
 
@@ -118,38 +106,20 @@ export const action: ActionFunction = async ({ request, params }) => {
       if (existingOrder) {
         return badRequest({ error: "Order of display already used by: " + existingOrder.name });
       }
-      await updateProperty(
-        params.id ?? "",
-        {
-          name,
-          title,
-          type,
-          isDynamic,
-          order,
-          isDefault: existing?.isDefault ?? false,
-          isRequired,
-          isHidden,
-          isDetail,
-          parentId,
-        },
-        {
-          pattern,
-          min: min ? Number(min) : null,
-          max: max ? Number(max) : null,
-          step: step?.toString() ?? null,
-          rows: rows ? Number(rows) : null,
-          defaultValue: defaultValue?.toString() ?? null,
-          maxSize: maxSize ? Number(maxSize) : null,
-          acceptFileTypes: acceptFileTypes?.toString() ?? null,
-          uppercase: uppercase !== undefined ? Boolean(uppercase) : null,
-          lowercase: lowercase !== undefined ? Boolean(lowercase) : null,
-          hintText: hintText?.toString() ?? null,
-          helpText: helpText?.toString() ?? null,
-          placeholder: placeholder?.toString() ?? null,
-          icon: icon?.toString() ?? null,
-        }
-      );
+      await updateProperty(params.id ?? "", {
+        name,
+        title,
+        type,
+        isDynamic,
+        order,
+        isDefault: existing?.isDefault ?? false,
+        isRequired,
+        isHidden,
+        isDetail,
+        parentId,
+      });
       await updatePropertyOptions(params.id ?? "", options);
+      await updatePropertyAttributes(params.id ?? "", attributes);
       return redirect(`/admin/entities/${params.slug}/properties`);
     } catch (e: any) {
       return badRequest({ error: e.message });

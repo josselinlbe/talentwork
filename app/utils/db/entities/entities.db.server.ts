@@ -1,4 +1,4 @@
-import { Entity, EntityWorkflowState, EntityWorkflowStep, Property, PropertyAttributes, PropertyOption } from "@prisma/client";
+import { Entity, EntityView, EntityWorkflowState, EntityWorkflowStep, Property, PropertyAttribute, PropertyOption } from "@prisma/client";
 import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
@@ -11,6 +11,7 @@ import { createProperties, CreatePropertyDto } from "./properties.db.server";
 export type RowsUsage = { entityId: string; _count: number };
 export type EntityWithDetails = Entity & {
   properties: PropertyWithDetails[];
+  views: EntityView[];
   workflowStates: EntityWorkflowState[];
   workflowSteps: EntityWorkflowStep[];
 };
@@ -18,7 +19,7 @@ export type EntityWithCount = EntityWithDetails & { _count: { rows: number } };
 
 export type PropertyWithDetails = Property & {
   // entity: EntityWithDetails;
-  attributes: PropertyAttributes | null;
+  attributes: PropertyAttribute[];
   options: PropertyOption[];
   parent?: PropertyWithDetails;
 };
@@ -48,6 +49,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
       },
     ],
     include: {
+      views: true,
       workflowStates: true,
       workflowSteps: true,
       properties: {
@@ -73,6 +75,7 @@ export async function getAllEntities(active?: boolean, isDefault?: boolean): Pro
 export async function getAllEntitiesWithRowCount(): Promise<EntityWithCount[]> {
   return await db.entity.findMany({
     include: {
+      views: true,
       workflowStates: true,
       workflowSteps: true,
       _count: {
@@ -177,6 +180,7 @@ export async function getEntityById(id: string): Promise<EntityWithDetails | nul
       id,
     },
     include: {
+      views: true,
       workflowStates: true,
       workflowSteps: true,
       properties: {
@@ -200,6 +204,7 @@ export async function getEntityBySlug(slug: string): Promise<EntityWithDetails |
       slug,
     },
     include: {
+      views: true,
       workflowStates: true,
       workflowSteps: true,
       properties: {
@@ -228,6 +233,7 @@ export async function getEntityByName(name: string): Promise<EntityWithDetails |
       name,
     },
     include: {
+      views: true,
       workflowStates: true,
       workflowSteps: true,
       properties: {

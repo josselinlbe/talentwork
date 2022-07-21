@@ -27,7 +27,7 @@ export default function RowsListAndTable({ entity, items, pagination, className 
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<RowWithDetails>[]>([]);
 
   useEffect(() => {
-    setHeaders(RowDisplayHeaderHelper.getDisplayedHeaders(entity, columns));
+    setHeaders(RowDisplayHeaderHelper.getDisplayedHeaders(entity, columns, "table"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entity, columns]);
 

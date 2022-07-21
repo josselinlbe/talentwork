@@ -2,10 +2,11 @@ import { useTranslation } from "react-i18next";
 import clsx from "~/utils/shared/ClassesUtils";
 import DateUtils from "~/utils/shared/DateUtils";
 import { ContractActivityType } from "~/modules/contracts/enums/ContractActivityType";
-import { ContractActivity, User } from "@prisma/client";
+import { ContractActivity } from "@prisma/client";
+import { UserSimple } from "~/utils/db/users.db.server";
 
 interface Props {
-  items: (ContractActivity & { createdByUser: User })[];
+  items: (ContractActivity & { createdByUser: UserSimple })[];
 }
 
 export default function ContractActivities({ items }: Props) {

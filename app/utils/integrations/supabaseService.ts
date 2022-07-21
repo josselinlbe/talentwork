@@ -1,4 +1,4 @@
-import { EmailAttachment } from "@prisma/client";
+import { EmailAttachment, RowMedia } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 
@@ -100,4 +100,9 @@ export async function createSupabaseFileFromMedia(bucketId: string, id: string, 
     // eslint-disable-next-line no-console
     console.error(e);
   }
+}
+
+export async function deleteSupabaseFile(bucketId: string, path: string) {
+  const client = getClient();
+  await client.storage.from(bucketId).remove([path]);
 }

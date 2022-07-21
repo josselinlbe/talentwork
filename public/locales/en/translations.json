@@ -159,6 +159,10 @@
     "public": "Public",
     "mail": {
       "inboundAddress": "Inbound Address"
+    },
+    "files": {
+      "image": "Image",
+      "images": "Images"
     }
   },
   "front": {
@@ -967,7 +971,9 @@
       "hintText": "Hint text",
       "helpText": "Help text",
       "placeholder": "Placeholder",
-      "icon": "Icon"
+      "icon": "Icon",
+      "editor": "Editor",
+      "editorLanguage": "Editor language"
     },
     "workflow": {
       "object": "Workflow",

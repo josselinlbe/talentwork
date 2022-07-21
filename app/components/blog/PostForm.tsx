@@ -278,6 +278,9 @@ export default function PostForm({ item, authors, categories, tags, canUpdate = 
             disabled={!canUpdate}
             className="col-span-12"
             rows={6}
+            editor="monaco"
+            editorLanguage="markdown"
+            editorTheme="light"
             name="content"
             title={t("models.post.markdown")}
             value={content}
@@ -285,7 +288,7 @@ export default function PostForm({ item, authors, categories, tags, canUpdate = 
             required
             hint={
               <ButtonTertiary className="text-xs" onClick={preview}>
-                {t("blog.previewMarkdown")}
+                {t("shared.preview")}
               </ButtonTertiary>
             }
           />

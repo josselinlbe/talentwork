@@ -129,11 +129,6 @@ async function createStep(entityId: string, action: string, fromState: EntityWor
 }
 
 export async function setRowInitialWorkflowState(entityId: string, rowId: string) {
-  const entity = await getEntityById(entityId);
-  if (!entity?.hasWorkflow) {
-    return;
-  }
-
   const workflowStates = await getWorkflowStates(entityId);
   if (workflowStates.length > 0) {
     await updateRowWorkflowState(rowId, workflowStates[0].id);
@@ -178,25 +173,26 @@ export async function updateRowWorkflowState(id: string, workflowStateId: string
   });
 }
 
-export async function getEntityById(id: string): Promise<EntityWithDetails | null> {
-  return await db.entity.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      workflowStates: true,
-      workflowSteps: true,
-      properties: {
-        orderBy: { order: "asc" },
-        include: {
-          attributes: true,
-          options: {
-            orderBy: {
-              order: "asc",
-            },
-          },
-        },
-      },
-    },
-  });
-}
+// async function getEntityById(id: string): Promise<EntityWithDetails | null> {
+//   return await db.entity.findUnique({
+//     where: {
+//       id,
+//     },
+//     include: {
+//       views: true,
+//       workflowStates: true,
+//       workflowSteps: true,
+//       properties: {
+//         orderBy: { order: "asc" },
+//         include: {
+//           attributes: true,
+//           options: {
+//             orderBy: {
+//               order: "asc",
+//             },
+//           },
+//         },
+//       },
+//     },
+//   });
+// }

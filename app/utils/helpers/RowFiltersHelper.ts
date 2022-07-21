@@ -15,10 +15,12 @@ const getRowFiltersCondition = (filters?: RowFiltersDto) => {
     filters.properties
       .filter((f) => isPropertyFilterable(f.property))
       ?.forEach((field) => {
-        if (field.property.isDynamic) {
-          queryConditions.push(getFilterByDynamicProperty(field.property, filters.query));
-        } else {
-          queryConditions.push(getFilterByHardCodedProperty(filters, field.property, filters.query));
+        if (field.property) {
+          if (field.property.isDynamic) {
+            queryConditions.push(getFilterByDynamicProperty(field.property, filters.query, field.condition));
+          } else {
+            queryConditions.push(getFilterByHardCodedProperty(filters, field.property, filters.query, field.condition));
+          }
         }
       });
   }
@@ -26,10 +28,18 @@ const getRowFiltersCondition = (filters?: RowFiltersDto) => {
   filters.properties
     .filter((f) => f.value && isPropertyFilterable(f.property))
     ?.forEach((field) => {
-      if (field.property.isDynamic) {
-        filterConditions.push(getFilterByDynamicProperty(field.property, field.value));
+      if (field.property) {
+        if (field.property.isDynamic) {
+          filterConditions.push(getFilterByDynamicProperty(field.property, field.value, field.condition));
+        } else {
+          filterConditions.push(getFilterByHardCodedProperty(filters, field.property, field.value, field.condition));
+        }
       } else {
-        filterConditions.push(getFilterByHardCodedProperty(filters, field.property, field.value));
+        if (field.name === "workflowState") {
+          filterConditions.push({ workflowState: { name: { equals: field.value } } });
+        } else if (field.name === "workflowStateId") {
+          filterConditions.push({ workflowStateId: field.value });
+        }
       }
     });
 
@@ -79,22 +89,22 @@ const getRowFiltersCondition = (filters?: RowFiltersDto) => {
   return where;
 };
 
-function getFilterByHardCodedProperty(filters: RowFiltersDto, property: Property, value: string | null) {
+function getFilterByHardCodedProperty(filters: RowFiltersDto, property: Property, value: string | null, condition: string | undefined) {
   if (value === null) {
     return {};
   }
   if (filters.customRow) {
     return {
       [filters.entity.name]: {
-        [property.name]: { contains: value },
+        [property.name]: { [condition ?? "contains"]: value },
       },
     };
   } else {
-    return { [property.name]: { contains: value } };
+    return { [property.name]: { [condition ?? "contains"]: value } };
   }
 }
 
-function getFilterByDynamicProperty(property: Property, value: string | null) {
+function getFilterByDynamicProperty(property: Property, value: string | null, condition: string | undefined) {
   if (value === null) {
     return {};
   }
@@ -103,14 +113,17 @@ function getFilterByDynamicProperty(property: Property, value: string | null) {
       some: {
         propertyId: property.id,
         textValue: {
-          contains: value,
+          [condition ?? "contains"]: value,
         },
       },
     },
   };
 }
 
-function isPropertyFilterable(property: Property) {
+function isPropertyFilterable(property?: Property) {
+  if (!property) {
+    return true;
+  }
   return property.type === PropertyType.TEXT || property.type === PropertyType.SELECT;
 }
 

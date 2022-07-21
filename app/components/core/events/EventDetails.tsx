@@ -36,7 +36,7 @@ export default function EventDetails({ item }: Props) {
 
       {item.attempts.map((attempt, idx) => {
         return (
-          <div key={idx} className="bg-white rounded-lg border border-gray-300 px-4">
+          <div key={idx} className="space-y-3">
             <CollapsibleRow
               key={idx}
               value={

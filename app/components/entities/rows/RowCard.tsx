@@ -12,14 +12,15 @@ interface Props {
   entity: EntityWithDetails;
   item: RowWithDetails;
   columns: ColumnDto[];
+  layout: string;
 }
-export default function RowCard({ entity, item, columns }: Props) {
+export default function RowCard({ entity, item, columns, layout }: Props) {
   const { t } = useTranslation();
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<RowWithDetails>[]>([]);
 
   useEffect(() => {
-    setHeaders(RowDisplayHeaderHelper.getDisplayedHeaders(entity, columns));
-  }, [entity, columns]);
+    setHeaders(RowDisplayHeaderHelper.getDisplayedHeaders(entity, columns, layout));
+  }, [entity, columns, layout]);
 
   return (
     <div className="flex flex-col whitespace-nowrap text-sm text-gray-600 space-y-2">

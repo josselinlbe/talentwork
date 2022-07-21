@@ -15,6 +15,8 @@ import StringUtils from "~/utils/shared/StringUtils";
 import EntitySelector from "../EntitySelector";
 import PropertyTypeSelector from "./PropertyTypeSelector";
 import PropertyOptionsForm, { OptionValue, RefPropertyOptionsForm } from "./PropertyOptionsForm";
+import PropertyAttributeHelper from "~/utils/helpers/PropertyAttributeHelper";
+import PropertyAttribute from "./PropertyAttribute";
 
 interface Props {
   item?: PropertyWithDetails;
@@ -43,23 +45,7 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
   const [isRequired, setIsRequired] = useState<boolean>(item?.isRequired ?? true);
   const [isHidden, setIsHidden] = useState<boolean>(item?.isHidden ?? false);
   const [isDetail, setIsDetail] = useState<boolean>(item?.isDetail ?? false);
-  const [pattern, setPattern] = useState<string>(item?.attributes?.pattern ?? "");
-  const [min, setMin] = useState<number | undefined>(item?.attributes?.min ?? undefined);
-  const [max, setMax] = useState<number | undefined>(item?.attributes?.max ?? undefined);
-  const [step, setStep] = useState<string | undefined>(item?.attributes?.step ?? undefined);
-  const [rows, setRows] = useState<number | undefined>(item?.attributes?.rows ?? undefined);
-  const [uppercase, setUppercase] = useState<boolean | undefined>(item?.attributes?.uppercase ?? undefined);
-  const [lowercase, setLowercase] = useState<boolean | undefined>(item?.attributes?.lowercase ?? undefined);
-
-  const [defaultValue, setDefaultValue] = useState<string | undefined>(item?.attributes?.defaultValue ?? undefined);
-
-  const [maxSize, setMaxSize] = useState<number | undefined>(item?.attributes?.maxSize ?? undefined);
-  const [acceptFileTypes, setAcceptFileTypes] = useState<string | undefined>(item?.attributes?.acceptFileTypes ?? undefined);
-
-  const [hintText, setHintText] = useState<string | undefined>(item?.attributes?.hintText ?? undefined);
-  const [helpText, setHelpText] = useState<string | undefined>(item?.attributes?.helpText ?? undefined);
-  const [placeholder, setPlaceholder] = useState<string | undefined>(item?.attributes?.placeholder ?? undefined);
-  const [icon, setIcon] = useState<string | undefined>(item?.attributes?.icon ?? undefined);
+  const [attributes, setAttributes] = useState<{ name: string; value: string | undefined }[]>(item?.attributes ?? []);
 
   const [entity, setEntity] = useState<EntityWithDetails>();
   const [formula, setFormula] = useState<string>();
@@ -103,128 +89,113 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
     setTitleEnabled(true);
   }, [type]);
 
-  // function close() {
-  //   navigate(`/admin/entities/${params.slug}/properties`);
-  // }
-
-  function supportsMinAndMax() {
-    return [PropertyType.TEXT, PropertyType.NUMBER, PropertyType.MEDIA].includes(type);
-  }
-
-  function supportsDefaultValue() {
-    return [PropertyType.TEXT, PropertyType.NUMBER, PropertyType.BOOLEAN, PropertyType.SELECT].includes(type);
-  }
-
-  function supportsPlaceholder() {
-    return [PropertyType.TEXT, PropertyType.NUMBER, PropertyType.SELECT].includes(type);
-  }
-
   return (
     <>
-      <FormGroup id={item?.id} editing={true} canDelete={item !== undefined && !item?.isDefault && showAdvancedOptions} className="px-4 pb-4 space-y-2">
+      <FormGroup
+        id={item?.id}
+        editing={true}
+        canDelete={item !== undefined && !item?.isDefault && showAdvancedOptions}
+        className="pb-4 space-y-2"
+        classNameFooter="px-4"
+      >
         <input type="hidden" name="order" value={order} />
 
-        <div className="mt-4 space-y-3">
-          <div className="w-full">
-            <label htmlFor="type" className="block text-xs font-medium text-gray-700">
-              Type
-            </label>
-            <div className="mt-1">
-              <PropertyTypeSelector selected={type} onSelected={(e) => setType(e)} />
-            </div>
-          </div>
-          {type === PropertyType.ENTITY && (
+        <div className="mt-4">
+          <div className="px-4 space-y-3">
             <div className="w-full">
-              <label htmlFor="entity" className="block text-xs font-medium text-gray-700">
-                Entity
+              <label htmlFor="type" className="block text-xs font-medium text-gray-700">
+                Type
               </label>
               <div className="mt-1">
-                <EntitySelector items={entities} selected={entity} onSelected={(e) => setEntity(e)} />
+                <PropertyTypeSelector selected={type} onSelected={(e) => setType(e)} />
               </div>
             </div>
-          )}
-          {titleEnabled && (
+            {type === PropertyType.ENTITY && (
+              <div className="w-full">
+                <label htmlFor="entity" className="block text-xs font-medium text-gray-700">
+                  Entity
+                </label>
+                <div className="mt-1">
+                  <EntitySelector items={entities} selected={entity} onSelected={(e) => setEntity(e)} />
+                </div>
+              </div>
+            )}
+            {titleEnabled && (
+              <InputText
+                name="title"
+                title={t("models.property.title")}
+                value={title}
+                setValue={(e) => setTitle(e)}
+                disabled={!titleEnabled}
+                required
+                withTranslation
+                placeholder="Property title..."
+              />
+            )}
             <InputText
-              name="title"
-              title={t("models.property.title")}
-              value={title}
-              setValue={(e) => setTitle(e)}
-              className={clsx(
-                !titleEnabled && "bg-gray-100 cursor-not-allowed",
-                "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              )}
-              disabled={!titleEnabled}
+              name="name"
+              title={t("models.property.name")}
+              value={name}
+              setValue={(e) => setName(e)}
               required
-              withTranslation
-              placeholder="Property title..."
+              placeholder="Property name..."
+              pattern="[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?"
+              hint={<span className="text-gray-400 font-normal italic">Camel case</span>}
             />
-          )}
-          <InputText
-            name="name"
-            title={t("models.property.name")}
-            value={name}
-            setValue={(e) => setName(e)}
-            className={clsx("shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md")}
-            required
-            placeholder="Property name..."
-            pattern="[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?"
-            hint={<span className="text-gray-400 font-normal italic">Camel case</span>}
-          />
-          {type === PropertyType.FORMULA && (
-            <div className="w-full">
-              <label htmlFor="formula" className="block text-xs font-medium text-gray-700">
-                {t("entities.fields.FORMULA")}
-              </label>
-              <div className="mt-1">
-                <InputText
-                  name="formula"
-                  title={t("models.property.formula")}
-                  value={formula}
-                  setValue={(e) => setFormula(e.toString())}
-                  className={clsx(
-                    !titleEnabled && "bg-gray-100 cursor-not-allowed",
-                    "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  )}
-                  required
-                />
-              </div>
-            </div>
-          )}
-          {type === PropertyType.SELECT && (
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700">Options</label>
-              <div className="mt-1 flex rounded-md shadow-sm">
-                <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <ViewListIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
-                  </div>
-                  {options.map((option) => {
-                    return <input key={option.order} hidden readOnly type="text" id="options[]" name="options[]" value={JSON.stringify(option)} />;
-                  })}
-                  <input
-                    disabled
-                    className="border bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
-                    value={options.length === 0 ? "No dropdown values defined" : options.map((f) => f.value).join(", ")}
+            {type === PropertyType.FORMULA && (
+              <div className="w-full">
+                <label htmlFor="formula" className="block text-xs font-medium text-gray-700">
+                  {t("entities.fields.FORMULA")}
+                </label>
+                <div className="mt-1">
+                  <InputText
+                    name="formula"
+                    title={t("models.property.formula")}
+                    value={formula}
+                    setValue={(e) => setFormula(e.toString())}
+                    disabled={!titleEnabled}
+                    required
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => selectOptionsForm.current?.set(options)}
-                  className="-ml-px relative inline-flex items-center space-x-2 px-4 py-1.5 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  <PencilAltIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
-                  <span>Set</span>
-                </button>
               </div>
+            )}
+            {type === PropertyType.SELECT && (
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-700">Options</label>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <ViewListIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                    </div>
+                    {options.map((option) => {
+                      return <input key={option.order} hidden readOnly type="text" id="options[]" name="options[]" value={JSON.stringify(option)} />;
+                    })}
+                    <input
+                      disabled
+                      className="border bg-gray-100 focus:ring-accent-500 focus:border-accent-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
+                      value={options.length === 0 ? "No dropdown values defined" : options.map((f) => f.value).join(", ")}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => selectOptionsForm.current?.set(options)}
+                    className="-ml-px relative inline-flex items-center space-x-2 px-4 py-1.5 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-accent-500 focus:border-accent-500"
+                  >
+                    <PencilAltIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                    <span>Set</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex">
+              <ButtonTertiary onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}>
+                {!showAdvancedOptions ? "Show advanced options" : "Hide advanced options"}
+              </ButtonTertiary>
             </div>
-          )}
-          <div className="flex">
-            <ButtonTertiary onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}>
-              {!showAdvancedOptions ? "Show advanced options" : "Hide advanced options"}
-            </ButtonTertiary>
           </div>
 
-          <div className={clsx(showAdvancedOptions ? "visible" : "invisible")}>
+          <div className={clsx("my-2 px-4 space-y-3 bg-gray-50 py-3 border border-gray-300 border-dashed", showAdvancedOptions ? "" : "hidden")}>
             <div className="w-full">
               <InputNumber name="order" title={t("models.property.order")} value={order} setValue={setOrder} />
             </div>
@@ -268,260 +239,32 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
                 setValue={setIsDetail}
               />
             </div>
-
             {/* <div className="font-bold">{t("models.propertyAttribute.plural")}</div> */}
 
-            {type === PropertyType.TEXT && (
-              <div className="w-full">
-                <InputText
-                  name="pattern"
-                  title={t("models.propertyAttribute.pattern")}
-                  value={pattern}
-                  setValue={setPattern}
-                  hint={
-                    <>
-                      {pattern && (
-                        <button type="button" onClick={() => setPattern("")} className="text-xs text-gray-600 hover:text-red-500">
-                          {t("shared.remove")}
-                        </button>
-                      )}
-                    </>
-                  }
+            {attributes.map((attribute) => {
+              return <input key={attribute.name} hidden readOnly type="text" id="attributes[]" name="attributes[]" value={JSON.stringify(attribute)} />;
+            })}
+
+            {PropertyAttributeHelper.getAttributesByType(type, attributes).map((item) => {
+              return (
+                <PropertyAttribute
+                  className="mb-2"
+                  key={item}
+                  name={item}
+                  title={PropertyAttributeHelper.getAttributeTitle(t, item)}
+                  value={attributes.find((f) => f.name === item)?.value ?? undefined}
+                  setValue={(e) => {
+                    const value = { name: item, value: e?.toString() };
+                    const found = attributes.find((f) => f.name === item);
+                    if (found) {
+                      setAttributes([...attributes.filter((f) => f.name !== item), value]);
+                    } else {
+                      setAttributes([...attributes, value]);
+                    }
+                  }}
                 />
-              </div>
-            )}
-            {supportsMinAndMax() && (
-              <>
-                <div className="w-full">
-                  <InputNumber
-                    name="min"
-                    title={t("models.propertyAttribute.min")}
-                    value={min}
-                    setValue={(e) => setMin(e ? Number(e) : undefined)}
-                    hint={
-                      <>
-                        {min && (
-                          <button type="button" onClick={() => setMin(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-                <div className="w-full">
-                  <InputNumber
-                    name="max"
-                    title={t("models.propertyAttribute.max")}
-                    value={max}
-                    setValue={(e) => setMax(e ? Number(e) : undefined)}
-                    hint={
-                      <>
-                        {max && (
-                          <button type="button" onClick={() => setMax(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-              </>
-            )}
-
-            {type === PropertyType.NUMBER && (
-              <div className="w-full">
-                <InputText
-                  name="step"
-                  title={t("models.propertyAttribute.step")}
-                  value={step}
-                  setValue={(e) => setStep(e.toString())}
-                  placeholder="0.01"
-                  hint={
-                    <>
-                      {step && (
-                        <button type="button" onClick={() => setStep(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                          {t("shared.remove")}
-                        </button>
-                      )}
-                    </>
-                  }
-                />
-              </div>
-            )}
-
-            {supportsDefaultValue() && (
-              <>
-                <div className="w-full">
-                  <InputText
-                    name="default-value"
-                    title={t("models.propertyAttribute.defaultValue")}
-                    value={defaultValue}
-                    setValue={(e) => setDefaultValue(e.toString() ?? undefined)}
-                    hint={
-                      <>
-                        {defaultValue && (
-                          <button type="button" onClick={() => setDefaultValue(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-              </>
-            )}
-
-            {type === PropertyType.MEDIA && (
-              <>
-                <div className="w-full">
-                  <InputText
-                    name="accept-file-types"
-                    title={t("models.propertyAttribute.acceptFileTypes")}
-                    value={acceptFileTypes}
-                    setValue={(e) => setAcceptFileTypes(e.toString() ?? undefined)}
-                    hint={
-                      <>
-                        {acceptFileTypes && (
-                          <button type="button" onClick={() => setAcceptFileTypes(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-
-                <div className="w-full">
-                  <InputNumber
-                    name="max-size"
-                    title={t("models.propertyAttribute.maxSize")}
-                    value={maxSize}
-                    setValue={(e) => setMaxSize(e ? Number(e) : undefined)}
-                    hint={
-                      <>
-                        {maxSize !== undefined && (
-                          <button type="button" onClick={() => setMaxSize(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-              </>
-            )}
-
-            <div className="w-full">
-              <InputText
-                name="hint-text"
-                title={t("models.propertyAttribute.hintText")}
-                value={hintText}
-                setValue={(e) => setHintText(e.toString() ?? undefined)}
-                hint={
-                  <>
-                    {hintText && (
-                      <button type="button" onClick={() => setHintText(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                        {t("shared.remove")}
-                      </button>
-                    )}
-                  </>
-                }
-              />
-            </div>
-            <div className="w-full">
-              <InputText
-                name="help-text"
-                title={t("models.propertyAttribute.helpText")}
-                value={helpText}
-                setValue={(e) => setHelpText(e.toString() ?? undefined)}
-                hint={
-                  <>
-                    {helpText && (
-                      <button type="button" onClick={() => setHelpText(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                        {t("shared.remove")}
-                      </button>
-                    )}
-                  </>
-                }
-              />
-            </div>
-            {supportsPlaceholder() && (
-              <div className="w-full">
-                <InputText
-                  name="placeholder"
-                  title={t("models.propertyAttribute.placeholder")}
-                  value={placeholder}
-                  setValue={(e) => setPlaceholder(e.toString() ?? undefined)}
-                  hint={
-                    <>
-                      {placeholder && (
-                        <button type="button" onClick={() => setPlaceholder(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                          {t("shared.remove")}
-                        </button>
-                      )}
-                    </>
-                  }
-                />
-              </div>
-            )}
-            <div className="w-full">
-              <InputText
-                name="icon"
-                title={t("models.propertyAttribute.icon")}
-                value={icon}
-                setValue={(e) => setIcon(e.toString() ?? undefined)}
-                hint={
-                  <>
-                    {icon && (
-                      <button type="button" onClick={() => setIcon(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                        {t("shared.remove")}
-                      </button>
-                    )}
-                  </>
-                }
-              />
-            </div>
-
-            {type === PropertyType.TEXT && (
-              <>
-                <div className="w-full">
-                  <InputNumber
-                    name="rows"
-                    title={t("models.propertyAttribute.rows")}
-                    value={rows}
-                    setValue={(e) => setRows(e ? Number(e) : undefined)}
-                    hint={
-                      <>
-                        {rows && (
-                          <button type="button" onClick={() => setRows(undefined)} className="text-xs text-gray-600 hover:text-red-500">
-                            {t("shared.remove")}
-                          </button>
-                        )}
-                      </>
-                    }
-                  />
-                </div>
-                <div className="w-full">
-                  <InputCheckboxWithDescription
-                    description="Force text to be uppercase"
-                    name="uppercase"
-                    title={t("models.propertyAttribute.uppercase")}
-                    value={uppercase}
-                    setValue={(e) => setUppercase(e ? Boolean(e) : undefined)}
-                  />
-                </div>
-                <div className="w-full">
-                  <InputCheckboxWithDescription
-                    description="Force text to be lowercase"
-                    name="lowercase"
-                    title={t("models.propertyAttribute.lowercase")}
-                    value={lowercase}
-                    setValue={(e) => setLowercase(e ? Boolean(e) : undefined)}
-                  />
-                </div>
-              </>
-            )}
+              );
+            })}
           </div>
         </div>
       </FormGroup>

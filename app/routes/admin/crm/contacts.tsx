@@ -6,7 +6,7 @@ import RowsViewRoute from "~/routes/app.$tenant/$entity";
 import { loaderRowsView } from "~/modules/rows/loaders/rows-view";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
-  const data = await loaderRowsView(request, params, "contacts", null);
+  const data = await loaderRowsView({ request, params, entitySlug: "contacts", tenantId: null });
   return json(data);
 };
 

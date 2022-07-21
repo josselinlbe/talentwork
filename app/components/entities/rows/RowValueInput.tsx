@@ -18,6 +18,9 @@ import { RefEntitySelector } from "../EntitySelector";
 import PropertyOptionSelector from "../properties/PropertyOptionSelector";
 import InputCheckbox from "~/components/ui/input/InputCheckbox";
 import InputMedia from "~/components/ui/input/InputMedia";
+import PropertyAttributeHelper from "~/utils/helpers/PropertyAttributeHelper";
+import { PropertyAttributeName } from "~/application/enums/entities/PropertyAttributeName";
+import { marked } from "marked";
 
 export interface RefRowValueInput {
   focus: () => void;
@@ -129,26 +132,47 @@ const RowValueInput = (
   return (
     <>
       {selected?.type === PropertyType.TEXT ? (
-        <InputText
-          ref={textInput}
-          name={selected.name}
-          title={t(selected.title)}
-          value={textValue}
-          setValue={(e) => onChange(e.toString())}
-          required={selected.isRequired}
-          className={className}
-          readOnly={readOnly}
-          pattern={selected.attributes?.pattern ?? undefined}
-          minLength={selected.attributes?.min ?? undefined}
-          maxLength={selected.attributes?.max ?? undefined}
-          rows={selected.attributes?.rows ?? undefined}
-          hint={selected.attributes?.hintText ?? undefined}
-          help={selected.attributes?.helpText ?? undefined}
-          placeholder={selected.attributes?.placeholder ?? undefined}
-          icon={selected.attributes?.icon ?? undefined}
-          uppercase={selected.attributes?.uppercase ?? undefined}
-          lowercase={selected.attributes?.lowercase ?? undefined}
-        />
+        <>
+          {PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.EditorLanguage) === "markdown" && readOnly ? (
+            <></>
+          ) : (
+            <InputText
+              ref={textInput}
+              name={selected.name}
+              title={t(selected.title)}
+              value={textValue}
+              setValue={(e) => onChange(e.toString())}
+              required={selected.isRequired}
+              className={className}
+              readOnly={readOnly}
+              pattern={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Pattern)}
+              minLength={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Min)}
+              maxLength={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Max)}
+              rows={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Rows)}
+              placeholder={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Placeholder)}
+              hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+              help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
+              icon={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Icon)}
+              uppercase={PropertyAttributeHelper.getPropertyAttributeValue_Boolean(selected, PropertyAttributeName.Uppercase)}
+              lowercase={PropertyAttributeHelper.getPropertyAttributeValue_Boolean(selected, PropertyAttributeName.Lowercase)}
+              editor={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Editor)}
+              editorLanguage={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.EditorLanguage)}
+            />
+          )}
+
+          {PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.EditorLanguage) === "markdown" && (
+            <div className="overflow-auto">
+              <label className="text-xs font-medium text-gray-600">Preview</label>
+              <div className="prose p-2 rounded-md border-2 border-dashed border-gray-300 h-64">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: marked(textValue ?? "") ?? "",
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </>
       ) : selected?.type === PropertyType.NUMBER ? (
         <InputNumber
           ref={numberInput}
@@ -160,13 +184,13 @@ const RowValueInput = (
           disabled={readOnly}
           className={className}
           readOnly={readOnly}
-          min={selected.attributes?.min ?? undefined}
-          max={selected.attributes?.max ?? undefined}
-          step={selected.attributes?.step ?? undefined}
-          hint={selected.attributes?.hintText ?? undefined}
-          help={selected.attributes?.helpText ?? undefined}
-          placeholder={selected.attributes?.placeholder ?? undefined}
-          icon={selected.attributes?.icon ?? undefined}
+          min={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Min)}
+          max={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Max)}
+          step={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Step)}
+          placeholder={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Placeholder)}
+          hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+          help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
+          icon={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Icon)}
         />
       ) : selected?.type === PropertyType.DATE ? (
         <>
@@ -179,9 +203,9 @@ const RowValueInput = (
             onChange={(e) => onChange(e)}
             className={className}
             readOnly={readOnly}
-            hint={selected.attributes?.hintText ?? undefined}
-            help={selected.attributes?.helpText ?? undefined}
-            icon={selected.attributes?.icon ?? undefined}
+            hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+            help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
+            icon={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Icon)}
           />
         </>
       ) : selected?.type === PropertyType.ROLE ? (
@@ -226,9 +250,9 @@ const RowValueInput = (
             }
             required={selected.isRequired}
             disabled={readOnly}
-            hint={selected.attributes?.hintText ?? undefined}
-            help={selected.attributes?.helpText ?? undefined}
-            icon={selected.attributes?.icon ?? undefined}
+            hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+            help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
+            icon={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Icon)}
             // onNewRoute={`${relatedEntity?.entity.slug}/new`}
           />
         </div>
@@ -246,9 +270,9 @@ const RowValueInput = (
             }}
             className={className}
             disabled={readOnly}
-            hint={selected.attributes?.hintText ?? undefined}
-            help={selected.attributes?.helpText ?? undefined}
-            icon={selected.attributes?.icon ?? undefined}
+            hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+            help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
+            icon={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Icon)}
           />
         </>
       ) : selected?.type === PropertyType.BOOLEAN ? (
@@ -263,9 +287,9 @@ const RowValueInput = (
             disabled={readOnly}
             className={className}
             readOnly={readOnly}
-            hint={selected.attributes?.hintText ?? undefined}
-            help={selected.attributes?.helpText ?? undefined}
-            icon={selected.attributes?.icon ?? undefined}
+            hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+            help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
+            icon={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.Icon)}
           />
         </>
       ) : selected?.type === PropertyType.MEDIA ? (
@@ -277,12 +301,11 @@ const RowValueInput = (
           disabled={readOnly}
           onSelected={(e) => setMedia(e)}
           readOnly={readOnly}
-          min={selected.attributes?.min ?? undefined}
-          max={selected.attributes?.max ?? undefined}
-          maxSize={selected.attributes?.maxSize ?? undefined}
-          accept={selected.attributes?.acceptFileTypes ?? undefined}
-          hint={selected.attributes?.hintText ?? undefined}
-          help={selected.attributes?.helpText ?? undefined}
+          min={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Min)}
+          max={PropertyAttributeHelper.getPropertyAttributeValue_Number(selected, PropertyAttributeName.Max)}
+          accept={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.AcceptFileTypes)}
+          hint={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HintText)}
+          help={PropertyAttributeHelper.getPropertyAttributeValue_String(selected, PropertyAttributeName.HelpText)}
         />
       ) : (
         // ) : selected?.type === PropertyType.FORMULA ? (

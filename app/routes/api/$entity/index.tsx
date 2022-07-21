@@ -3,7 +3,7 @@ import Constants from "~/application/Constants";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { setApiKeyLogStatus } from "~/utils/db/apiKeys.db.server";
-import { createRow, getRow } from "~/utils/db/entities/rows.db.server";
+import { createRow } from "~/utils/db/entities/rows.db.server";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import ApiHelper from "~/utils/helpers/ApiHelper";
 import { getEntityFiltersFromCurrentUrl, getPaginationFromCurrentUrl, getRowsWithPagination } from "~/utils/helpers/RowPaginationHelper";
@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   try {
     const jsonBody = await request.json();
     const rowValues = ApiHelper.getRowPropertiesFromJson(t, entity, jsonBody);
-    const created = await createRow({
+    const item = await createRow({
       entityId: entity.id,
       tenantId: tenant.id,
       createdByApiKeyId: apiKeyLog.apiKeyId,
@@ -66,7 +66,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       dynamicRows: rowValues.dynamicRows,
     });
     await setApiKeyLogStatus(apiKeyLog.id, { status: 201 });
-    const item = await getRow(entity.id, created.id, tenant.id);
     await createRowLog(request, {
       tenantId: tenant.id,
       createdByApiKey: apiKeyLog.apiKeyId,

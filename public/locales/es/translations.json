@@ -158,6 +158,10 @@
     "public": "Público",
     "mail": {
       "inboundAddress": "Correo de entrada"
+    },
+    "files": {
+      "image": "Imagen",
+      "images": "Imágenes"
     }
   },
   "front": {
@@ -965,7 +969,9 @@
       "hintText": "Texto de pista",
       "helpText": "Texto de ayuda",
       "placeholder": "Placeholder",
-      "icon": "Ícon"
+      "icon": "Ícono",
+      "editor": "Editor",
+      "editorLanguage": "Lenguaje en editor"
     },
     "workflow": {
       "object": "Flujo",

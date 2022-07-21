@@ -1,15 +1,6 @@
 import { ActionFunction, LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useCatch,
-  useLoaderData,
-} from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react";
 
 import styles from "./styles/app.css";
 import { useSetupTranslations } from "remix-i18next";
