@@ -147,10 +147,11 @@ export default function RowActivity({ entity, items }: Props) {
                           className="shadow-sm block w-full focus:ring-gray-900 focus:border-gray-900 sm:text-sm border border-gray-300 rounded-md"
                           placeholder={t("shared.addComment")}
                           defaultValue={""}
+                          disabled={isAdding || !appOrAdminData.user}
                         />
                       </div>
                       <div className="flex items-center justify-end space-x-4">
-                        <ButtonPrimary disabled={isAdding} type="submit">
+                        <ButtonPrimary disabled={isAdding || !appOrAdminData.user} type="submit">
                           {t("shared.comment")}
                         </ButtonPrimary>
                       </div>

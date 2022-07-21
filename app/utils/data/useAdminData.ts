@@ -38,7 +38,7 @@ export async function loadAdminData(request: Request) {
 
   const myTenants = await getMyTenants(user.id);
 
-  const roles = await getUserRoles(userInfo.userId);
+  const roles = await getUserRoles(userInfo.userId ?? undefined);
   const permissions: string[] = [];
   roles.forEach((role) => {
     role.role.permissions.forEach((permission) => {

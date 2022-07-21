@@ -32,7 +32,7 @@ export function getEntityPermission(entity: Entity, permission: "view" | "read" 
 export async function getUserPermission(request: Request, permissionName: string, tenantId: string | null = null) {
   const permission = await getPermissionByName(permissionName);
   const userInfo = await getUserInfo(request);
-  const userRoles = await getUserRoles(userInfo.userId, tenantId);
+  const userRoles = await getUserRoles(userInfo.userId ?? undefined, tenantId);
   let userPermission: Permission | undefined = undefined;
   userRoles.forEach((userRole) => {
     userRole.role.permissions.forEach((rolePermission) => {

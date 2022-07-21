@@ -223,7 +223,7 @@ export default function RowEditRoute({ children, title, rowFormChildren, afterRo
                 </div>
               </div>
               <div className="lg:w-2/6 space-y-4">
-                {data.entity.hasTags && !hideTags && <RowTags entity={data.entity} items={data.tags} />}
+                {data.entity.hasTags && !hideTags && <RowTags items={data.tags} />}
                 {data.entity.hasTasks && !hideTasks && <RowTasks entity={data.entity} items={data.tasks} />}
               </div>
             </div>

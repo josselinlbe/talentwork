@@ -63,8 +63,8 @@ export async function loadAppData(request: Request, params: Params) {
 
   const mySubscription = await getTenantSubscription(tenantUrl.tenantId);
 
-  const roles = await getUserRoles(userInfo.userId, tenantUrl.tenantId);
-  const allUserRoles = await getUserRoles(userInfo.userId);
+  const roles = await getUserRoles(userInfo.userId ?? undefined, tenantUrl.tenantId ?? undefined);
+  const allUserRoles = await getUserRoles(userInfo.userId ?? undefined);
   const permissions: string[] = [];
   roles.forEach((role) => {
     role.role.permissions.forEach((permission) => {
