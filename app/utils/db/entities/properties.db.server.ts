@@ -50,6 +50,7 @@ export type CreatePropertyDto = {
   isDynamic: boolean;
   isRequired?: boolean;
   isDefault?: boolean;
+  isHidden?: boolean;
   parentId?: string | null;
   options?: { order: number; value: string; name?: string; color?: Colors }[];
   attributes?: {
@@ -69,7 +70,7 @@ export async function createProperties(entityId: string, fields: CreatePropertyD
         isDynamic: field.isDynamic,
         isRequired: field.isRequired ?? true,
         isDefault: field.isDefault ?? false,
-        isHidden: false,
+        isHidden: field.isHidden ?? false,
         isDetail: false,
         parentId: field.parentId ?? null,
       });
