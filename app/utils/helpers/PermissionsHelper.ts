@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { RowPermissionsDto } from "~/application/dtos/entities/RowPermissionsDto";
 import { DefaultAdminRoles } from "~/application/dtos/shared/DefaultAdminRoles";
 import { DefaultAppRoles } from "~/application/dtos/shared/DefaultAppRoles";
+import { AppOrAdminData } from "../data/useAppOrAdminData";
 import { getMyGroups } from "../db/permissions/groups.db.server";
 import { getPermissionByName } from "../db/permissions/permissions.db.server";
 import {
@@ -182,4 +183,11 @@ export async function getRowPermissionsCondition(tenantId: string | null, userId
     ],
   };
   return where;
+}
+
+export function getUserHasPermission(appOrAdminData: AppOrAdminData, permission: string) {
+  if (appOrAdminData.isSuperAdmin || appOrAdminData.isSuperUser) {
+    return true;
+  }
+  return appOrAdminData.permissions.includes(permission);
 }

@@ -5,15 +5,17 @@ import { adminGetAllTenantsWithUsage, TenantWithUsage } from "~/utils/db/tenants
 import { i18nHelper } from "~/locale/i18n.utils";
 import TenantsTable from "~/components/core/tenants/TenantsTable";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
-import { getFiltersFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
+import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 import InputFilters from "~/components/ui/input/InputFilters";
 import { FilterablePropertyDto } from "~/application/dtos/data/FilterablePropertyDto";
 import { adminGetAllUsers } from "~/utils/db/users.db.server";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 
 type LoaderData = {
   title: string;
   items: TenantWithUsage[];
   filterableProperties: FilterablePropertyDto[];
+  pagination: PaginationDto;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -27,7 +29,7 @@ export let loader: LoaderFunction = async ({ request }) => {
       name: "userId",
       title: "models.user.object",
       manual: true,
-      options: (await adminGetAllUsers()).map((item) => {
+      options: (await adminGetAllUsers()).items.map((item) => {
         return {
           value: item.id,
           name: item.email,
@@ -36,12 +38,14 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
   ];
   const filters = getFiltersFromCurrentUrl(request, filterableProperties);
-  const items = (await adminGetAllTenantsWithUsage(filters)).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  const currentPagination = getPaginationFromCurrentUrl(request);
+  const { items, pagination } = await adminGetAllTenantsWithUsage(filters, currentPagination);
 
   const data: LoaderData = {
     title: `${t("models.tenant.plural")} | ${process.env.APP_NAME}`,
-    items,
+    items: items.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
     filterableProperties,
+    pagination,
   };
   return json(data);
 };
@@ -70,7 +74,7 @@ export default function AdminTenantsRoute() {
         </div>
       </div>
       <div className="pt-2 space-y-2 mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl">
-        <TenantsTable items={data.items} withSearch={false} />
+        <TenantsTable items={data.items} pagination={data.pagination} />
       </div>
     </div>
   );

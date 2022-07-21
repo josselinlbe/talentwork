@@ -149,7 +149,7 @@ export async function seedRolesAndPermissions() {
     })
   );
 
-  const users = await adminGetAllUsers();
+  const users = (await adminGetAllUsers()).items;
   await Promise.all(
     users
       .filter((f) => f.admin)

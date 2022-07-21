@@ -84,7 +84,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
 
     const actionData: ActionData = {
-      items: await adminGetAllUsers(),
+      items: (await adminGetAllUsers()).items,
     };
     return json(actionData);
   } else {

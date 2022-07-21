@@ -51,6 +51,7 @@ export default function RowEditRoute({ children, title, rowFormChildren, afterRo
     if (onChangeEditing) {
       onChangeEditing(editing);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editing]);
 
   function onClickedWorkflowStep(step: EntityWorkflowStep) {

@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SubscriptionBillingPeriod } from "~/application/enums/subscriptions/SubscriptionBillingPeriod";
 import DateUtils from "~/utils/shared/DateUtils";
-import InputSearch from "~/components/ui/input/InputSearch";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { TenantWithUsage } from "~/utils/db/tenants.db.server";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import { Link } from "react-router-dom";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 
 interface Props {
   items: TenantWithUsage[];
-  withSearch: boolean;
+  pagination: PaginationDto;
 }
-export default function TenantsTable({ items, withSearch = true }: Props) {
+export default function TenantsTable({ items, pagination }: Props) {
   const { t } = useTranslation();
 
-  const [searchInput, setSearchInput] = useState("");
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<TenantWithUsage>[]>([]);
 
   useEffect(() => {
@@ -89,34 +88,14 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const orderedItems = () => {
-    if (!filteredItems()) {
-      return [];
-    }
-    return filteredItems()
-      .slice()
-      .sort((x, y) => {
-        if (x.createdAt && y.createdAt) {
-          return (x.createdAt > y.createdAt ? -1 : 1) ?? -1;
-        }
-        return -1;
-      });
-  };
-  const filteredItems = () => {
-    if (!items) {
-      return [];
-    }
-    return items.filter((f) => f.name?.toString().toUpperCase().includes(searchInput.toUpperCase()));
-  };
   function billingPeriodName(item: TenantWithUsage) {
     return t("pricing." + SubscriptionBillingPeriod[item.subscription?.subscriptionPrice?.billingPeriod ?? SubscriptionBillingPeriod.MONTHLY] + "Short");
   }
 
   return (
     <div className="space-y-2">
-      {withSearch && <InputSearch value={searchInput} setValue={setSearchInput} />}
       <TableSimple
-        items={orderedItems()}
+        items={items}
         headers={headers}
         actions={[
           {
@@ -124,6 +103,7 @@ export default function TenantsTable({ items, withSearch = true }: Props) {
             onClickRoute: (_, item) => `/admin/accounts/${item.id}`,
           },
         ]}
+        pagination={pagination}
       />
     </div>
   );

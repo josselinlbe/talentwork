@@ -4,11 +4,13 @@ import DateUtils from "~/utils/shared/DateUtils";
 import { useEffect, useState } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
 import { LogWithDetails } from "~/utils/db/logs.db.server";
-import InputSearch from "~/components/ui/input/InputSearch";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
+import TablePagination from "~/components/ui/tables/TablePagination";
 
 interface Props {
   items: LogWithDetails[];
   withTenant: boolean;
+  pagination: PaginationDto;
 }
 
 type Header = {
@@ -17,29 +19,8 @@ type Header = {
   sortable?: boolean;
 };
 
-export default function LogsTable({ withTenant, items }: Props) {
+export default function LogsTable({ withTenant, items, pagination }: Props) {
   const { t } = useTranslation();
-
-  const [searchInput, setSearchInput] = useState("");
-
-  const filteredItems = () => {
-    if (!items) {
-      return [];
-    }
-    return items.filter(
-      (f) =>
-        DateUtils.dateYMDHMS(f.createdAt)?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.action?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.url?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.details?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.tenant?.name?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.user?.email?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        (f.user?.firstName?.toString() + " " + f.user?.lastName?.toString()).toUpperCase().includes(searchInput.toUpperCase())
-    );
-  };
-
-  const [sortByColumn, setSortByColumn] = useState("createdAt");
-  const [sortDirection, setSortDirection] = useState(1);
 
   const [headers, setHeaders] = useState<Header[]>([]);
 
@@ -77,41 +58,11 @@ export default function LogsTable({ withTenant, items }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [withTenant]);
 
-  function sortBy(column: string | undefined) {
-    if (column) {
-      setSortDirection(sortDirection === -1 ? 1 : -1);
-      setSortByColumn(column);
-    }
-  }
-
-  const sortedItems = () => {
-    if (!filteredItems()) {
-      return [];
-    }
-    const column = sortByColumn;
-    if (!column) {
-      return filteredItems();
-    }
-    return filteredItems()
-      .slice()
-      .sort((x: any, y: any) => {
-        if (x[column] && y[column]) {
-          if (sortDirection === -1) {
-            return (x[column] > y[column] ? 1 : -1) ?? 1;
-          } else {
-            return (x[column] < y[column] ? 1 : -1) ?? 1;
-          }
-        }
-        return 1;
-      });
-  };
-
   return (
     <div className="space-y-2">
-      <InputSearch value={searchInput} setValue={setSearchInput} />
       <div>
         {(() => {
-          if (sortedItems().length === 0) {
+          if (items.length === 0) {
             return (
               <div>
                 <EmptyState
@@ -125,58 +76,25 @@ export default function LogsTable({ withTenant, items }: Props) {
             );
           } else {
             return (
-              <div className="flex flex-col">
+              <div className="flex flex-col shadow border border-gray-200 sm:rounded-md overflow-hidden">
                 <div className="overflow-x-auto">
                   <div className="py-2 align-middle inline-block min-w-full">
-                    <div className="shadow overflow-hidden border border-gray-200 sm:rounded-lg">
+                    <div className="overflow-hidden">
                       <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             {headers.map((header, idx) => {
                               return (
-                                <th
-                                  key={idx}
-                                  onClick={() => sortBy(header.name)}
-                                  scope="col"
-                                  className={clsx(
-                                    "px-2 py-2 text-left text-xs font-medium text-gray-500 tracking-wider select-none",
-                                    header.name && "cursor-pointer hover:text-gray-700"
-                                  )}
-                                >
+                                <th key={idx} scope="col" className={clsx("px-2 py-2 text-left text-xs font-medium text-gray-500 tracking-wider select-none")}>
                                   <div className="flex items-center space-x-1 text-gray-500">
                                     <div>{header.title}</div>
-                                    <div className={clsx((!header.name || sortByColumn !== header.name) && "invisible")}>
-                                      {(() => {
-                                        if (sortDirection === -1) {
-                                          return (
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                              <path
-                                                fillRule="evenodd"
-                                                d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                                                clipRule="evenodd"
-                                              />
-                                            </svg>
-                                          );
-                                        } else {
-                                          return (
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                              <path
-                                                fillRule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clipRule="evenodd"
-                                              />
-                                            </svg>
-                                          );
-                                        }
-                                      })()}
-                                    </div>
                                   </div>
                                 </th>
                               );
                             })}
                           </tr>
                         </thead>
-                        {sortedItems().map((item, idx) => {
+                        {items.map((item, idx) => {
                           return (
                             <tbody key={idx} className="bg-white divide-y divide-gray-200">
                               <tr className="text-sm text-gray-600">
@@ -208,6 +126,7 @@ export default function LogsTable({ withTenant, items }: Props) {
                     </div>
                   </div>
                 </div>
+                <TablePagination totalItems={pagination.totalItems} totalPages={pagination.totalPages} page={pagination.page} pageSize={pagination.pageSize} />
               </div>
             );
           }

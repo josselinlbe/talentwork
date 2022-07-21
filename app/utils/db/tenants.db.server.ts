@@ -1,5 +1,6 @@
 import { AdminUser, Role, Tenant, TenantInboundAddress, TenantUser, User } from "@prisma/client";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { TenantUserJoined } from "~/application/enums/tenants/TenantUserJoined";
 import { TenantUserStatus } from "~/application/enums/tenants/TenantUserStatus";
 import { db } from "~/utils/db.server";
@@ -72,15 +73,24 @@ export async function adminGetAllTenants(): Promise<TenantWithDetails[]> {
   });
 }
 
-export async function adminGetAllTenantsWithUsage(filters?: FiltersDto): Promise<TenantWithUsage[]> {
+export async function adminGetAllTenantsWithUsage(
+  filters?: FiltersDto,
+  pagination?: { page: number; pageSize: number }
+): Promise<{ items: TenantWithUsage[]; pagination: PaginationDto }> {
   let where = RowFiltersHelper.getFiltersCondition(filters);
   const userId = filters?.properties.find((f) => f.name === "userId")?.value ?? filters?.query ?? "";
   if (userId) {
-    where = {
-      OR: [where, { users: { some: { userId } } }],
-    };
+    if (where) {
+      where = {
+        OR: [where, { users: { some: { userId } } }],
+      };
+    } else {
+      where = { users: { some: { userId } } };
+    }
   }
-  return await db.tenant.findMany({
+  const items = await db.tenant.findMany({
+    skip: pagination ? pagination?.pageSize * (pagination?.page - 1) : undefined,
+    take: pagination ? pagination?.pageSize : undefined,
     where,
     include: {
       inboundAddresses: true,
@@ -105,6 +115,18 @@ export async function adminGetAllTenantsWithUsage(filters?: FiltersDto): Promise
       _count: true,
     },
   });
+  const totalItems = await db.tenant.count({
+    where,
+  });
+  return {
+    items,
+    pagination: {
+      page: pagination?.page ?? 1,
+      pageSize: pagination?.pageSize ?? 10,
+      totalItems,
+      totalPages: Math.ceil(totalItems / (pagination?.pageSize ?? 10)),
+    },
+  };
 }
 
 export async function getTenant(id?: string): Promise<TenantWithDetails | null> {

@@ -28,7 +28,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     return redirect("/admin/roles-and-permissions/account-users");
   }
 
-  const adminUsers = (await adminGetAllUsers()).filter((f) => f.admin);
+  const adminUsers = (await adminGetAllUsers()).items.filter((f) => f.admin);
   const tenantUsers = await adminGetAllTenantUsers(params.account ?? "");
   const roles = await getAllRoles("app");
 
@@ -81,7 +81,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
 
     const actionData: ActionData = {
-      items: await adminGetAllUsers(),
+      items: (await adminGetAllUsers()).items,
     };
     return json(actionData);
   } else {

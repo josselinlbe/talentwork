@@ -11,6 +11,8 @@ import { adminGetAllTenantsWithUsage, TenantWithUsage } from "~/utils/db/tenants
 import TenantsTable from "~/components/core/tenants/TenantsTable";
 import { SetupItem } from "~/application/dtos/setup/SetupItem";
 import { Stat } from "~/application/dtos/stats/Stat";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
+import { getPaginationFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 
 type LoaderData = AdminLoaderData & {
   title: string;
@@ -18,6 +20,7 @@ type LoaderData = AdminLoaderData & {
   // entitiesStats: Stat[];
   setupSteps: SetupItem[];
   tenants: TenantWithUsage[];
+  tenantsPagination: PaginationDto;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -27,7 +30,8 @@ export let loader: LoaderFunction = async ({ request }) => {
   const stats = await getAdminDashboardStats(30);
   // const entitiesStats = await getCustomEntitiesDashboardStats(30);
   const setupSteps = await getSetupSteps();
-  const tenants = await adminGetAllTenantsWithUsage();
+  const currentPagination = getPaginationFromCurrentUrl(request);
+  const tenants = await adminGetAllTenantsWithUsage(undefined, currentPagination);
 
   const data: LoaderData = {
     ...adminData,
@@ -35,7 +39,8 @@ export let loader: LoaderFunction = async ({ request }) => {
     stats,
     // entitiesStats,
     setupSteps,
-    tenants,
+    tenants: tenants.items,
+    tenantsPagination: tenants.pagination,
   };
   return json(data);
 };
@@ -77,7 +82,7 @@ export default function AdminNavigationRoute() {
 
             <div className="overflow-x-auto space-y-4">
               <h3 className="leading-4 font-medium text-gray-900">Tenants</h3>
-              <TenantsTable items={data.tenants} withSearch={false} />
+              <TenantsTable items={data.tenants} pagination={data.tenantsPagination} />
             </div>
           </div>
         ) : (

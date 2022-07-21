@@ -1,9 +1,8 @@
 import { useSubmit, Outlet, useLoaderData, useActionData } from "@remix-run/react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import EmailsTable from "~/components/core/emails/EmailsTable";
-// import ButtonSecondary from "~/components/ui/buttons/ButtonSecondary";
-import InputSearch from "~/components/ui/input/InputSearch";
+import InputFilters from "~/components/ui/input/InputFilters";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import ConfirmModal, { RefConfirmModal } from "~/components/ui/modals/ConfirmModal";
 import { ActionDataEmails } from "../actions/inbound-emails";
@@ -17,28 +16,6 @@ export default function InboundEmailsRoute() {
 
   const confirmModal = useRef<RefConfirmModal>(null);
 
-  const [items] = useState(actionData?.items ?? data.items ?? []);
-  const [searchInput, setSearchInput] = useState("");
-
-  const filteredItems = () => {
-    if (!items) {
-      return [];
-    }
-    return items.filter(
-      (f) =>
-        f.fromEmail?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.fromName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.toEmail?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.toName?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.subject?.toString().toUpperCase().includes(searchInput.toUpperCase()) ||
-        f.textBody?.toString().toUpperCase().includes(searchInput.toUpperCase())
-    );
-  };
-
-  // function sync() {
-  //   confirmModal.current?.show("Sync emails", "Sync", "Back", "IMPORTANT: Attachments cannot be retrieved this way.");
-  // }
-
   function confirmedSync() {
     const form = new FormData();
     form.set("action", "sync");
@@ -47,24 +24,22 @@ export default function InboundEmailsRoute() {
 
   return (
     <IndexPageLayout
-      title={t("models.email.plural")}
+      title={
+        <div className="flex flex-col">
+          <div>{t("models.email.plural")}</div>
+          <div className="text-xs truncate font-normal">
+            <span className="select-all italic">{data.error ? <div className="text-red-500">{data.error}</div> : data.inboundEmailAddress}</span>
+          </div>
+        </div>
+      }
       buttons={
-        <div className="text-xs truncate font-normal py-2">
-          <span className="select-all italic">{data.error ? <div className="text-red-500">{data.error}</div> : data.inboundEmailAddress}</span>
+        <div className="flex items-center space-x-2">
+          <InputFilters filters={data.filterableProperties} />
         </div>
       }
     >
       <div className="space-y-2">
-        <div className="flex justify-between space-x-1">
-          <div className="flex-grow">
-            <InputSearch value={searchInput} setValue={setSearchInput} />
-          </div>
-          {/* <ButtonSecondary type="button" onClick={sync}>
-            Sync
-          </ButtonSecondary> */}
-        </div>
-
-        <EmailsTable items={filteredItems()} withTenant={true} />
+        <EmailsTable items={actionData?.items ?? data.items} withTenant={true} pagination={data.pagination} />
 
         <ConfirmModal ref={confirmModal} onYes={confirmedSync} />
 

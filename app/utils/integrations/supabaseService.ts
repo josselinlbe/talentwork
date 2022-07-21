@@ -1,4 +1,4 @@
-import { EmailAttachment, RowMedia } from "@prisma/client";
+import { EmailAttachment } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 

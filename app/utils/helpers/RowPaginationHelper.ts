@@ -28,6 +28,11 @@ export function getFiltersFromCurrentUrl(request: Request, properties: Filterabl
   properties.forEach((property) => {
     const params = url.searchParams.get(property.name);
     property.value = params ?? null;
+    if (property.isNumber && property.value) {
+      if (isNaN(Number(property.value))) {
+        property.value = null;
+      }
+    }
   });
 
   const query = url.searchParams.get("q") ?? undefined;

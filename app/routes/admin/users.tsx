@@ -10,14 +10,16 @@ import { deleteUserWithItsTenants } from "~/utils/services/userService";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { useAdminData } from "~/utils/data/useAdminData";
 import InputFilters from "~/components/ui/input/InputFilters";
-import { getFiltersFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
+import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 import { FilterablePropertyDto } from "~/application/dtos/data/FilterablePropertyDto";
 import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 
 type LoaderData = {
   title: string;
   items: UserWithDetails[];
   filterableProperties: FilterablePropertyDto[];
+  pagination: PaginationDto;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -41,12 +43,14 @@ export let loader: LoaderFunction = async ({ request }) => {
     },
   ];
   const filters = getFiltersFromCurrentUrl(request, filterableProperties);
-  const items = (await adminGetAllUsers(filters)).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  const currentPagination = getPaginationFromCurrentUrl(request);
+  const { items, pagination } = await adminGetAllUsers(filters, currentPagination);
 
   const data: LoaderData = {
     title: `${t("models.user.plural")} | ${process.env.APP_NAME}`,
-    items,
+    items: items.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
     filterableProperties,
+    pagination,
   };
   return json(data);
 };
@@ -146,6 +150,7 @@ export default function AdminUsersRoute() {
           canImpersonate={adminData.permissions.includes("admin.users.impersonate")}
           canChangePassword={adminData.permissions.includes("admin.users.changePassword")}
           canDelete={adminData.permissions.includes("admin.users.delete")}
+          pagination={data.pagination}
         />
       </div>
     </div>

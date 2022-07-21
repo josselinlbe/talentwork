@@ -2,6 +2,9 @@ import { ApiKey, ApiKeyEntity, ApiKeyLog, Entity, Tenant } from "@prisma/client"
 import { db } from "../db.server";
 import { getClientIPAddress } from "remix-utils";
 import { includeSimpleCreatedByUser, UserSimple } from "./users.db.server";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import RowFiltersHelper from "../helpers/RowFiltersHelper";
 
 export type ApiKeyWithDetails = ApiKey & {
   tenant: Tenant;
@@ -39,16 +42,14 @@ export async function getAllApiKeys(): Promise<ApiKeyWithDetails[]> {
   });
 }
 
-export async function getAllApiKeyLogs(tenantId?: string): Promise<ApiKeyLogWithDetails[]> {
-  let where: any = {};
-  if (tenantId) {
-    where = {
-      apiKey: {
-        tenantId,
-      },
-    };
-  }
-  return await db.apiKeyLog.findMany({
+export async function getAllApiKeyLogs(
+  pagination: { page: number; pageSize: number },
+  filters: FiltersDto
+): Promise<{ items: ApiKeyLogWithDetails[]; pagination: PaginationDto }> {
+  const where = RowFiltersHelper.getFiltersCondition(filters);
+  const items = await db.apiKeyLog.findMany({
+    take: pagination.pageSize,
+    skip: pagination.pageSize * (pagination.page - 1),
     where,
     include: {
       apiKey: {
@@ -59,6 +60,19 @@ export async function getAllApiKeyLogs(tenantId?: string): Promise<ApiKeyLogWith
       createdAt: "desc",
     },
   });
+  const totalItems = await db.apiKeyLog.count({
+    where,
+  });
+
+  return {
+    items,
+    pagination: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      totalItems,
+      totalPages: Math.ceil(totalItems / pagination.pageSize),
+    },
+  };
 }
 
 export async function getAllApiKeyLogsSimple(tenantId?: string): Promise<ApiKeyLogSimple[]> {
@@ -82,22 +96,31 @@ export async function getAllApiKeyLogsSimple(tenantId?: string): Promise<ApiKeyL
   });
 }
 
-export async function getTenantApiKeyLogs(tenantId: string): Promise<ApiKeyLogWithDetails[]> {
-  return await db.apiKeyLog.findMany({
-    where: {
-      apiKey: {
-        tenantId,
-      },
-    },
-    include: {
-      apiKey: {
-        include: { tenant: true },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+export async function getTenantApiKeyLogs(
+  tenantId: string,
+  pagination: { page: number; pageSize: number },
+  filters: FiltersDto
+): Promise<{ items: ApiKeyLogWithDetails[]; pagination: PaginationDto }> {
+  const where = {
+    AND: [RowFiltersHelper.getFiltersCondition(filters), { apiKey: { tenantId } }],
+  };
+  const items = await db.apiKeyLog.findMany({
+    take: pagination.pageSize,
+    skip: pagination.pageSize * (pagination.page - 1),
+    where,
+    include: { apiKey: { include: { tenant: true } } },
+    orderBy: { createdAt: "desc" },
   });
+  const totalItems = await db.apiKeyLog.count({ where });
+  return {
+    items,
+    pagination: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      totalItems,
+      totalPages: Math.ceil(totalItems / pagination.pageSize),
+    },
+  };
 }
 
 export async function getApiKeys(tenantId: string): Promise<ApiKeyWithDetails[]> {

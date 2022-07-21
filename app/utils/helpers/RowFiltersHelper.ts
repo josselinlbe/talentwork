@@ -138,8 +138,8 @@ const getFiltersCondition = (filters?: FiltersDto) => {
   filters.properties
     ?.filter((f) => !f.manual)
     .forEach((field) => {
-      if (filters.query) {
-        queryConditions.push(getPropertyFilter(field.name, filters.query));
+      if (filters.query && !field.isNumber) {
+        queryConditions.push(getPropertyFilter(field.name, filters.query, field.condition, field.isNumber));
       }
     });
 
@@ -147,7 +147,7 @@ const getFiltersCondition = (filters?: FiltersDto) => {
     ?.filter((f) => !f.manual)
     .forEach((field) => {
       if (field.value) {
-        filterConditions.push(getPropertyFilter(field.name, field.value));
+        filterConditions.push(getPropertyFilter(field.name, field.value, field.condition, field.isNumber));
       }
     });
 
@@ -179,8 +179,11 @@ const getFiltersCondition = (filters?: FiltersDto) => {
   return where;
 };
 
-function getPropertyFilter(name: string, value: string) {
-  return { [name]: { contains: value } };
+function getPropertyFilter(name: string, value: string, condition: string | undefined, isNumber: boolean | undefined) {
+  if (isNumber) {
+    return { [name]: { [condition ?? "contains"]: Number(value) } };
+  }
+  return { [name]: { [condition ?? "contains"]: value } };
 }
 
 export default {

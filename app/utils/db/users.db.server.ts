@@ -1,6 +1,8 @@
 import { AdminUser, Role, Tenant, TenantUser, UserRole } from ".prisma/client";
 import bcrypt from "bcryptjs";
+import Constants from "~/application/Constants";
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { db } from "~/utils/db.server";
 import RowFiltersHelper from "../helpers/RowFiltersHelper";
 
@@ -80,7 +82,10 @@ export async function adminGetAllTenantUsers(tenantId: string): Promise<UserWith
   });
 }
 
-export async function adminGetAllUsers(filters?: FiltersDto): Promise<UserWithDetails[]> {
+export async function adminGetAllUsers(
+  filters?: FiltersDto,
+  pagination?: { page: number; pageSize: number }
+): Promise<{ items: UserWithDetails[]; pagination: PaginationDto }> {
   let where = RowFiltersHelper.getFiltersCondition(filters);
   const tenantId = filters?.properties.find((f) => f.name === "tenantId")?.value ?? filters?.query ?? "";
   if (tenantId) {
@@ -88,7 +93,9 @@ export async function adminGetAllUsers(filters?: FiltersDto): Promise<UserWithDe
       OR: [where, { tenants: { some: { tenantId } } }],
     };
   }
-  return db.user.findMany({
+  const items = await db.user.findMany({
+    skip: pagination ? pagination?.pageSize * (pagination?.page - 1) : undefined,
+    take: pagination ? pagination?.pageSize : undefined,
     where,
     include: {
       admin: true,
@@ -104,6 +111,18 @@ export async function adminGetAllUsers(filters?: FiltersDto): Promise<UserWithDe
       },
     },
   });
+  const totalItems = await db.user.count({
+    where,
+  });
+  return {
+    items,
+    pagination: {
+      page: pagination?.page ?? 1,
+      pageSize: pagination?.pageSize ?? Constants.DEFAULT_PAGE_SIZE,
+      totalItems,
+      totalPages: Math.ceil(totalItems / (pagination?.pageSize ?? Constants.DEFAULT_PAGE_SIZE)),
+    },
+  };
 }
 
 export async function getUsersById(ids: string[]): Promise<UserWithDetails[]> {
