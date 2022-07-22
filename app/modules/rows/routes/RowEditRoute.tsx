@@ -28,9 +28,22 @@ interface Props {
   hideTags?: boolean;
   hideTasks?: boolean;
   hideActivity?: boolean;
+  disableUpdate?: boolean;
+  disableDelete?: boolean;
   onChangeEditing?: (editing: boolean) => void;
 }
-export default function RowEditRoute({ children, title, rowFormChildren, afterRowForm, hideTags, hideTasks, hideActivity, onChangeEditing }: Props) {
+export default function RowEditRoute({
+  children,
+  title,
+  rowFormChildren,
+  afterRowForm,
+  hideTags,
+  hideTasks,
+  hideActivity,
+  disableUpdate,
+  disableDelete,
+  onChangeEditing,
+}: Props) {
   const params = useParams();
   const data = useLoaderData<LoaderDataRowEdit>();
   const appOrAdminData = useAppOrAdminData();
@@ -73,7 +86,10 @@ export default function RowEditRoute({ children, title, rowFormChildren, afterRo
   }
 
   function canUpdate() {
-    return !(isUpdatingWorkflowState || !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) || !data.rowPermissions.canUpdate);
+    return (
+      !disableUpdate &&
+      !(isUpdatingWorkflowState || !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) || !data.rowPermissions.canUpdate)
+    );
   }
 
   return (
@@ -210,7 +226,9 @@ export default function RowEditRoute({ children, title, rowFormChildren, afterRo
                     editing={editing}
                     relatedEntities={data.relatedEntities}
                     linkedAccounts={data.linkedAccounts}
-                    canDelete={appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "delete")) && data.rowPermissions.canDelete}
+                    canDelete={
+                      !disableDelete && appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "delete")) && data.rowPermissions.canDelete
+                    }
                   >
                     {rowFormChildren}
                   </RowForm>
