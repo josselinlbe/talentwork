@@ -9,9 +9,13 @@ export async function createApplicationEvent(name: string, tenantId: string, dat
     data: JSON.stringify(data),
   });
 
-  endpoints?.forEach((endpoint) => {
-    callEventEndpoint(event, endpoint, JSON.stringify(data));
-  });
+  if (endpoints) {
+    await Promise.all(
+      endpoints.map(async (endpoint) => {
+        return await callEventEndpoint(event, endpoint, JSON.stringify(data));
+      })
+    );
+  }
 
   return event;
 }
@@ -19,16 +23,13 @@ export async function createApplicationEvent(name: string, tenantId: string, dat
 async function callEventEndpoint(event: Event, endpoint: string, body: string) {
   const webhookAttempt = await createEventWebhookAttempt({ eventId: event.id, endpoint });
   try {
-    setTimeout(() => {
-      fetch(process.env.SERVER_URL + `/api/events/webhooks/attempts/${webhookAttempt.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body,
-      });
-      // 3 seconds delay
-    }, 3000);
+    await fetch(process.env.SERVER_URL + `/api/events/webhooks/attempts/${webhookAttempt.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+    });
   } catch (e: any) {
     // eslint-disable-next-line no-console
     console.log("Could not create webhook endpoint", { message: e.message, e });
