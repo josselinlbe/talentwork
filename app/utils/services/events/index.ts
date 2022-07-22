@@ -1,6 +1,6 @@
 import { Event } from "@prisma/client";
 import { createEvent } from "~/utils/db/events/events.db.server";
-import { createEventWebhookAttempt } from "~/utils/db/events/eventWebhookAttempts.db.server";
+import { createEventWebhookAttempt, updateEventWebhookAttempt } from "~/utils/db/events/eventWebhookAttempts.db.server";
 
 export async function createApplicationEvent(name: string, tenantId: string, data: any, endpoints?: string[]) {
   const event = await createEvent({
@@ -18,11 +18,27 @@ export async function createApplicationEvent(name: string, tenantId: string, dat
 
 async function callEventEndpoint(event: Event, endpoint: string, body: string) {
   const webhookAttempt = await createEventWebhookAttempt({ eventId: event.id, endpoint });
-  fetch(process.env.SERVER_URL + `/api/events/webhooks/attempts/${webhookAttempt.id}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body,
-  });
+  try {
+    setTimeout(() => {
+      fetch(process.env.SERVER_URL + `/api/events/webhooks/attempts/${webhookAttempt.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      });
+      // 3 seconds delay
+    }, 3000);
+  } catch (e: any) {
+    // eslint-disable-next-line no-console
+    console.log("Could not create webhook endpoint", { message: e.message, e });
+    // While seeding the database it should not call endpoints
+    await updateEventWebhookAttempt(webhookAttempt.id, {
+      startedAt: new Date(),
+      finishedAt: new Date(),
+      success: false,
+      status: 500,
+      message: "Could not call webhook endpoint: " + e.message,
+    });
+  }
 }
