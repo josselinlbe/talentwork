@@ -6,7 +6,6 @@ import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getUser } from "~/utils/db/users.db.server";
 import TopBanner from "~/components/ui/banners/TopBanner";
-import LogoClouds from "~/components/ui/images/LogoClouds";
 import { Language } from "remix-i18next";
 import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
@@ -22,6 +21,7 @@ import { useRootData } from "~/utils/data/useRootData";
 import { useEffect } from "react";
 import Community from "~/components/front/Community";
 import VideoDemo from "~/components/front/VideoDemo";
+import LogoCloudsColor from "~/components/ui/images/LogoCloudsColor";
 
 export type IndexLoaderData = {
   title: string;
@@ -95,7 +95,7 @@ export default function IndexRoute() {
       />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
         <Hero />
-        <LogoClouds />
+        <LogoCloudsColor />
         <FeatureImages />
         <Community
           title="The SaasRock Community"
