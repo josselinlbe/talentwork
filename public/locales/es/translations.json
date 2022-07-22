@@ -1114,6 +1114,30 @@
       "url": "URL",
       "method": "Método"
     },
+    "event": {
+      "object": "Evento",
+      "plural": "Eventos",
+      "eventsAndWebhooks": "Eventos y Webhooks",
+      "name": "Nombre",
+      "data": "Data",
+      "resource": "Recurso",
+      "attempts": "Llamadas a Webhooks"
+    },
+    "webhook": {
+      "object": "Webhook",
+      "plural": "Webhooks"
+    },
+    "webhookAttempt": {
+      "object": "Intento de Webhook",
+      "plural": "Intentos de Webhook",
+      "endpoint": "URL",
+      "success": "Éxito",
+      "status": "Estatus",
+      "message": "Mensaje",
+      "body": "Cuerpo",
+      "startedAt": "Fecha de inicio",
+      "finishedAt": "Fecha de fin"
+    },
     "subscriptionProduct": {
       "object": "Suscripción",
       "plural": "Suscripciones",
