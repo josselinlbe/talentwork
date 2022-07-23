@@ -9,7 +9,7 @@ export default function TenantSelect({ onOpenCommandPalette }: Props) {
 
   return (
     <>
-      <button type="button" onClick={onOpenCommandPalette} className="group flex-shrink-0 flex bg-slate-800 p-4 focus:outline-none">
+      <button type="button" onClick={onOpenCommandPalette} className="group flex-shrink-0 flex bg-zinc-800 p-4 focus:outline-none">
         <div className="flex-shrink-0 w-full group block">
           <div className="flex justify-between items-center">
             <div className="flex items-center text-left truncate">

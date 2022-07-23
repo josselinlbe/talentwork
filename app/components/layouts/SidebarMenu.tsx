@@ -137,7 +137,7 @@ export default function SidebarMenu({ layout, onSelected }: Props) {
                                 to={getPath(menuItem)}
                                 className={clsx(
                                   "px-4 mt-1 group flex items-center space-x-4 py-2 text-base leading-5 rounded-sm hover:text-white text-slate-300 focus:outline-none focus:text-gray-50 transition ease-in-out duration-150",
-                                  isCurrent(menuItem) && "text-slate-300 bg-theme-600 focus:bg-theme-700",
+                                  isCurrent(menuItem) && "text-slate-300 bg-theme-500 focus:bg-theme-700",
                                   !isCurrent(menuItem) && "text-slate-200 hover:bg-slate-800 focus:bg-slate-800"
                                 )}
                                 onClick={onSelected}

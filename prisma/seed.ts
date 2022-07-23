@@ -236,6 +236,16 @@ async function seedCoreEntities() {
             { order: 3, value: "Done", color: Colors.BLUE },
           ],
         },
+        {
+          name: "files",
+          title: "Files",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: [
+            { name: PropertyAttributeName.Rows, value: "10" },
+            { name: PropertyAttributeName.HelpText, value: "10 files max" }
+          ],
+        },
       ]
   );
 

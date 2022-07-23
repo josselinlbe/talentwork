@@ -1,10 +1,10 @@
 import { Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useRef, useState } from "react";
 import SidebarMenu from "./SidebarMenu";
-import PendingInvitationsButton from "./buttons/PendingInvitationsButton";
+// import PendingInvitationsButton from "./buttons/PendingInvitationsButton";
 import ProfileButton from "./buttons/ProfileButton";
 import QuickActionsButton from "./buttons/QuickActionsButton";
-import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
+// import CurrentSubscriptionButton from "./buttons/CurrentSubscriptionButton";
 import { useAppData } from "~/utils/data/useAppData";
 import TenantSelect from "./selectors/TenantSelect";
 import { Link } from "@remix-run/react";
@@ -103,16 +103,16 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
         }
       >
         <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 shadow-md bg-theme-600">
+          <div className="flex flex-col h-0 flex-1 shadow-md bg-zinc-900">
             <div className="flex-1 flex flex-col overflow-y-auto">
-              <nav className="flex-1 px-2 py-4 space-y-3 bg-gray-900 select-none">
+              <nav className="flex-1 px-2 py-4 space-y-3 bg-zinc-900 select-none">
                 {/* <div className=" ">
                   <img className="h-7 hidden dark:block w-auto mx-auto" src={LogoDark} alt="Logo" />
                 </div> */}
                 <div className="flex flex-col space-y-2">
                   <Link to={"/"}>
                     {/* <BrandLogo className="h-8 mx-auto dark" /> */}
-                    <img className={"h-8 w-auto mx-auto"} src={LogoDark} alt="Logo" />
+                    <img className={"h-6 ml-4"} src={LogoDark} alt="Logo" />
                   </Link>
                 </div>
                 <SidebarMenu layout={layout} />
@@ -145,8 +145,8 @@ export default function SidebarLayout({ layout, children, onOpenCommandPalette }
               <SearchButton onClick={onOpenCommandPalette} />
               {/* {layout === "admin" && <LayoutSelector className="text-sm" />} */}
               {/* {layout === "admin" && <LocaleSelector className="text-sm" />} */}
-              {layout === "app" && appData.permissions.includes("app.settings.subscription.update") && <CurrentSubscriptionButton />}
-              {layout === "app" && appData.permissions.includes("app.settings.linkedAccounts.view") && <PendingInvitationsButton />}
+              {/* layout === "app" && appData.permissions.includes("app.settings.subscription.update") && <CurrentSubscriptionButton /> */}
+              {/* layout === "app" && appData.permissions.includes("app.settings.linkedAccounts.view") && <PendingInvitationsButton /> */}
               {/* {layout === "app" && <ChatSupportButton />} */}
               {layout === "app" && <QuickActionsButton entities={appData.entities} />}
               {(layout === "app" || layout === "admin") && <ProfileButton layout={layout} />}
