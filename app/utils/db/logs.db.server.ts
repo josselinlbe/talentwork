@@ -86,15 +86,34 @@ export async function getLogs(tenantId: string): Promise<LogWithDetails[]> {
   });
 }
 
-export async function getAllRowLogs(entityId: string): Promise<LogWithDetails[]> {
-  return await db.log.findMany({
-    where: {
-      row: {
-        entityId,
-      },
+export async function getAllRowLogs(
+  entityId: string,
+  pagination: { page: number; pageSize: number }
+): Promise<{ items: LogWithDetails[]; pagination: PaginationDto }> {
+  const where = {
+    row: {
+      entityId,
     },
+  };
+  const items = await db.log.findMany({
+    take: pagination.pageSize,
+    skip: pagination.pageSize * (pagination.page - 1),
+    where,
     include,
   });
+  const totalItems = await db.log.count({
+    where,
+  });
+
+  return {
+    items,
+    pagination: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      totalItems,
+      totalPages: Math.ceil(totalItems / pagination.pageSize),
+    },
+  };
 }
 
 export async function getRowLogs(tenantId: string | null, rowId: string): Promise<LogWithDetails[]> {

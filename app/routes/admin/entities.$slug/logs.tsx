@@ -1,21 +1,26 @@
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import LogsTable from "~/components/app/events/LogsTable";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { getAllRowLogs, LogWithDetails } from "~/utils/db/logs.db.server";
+import { getPaginationFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 
 type LoaderData = {
   items: LogWithDetails[];
+  pagination: PaginationDto;
 };
-export let loader: LoaderFunction = async ({ params }) => {
+export let loader: LoaderFunction = async ({ request, params }) => {
   const item = await getEntityBySlug(params.slug ?? "");
   if (!item) {
     return redirect("/admin/entities");
   }
-  const items = await getAllRowLogs(item.id);
+  const currentPagination = getPaginationFromCurrentUrl(request);
+  const { items, pagination } = await getAllRowLogs(item.id, currentPagination);
   const data: LoaderData = {
     items,
+    pagination,
   };
   return json(data);
 };
@@ -33,7 +38,7 @@ export default function EditEntityIndexRoute() {
   const data = useLoaderData<LoaderData>();
   return (
     <div>
-      <LogsTable withTenant={true} items={data.items} />
+      <LogsTable withTenant={true} items={data.items} pagination={data.pagination} />
     </div>
   );
 }
