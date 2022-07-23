@@ -1,9 +1,11 @@
 import { db } from "~/utils/db.server";
 
-export async function getTenantInboundAddress(address: string) {
-  return await db.tenantInboundAddress.findUnique({
+export async function getTenantInboundAddress(addresses: string[]) {
+  return await db.tenantInboundAddress.findMany({
     where: {
-      address,
+      address: {
+        in: addresses,
+      },
     },
   });
 }
