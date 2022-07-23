@@ -155,8 +155,7 @@ const getRowDescription = (entity: EntityWithDetails, item: RowWithDetails, with
   if (textProperties.length > 0) {
     const firstProp = textProperties[0];
     if (firstProp.isDynamic) {
-      const value = item.values.find((f) => f.propertyId === firstProp.id);
-      return getRowFolio(entity, item) + " - " + getFormattedValue(value, firstProp.type);
+      return getRowFolio(entity, item) + " - " + getPropertyValue(entity, item, firstProp);
     } else {
       const object = item[entity?.name as keyof typeof item];
       if (object) {
