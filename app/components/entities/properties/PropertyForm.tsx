@@ -58,8 +58,10 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
   }, []);
 
   useEffect(() => {
-    setName(StringUtils.toCamelCase(title.toLowerCase()));
-  }, [title]);
+    if (type !== PropertyType.ENTITY) {
+      setName(StringUtils.toCamelCase(title.toLowerCase()));
+    }
+  }, [title, type]);
 
   useEffect(() => {
     let formField = entity?.properties.find((f) => f.type === PropertyType.ID);
@@ -73,17 +75,6 @@ export default function PropertyForm({ item, properties, entities, parentEntity 
       setName(entity.name);
     }
   }, [entity]);
-  // useEffect(() => {
-  //   setParentId(formField?.id ?? "");
-  //   setParent(formField);
-  // }, [formField]);
-
-  // useEffect(() => {
-  //   if (type === PropertyType.ENTITY) {
-  //     setTitle(parent?.title ?? "");
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [parent]);
 
   useEffect(() => {
     setTitleEnabled(true);
