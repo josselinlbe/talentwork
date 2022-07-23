@@ -430,8 +430,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
       isDynamic: true,
       options: [
         { order: 1, value: "Active", color: Colors.GREEN },
-        { order: 2, value: "On Leave", color: Colors.YELLOW },
-        { order: 3, value: "Dismissed", color: Colors.GRAY },
+        { order: 2, value: "Inactive", color: Colors.RED },
       ],
     },
   ];
@@ -451,19 +450,19 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     dynamicProperties: [
       {
         propertyId: firstNameProperty?.id ?? "",
-        textValue: "David",
+        textValue: "Josselin",
       },
       {
         propertyId: lastNameProperty?.id ?? "",
-        textValue: "N. Crowell",
+        textValue: "Liebe",
       },
       {
         propertyId: emailProperty?.id ?? "",
-        textValue: "davidn.crowell@dayrep.com",
+        textValue: "josselin.liebe@321founded.com",
       },
       {
         propertyId: salaryProperty?.id ?? "",
-        numberValue: 100,
+        numberValue: 500,
       },
       {
         propertyId: statusProperty?.id ?? "",
@@ -487,23 +486,23 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     dynamicProperties: [
       {
         propertyId: firstNameProperty?.id ?? "",
-        textValue: "Sonny",
+        textValue: "Guillaume",
       },
       {
         propertyId: lastNameProperty?.id ?? "",
-        textValue: "L. Hill",
+        textValue: "Scaglia",
       },
       {
         propertyId: emailProperty?.id ?? "",
-        textValue: "sonnyl.hill@rhyta.com",
+        textValue: "guillaume.scgl31@gmail.com",
       },
       {
         propertyId: salaryProperty?.id ?? "",
-        numberValue: 200,
+        numberValue: 500,
       },
       {
         propertyId: statusProperty?.id ?? "",
-        textValue: "On Leave",
+        textValue: "Active",
       },
     ],
     properties: null,

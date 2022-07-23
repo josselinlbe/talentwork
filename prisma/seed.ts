@@ -138,19 +138,19 @@ async function seedCoreEntities() {
       },
       [
         {
+          name: "code",
+          title: "Code",
+          type: PropertyType.TEXT,
+          isRequired: true,
+          isDynamic: true,
+        },
+        {
           name: "project",
           title: "Project",
           type: PropertyType.ENTITY,
           isDynamic: true,
           isRequired: true,
           parentId: projectsEntity?.properties.find((f) => f.name === "id")?.id ?? null,
-        },
-        {
-          name: "code",
-          title: "Code",
-          type: PropertyType.TEXT,
-          isRequired: true,
-          isDynamic: true,
         },
         {
           name: "status",
@@ -187,6 +187,20 @@ async function seedCoreEntities() {
           type: PropertyType.TEXT,
           isRequired: true,
           isDynamic: true,
+        },
+        {
+          name: "startDate",
+          title: "Start Date",
+          type: PropertyType.DATE,
+          isDynamic: true,
+          attributes: { helpText: "Start date" },
+        },
+        {
+          name: "endDate",
+          title: "End Date",
+          type: PropertyType.DATE,
+          isDynamic: true,
+          attributes: { helpText: "End date" },
         },
         {
           name: "description",
@@ -244,30 +258,18 @@ async function seedCoreEntities() {
           isDynamic: true,
         },
         {
-          name: "taxes",
-          title: "Taxes",
-          type: PropertyType.SELECT,
-          isDynamic: true,
-          options: [
-            { order: 1, value: "0", name: "0%", color: Colors.BLUE },
-            { order: 2, value: "5", name: "5%", color: Colors.GREEN },
-            { order: 2, value: "20", name: "20%", color: Colors.YELLOW },
-          ],
-          attributes: { defaultValue: "20" },
-        },
-        {
           name: "startDate",
           title: "Start Date",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "Début de la mission" },
+          attributes: { helpText: "Start date" },
         },
         {
           name: "endDate",
           title: "End Date",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "Fin de la mission" },
+          attributes: { helpText: "End date" },
         },
         {
           name: "status",
@@ -279,6 +281,24 @@ async function seedCoreEntities() {
             { order: 1, value: "To Paid", color: Colors.RED },
             { order: 2, value: "Paid", color: Colors.GREEN },
           ],
+        },
+        {
+          name: "taxes",
+          title: "Taxes",
+          type: PropertyType.SELECT,
+          isDynamic: true,
+          options: [
+            { order: 1, value: "0" },
+            { order: 2, value: "20" },
+          ],
+          attributes: { defaultValue: "20", helpText: "Invoice %" },
+        },
+        {
+          name: "invoice_file",
+          title: "Invoice",
+          type: PropertyType.MEDIA,
+          isDynamic: true,
+          attributes: { acceptFileTypes: "application/pdf", max: 1, helpText: "Invoice fie in .pdf" },
         },
       ]
   );
