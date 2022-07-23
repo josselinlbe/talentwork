@@ -2,6 +2,7 @@ import { EmailAttachment, Entity } from "@prisma/client";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowWithDetails, updateRowMedia } from "../db/entities/rows.db.server";
 import { createSupabaseFile, deleteSupabaseFile } from "../integrations/supabaseService";
+import { deleteFile, deleteFolder, extractZip, saveZip } from "../services/fileService";
 
 export function getAttachmentToMedia(attachment: EmailAttachment): MediaDto {
   return {
