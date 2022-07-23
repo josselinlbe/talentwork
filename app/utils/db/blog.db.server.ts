@@ -103,7 +103,7 @@ export async function createBlogPost(data: {
 }): Promise<BlogPost> {
   const tags: BlogTag[] = [];
 
-  Promise.all(
+  await Promise.all(
     data.tagNames.map(async (tagName) => {
       const tag = await db.blogTag.findUnique({
         where: { name: tagName.trim() },
@@ -225,7 +225,7 @@ export async function syncPostTags(post: BlogPost, tagNames: string[]) {
       postId: post.id,
     },
   });
-  Promise.all(
+  await Promise.all(
     tags.map(async (tag) => {
       return await db.blogPostTag.create({
         data: {

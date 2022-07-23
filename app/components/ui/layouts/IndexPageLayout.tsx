@@ -2,23 +2,28 @@ import { ReactNode } from "react";
 import Tabs, { TabItem } from "../tabs/Tabs";
 
 interface Props {
-  title?: string;
+  title?: ReactNode;
   buttons?: ReactNode;
   children: ReactNode;
   tabs?: TabItem[];
+  replaceTitleWithTabs?: boolean;
 }
-export default function IndexPageLayout({ title, buttons, children, tabs }: Props) {
+export default function IndexPageLayout({ title, buttons, children, tabs, replaceTitleWithTabs }: Props) {
   return (
     <>
-      {(title || buttons) && (
+      {(title || buttons || (replaceTitleWithTabs && tabs)) && (
         <div className="bg-white shadow-sm border-b border-gray-300 w-full py-2">
           <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
-            <h1 className="flex-1 font-bold flex items-center truncate">{title}</h1>
+            {replaceTitleWithTabs && tabs ? (
+              <Tabs tabs={tabs} className="flex-grow" />
+            ) : (
+              <div className="flex-1 font-bold flex items-center truncate">{title}</div>
+            )}
             {buttons && <div className="flex items-center space-x-2">{buttons}</div>}
           </div>
         </div>
       )}
-      {tabs && (
+      {tabs && !replaceTitleWithTabs && (
         <div className="w-full py-2">
           <div className="mx-auto max-w-5xl xl:max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 space-x-2">
             <Tabs tabs={tabs} className="flex-grow" />

@@ -1,5 +1,6 @@
 import { RowMedia } from "@prisma/client";
 import { ReactNode, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { FileBase64 } from "~/application/dtos/shared/FileBase64";
 import PreviewMediaModal from "~/components/ui/media/PreviewMediaModal";
@@ -42,6 +43,7 @@ export default function InputMedia({
   icon,
   maxSize,
 }: Props) {
+  const { t } = useTranslation();
   const [error, setError] = useState<string | undefined>(undefined);
   const [items, setItems] = useState<MediaDto[]>(initialMedia ?? []);
   const [selectedItem, setSelectedItem] = useState<MediaDto>();
@@ -114,7 +116,7 @@ export default function InputMedia({
   function download(item: MediaDto) {
     const downloadLink = document.createElement("a");
     const fileName = item.name + "." + item.type.split("/")[1];
-    downloadLink.href = item.file;
+    downloadLink.href = item.publicUrl ?? item.file;
     downloadLink.download = fileName;
     downloadLink.click();
   }
@@ -171,6 +173,28 @@ export default function InputMedia({
           </div>
         ) : (
           <div></div>
+        )}
+
+        {items.filter((f) => f.type.includes("image")).length > 0 && (
+          <div className="mt-2 space-y-2">
+            <label className="font-medium text-gray-600 text-xs">{t("shared.files.images")}</label>
+            <div className="grid gap-1 max-h-60  overflow-auto">
+              {items
+                .filter((f) => f.type.includes("image"))
+                .map((item) => {
+                  return (
+                    <div key={item.name} className="space-y-1">
+                      <label className="text-gray-500 text-xs">{item.title}</label>
+                      <img
+                        className="w-full object-cover p-1 border border-dashed border-gray-300 bg-gray-50 shadow-sm"
+                        src={item.publicUrl ?? item.file}
+                        alt={item.title}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
         )}
       </div>
       {selectedItem && <PreviewMediaModal item={selectedItem} onClose={() => setSelectedItem(undefined)} onDownload={() => download(selectedItem)} />}

@@ -3,9 +3,7 @@ import { EntityWorkflowState, EntityWorkflowStep } from "@prisma/client";
 import clsx from "clsx";
 import { useState, useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-
 import { Link, Outlet, useActionData, useLoaderData, useParams, useSubmit, useTransition } from "@remix-run/react";
-
 import WorkflowStateBadge from "~/components/core/workflows/WorkflowStateBadge";
 import RowActivity from "~/components/entities/rows/RowActivity";
 import RowForm from "~/components/entities/rows/RowForm";
@@ -24,8 +22,28 @@ import { LoaderDataRowEdit } from "../loaders/row-edit";
 
 interface Props {
   children?: ReactNode;
+  title?: ReactNode;
+  rowFormChildren?: ReactNode;
+  afterRowForm?: ReactNode;
+  hideTags?: boolean;
+  hideTasks?: boolean;
+  hideActivity?: boolean;
+  disableUpdate?: boolean;
+  disableDelete?: boolean;
+  onChangeEditing?: (editing: boolean) => void;
 }
-export default function RowEditRoute({ children }: Props) {
+export default function RowEditRoute({
+  children,
+  title,
+  rowFormChildren,
+  afterRowForm,
+  hideTags,
+  hideTasks,
+  hideActivity,
+  disableUpdate,
+  disableDelete,
+  onChangeEditing,
+}: Props) {
   const params = useParams();
   const data = useLoaderData<LoaderDataRowEdit>();
   const appOrAdminData = useAppOrAdminData();
@@ -41,6 +59,13 @@ export default function RowEditRoute({ children }: Props) {
   useEffect(() => {
     setEditing(false);
   }, [actionData]);
+
+  useEffect(() => {
+    if (onChangeEditing) {
+      onChangeEditing(editing);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editing]);
 
   function onClickedWorkflowStep(step: EntityWorkflowStep) {
     const form = new FormData();
@@ -61,7 +86,10 @@ export default function RowEditRoute({ children }: Props) {
   }
 
   function canUpdate() {
-    return !(isUpdatingWorkflowState || !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) || !data.rowPermissions.canUpdate);
+    return (
+      !disableUpdate &&
+      !(isUpdatingWorkflowState || !appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "update")) || !data.rowPermissions.canUpdate)
+    );
   }
 
   return (
@@ -83,37 +111,34 @@ export default function RowEditRoute({ children }: Props) {
             <div className="relative space-y-2 sm:space-y-0 sm:flex items-center justify-between border-b border-gray-200 pb-4 z-10">
               <div className="flex flex-col">
                 <div className="font-bold text-xl truncate flex items-center space-x-2">
-                  <div className="truncate uppercase">{RowHelper.getRowFolio(data.entity, data.item)}</div>
-                  {data.currentWorkflowState && (
-                    <div className="">
-                      <WorkflowStateBadge state={data.currentWorkflowState} />
-                    </div>
+                  {title ?? (
+                    <>
+                      <div className="truncate uppercase">{RowHelper.getRowFolio(data.entity, data.item)}</div>
+                      {data.entity.hasWorkflow && data.currentWorkflowState && (
+                        <div className="">
+                          <WorkflowStateBadge state={data.currentWorkflowState} />
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
               <div className="flex sm:justify-end items-center space-x-2">
                 <div className="flex items-end space-x-2 space-y-0">
-                  {/* {data.nextWorkflowSteps.length === 0 && data.currentWorkflowState && (
-                    <ButtonSecondary disabled={true}>
-                      <div className="flex items-center space-x-2">
-                        <ColorBadge color={data.currentWorkflowState.color} />
-                        <div>{t(data.currentWorkflowState.title)}</div>
-                      </div>
-                    </ButtonSecondary>
-                  )} */}
                   <div className="hidden xl:flex items-end space-x-2 space-y-0">
-                    {data.nextWorkflowSteps.map((step) => {
-                      return (
-                        <>
-                          <ButtonSecondary disabled={!canUpdate()} key={step.id} onClick={() => onClickedWorkflowStep(step)}>
-                            <div className="flex items-center space-x-2">
-                              <ColorBadge color={step.toState.color} />
-                              <div>{t(step.action)}</div>
-                            </div>
-                          </ButtonSecondary>
-                        </>
-                      );
-                    })}
+                    {data.entity.hasWorkflow &&
+                      data.nextWorkflowSteps.map((step) => {
+                        return (
+                          <>
+                            <ButtonSecondary disabled={!canUpdate()} key={step.id} onClick={() => onClickedWorkflowStep(step)}>
+                              <div className="flex items-center space-x-2">
+                                <ColorBadge color={step.toState.color} />
+                                <div>{t(step.action)}</div>
+                              </div>
+                            </ButtonSecondary>
+                          </>
+                        );
+                      })}
                   </div>
                   <ButtonSecondary disabled={data.item.createdByUserId !== appOrAdminData?.user?.id && !appOrAdminData?.isSuperUser} to="share">
                     <div>{t("shared.share")}</div>
@@ -136,52 +161,54 @@ export default function RowEditRoute({ children }: Props) {
                             {t("shared.reload")}
                           </Link>
                         </Menu.Item>
-                        {data.nextWorkflowSteps.map((step) => {
-                          return (
-                            <Menu.Item key={step.id}>
-                              {({ active }) => (
-                                <button
-                                  type="button"
-                                  onClick={() => onClickedWorkflowStep(step)}
-                                  className={clsx(
-                                    "w-full text-left flex space-x-2 items-center",
-                                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                                    "block px-4 py-2 text-sm"
-                                  )}
-                                >
-                                  <ColorBadge color={step.toState.color} />
-                                  <div>{t(step.action)}</div>
-                                </button>
-                              )}
-                            </Menu.Item>
-                          );
-                        })}
+                        {data.entity.hasWorkflow &&
+                          data.nextWorkflowSteps.map((step) => {
+                            return (
+                              <Menu.Item key={step.id}>
+                                {({ active }) => (
+                                  <button
+                                    type="button"
+                                    onClick={() => onClickedWorkflowStep(step)}
+                                    className={clsx(
+                                      "w-full text-left flex space-x-2 items-center",
+                                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                      "block px-4 py-2 text-sm"
+                                    )}
+                                  >
+                                    <ColorBadge color={step.toState.color} />
+                                    <div>{t(step.action)}</div>
+                                  </button>
+                                )}
+                              </Menu.Item>
+                            );
+                          })}
 
                         {appOrAdminData.isSuperUser && (
                           <>
                             <div className="border-t border-gray-200"></div>
 
-                            {data.entity.workflowStates.map((state) => {
-                              return (
-                                <Menu.Item key={state.id}>
-                                  {({ active }) => (
-                                    <button
-                                      type="button"
-                                      onClick={() => onClickedWorkflowState(state)}
-                                      className={clsx(
-                                        "w-full text-left flex space-x-2 items-center",
-                                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                                        "block px-4 py-2 text-sm"
-                                      )}
-                                    >
-                                      <div>
-                                        <span className="font-bold text-xs">[Admin]</span> Set {t(state.title)}
-                                      </div>
-                                    </button>
-                                  )}
-                                </Menu.Item>
-                              );
-                            })}
+                            {data.entity.hasWorkflow &&
+                              data.entity.workflowStates.map((state) => {
+                                return (
+                                  <Menu.Item key={state.id}>
+                                    {({ active }) => (
+                                      <button
+                                        type="button"
+                                        onClick={() => onClickedWorkflowState(state)}
+                                        className={clsx(
+                                          "w-full text-left flex space-x-2 items-center",
+                                          active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                          "block px-4 py-2 text-sm"
+                                        )}
+                                      >
+                                        <div>
+                                          <span className="font-bold text-xs">[Admin]</span> Set {t(state.title)}
+                                        </div>
+                                      </button>
+                                    )}
+                                  </Menu.Item>
+                                );
+                              })}
                           </>
                         )}
                       </div>
@@ -199,17 +226,26 @@ export default function RowEditRoute({ children }: Props) {
                     editing={editing}
                     relatedEntities={data.relatedEntities}
                     linkedAccounts={data.linkedAccounts}
-                    canDelete={appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "delete")) && data.rowPermissions.canDelete}
-                  />
+                    canDelete={
+                      !disableDelete && appOrAdminData?.permissions?.includes(getEntityPermission(data.entity, "delete")) && data.rowPermissions.canDelete
+                    }
+                  >
+                    {rowFormChildren}
+                  </RowForm>
                 )}
-                <div className="hidden lg:block">{data.rowPermissions.canComment && <RowActivity entity={data.entity} items={data.logs} />}</div>
+
+                {afterRowForm}
+
+                <div className="hidden lg:block">
+                  {data.rowPermissions.canComment && !hideActivity && <RowActivity entity={data.entity} items={data.logs} />}
+                </div>
               </div>
               <div className="lg:w-2/6 space-y-4">
-                {data.entity.hasTags && <RowTags entity={data.entity} items={data.tags} />}
-                {data.entity.hasTasks && <RowTasks entity={data.entity} items={data.tasks} />}
+                {data.entity.hasTags && !hideTags && <RowTags items={data.tags} />}
+                {data.entity.hasTasks && !hideTasks && <RowTasks entity={data.entity} items={data.tasks} />}
               </div>
             </div>
-            <div className="lg:hidden pt-4">{data.rowPermissions.canComment && <RowActivity entity={data.entity} items={data.logs} />}</div>
+            <div className="lg:hidden pt-4">{data.rowPermissions.canComment && !hideActivity && <RowActivity entity={data.entity} items={data.logs} />}</div>
           </div>
         )}
       </EditPageLayout>

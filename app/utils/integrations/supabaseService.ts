@@ -101,3 +101,8 @@ export async function createSupabaseFileFromMedia(bucketId: string, id: string, 
     console.error(e);
   }
 }
+
+export async function deleteSupabaseFile(bucketId: string, path: string) {
+  const client = getClient();
+  await client.storage.from(bucketId).remove([path]);
+}

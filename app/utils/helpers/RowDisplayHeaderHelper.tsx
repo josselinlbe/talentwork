@@ -7,6 +7,9 @@ import { RowWithDetails } from "../db/entities/rows.db.server";
 import DateUtils from "../shared/DateUtils";
 import RowHelper from "./RowHelper";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
+import { MediaDto } from "~/application/dtos/entities/MediaDto";
+import clsx from "clsx";
+import WorkflowStateBadge from "~/components/core/workflows/WorkflowStateBadge";
 
 function isColumnVisible(columns: ColumnDto[], name: string) {
   const column = columns.find((f) => f.name === name);
@@ -37,11 +40,43 @@ function displayFolio(entity: EntityWithDetails): RowHeaderDisplayDto<RowWithDet
   };
 }
 
-function displayProperty(entity: EntityWithDetails, property: PropertyWithDetails): RowHeaderDisplayDto<RowWithDetails> {
+function displayWorkflowState(): RowHeaderDisplayDto<RowWithDetails> {
+  return {
+    name: "workflowState",
+    title: "models.workflowState.object",
+    value: (item) => <>{item.workflowState && <WorkflowStateBadge state={item.workflowState} />}</>,
+  };
+}
+
+function displayProperty(entity: EntityWithDetails, property: PropertyWithDetails, layout: string): RowHeaderDisplayDto<RowWithDetails> {
   const formattedValue = (item: RowWithDetails): string | ReactNode => {
     const value = RowHelper.getPropertyValue(entity, item, property);
     if (property.type === PropertyType.SELECT && value) {
       return <PropertyOptionValueBadge entity={entity} property={property.name} value={value} />;
+    } else if (property.type === PropertyType.MEDIA) {
+      const media = value as MediaDto[];
+      if (media) {
+        return (
+          <div
+            className={clsx(layout === "table" ? "truncate mt-1 flex items-center space-x-1 w-full overflow-x-visible" : "grid gap-1 max-h-60  overflow-auto")}
+          >
+            {media
+              .filter((f) => f.type.includes("image"))
+              .map((item) => {
+                return (
+                  <img
+                    key={item.name}
+                    className={clsx(" object-cover p-1 border border-dashed border-gray-300 bg-gray-50 shadow-sm", layout === "table" ? "h-10" : "")}
+                    src={item.publicUrl ?? item.file}
+                    alt={item.name}
+                  />
+                );
+              })}
+          </div>
+        );
+      } else {
+        return <div></div>;
+      }
     } else {
       return RowHelper.getCellValue(entity, item, property);
     }
@@ -83,7 +118,7 @@ function displayCreatedByUser(): RowHeaderDisplayDto<RowWithDetails> {
   };
 }
 
-function getDisplayedHeaders(entity: EntityWithDetails, columns: ColumnDto[]): RowHeaderDisplayDto<RowWithDetails>[] {
+function getDisplayedHeaders(entity: EntityWithDetails, columns: ColumnDto[], layout: string): RowHeaderDisplayDto<RowWithDetails>[] {
   const headers: RowHeaderDisplayDto<RowWithDetails>[] = [];
 
   if (isColumnVisible(columns, "id") && columns?.find((f) => f.name === "id")) {
@@ -95,10 +130,13 @@ function getDisplayedHeaders(entity: EntityWithDetails, columns: ColumnDto[]): R
   if (isColumnVisible(columns, "folio")) {
     headers.push(displayFolio(entity));
   }
+  if (entity.hasWorkflow) {
+    headers.push(displayWorkflowState());
+  }
   entity.properties
     .filter((f) => !f.isHidden && !f.isDetail && isColumnVisible(columns, f.name))
     .forEach((property) => {
-      headers.push(displayProperty(entity, property));
+      headers.push(displayProperty(entity, property, layout));
     });
   if (isColumnVisible(columns, "rows")) {
     if (entity.properties.find((f) => f.isDetail)) {

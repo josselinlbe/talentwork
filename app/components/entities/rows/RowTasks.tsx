@@ -52,7 +52,7 @@ export default function RowTasks({ entity, items }: Props) {
   }
 
   function canDelete(item: RowTaskWithDetails) {
-    return appOrAdminData.isSuperUser || (!item.completed && item.createdByUserId === appOrAdminData.user.id);
+    return appOrAdminData.isSuperUser || (!item.completed && item.createdByUserId === appOrAdminData.user?.id);
   }
 
   return (
@@ -66,7 +66,7 @@ export default function RowTasks({ entity, items }: Props) {
             </div>
           </div>
         </h3>
-        {items.length > 0 && (
+        {items.length > 0 && appOrAdminData.user !== undefined && (
           <div className="text-xs inline">
             <button type="button" onClick={() => setShowAddTask(true)} className="flex items-center space-x-1 text-gray-500 text-sm hover:underline">
               <PlusIcon className="h-3 w-3" />
@@ -77,13 +77,21 @@ export default function RowTasks({ entity, items }: Props) {
       </div>
 
       {items.length === 0 && !showAddTask && (
-        <button
-          type="button"
-          onClick={() => setShowAddTask(true)}
-          className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          <span className="block text-xs font-normal text-gray-500">{t("shared.noTasks")}</span>
-        </button>
+        <>
+          {appOrAdminData.user !== undefined ? (
+            <button
+              type="button"
+              onClick={() => setShowAddTask(true)}
+              className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              <span className="block text-xs font-normal text-gray-500">{t("shared.noTasks")}</span>
+            </button>
+          ) : (
+            <div className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-4 text-center">
+              <span className="block text-xs font-normal text-gray-500">{t("shared.noTasks")}</span>
+            </div>
+          )}
+        </>
       )}
 
       {items.length > 0 && (
@@ -97,6 +105,7 @@ export default function RowTasks({ entity, items }: Props) {
                 <div className="group flex space-x-1 justify-between items-center truncate">
                   <div className="flex-grow truncate flex items-center space-x-1">
                     <button
+                      disabled={!appOrAdminData.user}
                       type="button"
                       onClick={() => onToggleTaskCompleted(item.id)}
                       className="text-gray-600 hover:text-gray-700 focus:outline-none flex-shrink-0"
@@ -107,7 +116,7 @@ export default function RowTasks({ entity, items }: Props) {
                   </div>
                   {canDelete(item) && (
                     <button
-                      disabled={!canDelete(item)}
+                      disabled={!canDelete(item) || !appOrAdminData.user}
                       type="button"
                       onClick={() => onDeleteTask(item.id)}
                       className={clsx(

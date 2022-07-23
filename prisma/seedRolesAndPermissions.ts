@@ -149,7 +149,7 @@ export async function seedRolesAndPermissions() {
     })
   );
 
-  const users = await adminGetAllUsers();
+  const users = (await adminGetAllUsers()).items;
   await Promise.all(
     users
       .filter((f) => f.admin)
@@ -188,7 +188,7 @@ export async function seedRolesAndPermissions() {
 }
 
 async function seedRoles(roles: { name: string; description: string; type: "admin" | "app"; assignToNewUsers: boolean }[]) {
-  return Promise.all(
+  return await Promise.all(
     roles.map(async (data, idx) => {
       const role = await createRole({
         ...data,

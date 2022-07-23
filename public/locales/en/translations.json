@@ -159,6 +159,10 @@
     "public": "Public",
     "mail": {
       "inboundAddress": "Inbound Address"
+    },
+    "files": {
+      "image": "Image",
+      "images": "Images"
     }
   },
   "front": {
@@ -967,7 +971,9 @@
       "hintText": "Hint text",
       "helpText": "Help text",
       "placeholder": "Placeholder",
-      "icon": "Icon"
+      "icon": "Icon",
+      "editor": "Editor",
+      "editorLanguage": "Editor language"
     },
     "workflow": {
       "object": "Workflow",
@@ -1112,6 +1118,30 @@
       "url": "URL",
       "method": "Method"
     },
+    "event": {
+      "object": "Event",
+      "plural": "Events",
+      "eventsAndWebhooks": "Events and Webhooks",
+      "name": "Name",
+      "data": "Data",
+      "resource": "Resource",
+      "attempts": "Webhook Attempts"
+    },
+    "webhook": {
+      "object": "Webhook",
+      "plural": "Webhooks"
+    },
+    "webhookAttempt": {
+      "object": "Webhook Attempt",
+      "plural": "Webhook Attempts",
+      "endpoint": "Endpoint",
+      "success": "Success",
+      "status": "Status",
+      "message": "Message",
+      "body": "Body",
+      "startedAt": "Started at",
+      "finishedAt": "Finished at"
+    },
     "subscriptionProduct": {
       "object": "Subscription",
       "plural": "Subscriptions",
@@ -1143,10 +1173,10 @@
       "subject": "Subject",
       "from": "From",
       "fromEmail": "From email",
-      "fromName": "From name",
+      "fromName": "From (name)",
       "to": "To",
       "toEmail": "To email",
-      "toName": "toName",
+      "toName": "To (name)",
       "textBody": "Text body",
       "htmlBody": "HTML body",
       "cc": "CC",

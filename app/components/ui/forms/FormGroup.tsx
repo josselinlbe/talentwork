@@ -1,4 +1,5 @@
 import { Form, useActionData, useSubmit, useTransition } from "@remix-run/react";
+import clsx from "clsx";
 import { t } from "i18next";
 import { FormEvent, forwardRef, ReactNode, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import ButtonSecondary from "../buttons/ButtonSecondary";
@@ -13,6 +14,7 @@ interface Props {
   onCancel?: () => void;
   children: ReactNode;
   className?: string;
+  classNameFooter?: string;
   editing?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
@@ -25,7 +27,7 @@ interface Props {
   };
 }
 const FormGroup = (
-  { id, onCancel, children, className, editing, canUpdate = true, canDelete = true, confirmationPrompt, onSubmit }: Props,
+  { id, onCancel, children, className, classNameFooter, editing, canUpdate = true, canDelete = true, confirmationPrompt, onSubmit }: Props,
   ref: Ref<RefFormGroup>
 ) => {
   useImperativeHandle(ref, () => ({}));
@@ -101,13 +103,13 @@ const FormGroup = (
   }
 
   return (
-    <Form method="post" className={className} onSubmit={handleSubmit}>
+    <Form method="post" acceptCharset="utf-8" className={clsx(className, "py-1")} onSubmit={handleSubmit}>
       <input type="hidden" readOnly name="action" value={id ? "edit" : "create"} />
       <div className="space-y-3">
         {children}
 
         {(!id || editing) && (
-          <div className="flex justify-between space-x-2">
+          <div className={clsx(classNameFooter, "flex justify-between space-x-2")}>
             <div>
               {id && canDelete && (
                 <ButtonSecondary disabled={loading || !canDelete} destructive={true} type="button" onClick={remove}>

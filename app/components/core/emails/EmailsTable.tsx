@@ -2,6 +2,7 @@ import { useTransition } from "@remix-run/react";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import PaperClipIcon from "~/components/ui/icons/PaperClipIcon";
 import RightIcon from "~/components/ui/icons/RightIcon";
@@ -13,8 +14,9 @@ import DateUtils from "~/utils/shared/DateUtils";
 interface Props {
   items: EmailWithSimpleDetails[];
   withTenant: boolean;
+  pagination: PaginationDto;
 }
-export default function EmailsTable({ items, withTenant }: Props) {
+export default function EmailsTable({ items, withTenant, pagination }: Props) {
   const transition = useTransition();
   const { t } = useTranslation();
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<EmailWithSimpleDetails>[]>([]);
@@ -96,6 +98,7 @@ export default function EmailsTable({ items, withTenant }: Props) {
             },
           ]}
           headers={headers}
+          pagination={pagination}
         />
       )}
     </div>

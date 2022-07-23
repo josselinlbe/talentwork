@@ -134,11 +134,11 @@ const InputSelector = (
                 </div>
               )}
 
-              <span className="w-full inline-flex truncate space-x-1 items-center">
+              <span className="w-full inline-flex truncate space-x-2 items-center">
                 {withColors && selected && <ColorBadge color={selected?.color ?? Colors.UNDEFINED} />}
-                <span className="truncate">
+                <div className="truncate">
                   {selected ? <span>{selected?.name}</span> : <span className="text-sm text-gray-500">{selectPlaceholder ?? t("shared.select")}...</span>}
-                </span>
+                </div>
               </span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -211,9 +211,9 @@ const InputSelector = (
                   >
                     {({ selected, active }) => (
                       <>
-                        <div className="flex items-center space-x-1">
+                        <div className="flex items-center space-x-2">
                           {item.color !== undefined && <ColorBadge color={item.color} />}
-                          <span className={clsx(selected ? "font-semibold" : "font-normal", "truncate")}>{item.name}</span>
+                          <div className={clsx(selected ? "font-semibold" : "font-normal", "truncate")}>{item.name}</div>
                         </div>
 
                         {selected ? (

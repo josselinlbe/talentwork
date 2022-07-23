@@ -1,4 +1,3 @@
-import { EmailAttachment } from "@prisma/client";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import SlideOverFormLayout from "~/components/ui/slideOvers/SlideOverFormLayout";
 import DateUtils from "~/utils/shared/DateUtils";
@@ -7,19 +6,13 @@ import { LoaderDataInboundEmailEdit } from "../loaders/inbound-email-edit";
 export default function InboundEmailRoute() {
   const data = useLoaderData<LoaderDataInboundEmailEdit>();
   const navigate = useNavigate();
-  function getFileUrl(item: EmailAttachment) {
-    if (item.publicUrl) {
-      return item.publicUrl;
-    }
-    return `data:application/octet-stream;base64,${item.content}`;
-  }
   return (
     <div>
       <SlideOverFormLayout
         className="max-w-2xl bg-gray-50"
         title={data.item.subject}
         description={DateUtils.dateAgo(data.item.date)}
-        onClosed={() => navigate("/admin/emails")}
+        onClosed={() => navigate(data.redirectUrl)}
       >
         <div className="p-2">
           <div className="grid grid-cols-12 gap-3">
@@ -79,7 +72,13 @@ export default function InboundEmailRoute() {
                   return (
                     <div key={item.id}>
                       <div className="text-sm">
-                        <a href={getFileUrl(item)} download={item.name} target="_blank" rel="noreferrer" className="underline hover:text-theme-500">
+                        <a
+                          href={item.publicUrl ?? item.content}
+                          download={item.name}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline hover:text-theme-500"
+                        >
                           {item.name}
                         </a>
                       </div>

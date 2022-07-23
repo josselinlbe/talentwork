@@ -38,7 +38,7 @@ export async function loadAdminData(request: Request) {
 
   const myTenants = await getMyTenants(user.id);
 
-  const roles = await getUserRoles(userInfo.userId);
+  const roles = await getUserRoles(userInfo.userId ?? undefined);
   const permissions: string[] = [];
   roles.forEach((role) => {
     role.role.permissions.forEach((permission) => {
@@ -56,6 +56,7 @@ export async function loadAdminData(request: Request) {
     allRoles: await getAllRoles("admin"),
     permissions,
     isSuperUser: roles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) !== undefined,
+    isSuperAdmin: roles.find((f) => f.role.name === DefaultAdminRoles.SuperAdmin) !== undefined,
     myGroups: await getMyGroups(user.id, null),
   };
   return data;

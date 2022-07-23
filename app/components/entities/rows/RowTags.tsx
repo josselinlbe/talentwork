@@ -7,17 +7,18 @@ import TagFilledIcon from "~/components/ui/icons/TagFilledIcon";
 import XIcon from "~/components/ui/icons/XIcon";
 import { RowTagWithDetails } from "~/utils/db/entities/rowTags.db.server";
 import { getBackgroundColor } from "~/utils/shared/ColorUtils";
+import { useAppOrAdminData } from "~/utils/data/useAppOrAdminData";
 
 interface Props {
-  entity: Entity;
   items: RowTagWithDetails[];
   withLink?: boolean;
   onRemove?: (item: RowTagWithDetails) => void;
 }
 
-export default function RowTags({ entity, items, withLink = true, onRemove }: Props) {
+export default function RowTags({ items, withLink = true, onRemove }: Props) {
   const { t } = useTranslation();
   const data = useLoaderData<{ entityRowsRoute: string }>();
+  const appOrAdminData = useAppOrAdminData();
 
   const sortedItems = () => {
     return items.slice().sort((x, y) => {
@@ -39,7 +40,7 @@ export default function RowTags({ entity, items, withLink = true, onRemove }: Pr
             </div>
           </div>
         </h3>
-        {items.length > 0 && (
+        {items.length > 0 && appOrAdminData.user !== undefined && (
           <div className="text-xs inline">
             <Link to="tags" className="flex items-center space-x-1 text-gray-500 text-sm hover:underline">
               <PlusIcon className="h-3 w-3" />
@@ -50,13 +51,20 @@ export default function RowTags({ entity, items, withLink = true, onRemove }: Pr
       </div>
 
       {items.length === 0 && (
-        <Link
-          to="tags"
-          className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          {/* <TagFilledIcon className="h-4 mx-auto text-gray-500" /> */}
-          <span className="block text-xs font-normal text-gray-500">{t("shared.noTags")}</span>
-        </Link>
+        <>
+          {appOrAdminData.user ? (
+            <Link
+              to="tags"
+              className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              <span className="block text-xs font-normal text-gray-500">{t("shared.noTags")}</span>
+            </Link>
+          ) : (
+            <div className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-4 text-center">
+              <span className="block text-xs font-normal text-gray-500">{t("shared.noTags")}</span>
+            </div>
+          )}
+        </>
       )}
       <ul className="leading-8">
         {sortedItems().map((item) => {

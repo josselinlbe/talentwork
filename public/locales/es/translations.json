@@ -158,6 +158,10 @@
     "public": "Público",
     "mail": {
       "inboundAddress": "Correo de entrada"
+    },
+    "files": {
+      "image": "Imagen",
+      "images": "Imágenes"
     }
   },
   "front": {
@@ -965,7 +969,9 @@
       "hintText": "Texto de pista",
       "helpText": "Texto de ayuda",
       "placeholder": "Placeholder",
-      "icon": "Ícon"
+      "icon": "Ícono",
+      "editor": "Editor",
+      "editorLanguage": "Lenguaje en editor"
     },
     "workflow": {
       "object": "Flujo",
@@ -1108,6 +1114,30 @@
       "url": "URL",
       "method": "Método"
     },
+    "event": {
+      "object": "Evento",
+      "plural": "Eventos",
+      "eventsAndWebhooks": "Eventos y Webhooks",
+      "name": "Nombre",
+      "data": "Data",
+      "resource": "Recurso",
+      "attempts": "Llamadas a Webhooks"
+    },
+    "webhook": {
+      "object": "Webhook",
+      "plural": "Webhooks"
+    },
+    "webhookAttempt": {
+      "object": "Intento de Webhook",
+      "plural": "Intentos de Webhook",
+      "endpoint": "URL",
+      "success": "Éxito",
+      "status": "Estatus",
+      "message": "Mensaje",
+      "body": "Cuerpo",
+      "startedAt": "Fecha de inicio",
+      "finishedAt": "Fecha de fin"
+    },
     "subscriptionProduct": {
       "object": "Suscripción",
       "plural": "Suscripciones",
@@ -1139,10 +1169,10 @@
       "subject": "Asunto",
       "from": "De",
       "fromEmail": "De correo",
-      "fromName": "De nombre",
+      "fromName": "De (nombre)",
       "to": "Para",
       "toEmail": "Para correo",
-      "toName": "Para nombre",
+      "toName": "Para (nombre)",
       "textBody": "Cuerpo",
       "htmlBody": "Cuerpo en HTML",
       "cc": "CC",

@@ -1,10 +1,11 @@
-import { ContractMember, User } from "@prisma/client";
+import { ContractMember } from "@prisma/client";
 import { useTranslation } from "react-i18next";
 import { useAppData } from "~/utils/data/useAppData";
+import { UserSimple } from "~/utils/db/users.db.server";
 import clsx from "~/utils/shared/ClassesUtils";
 
 interface Props {
-  items: (ContractMember & { user: User })[];
+  items: (ContractMember & { user: UserSimple })[];
 }
 
 export default function ContractMembers({ items }: Props) {

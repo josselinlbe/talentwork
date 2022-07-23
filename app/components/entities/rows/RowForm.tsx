@@ -1,6 +1,6 @@
 import { RowWithDetails } from "~/utils/db/entities/rows.db.server";
 import { EntityWithDetails } from "~/utils/db/entities/entities.db.server";
-import { forwardRef, Ref, useEffect, useRef, useState } from "react";
+import { forwardRef, ReactNode, Ref, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { updateItemByIdx } from "~/utils/shared/ObjectUtils";
@@ -14,6 +14,8 @@ import RowDetailsTable from "./RowDetailsTable";
 import { RowDetailDto } from "~/application/dtos/entities/RowDetailDto";
 import LinkedAccountSelector from "~/components/app/linkedAccounts/LinkedAccountSelector";
 import { LinkedAccountWithDetailsAndMembers } from "~/utils/db/linkedAccounts.db.server";
+import PropertyAttributeHelper from "~/utils/helpers/PropertyAttributeHelper";
+import { PropertyAttributeName } from "~/application/enums/entities/PropertyAttributeName";
 
 export interface RefRowForm {
   create: (index: number) => void;
@@ -30,10 +32,11 @@ interface Props {
   linkedAccounts: LinkedAccountWithDetailsAndMembers[];
   onSubmit?: (values: RowValueDto[]) => void;
   canDelete?: boolean;
+  children?: ReactNode;
 }
 
 const RowForm = (
-  { entity, item, editing = false, relatedEntities, isDetail = false, linkedAccounts, onSubmit = () => {}, canDelete }: Props,
+  { entity, item, editing = false, relatedEntities, isDetail = false, linkedAccounts, onSubmit = () => {}, canDelete, children }: Props,
   ref: Ref<RefRowForm>
 ) => {
   const location = useLocation();
@@ -64,7 +67,10 @@ const RowForm = (
         const search = location.search;
         const preselected = new URLSearchParams(search).get(property.name);
 
-        const selectedOption = property.options?.find((f) => f.value === (existing?.textValue ?? property.attributes?.defaultValue ?? preselected));
+        const defaultValueString = PropertyAttributeHelper.getPropertyAttributeValue_String(property, PropertyAttributeName.DefaultValue);
+        const defaultValueNumber = PropertyAttributeHelper.getPropertyAttributeValue_Number(property, PropertyAttributeName.DefaultValue);
+        const defaultValueBoolean = PropertyAttributeHelper.getPropertyAttributeValue_Boolean(property, PropertyAttributeName.DefaultValue);
+        const selectedOption = property.options?.find((f) => f.value === (existing?.textValue ?? defaultValueString ?? preselected));
 
         let dateValue = existing?.dateValue ?? undefined;
         // if (property.type === PropertyType.DATE && !dateValue) {
@@ -74,18 +80,10 @@ const RowForm = (
           propertyId: property.id,
           property: property,
           idValue: existing?.idValue ?? undefined,
-          textValue: existing?.textValue ?? preselected ?? property.attributes?.defaultValue ?? undefined,
-          numberValue: existing?.numberValue
-            ? Number(existing?.numberValue)
-            : property.attributes?.defaultValue
-            ? Number(property.attributes?.defaultValue)
-            : undefined,
+          textValue: existing?.textValue ?? preselected ?? defaultValueString ?? undefined,
+          numberValue: existing?.numberValue ? Number(existing?.numberValue) : defaultValueNumber,
           dateValue,
-          booleanValue: existing?.booleanValue
-            ? Boolean(existing?.booleanValue)
-            : !existing && property.attributes?.defaultValue
-            ? Boolean(property.attributes?.defaultValue)
-            : undefined,
+          booleanValue: existing?.booleanValue ? Boolean(existing?.booleanValue) : (!existing && defaultValueBoolean) ?? undefined,
           relatedRowId: existing?.relatedRowId ?? preselected ?? undefined,
           selectedOption,
           media: existing?.media ?? [],
@@ -178,6 +176,8 @@ const RowForm = (
                   </div>
                 );
               })}
+
+              {children}
             </div>
           </InputGroup>
         )}

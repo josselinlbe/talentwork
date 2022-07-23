@@ -13,15 +13,16 @@ interface Props {
   children: ReactNode;
   onRemove?: () => void;
   initial?: boolean;
+  className?: string;
 }
 
-export default function CollapsibleRow({ value, title, children, onRemove, initial = false }: Props) {
+export default function CollapsibleRow({ value, title, children, onRemove, initial = false, className }: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(initial);
 
   return (
-    <div>
-      <div className="flex items-center space-x-2 justify-between py-3">
+    <div className={clsx(className, "border-2 border-dashed border-gray-300 bg-white p-2 rounded-md")}>
+      <div className="flex items-center space-x-2 justify-between">
         <button type="button" onClick={() => setOpen(!open)} className=" text-left w-full text-sm truncate">
           {!open ? <span className=" text-gray-500">{value ?? "Empty"}</span> : <span className=" font-medium text-gray-800">{title}</span>}
         </button>

@@ -3,6 +3,7 @@ import { forwardRef, ReactNode, Ref, RefObject, useEffect, useImperativeHandle, 
 import { useTranslation } from "react-i18next";
 import EntityIcon from "~/components/layouts/icons/EntityIcon";
 import HintTooltip from "~/components/ui/tooltips/HintTooltip";
+import Editor from "@monaco-editor/react";
 
 export interface RefInputText {
   input: RefObject<HTMLInputElement> | RefObject<HTMLTextAreaElement>;
@@ -34,6 +35,10 @@ interface Props {
   hint?: ReactNode;
   help?: string;
   icon?: string;
+  editor?: string; // monaco
+  editorLanguage?: string; // "javascript" | "typescript" | "html" | "css" | "json";
+  editorHideLineNumbers?: boolean;
+  editorTheme?: "vs-dark" | "light";
   onBlur?: () => void;
 }
 const InputText = (
@@ -63,6 +68,10 @@ const InputText = (
     type = "text",
     darkMode,
     icon,
+    editor,
+    editorLanguage,
+    editorHideLineNumbers,
+    editorTheme = "vs-dark",
     onBlur,
   }: Props,
   ref: Ref<RefInputText>
@@ -129,8 +138,25 @@ const InputText = (
           {hint}
         </label>
       )}
-      <div className={clsx("flex rounded-md shadow-sm w-full relative", withLabel && "mt-1")}>
-        {!rows ? (
+      <div className={clsx("flex rounded-md w-full relative", withLabel && "mt-1")}>
+        {editor === "monaco" && editorLanguage ? (
+          <>
+            <textarea hidden readOnly name={name} value={actualValue} />
+            <Editor
+              theme={editorTheme}
+              className={clsx(
+                className,
+                "h-64 w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
+                editorHideLineNumbers && "-ml-10"
+              )}
+              defaultLanguage={editorLanguage}
+              language={editorLanguage}
+              defaultValue={value}
+              value={actualValue}
+              onChange={(e) => setActualValue(e?.toString() ?? "")}
+            />
+          </>
+        ) : !rows ? (
           <>
             {icon && (
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -158,8 +184,6 @@ const InputText = (
                 "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
                 className,
                 (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
-                lowercase && "lowercase",
-                uppercase && "uppercase",
                 icon && "pl-10"
               )}
             />
@@ -184,8 +208,7 @@ const InputText = (
             className={clsx(
               "w-full flex-1 focus:ring-accent-500 focus:border-accent-500 block min-w-0 rounded-md sm:text-sm border-gray-300",
               className,
-              (disabled || readOnly) && "bg-gray-100 cursor-not-allowed",
-              lowercase && "lowercase"
+              (disabled || readOnly) && "bg-gray-100 cursor-not-allowed"
             )}
           />
         )}

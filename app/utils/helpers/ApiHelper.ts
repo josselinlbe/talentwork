@@ -9,6 +9,8 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import { TFunction } from "react-i18next";
 import { validatePropertyValue, validatePropertyValue_Media } from "./PropertyHelper";
+import PropertyAttributeHelper from "./PropertyAttributeHelper";
+import { PropertyAttributeName } from "~/application/enums/entities/PropertyAttributeName";
 
 const generateKey = () => {
   const id: string = uuid();
@@ -114,8 +116,9 @@ function getPropertyValueFromJson(t: TFunction, property: PropertyWithDetails, o
   } else {
     jsonValue = object[name];
     if (property.isRequired && (jsonValue === null || jsonValue === undefined || jsonValue === "")) {
-      if (property.defaultValue) {
-        jsonValue = property.defaultValue;
+      const defaultValue = PropertyAttributeHelper.getPropertyAttributeValue_String(property, PropertyAttributeName.DefaultValue);
+      if (defaultValue) {
+        jsonValue = defaultValue;
       } else {
         if (existing && !object.hasOwnProperty(name)) {
           return null;

@@ -5,8 +5,9 @@ interface Props {
   icon?: ReactNode;
   children: ReactNode;
   description?: string;
+  className?: string;
 }
-export default function InputGroup({ title, description, icon, children }: Props) {
+export default function InputGroup({ title, description, icon, children, className }: Props) {
   return (
     <div className="space-y-3">
       <h3 className="text-sm leading-3 font-medium text-gray-800">

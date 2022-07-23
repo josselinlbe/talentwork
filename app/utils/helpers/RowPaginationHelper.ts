@@ -7,12 +7,18 @@ import { countRows, getRows, RowWithDetails } from "../db/entities/rows.db.serve
 import { FiltersDto } from "~/application/dtos/data/FiltersDto";
 import { FilterablePropertyDto } from "~/application/dtos/data/FilterablePropertyDto";
 import Constants from "~/application/Constants";
+import { EntityViewWithDetails } from "../db/entities/entityViews.db.server";
+// import RowSortHelper from "./RowSortHelper";
 
-export function getPaginationFromCurrentUrl(request: Request): { page: number; pageSize: number; sortedBy: SortedByDto; query: string } {
+export function getPaginationFromCurrentUrl(
+  request: Request,
+  entity?: EntityWithDetails,
+  entityView?: EntityViewWithDetails | null
+): { page: number; pageSize: number; sortedBy: SortedByDto[]; query: string } {
   return {
     page: getPageFromCurrentUrl(request),
     pageSize: Constants.DEFAULT_PAGE_SIZE,
-    sortedBy: getSortByFromCurrentUrl(request),
+    sortedBy: getSortByFromCurrentUrl(request, entity, entityView),
     query: getSearchQueryFromCurrentUrl(request),
   };
 }
@@ -22,6 +28,11 @@ export function getFiltersFromCurrentUrl(request: Request, properties: Filterabl
   properties.forEach((property) => {
     const params = url.searchParams.get(property.name);
     property.value = params ?? null;
+    if (property.isNumber && property.value) {
+      if (isNaN(Number(property.value))) {
+        property.value = null;
+      }
+    }
   });
 
   const query = url.searchParams.get("q") ?? undefined;
@@ -29,18 +40,42 @@ export function getFiltersFromCurrentUrl(request: Request, properties: Filterabl
   return { query, properties };
 }
 
-export function getEntityFiltersFromCurrentUrl(customRow: boolean, entity: EntityWithDetails, request: Request): RowFiltersDto {
+export function getEntityFiltersFromCurrentUrl(
+  customRow: boolean,
+  entity: EntityWithDetails,
+  request: Request,
+  entityView?: EntityViewWithDetails | null | null
+): RowFiltersDto {
   const tags: string[] = [];
-  const properties: { property: Property; value: string | null }[] = [];
+  const properties: { property?: Property; name?: string; value: string | null; condition?: string }[] = [];
   const url = new URL(request.url);
   entity.properties.forEach((property) => {
     const param = url.searchParams.get(property.name);
     properties.push({ property, value: param ?? null });
   });
 
+  entityView?.filters.forEach((filter) => {
+    const property = entity.properties.find((f) => f.name === filter.name);
+    if (property) {
+      properties.push({ property, value: filter.value ?? null, condition: filter.condition });
+    } else {
+      properties.push({ name: filter.name, value: filter.value ?? null, condition: filter.condition });
+    }
+  });
+
   url.searchParams.getAll("tag").forEach((tag) => {
     tags.push(tag);
   });
+
+  const workflowState = url.searchParams.get("workflowState");
+  if (workflowState) {
+    properties.push({ name: "workflowState", value: workflowState });
+  }
+
+  const workflowStateId = url.searchParams.get("workflowStateId");
+  if (workflowStateId) {
+    properties.push({ name: "workflowStateId", value: workflowStateId });
+  }
 
   const query = url.searchParams.get("q");
 
@@ -66,19 +101,23 @@ function getSearchQueryFromCurrentUrl(request: Request): string {
   return params.get("q")?.toString() ?? "";
 }
 
-function getSortByFromCurrentUrl(request: Request): SortedByDto {
+function getSortByFromCurrentUrl(request: Request, entity?: EntityWithDetails, entityView?: EntityViewWithDetails | null): SortedByDto[] {
   const params = new URL(request.url).searchParams;
-  let sort = params.get("sort")?.toString() ?? "";
-  let direction: "asc" | "desc" = "asc";
-  if (sort) {
-    if (sort.startsWith("-")) {
-      sort = sort.replace("-", "");
-      direction = "desc";
-    } else {
-      direction = "asc";
+  let sorts = params.get("sort")?.toString().split(",") ?? [];
+  return sorts.map((sort) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sort) {
+      if (sort.startsWith("-")) {
+        sort = sort.replace("-", "");
+        direction = "desc";
+      } else {
+        direction = "asc";
+      }
     }
-  }
-  return { name: sort, direction };
+    const sortName = sort.replace("-", "").replace("+", "");
+    const property = entity?.properties.find((p) => p.name === sortName);
+    return { entity, name: sortName, direction, property };
+  });
 }
 
 export function getNewPaginationUrl(request: Request, page: number, sortedBy: { name: string; direction: "asc" | "desc" }): string {
@@ -139,16 +178,14 @@ export async function getRowsWithPagination(
   userId: string | undefined,
   pageSize: number,
   page: number,
-  sortedBy?: SortedByDto,
+  sortedBy?: SortedByDto[],
   filters?: RowFiltersDto
 ): Promise<{
   items: RowWithDetails[];
   pagination: PaginationDto;
 }> {
+  // const orderBy = RowSortHelper.getRowSortCondition(sortedBy);
   let orderBy: any = { folio: "desc" };
-  if (sortedBy?.name === "createdAt" || sortedBy?.name === "folio") {
-    orderBy = { [sortedBy?.name]: sortedBy?.direction };
-  }
 
   const items = await getRows(entityId, tenantId, userId, pageSize, pageSize * (page - 1), orderBy, filters);
   const totalItems = await countRows(entityId, tenantId, userId, filters);

@@ -1,8 +1,6 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Outlet, useLocation, useNavigate } from "@remix-run/react";
-import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import UrlUtils from "~/utils/app/UrlUtils";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 
@@ -22,7 +20,6 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function AdminApiRoute() {
-  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -33,21 +30,5 @@ export default function AdminApiRoute() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  return (
-    <IndexPageLayout
-      title="API"
-      tabs={[
-        {
-          name: t("models.apiKey.plural"),
-          routePath: "/admin/api/keys",
-        },
-        {
-          name: t("models.apiKey.logs"),
-          routePath: "/admin/api/logs",
-        },
-      ]}
-    >
-      <Outlet />
-    </IndexPageLayout>
-  );
+  return <Outlet />;
 }

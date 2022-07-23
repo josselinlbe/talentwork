@@ -51,6 +51,10 @@ export default function EditEntityRoute() {
                 routePath: `/admin/entities/${params.slug}/properties`,
               },
               {
+                name: "Views",
+                routePath: `/admin/entities/${params.slug}/views`,
+              },
+              {
                 name: "Rows",
                 routePath: `/admin/entities/${params.slug}/rows`,
               },

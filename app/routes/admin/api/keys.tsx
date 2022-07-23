@@ -1,6 +1,8 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import ApiKeysTable from "~/components/core/apiKeys/ApiKeysTable";
+import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
 import { useAdminData } from "~/utils/data/useAdminData";
 import { ApiKeyLogSimple, ApiKeyWithDetails, getAllApiKeyLogsSimple, getAllApiKeys } from "~/utils/db/apiKeys.db.server";
 
@@ -19,18 +21,33 @@ export let loader: LoaderFunction = async () => {
 };
 
 export default function AdminApiKeysRoute() {
+  const { t } = useTranslation();
   const data = useLoaderData<LoaderData>();
   const adminData = useAdminData();
   return (
     <>
-      <ApiKeysTable
-        canCreate={adminData.permissions.includes("admin.apiKeys.create")}
-        entities={adminData.entities}
-        items={data.apiKeys}
-        logs={data.apiKeyLogs}
-        withTenant={true}
-      />
-      <Outlet />
+      <IndexPageLayout
+        replaceTitleWithTabs={true}
+        tabs={[
+          {
+            name: t("models.apiKey.plural"),
+            routePath: "/admin/api/keys",
+          },
+          {
+            name: t("models.apiKey.logs"),
+            routePath: "/admin/api/logs",
+          },
+        ]}
+      >
+        <ApiKeysTable
+          canCreate={adminData.permissions.includes("admin.apiKeys.create")}
+          entities={adminData.entities}
+          items={data.apiKeys}
+          logs={data.apiKeyLogs}
+          withTenant={true}
+        />
+        <Outlet />
+      </IndexPageLayout>
     </>
   );
 }

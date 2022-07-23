@@ -4,7 +4,6 @@ import { updateEmailAttachmentFileProvider } from "~/utils/db/email/emailAttachm
 import { createEmail, getEmail } from "~/utils/db/email/emails.db.server";
 import { getTenantInboundAddress } from "~/utils/db/email/tenantInboundAddresses.db.server";
 import { createSupabaseFile, getSupabaseAttachmentBucket, getSupabaseAttachmentPath } from "~/utils/integrations/supabaseService";
-import { createBlobFromBase64 } from "~/utils/services/fileService";
 
 export const action: ActionFunction = async ({ request }) => {
   try {
@@ -36,18 +35,18 @@ export const action: ActionFunction = async ({ request }) => {
         attachments: {
           create: email.Attachments.map((attachment: any) => ({
             name: attachment.Name,
-            content: attachment.Content,
+            content: `data:${attachment.ContentType};base64,${attachment.Content}`,
             type: attachment.ContentType,
             length: attachment.ContentLength,
           })),
         },
       });
-      if (process.env.SUPABASE_API_URL && process.env.SUPABASE_KEY) {
-        const emailWithAttachments = await getEmail(createdEmail.id);
-        if (emailWithAttachments) {
+      const emailWithAttachments = await getEmail(createdEmail.id, tenantWithInboundAddress?.tenantId ?? null);
+      if (emailWithAttachments && emailWithAttachments.attachments.length > 0) {
+        if (process.env.SUPABASE_API_URL && process.env.SUPABASE_KEY) {
           await Promise.all(
             emailWithAttachments?.attachments.map(async (attachment) => {
-              const blob = await createBlobFromBase64(attachment.type, attachment.content);
+              const blob = await (await fetch(attachment.content)).blob();
               const file = new File([blob], attachment.name);
 
               try {

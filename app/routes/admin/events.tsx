@@ -6,18 +6,22 @@ import { ApplicationEvent } from "~/application/dtos/shared/ApplicationEvent";
 import EventsTable from "~/components/core/events/EventsTable";
 import InputFilters from "~/components/ui/input/InputFilters";
 import IndexPageLayout from "~/components/ui/layouts/IndexPageLayout";
+import { i18nHelper } from "~/locale/i18n.utils";
 import { EventWithAttempts, getEvents } from "~/utils/db/events/events.db.server";
 import { adminGetAllTenants } from "~/utils/db/tenants.db.server";
 import { verifyUserHasPermission } from "~/utils/helpers/PermissionsHelper";
 import { getFiltersFromCurrentUrl, getPaginationFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 
 type LoaderData = {
+  title: string;
   items: EventWithAttempts[];
   pagination: PaginationDto;
   filterableProperties: FilterablePropertyDto[];
 };
 export let loader: LoaderFunction = async ({ request }) => {
   await verifyUserHasPermission(request, "admin.events.view");
+  const { t } = await i18nHelper(request);
+
   const current = getPaginationFromCurrentUrl(request);
   const filterableProperties: FilterablePropertyDto[] = [
     {
@@ -49,6 +53,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   const { items, pagination } = await getEvents({ current, filters });
 
   const data: LoaderData = {
+    title: `${t("models.event.eventsAndWebhooks")} | ${process.env.APP_NAME}`,
     items,
     pagination,
     filterableProperties,

@@ -1,4 +1,6 @@
+import { ReactNode } from "react";
 import clsx from "~/utils/shared/ClassesUtils";
+import HintTooltip from "../tooltips/HintTooltip";
 
 interface Props {
   name: string;
@@ -10,16 +12,23 @@ interface Props {
   className?: string;
   required?: boolean;
   disabled?: boolean;
+  help?: string;
+  hint?: ReactNode;
 }
-export default function InputSelect({ name, title, withLabel = true, value, options, setValue, className, required, disabled }: Props) {
+export default function InputSelect({ name, title, withLabel = true, value, options, setValue, className, required, disabled, help, hint }: Props) {
   return (
     <div className={clsx(className, "flex-grow w-full text-gray-800")}>
       {withLabel && (
-        <label htmlFor={name} className="block text-xs font-medium text-gray-700 truncate">
-          <div>
-            {title}
-            {required && <span className="ml-1 text-red-500">*</span>}
+        <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600">
+          <div className=" flex space-x-1 items-center">
+            <div className="truncate">
+              {title}
+              {required && <span className="ml-1 text-red-500">*</span>}
+            </div>
+
+            {help && <HintTooltip text={help} />}
           </div>
+          {hint}
         </label>
       )}
       <div className={clsx(withLabel && "mt-1")}>

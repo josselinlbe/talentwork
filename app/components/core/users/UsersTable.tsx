@@ -10,14 +10,16 @@ import { UsersActionType } from "~/routes/admin/users";
 import { UserWithDetails } from "~/utils/db/users.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
 import UserBadge from "./UserBadge";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 
 interface Props {
   items: UserWithDetails[];
   canImpersonate: boolean;
   canChangePassword: boolean;
   canDelete: boolean;
+  pagination: PaginationDto;
 }
-export default function UsersTable({ items, canImpersonate, canChangePassword, canDelete }: Props) {
+export default function UsersTable({ items, canImpersonate, canChangePassword, canDelete, pagination }: Props) {
   const { t } = useTranslation();
   const submit = useSubmit();
 
@@ -111,6 +113,7 @@ export default function UsersTable({ items, canImpersonate, canChangePassword, c
             destructive: true,
           },
         ]}
+        pagination={pagination}
       />
       <ConfirmModal ref={confirmDelete} onYes={confirmDeleteUser} />
     </div>

@@ -44,11 +44,11 @@ export default function PreviewMediaModal({ item, onClose, onDownload }: Props) 
             <div className="mt-4 space-y-3">
               {isPdf() ? (
                 <div>
-                  <PdfViewer file={item.file} canDownload={false} />
+                  <PdfViewer file={item.publicUrl ?? item.file} canDownload={false} />
                 </div>
               ) : isImage() ? (
                 <div>
-                  <img alt={item.title} className="h-96 object-contain mx-auto" src={item.file} />
+                  <img alt={item.title} className="h-96 object-contain mx-auto" src={item.publicUrl ?? item.file} />
                 </div>
               ) : (
                 <div>Not PDF or Image</div>

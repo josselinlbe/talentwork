@@ -10,7 +10,7 @@ export async function getCustomEntitiesDashboardStats(lastDays: number): Promise
   const stats = entities.map(async (entity) => {
     return await getEntityStat(entity, lastDays);
   });
-  return Promise.all(stats);
+  return await Promise.all(stats);
 }
 
 async function getEntityStat(entity: Entity, lastDays: number) {

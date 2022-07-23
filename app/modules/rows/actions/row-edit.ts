@@ -60,7 +60,7 @@ export const actionRowEdit = async (
       await createRowLog(request, { tenantId: tenantId, createdByUserId: userInfo.userId, action: DefaultLogActions.Updated, entity, item });
       return json({});
     } catch (e: any) {
-      return badRequest({ error: e?.toString() });
+      return badRequest({ error: e?.message });
     }
   } else if (action === "delete") {
     await verifyUserHasPermission(request, getEntityPermission(entity, "delete"), tenantId);

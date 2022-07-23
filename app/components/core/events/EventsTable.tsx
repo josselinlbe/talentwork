@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { Colors } from "~/application/enums/shared/Colors";
 import SimpleBadge from "~/components/ui/badges/SimpleBadge";
@@ -16,6 +17,7 @@ interface Props {
   pagination: PaginationDto;
 }
 export default function EventsTable({ items, pagination }: Props) {
+  const { t } = useTranslation();
   const [selectedData, setSelectedData] = useState<EventWithAttempts | undefined>(undefined);
   return (
     <>
@@ -23,7 +25,7 @@ export default function EventsTable({ items, pagination }: Props) {
         items={items}
         actions={[
           {
-            title: "Details",
+            title: t("shared.details"),
             onClickRoute: (_, i) => i.id,
           },
         ]}
@@ -31,18 +33,18 @@ export default function EventsTable({ items, pagination }: Props) {
         headers={[
           {
             name: "account",
-            title: "Account",
+            title: t("models.tenant.object"),
             value: (i) => i.tenant?.name,
           },
           {
             name: "event",
-            title: "Event",
+            title: t("models.event.object"),
             value: (i) => i.name,
             formattedValue: (i) => <SimpleBadge title={i.name} color={Colors.VIOLET} />,
           },
           {
             name: "data",
-            title: "Data",
+            title: t("models.event.data"),
             value: (i) => i.data,
             formattedValue: (i) => (
               <button type="button" onClick={() => setSelectedData(i)} className="truncate max-w-xs underline hover:text-theme-500">
@@ -53,7 +55,7 @@ export default function EventsTable({ items, pagination }: Props) {
           },
           {
             name: "attempts",
-            title: "Webhook Attempts",
+            title: t("models.event.attempts"),
             value: (i) => i.attempts.length,
             formattedValue: (i) => (
               <div className="flex space-x-1">
@@ -67,7 +69,7 @@ export default function EventsTable({ items, pagination }: Props) {
           },
           {
             name: "createdAt",
-            title: "shared.createdAt",
+            title: t("shared.createdAt"),
             value: (item) => DateUtils.dateAgo(item.createdAt),
             className: "text-gray-400 text-xs",
             breakpoint: "sm",
@@ -92,7 +94,7 @@ export default function EventsTable({ items, pagination }: Props) {
             </div>
 
             <div className="space-y-2">
-              <p className="font-bold text-xs">Request Body</p>
+              <p className="font-bold text-xs">{t("models.event.data")}</p>
               <div className="border-2 border-dashed border-gray-300 rounded-lg">
                 <div className="prose">
                   <pre>{selectedData.data}</pre>
@@ -104,15 +106,41 @@ export default function EventsTable({ items, pagination }: Props) {
               return (
                 <div key={idx} className="space-y-2">
                   <div className="flex items-center space-x-2 justify-between">
-                    <h3 className="font-bold text-xs">Webhook Attempt #{idx + 1}</h3>
+                    <h3 className="font-bold text-xs">
+                      {t("models.webhookAttempt.object")} #{idx + 1}
+                    </h3>
                     <StatusBadge endpoint={attempt.endpoint} status={attempt.status} startedAt={attempt.startedAt} finishedAt={attempt.finishedAt} />
                   </div>
                   <div className="grid grid-cols-12 gap-2 border border-dashed border-gray-300 rounded-md p-2">
-                    <InputText className="col-span-12" name="endpoint" title="Endpoint" readOnly={true} value={attempt.endpoint} />
-                    <InputText className="col-span-12" name="startedAt" title="Started at" readOnly={true} value={DateUtils.dateYMDHMS(attempt.startedAt)} />
-                    <InputText className="col-span-12" name="finishedAt" title="Finished at" readOnly={true} value={DateUtils.dateYMDHMS(attempt.finishedAt)} />
-                    <InputText className="col-span-12" name="status" title="Status" readOnly={true} value={attempt.status?.toString() ?? "?"} />
-                    <InputText className="col-span-12" name="message" title="Message" readOnly={true} value={attempt.message?.toString() ?? "?"} />
+                    <InputText className="col-span-12" name="endpoint" title={t("models.webhookAttempt.endpoint")} readOnly={true} value={attempt.endpoint} />
+                    <InputText
+                      className="col-span-12"
+                      name="startedAt"
+                      title={t("models.webhookAttempt.startedAt")}
+                      readOnly={true}
+                      value={DateUtils.dateYMDHMS(attempt.startedAt)}
+                    />
+                    <InputText
+                      className="col-span-12"
+                      name="finishedAt"
+                      title={t("models.webhookAttempt.finishedAt")}
+                      readOnly={true}
+                      value={DateUtils.dateYMDHMS(attempt.finishedAt)}
+                    />
+                    <InputText
+                      className="col-span-12"
+                      name="status"
+                      title={t("models.webhookAttempt.status")}
+                      readOnly={true}
+                      value={attempt.status?.toString() ?? "?"}
+                    />
+                    <InputText
+                      className="col-span-12"
+                      name="message"
+                      title={t("models.webhookAttempt.message")}
+                      readOnly={true}
+                      value={attempt.message?.toString() ?? "?"}
+                    />
                   </div>
                 </div>
               );

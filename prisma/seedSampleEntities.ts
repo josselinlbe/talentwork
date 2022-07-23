@@ -1,11 +1,17 @@
 import { LinkedAccount, User } from "@prisma/client";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { Visibility } from "~/application/dtos/shared/Visibility";
+import { PropertyAttributeName } from "~/application/enums/entities/PropertyAttributeName";
 import { PropertyType } from "~/application/enums/entities/PropertyType";
 import { Colors } from "~/application/enums/shared/Colors";
+import FakePdfBase64 from "~/components/ui/pdf/FakePdfBase64";
+import { EmployeeDto } from "~/modules/contracts/dtos/EmployeeDto";
+import { ContractMemberRole } from "~/modules/contracts/enums/ContractMemberRole";
+import { ContractStatus } from "~/modules/contracts/enums/ContractStatus";
+import { db } from "~/utils/db.server";
 import { createCoreEntity, createEntity, getEntityByName, getEntityBySlug } from "~/utils/db/entities/entities.db.server";
 import { createProperties, CreatePropertyDto } from "~/utils/db/entities/properties.db.server";
-import { createRow, getRow } from "~/utils/db/entities/rows.db.server";
+import { createRow, getMaxRowFolio } from "~/utils/db/entities/rows.db.server";
 import { createManualRowLog } from "~/utils/db/logs.db.server";
 
 export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount, user1: User, seedAttributeEntities = false) {
@@ -28,79 +34,102 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
           title: "Text with pattern (email)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" },
+          attributes: [{ name: PropertyAttributeName.Pattern, value: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" }],
         },
         {
           name: "textWithMinLength",
           title: "Text with Min length (9)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { min: 9 },
+          attributes: [{ name: PropertyAttributeName.Min, value: "9" }],
         },
         {
           name: "textWithMaxLength",
           title: "Text with Max length (10)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { max: 10 },
+          attributes: [{ name: PropertyAttributeName.Max, value: "10" }],
         },
         {
           name: "textWithDefaultValue",
           title: "Text with Default Value (Abc123)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { defaultValue: "Abc123" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: "Abc123" }],
         },
         {
           name: "textWithHintText",
           title: "Text with Hint Text (Hi)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { hintText: "Hi" },
+          attributes: [{ name: PropertyAttributeName.HintText, value: "Hi" }],
         },
         {
           name: "textWithHelpText",
           title: "Text with Help Text (Hello)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { helpText: "Hello" },
+          attributes: [{ name: PropertyAttributeName.HelpText, value: "Hello" }],
         },
         {
           name: "textWithPlaceholder",
           title: "Text with Placeholder (Type your name...)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { placeholder: "Type your name..." },
+          attributes: [{ name: PropertyAttributeName.Placeholder, value: "Type your name..." }],
         },
         {
           name: "textWithIcon",
           title: "Text with Icon",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: {
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-          },
+          attributes: [
+            {
+              name: PropertyAttributeName.Icon,
+              value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+            },
+          ],
         },
         {
           name: "textWithRows",
           title: "Text with Rows (2)",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { rows: 2 },
+          attributes: [{ name: PropertyAttributeName.Rows, value: "2" }],
         },
         {
           name: "textAsUppercase",
           title: "Text as Uppercase",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { uppercase: true },
+          attributes: [{ name: PropertyAttributeName.Uppercase, value: "true" }],
         },
         {
           name: "textAsLowercase",
           title: "Text as Lowercase",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { lowercase: true },
+          attributes: [{ name: PropertyAttributeName.Lowercase, value: "true" }],
+        },
+        {
+          name: "textWithEditorTypeScript",
+          title: "Text with Editor (monaco-typescript)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: [
+            { name: PropertyAttributeName.Editor, value: "monaco" },
+            { name: PropertyAttributeName.EditorLanguage, value: "typescript" },
+          ],
+        },
+        {
+          name: "textWithEditorMarkdown",
+          title: "Text with Editor (monaco-markdown)",
+          type: PropertyType.TEXT,
+          isDynamic: true,
+          attributes: [
+            { name: PropertyAttributeName.Editor, value: "monaco" },
+            { name: PropertyAttributeName.EditorLanguage, value: "markdown" },
+          ],
         },
       ]
     );
@@ -117,55 +146,65 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
       },
       [
         {
+          name: "numberWithStep",
+          title: "Number with Step (0.01)",
+          type: PropertyType.NUMBER,
+          isDynamic: true,
+          attributes: [{ name: PropertyAttributeName.Step, value: "0.01" }],
+        },
+        {
           name: "numberWithMin",
           title: "Number with Min (11)",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: { min: 11 },
+          attributes: [{ name: PropertyAttributeName.Min, value: "11" }],
         },
         {
           name: "numberWithMax",
           title: "Number with Max (12)",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: { max: 12 },
+          attributes: [{ name: PropertyAttributeName.Max, value: "12" }],
         },
         {
           name: "numberWithDefaultValue",
           title: "Number with Default Value (6)",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: { defaultValue: "6" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: "6" }],
         },
         {
           name: "numberWithHintText",
           title: "Number with Hint Text (Hi)",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: { hintText: "Hi" },
+          attributes: [{ name: PropertyAttributeName.HintText, value: "Hi" }],
         },
         {
           name: "numberWithHelpText",
           title: "Number with Help Text (Hello)",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: { helpText: "Hello" },
+          attributes: [{ name: PropertyAttributeName.HelpText, value: "Hello" }],
         },
         {
           name: "numberWithPlaceholder",
           title: "Number with Placeholder (Type your age 😉)",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: { placeholder: "Type your age 😉" },
+          attributes: [{ name: PropertyAttributeName.Placeholder, value: "Type your age 😉" }],
         },
         {
           name: "numberWithIcon",
           title: "Number with Icon",
           type: PropertyType.NUMBER,
           isDynamic: true,
-          attributes: {
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-          },
+          attributes: [
+            {
+              name: PropertyAttributeName.Icon,
+              value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+            },
+          ],
         },
       ]
     );
@@ -186,23 +225,26 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
           title: "Date with Hint Text (Hi)",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { hintText: "Hi" },
+          attributes: [{ name: PropertyAttributeName.HintText, value: "Hi" }],
         },
         {
           name: "dateWithHelpText",
           title: "Date with Help Text (Hello)",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "Hello" },
+          attributes: [{ name: PropertyAttributeName.HelpText, value: "Hello" }],
         },
         {
           name: "dateWithIcon",
           title: "Date with Icon",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: {
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-          },
+          attributes: [
+            {
+              name: PropertyAttributeName.Icon,
+              value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+            },
+          ],
         },
       ]
     );
@@ -227,7 +269,7 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
             { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
             { order: 2, value: "2", name: "Option 2", color: Colors.RED },
           ],
-          attributes: { defaultValue: "2" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: `2` }],
         },
         {
           name: "selectWithHintText",
@@ -238,7 +280,7 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
             { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
             { order: 2, value: "2", name: "Option 2", color: Colors.RED },
           ],
-          attributes: { hintText: "Hi" },
+          attributes: [{ name: PropertyAttributeName.HintText, value: "Hi" }],
         },
         {
           name: "selectWithHelpText",
@@ -249,7 +291,7 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
             { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
             { order: 2, value: "2", name: "Option 2", color: Colors.RED },
           ],
-          attributes: { helpText: "Hello" },
+          attributes: [{ name: PropertyAttributeName.HelpText, value: "Hello" }],
         },
         {
           name: "selectWithPlaceholder",
@@ -260,7 +302,7 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
             { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
             { order: 2, value: "2", name: "Option 2", color: Colors.RED },
           ],
-          attributes: { placeholder: "Select one..." },
+          attributes: [{ name: PropertyAttributeName.Placeholder, value: `Select one...` }],
         },
         {
           name: "selectWithIcon",
@@ -271,9 +313,12 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
             { order: 1, value: "1", name: "Option 1", color: Colors.BLUE },
             { order: 2, value: "2", name: "Option 2", color: Colors.RED },
           ],
-          attributes: {
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
-          },
+          attributes: [
+            {
+              name: PropertyAttributeName.Icon,
+              value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"> <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd" /> </svg>`,
+            },
+          ],
         },
       ]
     );
@@ -294,21 +339,21 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
           title: "Boolean with Default Value (true)",
           type: PropertyType.BOOLEAN,
           isDynamic: true,
-          attributes: { defaultValue: "true" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: `true` }],
         },
         {
           name: "booleanWithHintText",
           title: "Boolean with Hint Text (Hi)",
           type: PropertyType.BOOLEAN,
           isDynamic: true,
-          attributes: { hintText: "Hi" },
+          attributes: [{ name: PropertyAttributeName.HintText, value: "Hi" }],
         },
         {
           name: "booleanWithHelpText",
           title: "Boolean with Help Text (Hello)",
           type: PropertyType.BOOLEAN,
           isDynamic: true,
-          attributes: { helpText: "Hello" },
+          attributes: [{ name: PropertyAttributeName.HelpText, value: "Hello" }],
         },
       ]
     );
@@ -329,42 +374,42 @@ export async function seedSampleEntities(tenant1And2Relationship: LinkedAccount,
           title: "Media with Min files (2)",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { min: 2 },
+          attributes: [{ name: PropertyAttributeName.Min, value: `2` }],
         },
         {
           name: "mediaWithMaxLength",
           title: "Media with Max files (3)",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { max: 3 },
+          attributes: [{ name: PropertyAttributeName.Max, value: `3` }],
         },
         {
           name: "mediaWithAccepFileTypes",
           title: "Media with Accept File Types (images)",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { acceptFileTypes: "image/png, image/gif, image/jpeg" },
+          attributes: [{ name: PropertyAttributeName.AcceptFileTypes, value: `image/png, image/gif, image/jpeg` }],
         },
         {
           name: "mediaWithMaxSize",
           title: "Media with Max File Size (5 MB)",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { maxSize: 5 },
+          attributes: [{ name: PropertyAttributeName.MaxSize, value: `5` }],
         },
         {
           name: "mediaWithHintText",
           title: "Media with Hint Text (Hi)",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { hintText: "Hi" },
+          attributes: [{ name: PropertyAttributeName.HintText, value: "Hi" }],
         },
         {
           name: "mediaWithHelpText",
           title: "Media with Help Text (Hello)",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { helpText: "Hello" },
+          attributes: [{ name: PropertyAttributeName.HelpText, value: "Hello" }],
         },
       ]
     );
@@ -388,7 +433,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
     hasTags: true,
     hasComments: true,
     hasTasks: true,
-    hasWorkflow: true,
+    hasWorkflow: false,
     defaultVisibility: Visibility.Tenant,
   });
   const employeesEntity = await getEntityByName("employee");
@@ -413,9 +458,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
       title: "models.employee.email",
       type: PropertyType.TEXT,
       isDynamic: true,
-      attributes: {
-        pattern: "[a-zA-Z0-9._%+-]+@[a-z0-9.-]+.[a-zA-Z]{2,4}",
-      },
+      attributes: [{ name: PropertyAttributeName.Pattern, value: "[a-zA-Z0-9._%+-]+@[a-z0-9.-]+.[a-zA-Z]{2,4}" }],
     },
     {
       name: "salary",
@@ -430,7 +473,18 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
       isDynamic: true,
       options: [
         { order: 1, value: "Active", color: Colors.GREEN },
-        { order: 2, value: "Inactive", color: Colors.RED },
+        { order: 2, value: "Inactive", color: Colors.YELLOW }
+      ],
+    },
+    {
+      name: "photo",
+      title: "Photo",
+      type: PropertyType.MEDIA,
+      isDynamic: true,
+      isRequired: false,
+      attributes: [
+        { name: PropertyAttributeName.Max, value: "1" },
+        { name: PropertyAttributeName.AcceptFileTypes, value: "image/png, image/gif, image/jpeg" },
       ],
     },
   ];
@@ -441,6 +495,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
   const emailProperty = properties.find((f) => f.name === "email");
   const salaryProperty = properties.find((f) => f.name === "salary");
   const statusProperty = properties.find((f) => f.name === "status");
+  const photoProperty = properties.find((f) => f.name === "photo");
 
   const employee1 = await createRow({
     entityId: employeesEntity.id,
@@ -468,12 +523,22 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
         propertyId: statusProperty?.id ?? "",
         textValue: "Active",
       },
+      {
+        propertyId: photoProperty?.id ?? "",
+        media: [
+          {
+            title: "My pic",
+            name: "My pic",
+            type: "image/png",
+            file: "https://via.placeholder.com/500x500.png",
+          },
+        ],
+      },
     ],
     properties: null,
     dynamicRows: [],
   });
-  const employee1Item = await getRow(employeesEntity.id, employee1.id, tenantId);
-  await createManualRowLog({ tenantId, createdByUserId, action: DefaultLogActions.Created, entity: employeesEntity, item: employee1Item });
+  await createManualRowLog({ tenantId, createdByUserId, action: DefaultLogActions.Created, entity: employeesEntity, item: employee1 });
 
   // So both employees have different createdAt value
   await new Promise((r) => setTimeout(r, 1000));
@@ -504,15 +569,25 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
         propertyId: statusProperty?.id ?? "",
         textValue: "Active",
       },
+      {
+        propertyId: photoProperty?.id ?? "",
+        media: [
+          {
+            title: "My pic",
+            name: "My pic",
+            type: "image/png",
+            file: "https://via.placeholder.com/500x500.png",
+          },
+        ],
+      },
     ],
     properties: null,
     dynamicRows: [],
   });
-  const employee2Item = await getRow(employeesEntity.id, employee2.id, tenantId);
-  await createManualRowLog({ tenantId, createdByUserId, action: DefaultLogActions.Created, entity: employeesEntity, item: employee2Item });
+  await createManualRowLog({ tenantId, createdByUserId, action: DefaultLogActions.Created, entity: employeesEntity, item: employee2 });
 
   return {
     employeesEntity: await getEntityBySlug("employees"),
-    employees: [await getRow(employeesEntity.id, employee1.id, tenantId), await getRow(employeesEntity.id, employee2.id, tenantId)],
+    employees: [employee1, employee2],
   };
 }

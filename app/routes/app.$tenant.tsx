@@ -6,6 +6,7 @@ import { loadAppData, useAppData } from "~/utils/data/useAppData";
 import { updateUserDefaultTenantId } from "~/utils/db/users.db.server";
 import { getTenantUrl } from "~/utils/services/urlService";
 import { getUserInfo } from "~/utils/session.server";
+import Page404 from "~/components/pages/Page404";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   const data = await loadAppData(request, params);
@@ -32,6 +33,16 @@ export default function AppRoute() {
     <div className="bg-white min-h-screen">
       <AppLayout layout="app">
         <Outlet />
+      </AppLayout>
+    </div>
+  );
+}
+
+export function CatchBoundary() {
+  return (
+    <div className="bg-white min-h-screen">
+      <AppLayout layout="app">
+        <Page404 />
       </AppLayout>
     </div>
   );

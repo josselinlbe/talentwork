@@ -1,8 +1,11 @@
 import { Tenant, User, Log, ApiKey } from "@prisma/client";
 import { getClientIPAddress } from "remix-utils";
+import { FiltersDto } from "~/application/dtos/data/FiltersDto";
+import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { db } from "../db.server";
 import ApiHelper from "../helpers/ApiHelper";
+import RowFiltersHelper from "../helpers/RowFiltersHelper";
 import RowHelper from "../helpers/RowHelper";
 import { TenantUrl } from "../services/urlService";
 import { getUserInfo } from "../session.server";
@@ -48,10 +51,30 @@ const include = {
   },
 };
 
-export async function getAllLogs(): Promise<LogWithDetails[]> {
-  return await db.log.findMany({
+export async function getAllLogs(
+  pagination: { page: number; pageSize: number },
+  filters: FiltersDto
+): Promise<{ items: LogWithDetails[]; pagination: PaginationDto }> {
+  const where = RowFiltersHelper.getFiltersCondition(filters);
+  const items = await db.log.findMany({
+    take: pagination.pageSize,
+    skip: pagination.pageSize * (pagination.page - 1),
     include,
+    where,
   });
+  const totalItems = await db.log.count({
+    where,
+  });
+
+  return {
+    items,
+    pagination: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      totalItems,
+      totalPages: Math.ceil(totalItems / pagination.pageSize),
+    },
+  };
 }
 
 export async function getLogs(tenantId: string): Promise<LogWithDetails[]> {

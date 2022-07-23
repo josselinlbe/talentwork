@@ -8,8 +8,9 @@ import { getUserInfo } from "~/utils/session.server";
 export type LoaderDataInboundEmailEdit = {
   item: EmailWithDetails;
   myRead: EmailRead;
+  redirectUrl: string;
 };
-export let loaderEmailEdit = async (request: Request, params: Params, tenantUrl: TenantUrl | null) => {
+export let loaderEmailEdit = async (request: Request, params: Params, tenantUrl: TenantUrl | null, redirectUrl: string) => {
   const userInfo = await getUserInfo(request);
   const item = await getEmail(params.id ?? "", tenantUrl?.tenantId ?? null);
   if (!item) {
@@ -25,6 +26,7 @@ export let loaderEmailEdit = async (request: Request, params: Params, tenantUrl:
   const data: LoaderDataInboundEmailEdit = {
     item,
     myRead,
+    redirectUrl,
   };
   return data;
 };

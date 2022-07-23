@@ -20,7 +20,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   let { t } = await i18nHelper(request);
 
-  const items = (await adminGetAllUsers()).filter((f) => f.admin);
+  const items = (await adminGetAllUsers()).items.filter((f) => f.admin);
   const roles = await getAllRoles("admin");
 
   const data: LoaderData = {
@@ -57,7 +57,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       createAdminLog(request, "Deleted", `${user?.email} - ${role?.name}}`);
     }
     const actionData: ActionData = {
-      items: await adminGetAllUsers(),
+      items: (await adminGetAllUsers()).items,
     };
     return json(actionData);
   } else {

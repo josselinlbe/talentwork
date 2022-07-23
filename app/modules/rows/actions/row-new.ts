@@ -1,7 +1,7 @@
 import { json, redirect } from "@remix-run/node";
 import { DefaultLogActions } from "~/application/dtos/shared/DefaultLogActions";
 import { getEntityBySlug } from "~/utils/db/entities/entities.db.server";
-import { createRow, getRow } from "~/utils/db/entities/rows.db.server";
+import { createRow } from "~/utils/db/entities/rows.db.server";
 import { createRowLog } from "~/utils/db/logs.db.server";
 import RowHelper from "~/utils/helpers/RowHelper";
 import { getUserInfo } from "~/utils/session.server";
@@ -25,7 +25,7 @@ export const actionRowNew = async (request: Request, params: Params, tenantId: s
 
   try {
     const rowValues = RowHelper.getRowPropertiesFromForm(t, entity, form);
-    const created = await createRow({
+    const item = await createRow({
       entityId: entity.id,
       tenantId,
       createdByUserId: userInfo.userId,
@@ -34,9 +34,8 @@ export const actionRowNew = async (request: Request, params: Params, tenantId: s
       dynamicRows: rowValues.dynamicRows,
       properties: rowValues.properties,
     });
-    const item = await getRow(entity.id, created.id, tenantId);
     await createRowLog(request, { tenantId: tenantId, createdByUserId: userInfo.userId, action: DefaultLogActions.Created, entity, item });
-    return redirect(`${entityRowsRoute}/${created.id}`);
+    return redirect(`${entityRowsRoute}/${item!.id}`);
   } catch (e: any) {
     return badRequest({ error: e?.toString() });
   }

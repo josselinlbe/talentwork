@@ -4,6 +4,7 @@ import { Params } from "react-router";
 import { i18nHelper } from "~/locale/i18n.utils";
 import { getPostmarkInboundMessages, getPostmarkInboundMessage } from "~/utils/email.server";
 import { TenantUrl } from "~/utils/services/urlService";
+import { getPaginationFromCurrentUrl } from "~/utils/helpers/RowPaginationHelper";
 
 export type ActionDataEmails = {
   error?: string;
@@ -58,7 +59,8 @@ export const actionInboundEmails = async (request: Request, params: Params, tena
       })
     );
 
-    const items = await getAllEmails("inbound", tenantUrl?.tenantId ?? null);
+    const currentPagination = getPaginationFromCurrentUrl(request);
+    const items = await getAllEmails("inbound", currentPagination, undefined, tenantUrl?.tenantId ?? null);
     return json({
       items,
     });
