@@ -9,9 +9,10 @@ import {LinkedAccountStatus} from "~/application/enums/tenants/LinkedAccountStat
 import {seedRolesAndPermissions} from "./seedRolesAndPermissions";
 import {seedCrm} from "./seedCrm";
 import {getAvailableTenantInboundAddress, getAvailableTenantSlug} from "~/utils/services/emailService";
-import {createCoreEntity, getEntityById, getEntityByName} from "~/utils/db/entities/entities.db.server";
+import {createCoreEntity, getEntityByName} from "~/utils/db/entities/entities.db.server";
 import {PropertyType} from "~/application/enums/entities/PropertyType";
 import {Colors} from "~/application/enums/shared/Colors";
+import {PropertyAttributeName} from "~/application/enums/entities/PropertyAttributeName";
 
 const db = new PrismaClient();
 
@@ -78,6 +79,14 @@ async function seedCoreEntities() {
           isDynamic: true,
         },
         {
+          name: "logo",
+          title: "Logo",
+          type: PropertyType.MEDIA,
+          isRequired: false,
+          isDynamic: true,
+          attributes: [{ name: PropertyAttributeName.AcceptFileTypes, value: `image/png, image/gif, image/jpeg` }],
+        },
+        {
           name: "code",
           title: "Code",
           type: PropertyType.TEXT,
@@ -85,19 +94,11 @@ async function seedCoreEntities() {
           isDynamic: true,
         },
         {
-          name: "logo",
-          title: "Logo",
-          type: PropertyType.MEDIA,
-          isRequired: false,
-          isDynamic: true,
-          attributes: { acceptFileTypes: "image/png, image/gif, image/jpeg" },
-        },
-        {
           name: "description",
           title: "Description",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { rows: 5 },
+          attributes: [{ name: PropertyAttributeName.Rows, value: "5" }],
         },
         {
           name: "employee",
@@ -112,7 +113,7 @@ async function seedCoreEntities() {
           title: "Status",
           type: PropertyType.SELECT,
           isDynamic: true,
-          attributes: { defaultValue: "Active" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: "Active" }],
           options: [
             { order: 1, value: "Active", color: Colors.GREEN },
             { order: 2, value: "Inactive", color: Colors.YELLOW },
@@ -157,7 +158,7 @@ async function seedCoreEntities() {
           title: "Status",
           type: PropertyType.SELECT,
           isDynamic: true,
-          attributes: { defaultValue: "Active" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: "Active" }],
           options: [
             { order: 1, value: "Active", color: Colors.GREEN },
             { order: 2, value: "Inactive", color: Colors.RED },
@@ -193,21 +194,27 @@ async function seedCoreEntities() {
           title: "Start Date",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "Start date" },
+          attributes: [
+            { name: PropertyAttributeName.HelpText, value: "Start date" }
+          ],
         },
         {
           name: "endDate",
           title: "End Date",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "End date" },
+          attributes: [
+            { name: PropertyAttributeName.HelpText, value: "End date" }
+          ],
         },
         {
           name: "description",
           title: "Description",
           type: PropertyType.TEXT,
           isDynamic: true,
-          attributes: { rows: 5 },
+          attributes: [
+            { name: PropertyAttributeName.Rows, value: "3" }
+          ],
         },
         {
           name: "codeAnalytic",
@@ -222,11 +229,11 @@ async function seedCoreEntities() {
           title: "Status",
           type: PropertyType.SELECT,
           isDynamic: true,
-          attributes: { defaultValue: "Planned" },
+          attributes: [{ name: PropertyAttributeName.DefaultValue, value: "Planned" }],
           options: [
-            { order: 1, value: "Done", color: Colors.BLUE },
-            { order: 2, value: "Planned", color: Colors.YELLOW },
-            { order: 3, value: "In Progress", color: Colors.GREEN },
+            { order: 1, value: "Planned", color: Colors.YELLOW },
+            { order: 2, value: "In Progress", color: Colors.GREEN },
+            { order: 3, value: "Done", color: Colors.BLUE },
           ],
         },
       ]
@@ -253,30 +260,39 @@ async function seedCoreEntities() {
         },
         {
           name: "amount",
-          title: "Amount (excl. taxes)",
+          title: "Amount",
           type: PropertyType.NUMBER,
           isDynamic: true,
+          attributes: [
+            { name: PropertyAttributeName.HelpText, value: "Excl. taxes" }
+          ],
         },
         {
           name: "startDate",
           title: "Start Date",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "Start date" },
+          attributes: [
+            { name: PropertyAttributeName.HelpText, value: "Start date" }
+          ],
         },
         {
           name: "endDate",
           title: "End Date",
           type: PropertyType.DATE,
           isDynamic: true,
-          attributes: { helpText: "End date" },
+          attributes: [
+            { name: PropertyAttributeName.HelpText, value: "End date" }
+          ],
         },
         {
           name: "status",
           title: "Status",
           type: PropertyType.SELECT,
           isDynamic: true,
-          attributes: { defaultValue: "To Paid" },
+          attributes: [
+            { name: PropertyAttributeName.DefaultValue, value: "To paid" }
+          ],
           options: [
             { order: 1, value: "To Paid", color: Colors.RED },
             { order: 2, value: "Paid", color: Colors.GREEN },
@@ -291,14 +307,21 @@ async function seedCoreEntities() {
             { order: 1, value: "0" },
             { order: 2, value: "20" },
           ],
-          attributes: { defaultValue: "20", helpText: "Invoice %" },
+          attributes: [
+            { name: PropertyAttributeName.DefaultValue, value: "20" },
+            { name: PropertyAttributeName.HelpText, value: "Taxe percent" }
+          ]
         },
         {
           name: "invoice_file",
           title: "Invoice",
           type: PropertyType.MEDIA,
           isDynamic: true,
-          attributes: { acceptFileTypes: "application/pdf", max: 1, helpText: "Invoice fie in .pdf" },
+          attributes: [
+              { name: PropertyAttributeName.AcceptFileTypes, value: "application/pdf" },
+              { name: PropertyAttributeName.Rows, value: "1" },
+              { name: PropertyAttributeName.HelpText, value: "Invoice file (.pdf)" }
+          ],
         },
       ]
   );

@@ -145,7 +145,6 @@ export default function RegisterRoute() {
               </span>
             </p>
           </div>
-          <InfoBanner title="Demo" text={"No email verification required nor a credit card to test the app."} />
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
             {/* Tenant */}

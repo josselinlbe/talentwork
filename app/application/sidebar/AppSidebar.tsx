@@ -53,12 +53,12 @@ export const AppSidebar = (params: Params, entities: EntityWithDetails[], isDebu
         //   tenantUserTypes: [TenantUserType.OWNER, TenantUserType.ADMIN],
         //   path: `${currentTenantUrl}/logs`,
         // },
-        {
-          title: "admin.switchToAdmin",
-          path: "/admin/dashboard",
-          icon: SvgIcon.ADMIN,
-          adminOnly: true,
-        },
+        // {
+        //   title: "admin.switchToAdmin",
+        //   path: "/admin/dashboard",
+        //   icon: SvgIcon.ADMIN,
+        //   adminOnly: true,
+        // },
       ],
     },
   ];

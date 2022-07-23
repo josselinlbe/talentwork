@@ -132,44 +132,6 @@ export default function LoginRoute() {
               </Link>
             </p>
           </div>
-          <InfoBanner title="Demo" text={t("account.login.createTestAccount")} redirect="/register">
-            <div className="mt-2 border-t pt-1 border-accent-300 w-full text-xs">
-              {/* {t("account.login.useTestAccount")} */}
-              <p className="mt-1">
-                <span className="font-bold">App Users</span>:{" "}
-                <button
-                  type="button"
-                  onClick={() => setDemoAccount("luna.davis@company.com")}
-                  className="border-b border-dashed hover:border-dotted border-accent-300"
-                >
-                  luna.davis@company.com
-                </button>{" "}
-                or{" "}
-                <button
-                  type="button"
-                  onClick={() => setDemoAccount("john.doe@company.com")}
-                  className="border-b border-dashed hover:border-dotted border-accent-300"
-                >
-                  john.doe@company.com
-                </button>
-              </p>
-              <p>
-                <p className="mt-1">
-                  <span className="font-bold">Admin User</span>:{" "}
-                  <button
-                    type="button"
-                    onClick={() => setDemoAccount("guest@admin.com")}
-                    className="border-b border-dashed hover:border-dotted border-accent-300"
-                  >
-                    guest@admin.com
-                  </button>
-                </p>
-              </p>
-              <p>
-                <span className="font-bold select-all">Password</span>: password
-              </p>
-            </div>
-          </InfoBanner>
           <Form className="mt-8 space-y-6" method="post">
             <input type="hidden" name="redirectTo" value={searchParams.get("redirect") ?? undefined} />
             <div className="rounded-sm shadow-sm -space-y-px">
@@ -248,7 +210,7 @@ export default function LoginRoute() {
 
             <div className="flex items-center justify-end">
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-theme-500 hover:text-theme-400">
+                <Link to="/forgot-password" className="font-medium text-theme-500² hover:text-theme-400">
                   {t("account.login.forgot")}
                 </Link>
               </div>
