@@ -1334,7 +1334,7 @@
   },
   "blog": {
     "title": "Blog",
-    "headline": "Read the latest articles about the Remix SaaS boilerplate.",
+    "headline": "Read the latest articles",
     "published": "Published",
     "draft": "Draft",
     "thisIsADraft": "This is a draft",
