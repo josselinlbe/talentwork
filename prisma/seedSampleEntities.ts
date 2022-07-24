@@ -456,8 +456,14 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
       attributes: [{ name: PropertyAttributeName.Pattern, value: "[a-zA-Z0-9._%+-]+@[a-z0-9.-]+.[a-zA-Z]{2,4}" }],
     },
     {
-      name: "salary",
-      title: "Salary",
+      name: "priceDay",
+      title: "Price Day",
+      type: PropertyType.NUMBER,
+      isDynamic: true,
+    },
+    {
+      name: "priceHour",
+      title: "Price Hour",
       type: PropertyType.NUMBER,
       isDynamic: true,
     },
@@ -488,7 +494,7 @@ async function createSampleEntity_Employees(tenantId: string, createdByUserId: s
   const firstNameProperty = properties.find((f) => f.name === "firstName");
   const lastNameProperty = properties.find((f) => f.name === "lastName");
   const emailProperty = properties.find((f) => f.name === "email");
-  const salaryProperty = properties.find((f) => f.name === "salary");
+  const salaryProperty = properties.find((f) => f.name === "priceDay");
   const statusProperty = properties.find((f) => f.name === "status");
   const photoProperty = properties.find((f) => f.name === "photo");
 
