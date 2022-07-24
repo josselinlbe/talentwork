@@ -14,12 +14,7 @@ export default function VideoDemo({ title, url, subtitle }: Props) {
               <p className="text-xl text-gray-500">{subtitle}</p>
             </div>
             <div className="aspect-w-16 aspect-h-5 mt-10 max-w-2xl mx-auto my-12">
-              <iframe
-                src={url}
-                title={title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              ></iframe>
+              <iframe src={url} frameBorder="0" />
             </div>
           </div>
         </div>

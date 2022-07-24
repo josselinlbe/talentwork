@@ -8,5 +8,5 @@ let backend = new FetchBackend({
 
 export let i18n = new RemixI18Next(backend, {
   fallbackLng: "en", // here configure your default (fallback) language
-  supportedLanguages: ["es", "en"], // here configure your supported languages
+  supportedLanguages: ["fr", "en"], // here configure your supported languages
 });

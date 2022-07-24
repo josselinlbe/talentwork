@@ -3,7 +3,7 @@ import { Language } from "remix-i18next";
 import Footer from "~/components/front/Footer";
 import Header from "~/components/front/Header";
 import { i18nHelper } from "~/locale/i18n.utils";
-import LogoCloudsColor from "~/components/ui/images/LogoCloudsColor";
+import LogoClouds from "~/components/ui/images/LogoClouds";
 
 type LoaderData = {
   title: string;
@@ -62,7 +62,7 @@ export default function StackRoute() {
                   </p>
                 </div>
                 <div className="mt-12 mx-auto min-h-full">
-                  <LogoCloudsColor />
+                  <LogoClouds />
                 </div>
               </div>
             </div>

@@ -18,25 +18,25 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = ({ data }) => {
-  const description = `SaasRock is a multi-tenant framework with rock-solid out-of-the-box SaaS core features, built with Remix, Tailwind CSS, and Prisma.`;
+  const description = `Talentwork transform the way your freelances work - Talent pool, freelancers, flexible workforce, contractors`;
   return {
     charset: "utf-8",
     title: data?.title,
     description,
-    keywords: "remix,saas,tailwindcss,prisma,react,typescript,boilerplate,saas-kit,saas-boilerplate,stripe,postmark,admin-portal,app-dashboard,multi-tenancy",
-    "og:title": "SaasRock | The Remix SaaS boilerplate",
+    keywords: "freelances,talent pool,workforce,contractors,expenses freelances,software freelance",
+    "og:title": "Talentwork | Manage your flexible workforce",
     "og:type": "website",
-    "og:url": "https://saasrock.com",
-    "og:image": "https://yahooder.sirv.com/saasfrontends/remix/ss/cover.png",
+    "og:url": "https://talentwork.io",
+    "og:image": "https://tlyriaxy.sirv.com/Talentwork/cover.png",
     "og:card": "summary_large_image",
-    "og:creator": "@AlexandroMtzG",
-    "og:site": "https://saasrock.com",
+    "og:creator": "@talentwork",
+    "og:site": "https://talentwork.io",
     "og:description": description,
-    "twitter:image": "https://yahooder.sirv.com/saasfrontends/remix/thumbnail.png",
+    "twitter:image": "https://tlyriaxy.sirv.com/Talentwork/thumbnail.png",
     "twitter:card": "summary_large_image",
-    "twitter:creator": "@AlexandroMtzG",
-    "twitter:site": "@saas_rock",
-    "twitter:title": "SaasRock",
+    "twitter:creator": "@talentwork",
+    "twitter:site": "@talentwork",
+    "twitter:title": "talentwork",
     "twitter:description": description,
   };
 };

@@ -10,9 +10,6 @@ export default function PreviewInputTextWithMonacoEditor() {
 
   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-  _Image_:
-
-  ![SaasRock](https://yahooder.sirv.com/saasrock/seo/cover-dark.png)
   `);
   return (
     <div id="input-text">

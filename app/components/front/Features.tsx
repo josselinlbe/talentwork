@@ -6,92 +6,38 @@ import CheckIcon from "../ui/icons/CheckIcon";
 
 const groups = [
   {
-    headline: "🪨 Rock-solid features",
-    subheadline: "A rock-solid starter kit",
-    description: "Everything you need to start to build an MVP, or to build a whole SaaS application in a few weeks.",
+    headline: "Everything you need to manage your network",
+    subheadline: "A rock-solid dashboard",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     items: [...getFeatures()],
   },
   {
-    headline: "First-class tech stack 💪",
+    headline: "First-class freelancer stack 💪",
     subheadline: "Powered by the best tools",
-    description: "The codebase comes with the latest technology out there: SSR, utility-first CSS, and first-class ORM.",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     items: [
       {
-        name: "Remix",
-        description: "Focused on web standards and modern web app UX, you’re simply going to build better websites.",
-        link: "https://remix.run/docs/en/v1",
+        name: "Your own live talents pool",
+        description: "Say goodbye to your spreadsheets, and replace them with a searchable live talent pool of all your freelancers."
       },
       {
-        name: "React",
-        description: "A JavaScript library for building user interfaces.",
-        link: "https://reactjs.org/docs/getting-started.html",
+        name: "Easy invite",
+        description: "Invite your own freelancers to your own talent pool by just filling in their email address and name."
       },
       {
-        name: "Tailwind CSS",
-        description: "Rapidly build modern websites without ever leaving your HTML. The best utility-first CSS framework.",
-        link: "https://tailwindcss.com/docs/utility-first",
+        name: "Filter & search",
+        description: "Filter and search enables companies to quickly locate their talent based on: price, availability, services, location, status and language."
       },
       {
-        name: "Prisma",
-        description: "Next-generation Node.js and TypeScript ORM.",
-        link: "https://www.prisma.io/docs",
+        name: "Self serving profiles",
+        description: "Talentwork gives your talent the possibility to create, control and customize their own profile. which saves time, since there are no longer excel sheets needing updates."
+      },
+      {
+        name: "Import excel list",
+        description: "In just a few clicks you can transform your entire excel list into a live talent pool by using the import function."
       },
     ],
-  },
-  {
-    headline: "Integrations 🔗",
-    subheadline: "Connect with your apps",
-    description: "Using Webhooks by Zapier, integrate with +4,000 apps, such as Notion, Airtable, Google Sheets/Docs, and more.",
-    items: [
-      {
-        name: "Stripe",
-        description: "The payments infrastructure for the internet. Stripe Customers, Products, and Prices.",
-        link: "https://stripe.com/docs",
-      },
-      {
-        name: "Postmark",
-        description: "The email delivery service that people actually like. Customize your transactional email templates (Welcome, Forgot password...).",
-        link: "https://postmarkapp.com/developer",
-      },
-      {
-        name: "ConvertKit",
-        description: (
-          <div>
-            The creator marketing platform for your newsletter. Used at{" "}
-            <Link to="/newsletter" className="font-bold">
-              /newsletter
-            </Link>
-            .
-          </div>
-        ),
-        link: "https://developers.convertkit.com/",
-      },
-      {
-        name: "Formspree",
-        description: (
-          <div>
-            Let your visitors contact you with a form. Used at{" "}
-            <Link to="/contact" className="font-bold">
-              /contact
-            </Link>
-            .
-          </div>
-        ),
-        link: "https://formspree.io/",
-      },
-      {
-        name: "Webhooks by Zapier",
-        description: "Hook with Zapier by using the Custom Entity events (Created, Updated, and Deleted).",
-        link: "https://platform.zapier.com/docs/zapier-intro",
-      },
-      {
-        name: "Deployment",
-        description:
-          "Deploy your Remix SaaS application on Vercel, Netlify, Cloudflare Workers, Fly.io, or use your own server (this site uses Vercel + Supabase).",
-        link: "https://remix.run/docs/en/v1/guides/deployment",
-      },
-    ],
-  },
+  }
 ];
 
 export default function Features() {

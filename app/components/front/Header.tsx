@@ -21,36 +21,7 @@ export default function Header() {
   const links: NavbarItemDto[] = [
     { path: "/", title: t("front.navbar.product") },
     { path: "/pricing", title: t("front.navbar.pricing") },
-    { path: "/docs", title: "Docs", className: "" },
-    {
-      title: t("front.navbar.about"),
-      items: [
-        {
-          path: "/blog",
-          title: t("front.navbar.blog"),
-        },
-        {
-          path: "/changelog",
-          title: "Changelog",
-        },
-        {
-          path: "/docs/roadmap",
-          title: "Roadmap",
-        },
-        {
-          path: "/contact",
-          title: t("front.navbar.contact"),
-        },
-        {
-          path: "/newsletter",
-          title: "Newsletter",
-        },
-        {
-          path: "https://www.youtube.com/channel/UCdXy3FPDHxP-b7NhPspt6cQ",
-          title: "Tutorials",
-        },
-      ],
-    },
+    { path: "/blog", title: t("front.navbar.blog") },
   ];
   function isCurrent(path: string): boolean {
     return location.pathname === path;

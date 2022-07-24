@@ -59,27 +59,18 @@ export default function Hero() {
                 <div className="mt-2 mx-auto lg:mx-0 sm:flex justify-center md:mt-2">
                   <div className="rounded-md shadow">
                     <a
-                      href="https://alexandromg.gumroad.com/l/SaasRock"
+                      href="/register"
                       target="_blank"
                       rel="noreferrer"
                       className="w-full flex items-center space-x-2 justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md bg-theme-500 text-theme-50 hover:bg-theme-600 md:py-4 md:text-lg md:px-7"
                     >
-                      <div>{t("front.hero.buy")}</div>
+                      <div>{t("front.hero.register")}</div>
                     </a>
                   </div>
                   {/* <script src="https://gumroad.com/js/gumroad.js"></script>
                   <a className="gumroad-button align-middle" href="https://alexandromg.gumroad.com/l/SaasRock">
                     Subscribe
                   </a> */}
-
-                  <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-                    <Link
-                      to="/docs"
-                      className="w-full flex items-center justify-center px-5 py-3 border border-gray-200 dark:border-gray-800 text-base font-medium rounded-md text-theme-600 dark:text-theme-400 bg-white hover:bg-gray-50 dark:bg-gray-900 dark:hover:text-theme-500 md:py-4 md:text-lg md:px-7"
-                    >
-                      {t("front.hero.docs")}
-                    </Link>
-                  </div>
                 </div>
 
                 <div className="mt-8 space-y-3">

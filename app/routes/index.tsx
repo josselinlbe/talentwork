@@ -9,19 +9,16 @@ import TopBanner from "~/components/ui/banners/TopBanner";
 import { Language } from "remix-i18next";
 import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
-import PricingCTA from "~/components/front/PricingCTA";
 import { useTranslation } from "react-i18next";
 import { getGitHubSocialProof } from "~/utils/integrations/githubService";
-import UpcomingFeatures from "~/components/front/UpcomingFeatures";
 import Testimonials from "~/components/front/Testimonials";
 import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 import { getTestimonials } from "~/utils/services/marketingService";
 import Newsletter from "~/components/front/Newsletter";
 import { useRootData } from "~/utils/data/useRootData";
 import { useEffect } from "react";
-import Community from "~/components/front/Community";
 import VideoDemo from "~/components/front/VideoDemo";
-import LogoCloudsColor from "~/components/ui/images/LogoCloudsColor";
+import LogoClouds from "~/components/ui/images/LogoClouds";
 
 export type IndexLoaderData = {
   title: string;
@@ -95,36 +92,15 @@ export default function IndexRoute() {
       />
       <div className="relative overflow-hidden bg-white dark:bg-gray-900 text-gray-800 dark:text-slate-200 space-y-16">
         <Hero />
-        <LogoCloudsColor />
+        <LogoClouds />
         <FeatureImages />
-        <Community
-          title="The Talentwork Community"
-          subtitle="We're all looking to build successful SaaS applications."
-          socialProof={data.socialProof}
-          cta={[
-            {
-              message: "Subscribe",
-              link: "https://alexandromg.gumroad.com/l/Talentwork",
-            },
-            {
-              message: "Join Discord",
-              link: "https://discord.gg/KMkjU2BFn9",
-            },
-            {
-              message: "Youtube channel",
-              link: "https://www.youtube.com/channel/UCdXy3FPDHxP-b7NhPspt6cQ",
-            },
-          ]}
-        />
         <VideoDemo
-          title="Building a SaaS with Talentwork 🎥"
-          url="https://www.youtube.com/embed/FyQvTxyl7LI"
-          subtitle="Follow this tutorial while you build your SaaS with Talentwork."
+          title="An overview of Talentwork 🎥"
+          url="https://www.loom.com/embed/bf16cf17fee64e8ca1d32fc73e0652d5"
+          subtitle="Lorem..."
         />
         <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
         <Features />
-        <PricingCTA />
-        <UpcomingFeatures />
         <Newsletter />
         <Footer />
       </div>

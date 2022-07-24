@@ -39,13 +39,6 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
     }
     return 0;
   }
-  function getIssueUrl(item: Issue) {
-    const id = getIssueId(item);
-    if (id > 0) {
-      return "https://github.com/AlexandroMtzG/saasrock/issues/" + id;
-    }
-    return "";
-  }
   function imageCount() {
     return items.filter((f) => (f.img?.length ?? 0) > 0).length;
   }
@@ -68,14 +61,6 @@ export default function ChangelogIssues({ title, icon, items }: Props) {
                   return (
                     <li key={idx}>
                       {icon}{" "}
-                      {getIssueId(issue) > 0 && (
-                        <>
-                          <a className=" text-theme-600 dark:text-theme-400" target="_blank" rel="noreferrer" href={getIssueUrl(issue)}>
-                            #{getIssueId(issue)}
-                          </a>
-                          :{" "}
-                        </>
-                      )}
                       {issue.title.split("#")[0]}
                       {viewImages && (
                         <div className="flex items-baseline space-x-3">

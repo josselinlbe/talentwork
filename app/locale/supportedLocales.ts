@@ -4,7 +4,7 @@ export default [
     flag: "us",
   },
   {
-    lang: "es",
-    flag: "mx",
+    lang: "fr",
+    flag: "fr",
   },
 ];
