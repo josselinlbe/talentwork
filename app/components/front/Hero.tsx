@@ -67,10 +67,6 @@ export default function Hero() {
                       <div>{t("front.hero.register")}</div>
                     </a>
                   </div>
-                  {/* <script src="https://gumroad.com/js/gumroad.js"></script>
-                  <a className="gumroad-button align-middle" href="https://alexandromg.gumroad.com/l/SaasRock">
-                    Subscribe
-                  </a> */}
                 </div>
 
                 <div className="mt-8 space-y-3">
