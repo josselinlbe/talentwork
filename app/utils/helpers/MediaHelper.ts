@@ -85,7 +85,7 @@ export async function getMediaFromZipFiles(zipFiles: MediaDto[]) {
   let createdFiles: MediaDto[] = [];
   await Promise.all(
     zipFiles.map(async (item) => {
-      const filePath = "zip-uploads/" + item.name;
+      const filePath = "zip-uploads/" + item.name.replace(" ", "");
       deleteFile(filePath);
       const path = await saveZip(filePath, { type: item.type, content: item.file.split(",")[1] });
       if (path) {
