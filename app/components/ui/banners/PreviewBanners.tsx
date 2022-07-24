@@ -14,7 +14,7 @@ export default function PreviewBanners() {
       <WarningBanner
         title="WarningBanner with Redirect"
         text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut..."
-        redirect="https://saasrock.com"
+        redirect="https://talentwork.io"
       />
     </div>
   );

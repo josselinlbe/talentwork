@@ -35,7 +35,7 @@ export default function TermsAndConditionsRoute() {
                 <h3 className="text-black dark:text-white">Introduction</h3>
 
                 <p>
-                  These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, Talentwork accessible at saasrock.com.
+                  These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, Talentwork accessible at talentwork.io.
                 </p>
 
                 <p>

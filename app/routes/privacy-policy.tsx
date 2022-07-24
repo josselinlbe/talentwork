@@ -35,8 +35,8 @@ export default function PrivacyPolicyRoute() {
                 <p>
                   Your privacy is important to us. It is Talentwork&#39; policy to respect your privacy and comply with any applicable law and regulation
                   regarding any personal information we may collect about you, including across our website,{" "}
-                  <a className="text-black dark:text-white" href="https://saasrock.com">
-                    https://saasrock.com
+                  <a className="text-black dark:text-white" href="https://talentwork.io">
+                    https://talentwork.io
                   </a>
                   , and other sites we own and operate.
                 </p>
@@ -180,9 +180,9 @@ export default function PrivacyPolicyRoute() {
                 <h3 className="text-black dark:text-white">Contact Us</h3>
                 <p>For any questions or concerns regarding your privacy, you may contact us using the following details:</p>
                 <p>
-                  Alexandro Martinez
+                  Josselin Liebe
                   <br />
-                  contact@saasrock.com
+                  contact@talentwork.io
                 </p>
               </div>
             </div>
