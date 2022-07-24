@@ -10,7 +10,6 @@ import { Language } from "remix-i18next";
 import FeatureImages from "~/components/front/FeatureImages";
 import Features from "~/components/front/Features";
 import { useTranslation } from "react-i18next";
-import { getGitHubSocialProof } from "~/utils/integrations/githubService";
 import Testimonials from "~/components/front/Testimonials";
 import { TestimonialDto } from "~/application/dtos/marketing/TestimonialDto";
 import { getTestimonials } from "~/utils/services/marketingService";
@@ -26,14 +25,12 @@ export type IndexLoaderData = {
   authenticated: boolean;
   isAdmin: boolean;
   i18n: Record<string, Language>;
-  socialProof: any;
   testimonials: TestimonialDto[];
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   const { translations } = await i18nHelper(request);
   try {
-    const socialProof = await getGitHubSocialProof();
     const testimonials = getTestimonials();
 
     const userSession = await getUserInfo(request);
@@ -44,7 +41,6 @@ export let loader: LoaderFunction = async ({ request }) => {
       isAdmin: user?.admin !== null,
       authenticated: userSession.userId?.length > 0,
       i18n: translations,
-      socialProof,
       testimonials,
     };
     return json(data);
@@ -99,7 +95,7 @@ export default function IndexRoute() {
           url="https://www.loom.com/embed/bf16cf17fee64e8ca1d32fc73e0652d5"
           subtitle="Lorem..."
         />
-        <Testimonials items={data?.testimonials} socialProof={data?.socialProof} />
+        <Testimonials items={data?.testimonials} />
         <Features />
         <Newsletter />
         <Footer />
