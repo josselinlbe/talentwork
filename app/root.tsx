@@ -56,16 +56,6 @@ function Document({ children }: { children: React.ReactNode; title?: string }) {
       </head>
       <body className="min-h-screen text-gray-800 dark:text-white bg-white dark:bg-slate-900 max-w-full max-h-full">
         {children}
-
-        {!debug && (
-          <>
-            <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-            <noscript>
-              <img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="privacy-friendly-simpleanalytics" referrerPolicy="no-referrer-when-downgrade" />
-            </noscript>
-          </>
-        )}
-
         <LiveReload />
         <FloatingLoader />
         <ScrollRestoration />

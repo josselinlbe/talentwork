@@ -26,6 +26,7 @@ export async function seedRolesAndPermissions() {
     { name: DefaultAppRoles.SuperUser, description: "Has all app permissions", type: "app", assignToNewUsers: false },
     { name: "Admin", description: "Has all app permissions but account deletion", type: "app", assignToNewUsers: false },
     { name: "Billing Admin", description: "Has subscription permissions", type: "app", assignToNewUsers: false },
+    { name: "Manager", description: "Manager for projets & talents pool", type: "app", assignToNewUsers: false},
     { name: "User", description: "Has regular permissions", type: "app", assignToNewUsers: true },
   ]);
 
