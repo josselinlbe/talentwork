@@ -1,3 +1,4 @@
+import { TenantInboundAddress } from "@prisma/client";
 import { ActionFunction, json } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { updateEmailAttachmentFileProvider } from "~/utils/db/email/emailAttachments.db.server";
@@ -17,8 +18,18 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ error: "Message already exists" }, { status: 400 });
       }
 
-      const fromInboundAddress = email.ToFull[0].Email.split("@")[0];
-      const tenantWithInboundAddress = await getTenantInboundAddress(fromInboundAddress);
+      const fromInboundAddress = [email.ToFull[0].Email];
+      if (email.Bcc) {
+        fromInboundAddress.push(...email.Bcc.split(","));
+      }
+      const tenantWithInboundAddresses = await getTenantInboundAddress(fromInboundAddress.map((f) => f.split("@")[0]));
+      let tenantWithInboundAddress: TenantInboundAddress | null = null;
+      if (tenantWithInboundAddresses.length === 1) {
+        tenantWithInboundAddress = tenantWithInboundAddresses[0];
+      } else if (tenantWithInboundAddresses.length > 1) {
+        // eslint-disable-next-line no-console
+        console.log("[INBOUND EMAIL ERROR] More than 1 address found with subdomains: " + fromInboundAddress.map((f) => f.split("@")[0]));
+      }
       const createdEmail = await createEmail({
         tenantInboundAddressId: tenantWithInboundAddress?.id ?? null,
         messageId: email.MessageID,

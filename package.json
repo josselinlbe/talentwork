@@ -21,6 +21,7 @@
     "remix-migrate": "remix migrate --migration replace-remix-imports"
   },
   "dependencies": {
+    "-": "^0.0.1",
     "@headlessui/react": "^1.6.5",
     "@monaco-editor/react": "^4.4.5",
     "@prisma/client": "^4.0.0",
@@ -29,11 +30,14 @@
     "@remix-run/vercel": "^1.6.3",
     "@stripe/stripe-js": "^1.25.0",
     "@supabase/supabase-js": "^1.35.4",
+    "@types/adm-zip": "^0.5.0",
     "@types/postmark": "^2.0.3",
     "@types/stripe": "^8.0.417",
+    "adm-zip": "^0.5.9",
     "bcryptjs": "^2.4.3",
     "browser-image-compression": "^1.0.17",
     "clsx": "^1.1.1",
+    "D": "^1.0.0",
     "hyperformula": "^2.0.0",
     "i18next": "^21.8.11",
     "marked": "^4.0.14",

@@ -1,4 +1,3 @@
-import { useTransition } from "@remix-run/react";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +5,6 @@ import { PaginationDto } from "~/application/dtos/data/PaginationDto";
 import { RowHeaderDisplayDto } from "~/application/dtos/data/RowHeaderDisplayDto";
 import PaperClipIcon from "~/components/ui/icons/PaperClipIcon";
 import RightIcon from "~/components/ui/icons/RightIcon";
-import Loading from "~/components/ui/loaders/Loading";
 import TableSimple from "~/components/ui/tables/TableSimple";
 import { EmailWithSimpleDetails } from "~/utils/db/email/emails.db.server";
 import DateUtils from "~/utils/shared/DateUtils";
@@ -17,7 +15,6 @@ interface Props {
   pagination: PaginationDto;
 }
 export default function EmailsTable({ items, withTenant, pagination }: Props) {
-  const transition = useTransition();
   const { t } = useTranslation();
   const [headers, setHeaders] = useState<RowHeaderDisplayDto<EmailWithSimpleDetails>[]>([]);
 
@@ -82,25 +79,21 @@ export default function EmailsTable({ items, withTenant, pagination }: Props) {
 
   return (
     <div>
-      {transition.state === "submitting" ? (
-        <Loading />
-      ) : (
-        <TableSimple
-          onClickRoute={(_, i) => i.id}
-          className={(_, i) =>
-            i._count.reads === 0 ? "bg-white cursor-pointer group-hover:border-theme-500" : "bg-gray-100 cursor-pointer group-hover:border-theme-500"
-          }
-          items={items}
-          actions={[
-            {
-              title: <RightIcon className="h-4 w-4" />,
-              onClickRoute: (_, i) => i.id,
-            },
-          ]}
-          headers={headers}
-          pagination={pagination}
-        />
-      )}
+      <TableSimple
+        onClickRoute={(_, i) => i.id}
+        className={(_, i) =>
+          i._count.reads === 0 ? "bg-white cursor-pointer group-hover:border-theme-500" : "bg-gray-100 cursor-pointer group-hover:border-theme-500"
+        }
+        items={items}
+        actions={[
+          {
+            title: <RightIcon className="h-4 w-4" />,
+            onClickRoute: (_, i) => i.id,
+          },
+        ]}
+        headers={headers}
+        pagination={pagination}
+      />
     </div>
   );
 }

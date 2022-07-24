@@ -20,16 +20,17 @@ interface Props {
   required?: boolean;
   hint?: ReactNode;
   icon?: string;
+  darkMode?: boolean;
 }
 const InputDate = (
-  { name, title, value, defaultValue, onChange, className, help, disabled = false, readOnly = false, required = false, hint, icon }: Props,
+  { name, title, value, defaultValue, onChange, className, help, disabled = false, readOnly = false, required = false, hint, icon, darkMode }: Props,
   ref: Ref<RefInputDate>
 ) => {
   useImperativeHandle(ref, () => ({ input }));
   const input = useRef<HTMLInputElement>(null);
 
   return (
-    <div className={className}>
+    <div className={clsx(className, !darkMode && "text-gray-800")}>
       <label htmlFor={name} className="flex justify-between space-x-2 text-xs font-medium text-gray-600">
         <div className=" flex space-x-1 items-center">
           <div className="truncate">

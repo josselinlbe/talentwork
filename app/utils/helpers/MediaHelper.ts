@@ -2,6 +2,7 @@ import { EmailAttachment, Entity } from "@prisma/client";
 import { MediaDto } from "~/application/dtos/entities/MediaDto";
 import { RowWithDetails, updateRowMedia } from "../db/entities/rows.db.server";
 import { createSupabaseFile, deleteSupabaseFile } from "../integrations/supabaseService";
+import { deleteFile, deleteFolder, extractZip, saveZip } from "../services/fileService";
 
 export function getAttachmentToMedia(attachment: EmailAttachment): MediaDto {
   return {
@@ -78,4 +79,41 @@ export async function deleteRowMediaFromStorageProvider(row: RowWithDetails | nu
       }
     })
   );
+}
+
+export async function getMediaFromZipFiles(zipFiles: MediaDto[]) {
+  let createdFiles: MediaDto[] = [];
+  await Promise.all(
+    zipFiles.map(async (item) => {
+      const filePath = "zip-uploads/" + item.name.replace(" ", "");
+      deleteFile(filePath);
+      const path = await saveZip(filePath, { type: item.type, content: item.file.split(",")[1] });
+      if (path) {
+        const folderPath = path + "-unzip";
+        deleteFolder(folderPath, { recursive: true, force: true });
+        const entries = await extractZip(path);
+        entries.forEach((entry) => {
+          if (entry.name.startsWith("._")) {
+            return;
+          }
+          var file = entry.getData().toString("base64");
+          let type = "";
+          if (entry.name.toLowerCase().endsWith("xml")) {
+            type = "text/xml";
+          } else if (entry.name.toLowerCase().endsWith("pdf")) {
+            type = "application/pdf";
+          }
+          createdFiles.push({
+            title: entry.name,
+            name: entry.name,
+            file: `data:${type};base64,${file}`,
+            type,
+          });
+        });
+        deleteFile(path);
+      }
+      deleteFile(filePath);
+    })
+  );
+  return createdFiles;
 }

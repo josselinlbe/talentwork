@@ -132,6 +132,12 @@ export function createEmailRead(emailId: string, userId: string): Promise<EmailR
   });
 }
 
+export function deleteEmail(id: string) {
+  return db.email.delete({
+    where: { id },
+  });
+}
+
 function whereInboundAddress(tenantId?: string | null) {
   if (!tenantId) {
     return {

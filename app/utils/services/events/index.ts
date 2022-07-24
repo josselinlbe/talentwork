@@ -31,8 +31,6 @@ async function callEventEndpoint(event: Event, endpoint: string, body: string) {
       body,
     });
   } catch (e: any) {
-    // eslint-disable-next-line no-console
-    console.log("Could not create webhook endpoint", { message: e.message, e });
     // While seeding the database it should not call endpoints
     await updateEventWebhookAttempt(webhookAttempt.id, {
       startedAt: new Date(),
