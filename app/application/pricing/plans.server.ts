@@ -46,14 +46,14 @@ const plans: SubscriptionProductDto[] = [
       },
       {
         order: 2,
-        title: "5 project",
+        title: "5 projects",
         name: "project",
         value: 1,
         type: SubscriptionFeatureLimitType.MAX,
       },
       {
         order: 3,
-        title: "Talents Pool",
+        title: "Talents",
         name: "talents",
         value: 0,
         type: SubscriptionFeatureLimitType.NOT_INCLUDED,
@@ -122,7 +122,7 @@ const plans: SubscriptionProductDto[] = [
       },
       {
         order: 3,
-        title: "100 Talents Pool",
+        title: "100 Talents",
         name: "talents",
         value: 100,
         type: SubscriptionFeatureLimitType.MAX,
@@ -191,7 +191,7 @@ const plans: SubscriptionProductDto[] = [
       },
       {
         order: 3,
-        title: "Unlimited Talents Pool",
+        title: "Unlimited Talents",
         name: "talents",
         value: 0,
         type: SubscriptionFeatureLimitType.INCLUDED,

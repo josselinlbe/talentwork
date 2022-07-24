@@ -40,7 +40,7 @@ export default function PrivacyPolicyRoute() {
                   </a>
                   , and other sites we own and operate.
                 </p>
-                <p>This policy is effective as of 14 December 2021 and was last updated on 14 December 2021.</p>
+                <p>This policy is effective as of 24 July 2022 and was last updated on 24 July 2022.</p>
                 <h3 className="text-black dark:text-white">Information We Collect</h3>
                 <p>
                   Information we collect includes both information you knowingly and actively provide us when using or participating in any of our services and
