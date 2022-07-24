@@ -275,9 +275,6 @@ export default function LinkedAccountsTable({ items, canDelete }: Props) {
                                 <div className="flex items-center space-x-2">
                                   {link.status === LinkedAccountStatus.LINKED ? (
                                     <>
-                                      <ButtonTertiary to={UrlUtils.currentTenantUrl(params, `contracts/new?l=${link.id}`)}>
-                                        <div>{t("app.contracts.new.title")}</div>
-                                      </ButtonTertiary>
                                       <ButtonTertiary disabled={!canDelete} onClick={() => deleteLinkedAccount(link)}>
                                         <div>{t("shared.delete")}</div>
                                       </ButtonTertiary>
