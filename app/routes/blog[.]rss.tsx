@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       <channel>
         <title>Talentwork - Blog</title>
         <link>${blogUrl}</link>
-        <description>Read the latest articles about Talentwork - The Remix SaaS kit</description>
+        <description>Read the latest articles about Talentwork</description>
         <language>en-us</language>
         <generator>AlexandroMtzG</generator>
         <ttl>40</ttl>

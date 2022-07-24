@@ -442,6 +442,7 @@ async function seedCoreEntities() {
           title: "Files",
           type: PropertyType.MEDIA,
           isDynamic: true,
+          isRequired: false,
           attributes: [
             { name: PropertyAttributeName.Max, value: "10" },
             { name: PropertyAttributeName.HelpText, value: "10 files max" }

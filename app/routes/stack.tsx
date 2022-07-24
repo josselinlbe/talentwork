@@ -57,9 +57,6 @@ export default function StackRoute() {
                 </svg>
                 <div className="text-center">
                   <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-slate-200 sm:text-4xl">First-class tech stack</h1>
-                  <p className="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-400">
-                    The Remix + Tailwind CSS + Prisma Boilerplate for SaaS applications.
-                  </p>
                 </div>
                 <div className="mt-12 mx-auto min-h-full">
                   <LogoClouds />
